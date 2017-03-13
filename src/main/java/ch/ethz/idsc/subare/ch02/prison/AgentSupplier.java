@@ -1,3 +1,4 @@
+// code by jph
 package ch.ethz.idsc.subare.ch02.prison;
 
 import java.util.function.Supplier;
@@ -19,7 +20,7 @@ public enum AgentSupplier {
   egreec(() -> new EGreedyAgent(2, i -> RationalScalar.of(1, 5), "1/5")), //
   egreed(() -> new EGreedyAgent(2, i -> RationalScalar.of(1, i + 1), "1/i")), //
   gradie(() -> new GradientAgent(2, RealScalar.of(.1))), //
-  optimi(() -> new OptimistAgent(2, RealScalar.of(3), RealScalar.of(.1))), //
+  optimi(() -> new OptimistAgent(2, RealScalar.of(6), RealScalar.of(.1))), //
   ucboun(() -> new UCBAgent(2, RealScalar.of(1))), //
   ;
   public final Supplier<Agent> supplier;

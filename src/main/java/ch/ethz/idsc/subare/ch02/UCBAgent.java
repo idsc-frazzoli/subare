@@ -1,12 +1,12 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
+import ch.ethz.idsc.subare.util.FairArg;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.ZeroScalar;
-import ch.ethz.idsc.tensor.alg.Arg;
 import ch.ethz.idsc.tensor.alg.Array;
 
 /** Section 2.6 "upper-confidence-bound action selection" */
@@ -31,7 +31,7 @@ public class UCBAgent extends Agent {
     )).sqrt());
     Tensor dec = Qt.add(bias.multiply(c));
     // System.out.println(dec);
-    return Arg.max(dec);
+    return FairArg.max(dec);
   }
 
   @Override

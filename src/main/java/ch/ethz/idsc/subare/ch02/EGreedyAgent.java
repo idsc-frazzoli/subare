@@ -3,10 +3,10 @@ package ch.ethz.idsc.subare.ch02;
 
 import java.util.function.Function;
 
+import ch.ethz.idsc.subare.util.FairArg;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Arg;
 import ch.ethz.idsc.tensor.alg.Array;
 
 /** The e-greedy agent is described in
@@ -30,7 +30,7 @@ public class EGreedyAgent extends Agent {
     // as described in the algorithm box on p.33
     if (random.nextDouble() < eps.apply(getCount()).getRealDouble())
       return random.nextInt(Qt.numel());
-    return Arg.max(Qt); // (2.2)
+    return FairArg.max(Qt); // (2.2)
   }
 
   @Override
