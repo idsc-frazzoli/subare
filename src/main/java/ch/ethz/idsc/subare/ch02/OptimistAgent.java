@@ -1,0 +1,39 @@
+// code by jph
+package ch.ethz.idsc.subare.ch02;
+
+import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.alg.Arg;
+
+/** Section 2.5 "Optimistic Initial Values" */
+public final class OptimistAgent extends Agent {
+  final RealScalar Q0;
+  Tensor Qt;
+  final RealScalar alpha;
+
+  public OptimistAgent(int n, RealScalar Q0, RealScalar alpha) {
+    this.Q0 = Q0;
+    Qt = Tensors.vector(i -> Q0, n);
+    this.alpha = alpha;
+  }
+
+  @Override
+  public int takeAction() {
+    return Arg.max(Qt); // (2.2)
+  }
+
+  @Override
+  void protected_feedReward(int a, RealScalar r) {
+    // (2.4) with constant StepSize
+    Qt.set(QA -> QA.add( //
+        r.minus((Scalar) QA).multiply(alpha) //
+    ), a);
+  }
+
+  @Override
+  public String getDescription() {
+    return "Q0=" + Q0 + " a=" + alpha;
+  }
+}
