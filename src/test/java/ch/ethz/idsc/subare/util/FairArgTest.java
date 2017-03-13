@@ -1,3 +1,4 @@
+// code by jph
 package ch.ethz.idsc.subare.util;
 
 import java.util.HashSet;

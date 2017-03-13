@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 
 class Judger {
   final Tensor reward;
@@ -31,14 +32,9 @@ class Judger {
     a2.feedReward(A2, r2);
   }
 
-  void ranking() {
+  Tensor ranking() {
     GlobalAssert.of(a1.getCount() == a2.getCount());
-    // System.out.println("c1 "+a1.getCount());
-    // System.out.println("c2 "+a2.getCount());
     final RealScalar div = RationalScalar.of(1, a1.getCount());
-    RealScalar g1 = (RealScalar) a1.getTotal().multiply(div);
-    RealScalar g2 = (RealScalar) a2.getTotal().multiply(div);
-    System.out.println(String.format("%s    %6.3f", a1.getAbsDesc(), g1.getRealDouble()));
-    System.out.println(String.format("%s    %6.3f", a2.getAbsDesc(), g2.getRealDouble()));
+    return Tensors.of(a1.getTotal(), a2.getTotal()).multiply(div);
   }
 }
