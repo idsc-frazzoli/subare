@@ -13,6 +13,9 @@ public final class OptimistAgent extends Agent {
   Tensor Qt;
   final RealScalar alpha;
 
+  /** @param n
+   * @param Q0
+   * @param alpha is weight for difference (r-Qa) */
   public OptimistAgent(int n, RealScalar Q0, RealScalar alpha) {
     this.Q0 = Q0;
     Qt = Tensors.vector(i -> Q0, n);
