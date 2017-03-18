@@ -2,21 +2,20 @@
 package ch.ethz.idsc.subare.ch02;
 
 import ch.ethz.idsc.subare.util.FairArgMax;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 /** Section 2.5 "Optimistic Initial Values" */
 public final class OptimistAgent extends Agent {
-  final RealScalar Q0;
-  Tensor Qt;
-  final RealScalar alpha;
+  final Scalar Q0;
+  final Tensor Qt;
+  final Scalar alpha;
 
   /** @param n
-   * @param Q0
+   * @param Q0 initial value of all actions
    * @param alpha is weight for difference (r-Qa) */
-  public OptimistAgent(int n, RealScalar Q0, RealScalar alpha) {
+  public OptimistAgent(int n, Scalar Q0, Scalar alpha) {
     this.Q0 = Q0;
     Qt = Tensors.vector(i -> Q0, n);
     this.alpha = alpha;
@@ -28,7 +27,7 @@ public final class OptimistAgent extends Agent {
   }
 
   @Override
-  void protected_feedReward(int a, Scalar r) {
+  protected void protected_feedback(int a, Scalar r) {
     // (2.4) with constant StepSize
     Qt.set(QA -> QA.add( //
         r.subtract(QA).multiply(alpha) //

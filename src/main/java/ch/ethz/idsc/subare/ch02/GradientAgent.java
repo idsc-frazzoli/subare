@@ -1,19 +1,19 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Total;
+import ch.ethz.idsc.tensor.sca.Exp;
 
 public class GradientAgent extends Agent {
   final int n;
-  final RealScalar alpha;
+  final Scalar alpha;
   final Tensor Ht;
 
-  public GradientAgent(int n, RealScalar alpha) {
+  public GradientAgent(int n, Scalar alpha) {
     this.n = n;
     this.alpha = alpha;
     Ht = Array.zeros(n); // initially all values equal, p.38
@@ -21,9 +21,7 @@ public class GradientAgent extends Agent {
 
   private Tensor getPi() {
     // (2.9)
-    Tensor exp = Tensor.of(Ht.flatten(0) //
-        .map(Scalar.class::cast) //
-        .map(x -> DoubleScalar.of(Math.exp(x.number().doubleValue()))));
+    Tensor exp = Exp.of(Ht);
     return exp.multiply(((Scalar) Total.of(exp)).invert()).unmodifiable();
   }
 
@@ -41,11 +39,11 @@ public class GradientAgent extends Agent {
   }
 
   @Override
-  void protected_feedReward(final int a, Scalar r) {
+  protected void protected_feedback(final int a, Scalar r) {
     Tensor pi = getPi();
     for (int k = 0; k < n; ++k) {
       final int fk = k;
-      RealScalar delta = (RealScalar) r.subtract(getR_mean()).multiply(alpha);
+      Scalar delta = r.subtract(getR_mean()).multiply(alpha);
       // (2.10)
       if (k == a) {
         Ht.set(x -> x.add( //

@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.ch02.prison;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.util.GlobalAssert;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -22,14 +21,8 @@ class Judger {
   void play() {
     int A1 = a1.takeAction();
     int A2 = a2.takeAction();
-    RealScalar r1 = (RealScalar) reward.Get(A1, A2);
-    RealScalar r2 = (RealScalar) reward.Get(A2, A1);
-    // System.out.println("action " + k1 + " r=" + r1 + " " + k2 + " r=" + r2);
-    // RealScalar alpha = RationalScalar.of(1, 2);
-    // a1.feedReward(A1, (RealScalar) r1.plus(alpha.multiply(r2)));
-    // a2.feedReward(A2, (RealScalar) r2.plus(alpha.multiply(r1)));
-    a1.feedReward(A1, r1);
-    a2.feedReward(A2, r2);
+    a1.feedback(A1, reward.Get(A1, A2));
+    a2.feedback(A2, reward.Get(A2, A1));
   }
 
   Tensor ranking() {

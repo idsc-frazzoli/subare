@@ -25,7 +25,7 @@ class Judger {
     for (Agent player : list) {
       int k = player.takeAction();
       Scalar value = bandit.getLever(k);
-      player.feedReward(k, value);
+      player.feedback(k, value);
     }
   }
 

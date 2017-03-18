@@ -17,7 +17,7 @@ public class ConstantAgent extends Agent {
   }
 
   @Override
-  void protected_feedReward(int a, Scalar value) {
+  protected void protected_feedback(int a, Scalar value) {
     // ---
   }
 

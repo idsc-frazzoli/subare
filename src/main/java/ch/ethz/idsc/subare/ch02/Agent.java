@@ -18,13 +18,13 @@ public abstract class Agent {
 
   public abstract int takeAction();
 
-  abstract void protected_feedReward(int a, Scalar value);
+  protected abstract void protected_feedback(int a, Scalar value);
 
-  public final void feedReward(int a, Scalar value) {
+  public final void feedback(int a, Scalar value) {
     ++count;
     total = total.plus(value);
     history.append(RealScalar.of(a));
-    protected_feedReward(a, value);
+    protected_feedback(a, value);
   }
 
   public final Scalar getCount() {

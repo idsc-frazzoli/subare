@@ -13,15 +13,15 @@ import ch.ethz.idsc.tensor.RealScalar;
  * Multi-arm Bandits */
 class Training {
   static void train(int epochs) {
-    final int n = 2;
-    RealScalar econst = RationalScalar.of(1, 8);
+    final int n = 10;
+    RealScalar econst = RationalScalar.of(1, 12);
     Judger judger = new Judger(new Bandits(n), //
         new RandomAgent(n), //
         new GradientAgent(n, RealScalar.of(.1)), //
         new EGreedyAgent(n, i -> econst, econst.toString()), //
-        new EGreedyAgent(n, i -> RationalScalar.of(1, i.number().intValue() + 1), "1/i"), // yields infty in the first run
-        new UCBAgent(n, RealScalar.of(1)), //
-        new UCBAgent(n, RealScalar.of(2)), //
+        new EGreedyAgent(n, i -> RationalScalar.of(1, i.number().intValue() + 1), "1/i"), new UCBAgent(n, RealScalar.of(1)), //
+        new UCBAgent(n, RealScalar.of(1.2)), //
+        new UCBAgent(n, RealScalar.of(0.8)), //
         // new GradientAgent(n, 0.25), //
         new OptimistAgent(n, RealScalar.of(1), RealScalar.of(0.1)) //
     );
@@ -32,6 +32,6 @@ class Training {
   }
 
   public static void main(String[] args) {
-    train(1000);
+    train(100);
   }
 }
