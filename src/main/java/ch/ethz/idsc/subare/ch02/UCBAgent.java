@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import ch.ethz.idsc.subare.util.FairArg;
+import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -31,7 +31,7 @@ public class UCBAgent extends Agent {
     )).sqrt());
     Tensor dec = Qt.add(bias.multiply(c));
     // System.out.println(dec);
-    return FairArg.max(dec);
+    return FairArgMax.of(dec);
   }
 
   @Override

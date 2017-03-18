@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import ch.ethz.idsc.subare.util.FairArg;
+import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -24,7 +24,7 @@ public final class OptimistAgent extends Agent {
 
   @Override
   public int takeAction() {
-    return FairArg.max(Qt); // (2.2)
+    return FairArgMax.of(Qt); // (2.2)
   }
 
   @Override
