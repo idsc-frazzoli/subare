@@ -22,7 +22,7 @@ class AgentSupplier {
       () -> new ConstantAgent(1), //
       () -> new RandomAgent(2), //
       () -> new EGreedyAgent(2, i -> RationalScalar.of(1, 5), "1/5"), //
-      () -> new EGreedyAgent(2, i -> RationalScalar.of(1, i + 1), "1/i"), //
+      () -> new EGreedyAgent(2, i -> RationalScalar.of(1, i.number().intValue() + 1), "1/i"), //
       () -> new GradientAgent(2, RealScalar.of(.1)), //
       () -> new OptimistAgent(2, RealScalar.of(6), RealScalar.of(.1)), //
       () -> new UCBAgent(2, RealScalar.of(1))) //

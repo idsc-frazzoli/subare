@@ -30,7 +30,7 @@ class Bandits {
   Bandits(int n) {
     Tensor data = createGaussian(n);
     Scalar mean = (Scalar) Mean.of(data);
-    Tensor temp = data.map(x -> x.minus(mean)).unmodifiable();
+    Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
     prep = temp.multiply(((RealScalar) Variance.ofVector(temp)).sqrt().invert());
     GlobalAssert.of( //
         Chop.of(Mean.of(prep)).equals(ZeroScalar.get()));
@@ -49,7 +49,7 @@ class Bandits {
     max = (RealScalar) max.plus(sorted.Get(states.length() - 1));
   }
 
-  RealScalar getLever(int k) {
-    return (RealScalar) states.Get(k);
+  Scalar getLever(int k) {
+    return states.Get(k);
   }
 }

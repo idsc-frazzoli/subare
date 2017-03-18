@@ -28,10 +28,10 @@ public final class OptimistAgent extends Agent {
   }
 
   @Override
-  void protected_feedReward(int a, RealScalar r) {
+  void protected_feedReward(int a, Scalar r) {
     // (2.4) with constant StepSize
     Qt.set(QA -> QA.add( //
-        r.minus((Scalar) QA).multiply(alpha) //
+        r.subtract(QA).multiply(alpha) //
     ), a);
   }
 

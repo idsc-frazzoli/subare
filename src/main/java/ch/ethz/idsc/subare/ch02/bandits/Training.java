@@ -12,7 +12,6 @@ import ch.ethz.idsc.tensor.RealScalar;
 /** chapter 2:
  * Multi-arm Bandits */
 class Training {
-  @SuppressWarnings("unused")
   static void train(int epochs) {
     final int n = 2;
     RealScalar econst = RationalScalar.of(1, 8);
@@ -20,7 +19,7 @@ class Training {
         new RandomAgent(n), //
         new GradientAgent(n, RealScalar.of(.1)), //
         new EGreedyAgent(n, i -> econst, econst.toString()), //
-        new EGreedyAgent(n, i -> RationalScalar.of(1, i + 1), "1/i"), // yields infty in the first run
+        new EGreedyAgent(n, i -> RationalScalar.of(1, i.number().intValue() + 1), "1/i"), // yields infty in the first run
         new UCBAgent(n, RealScalar.of(1)), //
         new UCBAgent(n, RealScalar.of(2)), //
         // new GradientAgent(n, 0.25), //

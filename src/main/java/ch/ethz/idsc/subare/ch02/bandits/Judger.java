@@ -24,17 +24,17 @@ class Judger {
     bandit.pullAll();
     for (Agent player : list) {
       int k = player.takeAction();
-      RealScalar value = bandit.getLever(k);
+      Scalar value = bandit.getLever(k);
       player.feedReward(k, value);
     }
   }
 
   void ranking() {
-    Map<RealScalar, Agent> map = new TreeMap<>();
+    Map<Scalar, Agent> map = new TreeMap<>();
     list.stream().forEach(p -> map.put(p.getTotal(), p));
     for (Agent player : map.values()) {
-      Scalar s = player.getTotal().minus(bandit.min) //
-          .divide(bandit.max.minus(bandit.min)).multiply(RealScalar.of(100));
+      Scalar s = player.getTotal().subtract(bandit.min) //
+          .divide(bandit.max.subtract(bandit.min)).multiply(RealScalar.of(100));
       System.out.println(player + "\t" + Round.of(s) + " %");
     }
   }

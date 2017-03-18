@@ -3,8 +3,8 @@ package ch.ethz.idsc.subare.ch02.prison;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.util.GlobalAssert;
-import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
@@ -34,7 +34,7 @@ class Judger {
 
   Tensor ranking() {
     GlobalAssert.of(a1.getCount() == a2.getCount());
-    final RealScalar div = RationalScalar.of(1, a1.getCount());
+    final Scalar div = a1.getCount().invert();
     return Tensors.of(a1.getTotal(), a2.getTotal()).multiply(div);
   }
 }

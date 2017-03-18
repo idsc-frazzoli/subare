@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 
 /** the random agent picks any action equally likely
  * the policy is a constant vector of pi(a)=1/n */
@@ -13,13 +13,12 @@ public class RandomAgent extends Agent {
   }
 
   @Override
-  public
-  int takeAction() {
+  public int takeAction() {
     return random.nextInt(n);
   }
 
   @Override
-  void protected_feedReward(int a, RealScalar value) {
+  void protected_feedReward(int a, Scalar value) {
     // empty by design
   }
 

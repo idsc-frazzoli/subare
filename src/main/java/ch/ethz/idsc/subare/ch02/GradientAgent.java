@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.ch02;
 
 import ch.ethz.idsc.tensor.DoubleScalar;
-import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -42,7 +41,7 @@ public class GradientAgent extends Agent {
   }
 
   @Override
-  void protected_feedReward(final int a, RealScalar r) {
+  void protected_feedReward(final int a, Scalar r) {
     Tensor pi = getPi();
     for (int k = 0; k < n; ++k) {
       final int fk = k;
@@ -50,7 +49,7 @@ public class GradientAgent extends Agent {
       // (2.10)
       if (k == a) {
         Ht.set(x -> x.add( //
-            RealScalar.of(1).minus(pi.Get(fk)).multiply(delta) //
+            RealScalar.of(1).subtract(pi.Get(fk)).multiply(delta) //
         ), k);
       } else {
         Ht.set(x -> x.subtract( //
@@ -61,8 +60,8 @@ public class GradientAgent extends Agent {
   }
 
   /** @return average of all the rewards up through and including time t */
-  private RealScalar getR_mean() {
-    return (RealScalar) getTotal().multiply(RationalScalar.of(1, getCount()));
+  private Scalar getR_mean() {
+    return getTotal().divide(getCount());
   }
 
   @Override

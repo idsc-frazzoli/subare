@@ -1,8 +1,9 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 
+/** an agent that always produces the same predefined action */
 public class ConstantAgent extends Agent {
   final int action;
 
@@ -11,13 +12,12 @@ public class ConstantAgent extends Agent {
   }
 
   @Override
-  public
-  int takeAction() {
+  public int takeAction() {
     return action;
   }
 
   @Override
-  void protected_feedReward(int a, RealScalar value) {
+  void protected_feedReward(int a, Scalar value) {
     // ---
   }
 

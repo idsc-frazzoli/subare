@@ -24,7 +24,7 @@ public class UCBAgent extends Agent {
   @Override
   public int takeAction() {
     // (2.8)
-    final int t = getCount();
+    final int t = (Integer) getCount().number();
     RealScalar logt = DoubleScalar.of(t == 0 ? 0 : Math.log(t));
     Tensor bias = Na.map(v -> ((RealScalar) logt.divide( //
         v.equals(ZeroScalar.get()) ? RealScalar.of(1) : v//
@@ -35,14 +35,14 @@ public class UCBAgent extends Agent {
   }
 
   @Override
-  void protected_feedReward(int a, RealScalar r) {
+  void protected_feedReward(int a, Scalar r) {
     // as described in the algorithm box on p.33
     Na.set(NA -> NA.add(RealScalar.of(1)), a);
     // two possibilities
     // Qt.data[a] += (value - Qt.data[a]) / Na.data[a];
     // Qt.data[a] += (value - Qt.data[a]) / getCount();
     Qt.set(QA -> QA.add( //
-        r.minus((Scalar) QA).divide(Na.Get(a)) //
+        r.subtract(QA).divide(Na.Get(a)) //
     ), a);
   }
 

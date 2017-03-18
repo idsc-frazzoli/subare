@@ -17,9 +17,9 @@ public class FairArg {
     final int argmax = ArgMax.of(tensor);
     Scalar max = tensor.Get(argmax);
     List<Integer> list = IntStream.range(0, tensor.length()) //
-    .boxed() //
-    .filter(i->tensor.Get(i).equals(max)) //
-    .collect(Collectors.toList());
+        .boxed() //
+        .filter(i -> tensor.Get(i).equals(max)) //
+        .collect(Collectors.toList());
     // ---
     int blub = list.get(random.nextInt(list.size()));
     return blub;

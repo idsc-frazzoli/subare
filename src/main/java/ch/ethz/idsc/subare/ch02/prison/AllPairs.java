@@ -34,5 +34,4 @@ class AllPairs {
     }
     return matrix;
   }
-
 }
