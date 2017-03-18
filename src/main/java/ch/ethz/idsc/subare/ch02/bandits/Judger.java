@@ -9,7 +9,7 @@ import java.util.TreeMap;
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.alg.Round;
+import ch.ethz.idsc.tensor.sca.Round;
 
 class Judger {
   final Bandits bandit;

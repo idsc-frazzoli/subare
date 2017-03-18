@@ -8,13 +8,13 @@ import java.util.stream.IntStream;
 
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Arg;
+import ch.ethz.idsc.tensor.red.ArgMax;
 
 public class FairArg {
   public static final Random random = new Random();
 
   public static int max(Tensor tensor) {
-    final int argmax = Arg.max(tensor);
+    final int argmax = ArgMax.of(tensor);
     Scalar max = tensor.Get(argmax);
     List<Integer> list = IntStream.range(0, tensor.length()) //
     .boxed() //

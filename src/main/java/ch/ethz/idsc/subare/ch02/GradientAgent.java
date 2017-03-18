@@ -7,7 +7,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.alg.Total;
+import ch.ethz.idsc.tensor.red.Total;
 
 public class GradientAgent extends Agent {
   final int n;
@@ -23,8 +23,8 @@ public class GradientAgent extends Agent {
   private Tensor getPi() {
     // (2.9)
     Tensor exp = Tensor.of(Ht.flatten(0) //
-        .map(RealScalar.class::cast) //
-        .map(x -> DoubleScalar.of(Math.exp(x.getRealDouble()))));
+        .map(Scalar.class::cast) //
+        .map(x -> DoubleScalar.of(Math.exp(x.number().doubleValue()))));
     return exp.multiply(((Scalar) Total.of(exp)).invert()).unmodifiable();
   }
 
@@ -34,7 +34,7 @@ public class GradientAgent extends Agent {
     double sum = 0;
     double rnd = random.nextDouble();
     for (int k = 0; k < n; ++k) {
-      sum += pi.Get(k).getAbsDouble();
+      sum += pi.Get(k).abs().number().doubleValue(); // TODO why abs?
       if (rnd < sum)
         return k;
     }

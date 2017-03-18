@@ -12,7 +12,7 @@ class Listing {
     Tensor matrix = AllPairs.performance(list, 20, 500);
     final int size = matrix.length();
     for (int i1 = 0; i1 < size; ++i1) {
-      for (int i2 = i1; i2 < i1+1; ++i2) {
+      for (int i2 = i1; i2 < size; ++i2) {
         Agent a1 = list.get(i1).get();
         Agent a2 = list.get(i2).get();
         System.out.println("---");

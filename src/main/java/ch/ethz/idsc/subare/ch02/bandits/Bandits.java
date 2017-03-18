@@ -10,10 +10,10 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
-import ch.ethz.idsc.tensor.alg.Chop;
-import ch.ethz.idsc.tensor.alg.Mean;
 import ch.ethz.idsc.tensor.alg.Sort;
-import ch.ethz.idsc.tensor.alg.Variance;
+import ch.ethz.idsc.tensor.red.Mean;
+import ch.ethz.idsc.tensor.red.Variance;
+import ch.ethz.idsc.tensor.sca.Chop;
 
 /** implementation corresponds to Figure 2.1, p. 30 */
 class Bandits {

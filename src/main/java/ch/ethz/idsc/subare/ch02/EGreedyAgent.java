@@ -8,6 +8,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.alg.Numel;
 
 /** The e-greedy agent is described in
  * Section 2.2 "Action-Value Methods" */
@@ -28,8 +29,8 @@ public class EGreedyAgent extends Agent {
   public
   int takeAction() {
     // as described in the algorithm box on p.33
-    if (random.nextDouble() < eps.apply(getCount()).getRealDouble())
-      return random.nextInt(Qt.numel());
+    if (random.nextDouble() < eps.apply(getCount()).number().doubleValue())
+      return random.nextInt(Numel.of(Qt));
     return FairArg.max(Qt); // (2.2)
   }
 
