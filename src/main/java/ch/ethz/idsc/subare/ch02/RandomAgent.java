@@ -2,6 +2,8 @@
 package ch.ethz.idsc.subare.ch02;
 
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 
 /** the random agent picks any action equally likely
  * the policy is a constant vector of pi(a)=1/n */
@@ -19,7 +21,12 @@ public class RandomAgent extends Agent {
 
   @Override
   protected void protected_feedback(int a, Scalar value) {
-    // empty by design
+    // ---
+  }
+
+  @Override
+  protected Tensor protected_values() {
+    return Tensors.empty();
   }
 
   @Override

@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch02;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Exp;
@@ -56,6 +57,12 @@ public class GradientAgent extends Agent {
       }
     }
   }
+  
+  @Override
+  protected Tensor protected_values() {
+    return Ht;
+  }
+
 
   /** @return average of all the rewards up through and including time t */
   private Scalar getR_mean() {

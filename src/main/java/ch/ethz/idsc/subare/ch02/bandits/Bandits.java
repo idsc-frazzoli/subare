@@ -46,8 +46,8 @@ class Bandits {
   void pullAll() {
     states = prep.add(createGaussian(prep.length()));
     Tensor sorted = Sort.of(states);
-    min = min.plus(sorted.Get(0));
-    max = max.plus(sorted.Get(states.length() - 1));
+    min = min.add(sorted.Get(0));
+    max = max.add(sorted.Get(states.length() - 1));
   }
 
   Scalar getLever(int k) {

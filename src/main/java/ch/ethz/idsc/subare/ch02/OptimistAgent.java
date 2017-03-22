@@ -35,6 +35,11 @@ public final class OptimistAgent extends Agent {
   }
 
   @Override
+  protected Tensor protected_values() {
+    return Qt;
+  }
+
+  @Override
   public String getDescription() {
     return "Q0=" + Q0 + " a=" + alpha;
   }

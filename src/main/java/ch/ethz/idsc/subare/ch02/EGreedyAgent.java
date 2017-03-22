@@ -7,6 +7,7 @@ import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 
 /** The e-greedy agent is described in
@@ -40,6 +41,12 @@ public class EGreedyAgent extends Agent {
         r.subtract(QA).divide(Na.Get(a)) //
     ), a);
   }
+  
+  @Override
+  protected Tensor protected_values() {
+    return Qt;
+  }
+
 
   @Override
   public String getDescription() {

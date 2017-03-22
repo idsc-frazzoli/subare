@@ -14,16 +14,20 @@ public abstract class Agent {
   // ---
   private Scalar total = ZeroScalar.get();
   private int count = 0;
-  private Tensor history = Tensors.empty();
+  private Tensor actions = Tensors.empty();
+  private Tensor qvalues = Tensors.empty();
 
   public abstract int takeAction();
+
+  protected abstract Tensor protected_values();
 
   protected abstract void protected_feedback(int a, Scalar value);
 
   public final void feedback(int a, Scalar value) {
     ++count;
-    total = total.plus(value);
-    history.append(RealScalar.of(a));
+    total = total.add(value);
+    actions.append(RealScalar.of(a));
+    qvalues.append(protected_values());
     protected_feedback(a, value);
   }
 
@@ -35,8 +39,16 @@ public abstract class Agent {
     return total;
   }
 
-  public Tensor getHistory() {
-    return history.unmodifiable();
+  public Scalar getAverage() {
+    return total.divide(getCount());
+  }
+
+  public Tensor getActions() {
+    return actions.unmodifiable();
+  }
+
+  public Tensor getQValues() {
+    return qvalues.unmodifiable();
   }
 
   public abstract String getDescription();
