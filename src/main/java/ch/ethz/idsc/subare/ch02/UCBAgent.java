@@ -63,7 +63,7 @@ public class UCBAgent extends Agent {
   }
 
   @Override
-  protected Tensor protected_values() {
+  protected Tensor protected_QValues() {
     return getQBiased();
   }
 

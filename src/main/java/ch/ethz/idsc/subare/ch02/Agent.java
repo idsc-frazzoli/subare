@@ -19,7 +19,7 @@ public abstract class Agent {
 
   public abstract int takeAction();
 
-  protected abstract Tensor protected_values();
+  protected abstract Tensor protected_QValues();
 
   protected abstract void protected_feedback(int a, Scalar value);
 
@@ -27,7 +27,7 @@ public abstract class Agent {
     ++count;
     total = total.add(value);
     actions.append(RealScalar.of(a));
-    qvalues.append(protected_values());
+    qvalues.append(protected_QValues());
     protected_feedback(a, value);
   }
 

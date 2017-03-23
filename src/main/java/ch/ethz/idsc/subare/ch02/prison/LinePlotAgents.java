@@ -2,6 +2,7 @@ package ch.ethz.idsc.subare.ch02.prison;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.OptimistAgent;
+import ch.ethz.idsc.subare.ch02.RandomAgent;
 import ch.ethz.idsc.subare.ch02.UCBAgent;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -20,10 +21,12 @@ public class LinePlotAgents extends Application {
     {
       Agent a1;
       Agent a2;
-      a1 = new UCBAgent(2, RealScalar.of(1.3));
-      a2 = new UCBAgent(2, RealScalar.of(1.1));
-//      a1 = new OptimistAgent(2, RealScalar.of(6), RealScalar.of(.1));
-//      a2 = new OptimistAgent(2, RealScalar.of(5), RealScalar.of(.3));
+      // 1.2, 2
+      a1 = new UCBAgent(2, RealScalar.of(4));
+      a2 = new UCBAgent(2, RealScalar.of(5));
+      a1 = new OptimistAgent(2, RealScalar.of(3), RealScalar.of(.1));
+//      a1 = new RandomAgent(2);
+      a2 = new OptimistAgent(2, RealScalar.of(4), RealScalar.of(.2));
       Training.train(a1, a2, 100);
       System.out.println(a1 + " " + a1.getAverage().number().doubleValue());
       System.out.println(a2 + " " + a2.getAverage().number().doubleValue());

@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
+import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -25,8 +26,8 @@ public class RandomAgent extends Agent {
   }
 
   @Override
-  protected Tensor protected_values() {
-    return Tensors.empty();
+  protected Tensor protected_QValues() {
+    return Tensors.vector(i -> RationalScalar.of(1, n), n);
   }
 
   @Override
