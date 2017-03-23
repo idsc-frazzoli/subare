@@ -1,3 +1,4 @@
+// code by jph
 package ch.ethz.idsc.subare.ch02.prison;
 
 import java.util.List;
@@ -12,12 +13,12 @@ class Listing {
     Tensor matrix = AllPairs.performance(list, 20, 500);
     final int size = matrix.length();
     for (int i1 = 0; i1 < size; ++i1) {
-      for (int i2 = i1; i2 < i1+1; ++i2) {
+      for (int i2 = i1; i2 < size; ++i2) {
         Agent a1 = list.get(i1).get();
         Agent a2 = list.get(i2).get();
         System.out.println("---");
-        System.out.println(String.format("%s %s", a1.getAbsDesc(), matrix.Get(i1, i2)));
-        System.out.println(String.format("%s %s", a2.getAbsDesc(), matrix.Get(i2, i1)));
+        System.out.println(String.format("%s %f", a1.getAbsDesc(), matrix.Get(i1, i2).number().doubleValue()));
+        System.out.println(String.format("%s %f", a2.getAbsDesc(), matrix.Get(i2, i1).number().doubleValue()));
       }
     }
     System.out.println("done.");

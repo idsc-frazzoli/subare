@@ -5,10 +5,10 @@ import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
-/** Julian's idea
- * Prisoners Dilemma */
+/** Julian's idea: Prisoners' Dilemma */
 class Training {
-  static final Tensor r2 = Tensors.matrixDouble(new double[][] { //
+  /** rewards average at 2 */
+  static final Tensor r2 = Tensors.matrixInt(new int[][] { //
       { 1, 4 }, //
       { 0, 3 } });
 
