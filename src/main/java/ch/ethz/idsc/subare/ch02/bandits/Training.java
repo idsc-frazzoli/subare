@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.RealScalar;
  * Multi-arm Bandits */
 class Training {
   static void train(int epochs) {
-    final int n = 10;
+    final int n = 3;
     RealScalar econst = RationalScalar.of(1, 12);
     Judger judger = new Judger(new Bandits(n), //
         new RandomAgent(n), //
@@ -32,6 +32,6 @@ class Training {
   }
 
   public static void main(String[] args) {
-    train(100);
+    train(1000);
   }
 }

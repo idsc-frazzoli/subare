@@ -31,9 +31,9 @@ class Judger {
 
   void ranking() {
     Map<Scalar, Agent> map = new TreeMap<>();
-    list.stream().forEach(p -> map.put(p.getTotal(), p));
+    list.stream().forEach(p -> map.put(p.getRewardTotal(), p));
     for (Agent player : map.values()) {
-      Scalar s = player.getTotal().subtract(bandit.min) //
+      Scalar s = player.getRewardTotal().subtract(bandit.min) //
           .divide(bandit.max.subtract(bandit.min)).multiply(RealScalar.of(100));
       System.out.println(player + "\t" + Round.of(s) + " %");
     }

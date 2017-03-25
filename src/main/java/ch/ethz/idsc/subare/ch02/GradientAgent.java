@@ -4,15 +4,16 @@ package ch.ethz.idsc.subare.ch02;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Total;
+import ch.ethz.idsc.tensor.sca.Chop;
 import ch.ethz.idsc.tensor.sca.Exp;
 
 public class GradientAgent extends Agent {
   final int n;
   final Scalar alpha;
-  final Tensor Ht;
+  private final Tensor Ht;
 
   public GradientAgent(int n, Scalar alpha) {
     this.n = n;
@@ -20,53 +21,48 @@ public class GradientAgent extends Agent {
     Ht = Array.zeros(n); // initially all values equal, p.38
   }
 
+  /** @return vector with positive entries that sum up to 1 */
   private Tensor getPi() {
     // (2.9)
     Tensor exp = Exp.of(Ht);
-    return exp.multiply(((Scalar) Total.of(exp)).invert()).unmodifiable();
+    Scalar sum = (Scalar) Total.of(exp);
+    return exp.multiply(sum.invert());
   }
 
   @Override
   public int takeAction() {
     Tensor pi = getPi();
+    final double rnd = random.nextDouble(); // value in [0,1)
     double sum = 0;
-    double rnd = random.nextDouble();
+    Integer a = null;
     for (int k = 0; k < n; ++k) {
-      sum += pi.Get(k).abs().number().doubleValue(); // TODO why abs?
-      if (rnd < sum)
-        return k;
+      sum += pi.Get(k).number().doubleValue();
+      if (rnd < sum && a == null)
+        a = k;
     }
-    throw new RuntimeException();
+    Scalar zer = Chop.function.apply(RealScalar.of(1 - sum));
+    if (!zer.equals(ZeroScalar.get()))
+      throw new RuntimeException();
+    return a;
   }
 
   @Override
   protected void protected_feedback(final int a, Scalar r) {
     Tensor pi = getPi();
     for (int k = 0; k < n; ++k) {
-      final int fk = k;
-      Scalar delta = r.subtract(getR_mean()).multiply(alpha);
+      Scalar delta = r.subtract(getRewardAverage());
       // (2.10)
-      if (k == a) {
-        Ht.set(x -> x.add( //
-            RealScalar.of(1).subtract(pi.Get(fk)).multiply(delta) //
-        ), k);
-      } else {
-        Ht.set(x -> x.subtract( //
-            pi.Get(fk).multiply(delta) //
-        ), k);
-      }
+      Scalar pa = pi.Get(a);
+      Scalar prob = k == a ? //
+          RealScalar.of(1).subtract(pa) : // 1 - pi(At)
+          pa.negate(); // - pi(At)
+      Ht.set(HA -> HA.add(alpha.multiply(delta).multiply(prob)), k);
     }
   }
-  
+
   @Override
   protected Tensor protected_QValues() {
     return Ht;
-  }
-
-
-  /** @return average of all the rewards up through and including time t */
-  private Scalar getR_mean() {
-    return getTotal().divide(getCount());
   }
 
   @Override
