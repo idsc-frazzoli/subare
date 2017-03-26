@@ -27,9 +27,14 @@ public class EGreedyAgent extends Agent {
   @Override
   public int takeAction() {
     // as described in the algorithm box on p.33
-    if (random.nextDouble() < eps.apply(getCount()).number().doubleValue())
+    if (random.nextDouble() < eps.apply(getCount()).number().doubleValue()) {
+      notifyAboutRandomizedDecision();
       return random.nextInt(Qt.length());
-    return FairArgMax.of(Qt); // (2.2)
+    }
+    FairArgMax fairArgMax = FairArgMax.of(Qt);
+    if (!fairArgMax.isUnique())
+      notifyAboutRandomizedDecision();
+    return fairArgMax.nextRandomIndex(); // (2.2)
   }
 
   @Override
@@ -40,12 +45,11 @@ public class EGreedyAgent extends Agent {
         r.subtract(QA).divide(Na.Get(a)) //
     ), a);
   }
-  
+
   @Override
   protected Tensor protected_QValues() {
     return Qt;
   }
-
 
   @Override
   public String getDescription() {

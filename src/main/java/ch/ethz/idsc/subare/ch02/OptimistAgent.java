@@ -1,13 +1,12 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 /** Section 2.5 "Optimistic Initial Values" */
-public final class OptimistAgent extends Agent {
+public final class OptimistAgent extends FairMaxAgent {
   final Scalar Q0;
   final Tensor Qt;
   final Scalar alpha;
@@ -22,8 +21,8 @@ public final class OptimistAgent extends Agent {
   }
 
   @Override
-  public int takeAction() {
-    return FairArgMax.of(Qt); // (2.2)
+  protected Tensor getQVector() {
+    return Qt.unmodifiable();
   }
 
   @Override

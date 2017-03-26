@@ -28,6 +28,6 @@ class Judger {
   Tensor ranking() {
     GlobalAssert.of(a1.getCount().equals(a2.getCount()));
     final Scalar div = a1.getCount().invert();
-    return Tensors.of(a1.getTotal(), a2.getTotal()).multiply(div);
+    return Tensors.of(a1.getRewardTotal(), a2.getRewardTotal()).multiply(div);
   }
 }
