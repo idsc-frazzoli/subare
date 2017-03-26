@@ -11,17 +11,32 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.ArgMax;
 
 public class FairArgMax {
-  public static final Random random = new Random();
+  private static final Random random = new Random();
 
-  public static int of(Tensor tensor) {
+  public static FairArgMax of(Tensor tensor) {
+    return new FairArgMax(tensor);
+  }
+
+  private final List<Integer> list;
+
+  private FairArgMax(Tensor tensor) {
     final int argmax = ArgMax.of(tensor);
     Scalar max = tensor.Get(argmax);
-    List<Integer> list = IntStream.range(0, tensor.length()) //
+    list = IntStream.range(0, tensor.length()) //
         .boxed() //
-        .filter(i -> tensor.Get(i).equals(max)) //
+        .filter(index -> tensor.Get(index).equals(max)) //
         .collect(Collectors.toList());
-    // ---
-    int blub = list.get(random.nextInt(list.size()));
-    return blub;
+  }
+
+  public int nextRandomIndex() {
+    return list.get(random.nextInt(list.size()));
+  }
+
+  public boolean isUnique() {
+    return list.size() == 1;
+  }
+
+  public int getOptionCount() {
+    return list.size();
   }
 }

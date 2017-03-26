@@ -12,8 +12,9 @@ public class FairArgMaxTest extends TestCase {
   public void testIsFair() {
     Tensor d = Tensors.vectorDouble(3, .3, 3, .6, 3);
     Set<Integer> set = new HashSet<>();
+    FairArgMax fairArgMax = FairArgMax.of(d);
     for (int index = 0; index < 100; ++index)
-      set.add(FairArgMax.of(d));
+      set.add(fairArgMax.nextRandomIndex());
     assertEquals(set.size(), 3);
   }
 }

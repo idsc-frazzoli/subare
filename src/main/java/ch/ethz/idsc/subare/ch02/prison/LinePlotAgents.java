@@ -14,24 +14,46 @@ import javafx.stage.Stage;
 
 @SuppressWarnings("restriction")
 public class LinePlotAgents extends Application {
+  public static final int ACTION_COUNT = 2;
+
+  public String summaryString(Agent agent) {
+    return String.format("%25s  %6.3f  %5d RND", //
+        agent.toString(), agent.getRewardAverage().number(), agent.getRandomizedDecisionCount());
+  }
+
+  Agent a1;
+  Agent a2;
+
+  void initOptimists() {
+    a1 = new OptimistAgent(ACTION_COUNT, RealScalar.of(3.8), RealScalar.of(.1));
+    a1.setOpeningSequence(0);
+    a2 = new OptimistAgent(ACTION_COUNT, RealScalar.of(4), RealScalar.of(.1));
+    a2.setOpeningSequence(1);
+  }
+
+  void initUCB() {
+    a1 = new UCBAgent(ACTION_COUNT, RealScalar.of(3.8));
+    a1.setOpeningSequence(0);
+    a2 = new UCBAgent(ACTION_COUNT, RealScalar.of(4));
+    a2.setOpeningSequence(0);
+  }
+
   @Override
   public void start(Stage stage) {
     ListPlot listPlot = new ListPlot();
     {
-      Agent a1;
-      Agent a2;
       // 1.2, 2
       // a1 = new GradientAgent(2, RealScalar.of(.1));
       // a2 = new GradientAgent(2, RealScalar.of(.1));
-      a1 = new UCBAgent(2, RealScalar.of(5));
-      a2 = new UCBAgent(2, RealScalar.of(5));
-      a1 = new OptimistAgent(2, RealScalar.of(3), RealScalar.of(.1));
-      // a1 = new RandomAgent(2);
-      a2 = new OptimistAgent(2, RealScalar.of(4), RealScalar.of(.12));
-      Training.train(a1, a2, 100);
-      System.out.println(a1 + " " + a1.getRewardAverage().number().doubleValue());
-      System.out.println(a2 + " " + a2.getRewardAverage().number().doubleValue());
-      if (true) {
+      // initUCB();
+      initOptimists();
+      // ---
+      Training.train(a1, a2, 200);
+      // ---
+      System.out.println(summaryString(a1));
+      System.out.println(summaryString(a2));
+      // ---
+      {
         {
           XYChart.Series<Number, Number> s1 = listPlot.addVector(a1.getActions());
           s1.setName("action A1");

@@ -1,6 +1,9 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import ch.ethz.idsc.tensor.RealScalar;
@@ -15,8 +18,11 @@ public abstract class Agent {
   private Scalar total = ZeroScalar.get();
   private Integer count = 0;
   private int count_copy;
+  private int randomizedDecisionCount = 0;
   private Tensor actions = Tensors.empty();
   private Tensor qvalues = Tensors.empty();
+  /** EXPERIMENTAL opening sequence of action */
+  protected List<Integer> openingSequence = new ArrayList<>();
 
   public abstract int takeAction();
 
@@ -35,6 +41,10 @@ public abstract class Agent {
     qvalues.append(protected_QValues());
     protected_feedback(a, value);
     count = count_copy;
+  }
+
+  public final void notifyAboutRandomizedDecision() {
+    ++randomizedDecisionCount;
   }
 
   public final Scalar getCount() {
@@ -68,5 +78,13 @@ public abstract class Agent {
   @Override
   public String toString() {
     return getAbsDesc();
+  }
+
+  public int getRandomizedDecisionCount() {
+    return randomizedDecisionCount;
+  }
+
+  public void setOpeningSequence(Integer... actions) {
+    openingSequence.addAll(Arrays.asList(actions));
   }
 }

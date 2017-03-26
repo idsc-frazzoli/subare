@@ -33,6 +33,7 @@ public class GradientAgent extends Agent {
   public int takeAction() {
     Tensor pi = getPi();
     final double rnd = random.nextDouble(); // value in [0,1)
+    notifyAboutRandomizedDecision();
     double sum = 0;
     Integer a = null;
     for (int k = 0; k < n; ++k) {

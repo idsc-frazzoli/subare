@@ -1,7 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -13,7 +12,7 @@ import ch.ethz.idsc.tensor.sca.Log;
 import ch.ethz.idsc.tensor.sca.Sqrt;
 
 /** Section 2.6 "upper-confidence-bound action selection" */
-public class UCBAgent extends Agent {
+public class UCBAgent extends FairMaxAgent {
   public static final Scalar ONE = RealScalar.of(1); // TODO use RealScalar.ONE
   final Scalar c;
   final Tensor Na;
@@ -28,11 +27,7 @@ public class UCBAgent extends Agent {
   }
 
   @Override
-  public int takeAction() {
-    return FairArgMax.of(getQBiased());
-  }
-
-  private Tensor getQBiased() {
+  protected Tensor getQVector() {
     // rational estimation without bias, except initial bias Q0:
     final Tensor dec = Qt.copy();
     // add bias
@@ -52,7 +47,7 @@ public class UCBAgent extends Agent {
       }
       dec.set(QA -> QA.add(bias), a);
     }
-    return dec;
+    return dec.unmodifiable();
   }
 
   @Override
@@ -66,7 +61,7 @@ public class UCBAgent extends Agent {
 
   @Override
   protected Tensor protected_QValues() {
-    Tensor dec = getQBiased();
+    Tensor dec = getQVector();
     boolean inf = dec.flatten(-1) //
         .filter(t -> Double.isInfinite(((Scalar) t).number().doubleValue())) //
         .findFirst().isPresent();
