@@ -25,6 +25,7 @@ class Judger {
     a2.feedback(A2, reward.Get(A2, A1));
   }
 
+  /** @return tensor of rewards averaged over number of actions */
   Tensor ranking() {
     GlobalAssert.of(a1.getCount().equals(a2.getCount()));
     final Scalar div = a1.getCount().invert();
