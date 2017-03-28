@@ -31,12 +31,24 @@ public class LinePlotAgents extends Application {
     a2.setOpeningSequence(1);
   }
 
+  void initOptiTFT() {
+    a1 = new OptimistAgent(ACTION_COUNT, RationalScalar.of(60, 10), RationalScalar.of(10, 100));
+    a1.setOpeningSequence(1);
+    a2 = new TitForTatAgent();
+  }
+
   void initUCB() {
     a1 = new UCBAgent(ACTION_COUNT, RationalScalar.of(10, 10));
     a1.setOpeningSequence(1);
     // a2 = new UCBAgent(ACTION_COUNT, RationalScalar.of(9716, 10000)); // <- approx winwin threshold
     a2 = new UCBAgent(ACTION_COUNT, RationalScalar.of(10000, 10000)); // <- approx winwin threshold
     a2.setOpeningSequence(0);
+  }
+
+  void initUCBTFT() {
+    a1 = new UCBAgent(ACTION_COUNT, RationalScalar.of(10, 10));
+    a1.setOpeningSequence(1);
+    a2 = new TitForTatAgent();
   }
 
   void initGradient() {
@@ -48,7 +60,9 @@ public class LinePlotAgents extends Application {
   public void start(Stage stage) {
     ListPlot listPlot = new ListPlot();
     // initUCB();
-    initOptimists();
+    // initOptimists();
+//    initOptiTFT();
+    initUCBTFT();
     // initGradient();
     // ---
     Training.train(a1, a2, 100);
