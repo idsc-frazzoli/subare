@@ -30,7 +30,7 @@ public class GradientAgent extends Agent {
   }
 
   @Override
-  public int takeAction() {
+  public int protected_takeAction() {
     Tensor pi = getPi();
     final double rnd = random.nextDouble(); // value in [0,1)
     notifyAboutRandomizedDecision();

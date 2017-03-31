@@ -10,7 +10,7 @@ public class TitForTatAgent extends Agent {
   private int nextAction = 1;
 
   @Override
-  public int takeAction() {
+  public int protected_takeAction() {
     return nextAction;
   }
 

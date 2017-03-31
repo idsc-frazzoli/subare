@@ -16,7 +16,7 @@ public class ConstantAgent extends Agent {
   }
 
   @Override
-  public int takeAction() {
+  public int protected_takeAction() {
     return action;
   }
 
