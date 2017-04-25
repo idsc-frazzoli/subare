@@ -4,13 +4,15 @@ package ch.ethz.idsc.subare.ch02.streets;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 /** example network by Julian
  * three possible actions */
 class BridgeNetwork extends Network {
+  private Tensor affine = Tensors.vectorInt(-3, 0, 0, -3, 0).unmodifiable();
+  private Tensor linear = Tensors.vectorInt(0, -1, -1, 0, 0).unmodifiable();
+
   @Override
   int actions() {
     return 3;
@@ -34,10 +36,13 @@ class BridgeNetwork extends Network {
     return null;
   }
 
-  Tensor bias = Tensors.vectorInt(-1, 0, 0, -1, 0);
+  @Override
+  Tensor affine() {
+    return affine;
+  }
 
   @Override
-  Scalar streetBias(int index) {
-    return bias.Get(index);
+  Tensor linear() {
+    return linear;
   }
 }

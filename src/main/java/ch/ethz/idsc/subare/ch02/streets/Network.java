@@ -4,9 +4,7 @@ package ch.ethz.idsc.subare.ch02.streets;
 import java.util.List;
 
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 
 abstract class Network {
@@ -16,7 +14,9 @@ abstract class Network {
 
   abstract List<Integer> streetsFromAction(int k);
 
-  abstract Scalar streetBias(int index);
+  abstract Tensor affine();
+
+  abstract Tensor linear();
 
   Tensor usage;
 
@@ -29,10 +29,7 @@ abstract class Network {
       usage.set(use -> use.add(RealScalar.ONE), index);
   }
 
-  final Scalar costOfAction(int k) {
-    Scalar cost = ZeroScalar.get();
-    for (int index : streetsFromAction(k))
-      cost = cost.add(streetBias(index).subtract(usage.get(index)));
-    return cost;
+  final Tensor cost() {
+    return affine().add(usage.pmul(linear()));
   }
 }

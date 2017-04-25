@@ -61,7 +61,7 @@ public class LinePlotAgents extends Application {
     ListPlot listPlot = new ListPlot();
     // initUCB();
     // initOptimists();
-//    initOptiTFT();
+    // initOptiTFT();
     initUCBTFT();
     // initGradient();
     // ---
