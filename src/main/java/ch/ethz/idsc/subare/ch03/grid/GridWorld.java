@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch03.grid;
 
+import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -11,11 +12,11 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-class GridWorld implements MoveInterface, RewardInterface, PolicyInterface {
+class GridWorld implements StandardModel {
   static final Tensor WARP1_ANTE = Tensors.vector(0, 1);
   static final Tensor WARP1_POST = Tensors.vector(4, 1);
   static final Tensor WARP2_ANTE = Tensors.vector(0, 3);
-  static final Tensor WARP2_POST = Tensors.vector(3, 3);
+  static final Tensor WARP2_POST = Tensors.vector(2, 3);
   static final Clip CLIP = Clip.function(0, 4);
   // ---
   Tensor actions = Tensors.matrix(new Number[][] { //

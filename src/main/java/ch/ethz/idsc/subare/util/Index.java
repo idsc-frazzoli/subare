@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.ch03.grid;
+package ch.ethz.idsc.subare.util;
 
 import java.util.HashMap;
 import java.util.Map;

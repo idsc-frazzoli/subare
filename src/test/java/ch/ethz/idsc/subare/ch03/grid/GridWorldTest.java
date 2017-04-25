@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch03.grid;
 
+import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
