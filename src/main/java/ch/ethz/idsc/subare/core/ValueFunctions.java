@@ -15,10 +15,16 @@ import ch.ethz.idsc.tensor.red.Norm;
  * 
  */
 public class ValueFunctions {
-  /** under the assumption that p(s',r | s,a) \in {0,1}, i.e.
+  /** iterative policy evaluation (4.5)
+   * see box on p.81
+   * 
+   * under the assumption that p(s',r | s,a) \in {0,1}, i.e.
    * p(s',r | s,a) does not require special treatment or looping...
    * 
+   * initial values are set to zeros
+   * 
    * @param standardModel
+   * @param policyInterface
    * @param statesIndex
    * @param actionsIndex
    * @param gamma discount
@@ -28,7 +34,7 @@ public class ValueFunctions {
       StandardModel standardModel, PolicyInterface policyInterface, //
       Index statesIndex, Index actionsIndex, Scalar gamma, Scalar threshold) {
     final int n = statesIndex.size();
-    Tensor v = Array.zeros(n); // TODO initial value
+    Tensor v = Array.zeros(n);
     while (true) {
       Tensor v_new = Array.zeros(n); // values are added to 0's during iteration
       for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
@@ -57,26 +63,27 @@ public class ValueFunctions {
 
   /** approximately equivalent to iterating with {@link GreedyPolicy}
    * 
+   * initial values are set to zeros
+   * 
    * @param standardModel
    * @param statesIndex
    * @param actionsIndex
-   * @param gamma
+   * @param gamma discount
    * @param threshold
    * @return */
   public static Tensor bellmanIterationMax( //
       StandardModel standardModel, //
       Index statesIndex, Index actionsIndex, Scalar gamma, Scalar threshold) {
     final int n = statesIndex.size();
-    Tensor v = Array.zeros(n); // TODO initial value
+    Tensor v = Array.zeros(n);
     while (true) {
       Tensor v_new = Array.zeros(n); // values are added to 0's during iteration
       for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
         final Tensor state = statesIndex.get(stateI);
-        // TODO update comments to bellman optimality equation
-        // general bellman equation:
-        // v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
+        // bellman optimality equation:
+        // v_*(s) == max_a Sum_{s',r} p(s',r | s,a) * (r + gamma * v_*(s'))
         // simplifies here to
-        // v_pi(s) == Sum_a pi(a|s) * (r + gamma * v_pi(s'))
+        // v_*(s) == max_a (r + gamma * v_*(s'))
         Tensor va = Tensors.empty();
         for (int actionI = 0; actionI < actionsIndex.size(); ++actionI) {
           final Tensor action = actionsIndex.get(actionI);

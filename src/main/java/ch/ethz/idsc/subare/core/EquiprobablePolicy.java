@@ -5,10 +5,11 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-public class EqualPolicy implements PolicyInterface {
+/** the term "equiprobable" appears in Exercise 4.1 */
+public class EquiprobablePolicy implements PolicyInterface {
   final Scalar scalar;
 
-  public EqualPolicy(int actionsLength) {
+  public EquiprobablePolicy(int actionsLength) {
     scalar = RationalScalar.of(1, actionsLength);
   }
 
