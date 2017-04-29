@@ -6,7 +6,9 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Norm;
 
 /**
@@ -23,7 +25,8 @@ public class ValueFunctions {
    * @param threshold
    * @return */
   public static Tensor bellmanIteration( //
-      StandardModel standardModel, PolicyInterface policyInterface, Index statesIndex, Index actionsIndex, Scalar gamma, Scalar threshold) {
+      StandardModel standardModel, PolicyInterface policyInterface, //
+      Index statesIndex, Index actionsIndex, Scalar gamma, Scalar threshold) {
     final int n = statesIndex.size();
     Tensor v = Array.zeros(n); // TODO initial value
     while (true) {
@@ -44,6 +47,45 @@ public class ValueFunctions {
           Scalar delta = policy.multiply(reward.add(gamma.multiply(v.Get(nextI))));
           v_new.set(s -> s.add(delta), stateI);
         }
+      }
+      if (Scalars.lessThan(Norm._1.of(v_new.subtract(v)), threshold))
+        break;
+      v = v_new.unmodifiable();
+    }
+    return v;
+  }
+
+  /** approximately equivalent to iterating with {@link GreedyPolicy}
+   * 
+   * @param standardModel
+   * @param statesIndex
+   * @param actionsIndex
+   * @param gamma
+   * @param threshold
+   * @return */
+  public static Tensor bellmanIterationMax( //
+      StandardModel standardModel, //
+      Index statesIndex, Index actionsIndex, Scalar gamma, Scalar threshold) {
+    final int n = statesIndex.size();
+    Tensor v = Array.zeros(n); // TODO initial value
+    while (true) {
+      Tensor v_new = Array.zeros(n); // values are added to 0's during iteration
+      for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
+        final Tensor state = statesIndex.get(stateI);
+        // TODO update comments to bellman optimality equation
+        // general bellman equation:
+        // v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
+        // simplifies here to
+        // v_pi(s) == Sum_a pi(a|s) * (r + gamma * v_pi(s'))
+        Tensor va = Tensors.empty();
+        for (int actionI = 0; actionI < actionsIndex.size(); ++actionI) {
+          final Tensor action = actionsIndex.get(actionI);
+          Tensor next = standardModel.move(state, action);
+          Scalar reward = standardModel.reward(state, action);
+          int nextI = statesIndex.indexOf(next);
+          va.append(reward.add(gamma.multiply(v.Get(nextI))));
+        }
+        v_new.set(va.flatten(-1).reduce(Max::of).get(), stateI);
       }
       if (Scalars.lessThan(Norm._1.of(v_new.subtract(v)), threshold))
         break;
