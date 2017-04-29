@@ -28,8 +28,8 @@ public class GreedyPolicy implements PolicyInterface {
         Scalar value = values.Get(nextI);
         arg.append(value);
       }
-      int a = ArgMax.of(arg); // TODO use fair arg max
-      map.put(state, actions.get(a));
+      int actionG = ArgMax.of(arg); // TODO use fair arg max
+      map.put(state, actions.get(actionG));
     }
     return new GreedyPolicy(map);
   }
