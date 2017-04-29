@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -16,13 +17,29 @@ class GridWorld implements StandardModel {
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
   private static final Clip CLIP = Clip.function(0, 3);
   // ---
+  final Tensor states = Flatten.of(Array.of(Tensors::vector, 4, 4), 1).unmodifiable();
   final Tensor actions = Tensors.matrix(new Number[][] { //
       { 0, -1 }, //
       { 0, +1 }, //
       { -1, 0 }, //
       { +1, 0 } //
   }).unmodifiable();
-  final Tensor states = Flatten.of(Array.of(Tensors::vector, 4, 4), 1).unmodifiable();
+  final Index statesIndex;
+  final Index actionsIndex;
+
+  public GridWorld() {
+    statesIndex = Index.of(states);
+    actionsIndex = Index.of(actions);
+  }
+
+  public Tensor states() {
+    return states;
+  }
+
+  @Override
+  public Tensor actions() {
+    return actions;
+  }
 
   @Override
   public Scalar reward(Tensor state, Tensor action) {
@@ -40,5 +57,12 @@ class GridWorld implements StandardModel {
     if (state.equals(TERMINATE2))
       return TERMINATE2;
     return state.add(action).map(CLIP);
+  }
+
+  @Override
+  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+    Tensor next = move(state, action);
+    int nextI = statesIndex.indexOf(next);
+    return reward(state, action).add(gvalues.get(nextI));
   }
 }

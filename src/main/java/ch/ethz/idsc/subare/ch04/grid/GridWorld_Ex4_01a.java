@@ -27,7 +27,7 @@ class GridWorld_Ex4_01a {
     for (int iters = 0; iters < 10; ++iters) {
       values = ValueFunctions.bellmanIterationMax( //
           gridWorld, //
-          statesIndex, Index.of(gridWorld.actions), DoubleScalar.of(1.0), DecimalScalar.of(.0001));
+          statesIndex, DoubleScalar.of(1.0), DecimalScalar.of(.0001));
     }
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);

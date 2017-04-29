@@ -26,31 +26,26 @@ public class ValueFunctions {
    * @param standardModel
    * @param policyInterface
    * @param statesIndex
-   * @param actionsIndex
    * @param gamma discount
    * @param threshold
    * @return */
   public static Tensor bellmanIteration( //
       StandardModel standardModel, PolicyInterface policyInterface, //
-      Index statesIndex, Index actionsIndex, Scalar gamma, Scalar threshold) {
+      Index statesIndex, Scalar gamma, Scalar threshold) {
     final int n = statesIndex.size();
     Tensor v = Array.zeros(n);
     while (true) {
       Tensor v_new = Array.zeros(n); // values are added to 0's during iteration
+      Tensor gvalues = v.multiply(gamma);
       for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
         final Tensor state = statesIndex.get(stateI);
         // general bellman equation:
         // v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
         // simplifies here to
         // v_pi(s) == Sum_a pi(a|s) * (r + gamma * v_pi(s'))
-        for (int actionI = 0; actionI < actionsIndex.size(); ++actionI) {
-          final Tensor action = actionsIndex.get(actionI);
-          // ---
-          Tensor next = standardModel.move(state, action);
+        for (Tensor action : standardModel.actions()) {
           Scalar policy = policyInterface.policy(state, action);
-          Scalar reward = standardModel.reward(state, action);
-          int nextI = statesIndex.indexOf(next);
-          Scalar delta = policy.multiply(reward.add(gamma.multiply(v.Get(nextI))));
+          Scalar delta = policy.multiply(standardModel.qsa(state, action, gvalues));
           v_new.set(s -> s.add(delta), stateI);
         }
       }
@@ -61,23 +56,25 @@ public class ValueFunctions {
     return v;
   }
 
-  /** approximately equivalent to iterating with {@link GreedyPolicy}
+  /** implementation of (3.17) on p.69
+   * 
+   * approximately equivalent to iterating with {@link GreedyPolicy}
    * 
    * initial values are set to zeros
    * 
    * @param standardModel
    * @param statesIndex
-   * @param actionsIndex
    * @param gamma discount
    * @param threshold
    * @return */
   public static Tensor bellmanIterationMax( //
       StandardModel standardModel, //
-      Index statesIndex, Index actionsIndex, Scalar gamma, Scalar threshold) {
+      Index statesIndex, Scalar gamma, Scalar threshold) {
     final int n = statesIndex.size();
     Tensor v = Array.zeros(n);
     while (true) {
       Tensor v_new = Array.zeros(n); // values are added to 0's during iteration
+      Tensor gvalues = v.multiply(gamma);
       for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
         final Tensor state = statesIndex.get(stateI);
         // bellman optimality equation:
@@ -85,13 +82,9 @@ public class ValueFunctions {
         // simplifies here to
         // v_*(s) == max_a (r + gamma * v_*(s'))
         Tensor va = Tensors.empty();
-        for (int actionI = 0; actionI < actionsIndex.size(); ++actionI) {
-          final Tensor action = actionsIndex.get(actionI);
-          Tensor next = standardModel.move(state, action);
-          Scalar reward = standardModel.reward(state, action);
-          int nextI = statesIndex.indexOf(next);
-          va.append(reward.add(gamma.multiply(v.Get(nextI))));
-        }
+        // TODO can reduce code by streaming va
+        for (Tensor action : standardModel.actions())
+          va.append(standardModel.qsa(state, action, gvalues));
         v_new.set(va.flatten(-1).reduce(Max::of).get(), stateI);
       }
       if (Scalars.lessThan(Norm._1.of(v_new.subtract(v)), threshold))
