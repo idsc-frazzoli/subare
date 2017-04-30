@@ -13,19 +13,20 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Extract;
 
-/** exact implementation of equiprobable greedy policy:
- * if two or more states s1,s2, ... have equal value
- * v(s1)==v(s2)
- * then they are assigned equal probability
- * 
- * in case there is no unique maximum value
- * there are infinitely many greedy policies
- * and not a unique one policy. */
 public class GreedyPolicy implements PolicyInterface {
-  /** @param standardModel
+  /** exact implementation of equiprobable greedy policy:
+   * if two or more states s1,s2, ... have equal value
+   * v(s1)==v(s2)
+   * then they are assigned equal probability
+   * 
+   * in case there is no unique maximum value
+   * there are infinitely many greedy policies
+   * and not a unique one policy.
+   * 
+   * @param standardModel
    * @param values of standardModel.states()
    * @return */
-  public static GreedyPolicy build(StandardModel standardModel, Tensor values) {
+  public static GreedyPolicy bestEquiprobable(StandardModel standardModel, Tensor values) {
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : standardModel.states()) {
       Tensor actions = standardModel.actions(state);

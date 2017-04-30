@@ -25,11 +25,9 @@ class GridWorld implements StandardModel {
       { +1, 0 } //
   }).unmodifiable();
   final Index statesIndex;
-  final Index actionsIndex;
 
   public GridWorld() {
     statesIndex = Index.build(states);
-    actionsIndex = Index.build(actions);
   }
 
   @Override
@@ -42,7 +40,7 @@ class GridWorld implements StandardModel {
     return actions;
   }
 
-  public Scalar reward(Tensor state, Tensor action) {
+  Scalar reward(Tensor state, Tensor action) {
     if (state.equals(TERMINATE1))
       return ZeroScalar.get();
     if (state.equals(TERMINATE2))

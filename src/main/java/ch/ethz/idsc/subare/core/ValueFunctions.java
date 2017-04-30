@@ -17,18 +17,17 @@ public class ValueFunctions {
   /** iterative policy evaluation (4.5)
    * see box on p.81
    * 
+   * parallel implementation
    * initial values are set to zeros
    * Jacobi style, i.e. updates take effect only in the next iteration
    * 
    * @param standardModel
    * @param policyInterface
-   * @param statesIndex
    * @param gamma discount
    * @param threshold
    * @return */
   public static Tensor bellmanIteration( //
-      StandardModel standardModel, PolicyInterface policyInterface, //
-      Scalar gamma, Scalar threshold) {
+      StandardModel standardModel, PolicyInterface policyInterface, Scalar gamma, Scalar threshold) {
     Tensor v_old = Array.zeros(standardModel.states().length());
     while (true) {
       Tensor gvalues = v_old.multiply(gamma);
@@ -48,34 +47,4 @@ public class ValueFunctions {
         .reduce(Scalar::add).get();
   }
 
-  /** implementation of (3.17) on p.69
-   * 
-   * approximately equivalent to iterating with {@link GreedyPolicy}
-   * 
-   * initial values are set to zeros
-   * 
-   * @param standardModel
-   * @param gamma discount
-   * @param threshold
-   * @return */
-  public static Tensor bellmanIterationMax( //
-      StandardModel standardModel, Scalar gamma, Scalar threshold) {
-    Tensor v_old = Array.zeros(standardModel.states().length());
-    while (true) {
-      Tensor gvalues = v_old.multiply(gamma);
-      Tensor v_new = Tensor.of(standardModel.states().flatten(0) //
-          .parallel() //
-          .map(state -> jacobiMax(standardModel, state, gvalues)));
-      if (Scalars.lessThan(Norm._1.of(v_new.subtract(v_old)), threshold))
-        return v_new;
-      v_old = v_new.unmodifiable();
-    }
-  }
-
-  // helper function
-  private static Scalar jacobiMax(StandardModel standardModel, Tensor state, Tensor gvalues) {
-    return standardModel.actions(state).flatten(0) //
-        .map(action -> standardModel.qsa(state, action, gvalues)) //
-        .reduce(Max::of).get();
-  }
 }

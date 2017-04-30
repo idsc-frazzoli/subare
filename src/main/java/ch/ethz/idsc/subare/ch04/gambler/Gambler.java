@@ -51,6 +51,7 @@ class Gambler implements StandardModel {
     return Range.of(1, Min.of(stateS, TERMINAL_W.subtract(stateS)).number().intValue() + 1);
   }
 
+  // function is not used
   Scalar reward(Tensor state, Tensor action) {
     return KroneckerDelta.of(state, TERMINAL_W);
   }
