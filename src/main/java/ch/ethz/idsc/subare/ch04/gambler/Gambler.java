@@ -18,9 +18,6 @@ import ch.ethz.idsc.tensor.red.Min;
  * the action has to be non-zero unless the capital == 0
  * or the terminal cash has been reached */
 class Gambler implements StandardModel {
-  // TODO report bug in STZ code
-  // TODO report mistake in book
-  // TODO suggest action !=0 for 0<cash<100
   final Tensor states;
   final Index statesIndex;
   final Scalar TERMINAL_W;
