@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
-import ch.ethz.idsc.subare.ch02.ConstantAgent;
 import ch.ethz.idsc.subare.ch02.EGreedyAgent;
 import ch.ethz.idsc.subare.ch02.GradientAgent;
 import ch.ethz.idsc.subare.ch02.OptimistAgent;
@@ -18,8 +17,9 @@ import ch.ethz.idsc.tensor.RealScalar;
 
 class AgentSupplier {
   public static final List<Supplier<Agent>> mixed = Arrays.asList( //
-      () -> new ConstantAgent(2, 0), //
-      () -> new ConstantAgent(2, 1), //
+      // () -> new ConstantAgent(2, 0), //
+      // () -> new ConstantAgent(2, 1), //
+      () -> new TitForTatAgent(), //
       () -> new RandomAgent(2), //
       () -> new EGreedyAgent(2, i -> RationalScalar.of(1, 5), "1/5"), //
       () -> new EGreedyAgent(2, i -> RationalScalar.of(1, i.number().intValue() + 1), "1/i"), //

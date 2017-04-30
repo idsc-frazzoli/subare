@@ -6,9 +6,8 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.red.Total;
+import ch.ethz.idsc.tensor.opt.SoftmaxLayer;
 import ch.ethz.idsc.tensor.sca.Chop;
-import ch.ethz.idsc.tensor.sca.Exp;
 
 public class GradientAgent extends Agent {
   final int n;
@@ -21,17 +20,9 @@ public class GradientAgent extends Agent {
     Ht = Array.zeros(n); // initially all values equal, p.38
   }
 
-  /** @return vector with positive entries that sum up to 1 */
-  private Tensor getPi() {
-    // (2.9)
-    Tensor exp = Exp.of(Ht);
-    Scalar sum = (Scalar) Total.of(exp);
-    return exp.multiply(sum.invert());
-  }
-
   @Override
-  public int takeAction() {
-    Tensor pi = getPi();
+  public int protected_takeAction() {
+    Tensor pi = SoftmaxLayer.of(Ht);
     final double rnd = random.nextDouble(); // value in [0,1)
     notifyAboutRandomizedDecision();
     double sum = 0;
@@ -49,7 +40,7 @@ public class GradientAgent extends Agent {
 
   @Override
   protected void protected_feedback(final int a, Scalar r) {
-    Tensor pi = getPi();
+    Tensor pi = SoftmaxLayer.of(Ht);
     for (int k = 0; k < n; ++k) {
       Scalar delta = r.subtract(getRewardAverage());
       // (2.10)

@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.util;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -13,6 +14,9 @@ import ch.ethz.idsc.tensor.red.ArgMax;
 public class FairArgMax {
   private static final Random random = new Random();
 
+  /** @param tensor
+   * @return
+   * @throws exception if tensor is empty */
   public static FairArgMax of(Tensor tensor) {
     return new FairArgMax(tensor);
   }
@@ -38,5 +42,13 @@ public class FairArgMax {
 
   public int getOptionCount() {
     return list.size();
+  }
+
+  public int first() {
+    return list.get(0);
+  }
+
+  public List<Integer> options() {
+    return Collections.unmodifiableList(list);
   }
 }

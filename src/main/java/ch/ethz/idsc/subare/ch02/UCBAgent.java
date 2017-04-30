@@ -13,7 +13,6 @@ import ch.ethz.idsc.tensor.sca.Sqrt;
 
 /** Section 2.6 "upper-confidence-bound action selection" */
 public class UCBAgent extends FairMaxAgent {
-  public static final Scalar ONE = RealScalar.of(1); // TODO use RealScalar.ONE
   final Scalar c;
   final Tensor Na;
   final Tensor Qt;
@@ -37,7 +36,7 @@ public class UCBAgent extends FairMaxAgent {
       Scalar Nta = Na.Get(a);
       if (Nta.equals(ZeroScalar.get()))
         // if an action hasn't been taken yet, bias towards this action is infinite
-        bias = RealScalar.of(Double.POSITIVE_INFINITY); // TODO RealScalar.POSITIVE_INFINITY
+        bias = RealScalar.POSITIVE_INFINITY;
       else {
         Scalar count = Total.of(Na).Get();
         GlobalAssert.of(0 < (Integer) count.number());
@@ -53,7 +52,7 @@ public class UCBAgent extends FairMaxAgent {
   @Override
   protected void protected_feedback(int a, Scalar r) {
     // as described in the algorithm box on p.33
-    Na.set(NA -> NA.add(ONE), a);
+    Na.set(NA -> NA.add(RealScalar.ONE), a);
     Qt.set(QA -> QA.add( //
         r.subtract(QA).divide(Na.Get(a)) // <- compensate for init bias == 0
     ), a);

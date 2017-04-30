@@ -25,7 +25,7 @@ public class EGreedyAgent extends Agent {
   }
 
   @Override
-  public int takeAction() {
+  public int protected_takeAction() {
     // as described in the algorithm box on p.33
     if (random.nextDouble() < eps.apply(getCount()).number().doubleValue()) {
       notifyAboutRandomizedDecision();

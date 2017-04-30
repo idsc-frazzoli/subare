@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -19,12 +20,22 @@ public abstract class Agent {
   private Integer count = 0;
   private int count_copy;
   private int randomizedDecisionCount = 0;
+  private int actionReminder;
   private Tensor actions = Tensors.empty();
   private Tensor qvalues = Tensors.empty();
   /** EXPERIMENTAL opening sequence of action */
   protected List<Integer> openingSequence = new ArrayList<>();
 
-  public abstract int takeAction();
+  protected abstract int protected_takeAction();
+
+  public final int takeAction() {
+    actionReminder = protected_takeAction();
+    return actionReminder;
+  }
+
+  public final int getActionReminder() {
+    return actionReminder;
+  }
 
   // shall only be used to recording history
   protected abstract Tensor protected_QValues();
@@ -33,6 +44,7 @@ public abstract class Agent {
   protected abstract void protected_feedback(int a, Scalar value);
 
   public final void feedback(int a, Scalar value) {
+    GlobalAssert.of(a == actionReminder);
     total = total.add(value);
     actions.append(RealScalar.of(a));
     ++count;

@@ -17,4 +17,13 @@ public class FairArgMaxTest extends TestCase {
       set.add(fairArgMax.nextRandomIndex());
     assertEquals(set.size(), 3);
   }
+
+  public void testEmpty() {
+    try {
+      FairArgMax.of(Tensors.empty());
+      assertTrue(false);
+    } catch (Exception exception) {
+      // ---
+    }
+  }
 }

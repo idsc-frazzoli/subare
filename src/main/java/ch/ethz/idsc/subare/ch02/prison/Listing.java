@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.Tensor;
 class Listing {
   public static void main(String[] args) {
     List<Supplier<Agent>> list = AgentSupplier.mixed;
-    Tensor matrix = AllPairs.performance(list, 20, 500);
+    Tensor matrix = AllPairs.performance(list, 20, 100);
     final int size = matrix.length();
     for (int i1 = 0; i1 < size; ++i1) {
       for (int i2 = i1; i2 < size; ++i2) {
@@ -24,5 +24,7 @@ class Listing {
       }
     }
     System.out.println("done.");
+    int asd = Integer.parseInt("000123");
+    System.out.println(asd);
   }
 }

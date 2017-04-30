@@ -16,7 +16,7 @@ public class RandomAgent extends Agent {
   }
 
   @Override
-  public int takeAction() {
+  public int protected_takeAction() {
     notifyAboutRandomizedDecision();
     return random.nextInt(n);
   }

@@ -7,7 +7,7 @@ public abstract class FairMaxAgent extends Agent {
   protected abstract Tensor getQVector();
 
   @Override
-  public final int takeAction() {
+  public final int protected_takeAction() {
     FairArgMax fairArgMax = FairArgMax.of(getQVector());
     if (!fairArgMax.isUnique()) {
       if (getCount().number().intValue() < openingSequence.size())
