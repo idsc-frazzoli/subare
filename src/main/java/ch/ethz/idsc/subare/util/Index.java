@@ -21,11 +21,21 @@ public class Index {
       map.put(row, ++index);
   }
 
+  public Tensor keys() {
+    return tensor.unmodifiable();
+  }
+
   public Tensor get(int index) {
-    return tensor.get(index);
+    return tensor.get(index).unmodifiable();
+  }
+
+  public boolean containsKey(Tensor action) {
+    return map.containsKey(action);
   }
 
   public int of(Tensor row) {
+    if (!containsKey(row))
+      System.out.println("unknown key=" + row);
     return map.get(row);
   }
 

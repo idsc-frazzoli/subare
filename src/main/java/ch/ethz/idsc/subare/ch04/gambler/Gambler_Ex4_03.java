@@ -1,4 +1,5 @@
 // code by jph
+// inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.io.File;
@@ -6,18 +7,28 @@ import java.io.IOException;
 
 import ch.ethz.idsc.subare.core.GreedyPolicy;
 import ch.ethz.idsc.subare.core.ValueFunctions;
+import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.Put;
 
+/** Shangtong Zhang states that using double precision in python
+ * "due to tie and precision, can't reproduce the optimal policy in book"
+ * 
+ * here, using symbolic expressions we can reproduce the optimal policy in book */
 class Gambler_Ex4_03 {
   public static void main(String[] args) throws IOException {
-    Gambler ga = new Gambler(RealScalar.of(0.4));
-    Tensor values = ValueFunctions.bellmanIterationMax(ga, ga.statesIndex, RealScalar.ONE, RealScalar.of(1e-9));
+    Gambler gambler = new Gambler(100, //
+        // RealScalar.of(.4)
+        RationalScalar.of(40, 100) //
+    );
+    Tensor values = ValueFunctions.bellmanIterationMax(gambler, gambler.statesIndex, RealScalar.ONE, RealScalar.of(1e-10));
+    System.out.println(values);
     Put.of(new File("/home/datahaki/ex403_values"), values);
-    GreedyPolicy greedyPolicy = GreedyPolicy.build(ga, ga.statesIndex, values);
-    Tensor greedy = greedyPolicy.bestFor(ga.states);
+    GreedyPolicy greedyPolicy = GreedyPolicy.build(gambler, values);
+    // System.out.println(greedyPolicy.policy(RealScalar.of(49), RealScalar.of(1)));
+    Tensor greedy = greedyPolicy.flatten(gambler.states);
     Put.of(new File("/home/datahaki/ex403_greedy"), greedy);
-    greedyPolicy.print(ga.states);
+    greedyPolicy.print(gambler.states);
   }
 }

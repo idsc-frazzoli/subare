@@ -57,9 +57,7 @@ class GridWorld_Ex3_12b {
           gridWorld, //
           policy, //
           statesIndex, DoubleScalar.of(.9), DecimalScalar.of(.0001));
-      GreedyPolicy greedyPolicy = GreedyPolicy.build( //
-          gridWorld, statesIndex, values);
-      // greedyPolicy.print(gridWorld.states);
+      GreedyPolicy greedyPolicy = GreedyPolicy.build(gridWorld, values);
       policy = greedyPolicy;
     }
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {

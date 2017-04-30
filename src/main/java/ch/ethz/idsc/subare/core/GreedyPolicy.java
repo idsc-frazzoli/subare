@@ -4,56 +4,62 @@ package ch.ethz.idsc.subare.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.red.ArgMax;
-import ch.ethz.idsc.tensor.red.KroneckerDelta;
+import ch.ethz.idsc.tensor.ZeroScalar;
+import ch.ethz.idsc.tensor.alg.Extract;
 
+/** exact implementation of greedy policy:
+ * if two or more states s1,s2, ... have equal value
+ * v(s1)==v(s2)
+ * then they are assigned equal probability */
 public class GreedyPolicy implements PolicyInterface {
-  public static GreedyPolicy build( //
-      StandardModel standardModel, //
-      Index statesIndex, //
-      Tensor values // <- values of states
-  ) {
-    Map<Tensor, Tensor> map = new HashMap<>();
-    for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
-      final Tensor state = statesIndex.get(stateI);
-      // bellman optimality equation:
-      // v_*(s) == max_a Sum_{s',r} p(s',r | s,a) * (r + gamma * v_*(s'))
-      // simplifies here to
-      // v_*(s) == max_a (r + gamma * v_*(s'))
-      Tensor va = Tensors.empty();
-      // TODO can reduce code by streaming va
+  /** @param standardModel
+   * @param values of standardModel.states()
+   * @return */
+  public static GreedyPolicy build(StandardModel standardModel, Tensor values) {
+    Map<Tensor, Index> map = new HashMap<>();
+    for (Tensor state : standardModel.states()) {
       Tensor actions = standardModel.actions(state);
-      for (Tensor action : actions)
-        va.append(standardModel.qsa(state, action, values));
-      int argMax = ArgMax.of(va);
-      map.put(state, actions.get(argMax));
+      Tensor va = Tensor.of(actions.flatten(0) //
+          .map(action -> standardModel.qsa(state, action, values)));
+      FairArgMax fairArgMax = FairArgMax.of(va);
+      Tensor feasible = Extract.of(actions, fairArgMax.options());
+      map.put(state, Index.build(feasible));
     }
     return new GreedyPolicy(map);
   }
 
-  private final Map<Tensor, Tensor> map;
+  private final Map<Tensor, Index> map;
 
-  private GreedyPolicy(Map<Tensor, Tensor> map) {
+  private GreedyPolicy(Map<Tensor, Index> map) {
     this.map = map;
   }
 
   @Override
   public Scalar policy(Tensor state, Tensor action) {
-    return KroneckerDelta.of(map.get(state), action);
+    Index index = map.get(state);
+    return index.containsKey(action) ? RationalScalar.of(1, index.size()) : ZeroScalar.get();
   }
 
-  public Tensor bestFor(Tensor states) {
-    return Tensor.of(states.flatten(0).map(key -> map.get(key)));
+  /** @param states
+   * @return list of actions optimal for */
+  public Tensor flatten(Tensor states) {
+    Tensor result = Tensors.empty();
+    for (Tensor state : states)
+      for (Tensor action : map.get(state).keys())
+        result.append(Tensors.of(state, action));
+    return result;
   }
 
   public void print(Tensor states) {
     System.out.println("greedy:");
     for (Tensor state : states) {
-      System.out.println(state + " -> " + map.get(state));
+      System.out.println(state + " -> " + map.get(state).keys());
     }
   }
 }

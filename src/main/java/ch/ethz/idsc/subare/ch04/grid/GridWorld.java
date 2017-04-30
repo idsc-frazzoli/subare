@@ -32,6 +32,7 @@ class GridWorld implements StandardModel {
     actionsIndex = Index.build(actions);
   }
 
+  @Override
   public Tensor states() {
     return states;
   }

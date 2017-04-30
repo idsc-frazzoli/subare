@@ -7,6 +7,9 @@ import ch.ethz.idsc.tensor.Tensor;
 // TODO MoveInterface is not required
 public interface StandardModel extends MoveInterface {
   // ---
+  /** @return */
+  Tensor states();
+
   /** @param state
    * @return all action possible to execute from given state */
   Tensor actions(Tensor state);

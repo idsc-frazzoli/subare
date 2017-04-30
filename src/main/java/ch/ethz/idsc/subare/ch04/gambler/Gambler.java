@@ -6,36 +6,49 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
+import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 import ch.ethz.idsc.tensor.red.Min;
 
-class Gambler implements StandardModel // , RewardInterface
-{
-  static final Scalar TERMINAL_W = RealScalar.of(100);
-  // static final Scalar TERMINAL_L = ZeroScalar.get();
-  final Tensor states = Range.of(0, 101);
+/** Gambler's problem:
+ * an action defines the amount of coins to bet
+ * the action has to be non-zero unless the capital == 0
+ * or the terminal cash has been reached */
+class Gambler implements StandardModel {
+  // TODO report bug in STZ code
+  // TODO report mistake in book
+  final Tensor states;
   final Index statesIndex;
+  final Scalar TERMINAL_W;
   final Scalar P_win;
 
   /** @param P_win probabilty of winning a coin toss */
-  public Gambler(Scalar P_win) {
+  public Gambler(int length, Scalar P_win) {
+    states = Range.of(0, length + 1).unmodifiable();
     statesIndex = Index.build(states);
+    TERMINAL_W = (Scalar) Last.of(states);
     this.P_win = P_win;
   }
 
   @Override
+  public Tensor states() {
+    return states;
+  }
+
+  @Override
   public Tensor actions(Tensor state) {
+    if (state.equals(ZeroScalar.get()) || state.equals(TERMINAL_W))
+      return Tensors.of(ZeroScalar.get());
     Scalar stateS = state.Get();
-    return Range.of(Min.of(stateS, TERMINAL_W.subtract(stateS)).number().intValue() + 1);
+    return Range.of(1, Min.of(stateS, TERMINAL_W.subtract(stateS)).number().intValue() + 1);
   }
 
   @Override
   public Tensor move(Tensor state, Tensor action) {
-    // return state.add(action);
-    // non deterministic
-    return null;
+    throw new RuntimeException(); // non deterministic
   }
 
   // @Override
@@ -45,30 +58,26 @@ class Gambler implements StandardModel // , RewardInterface
 
   @Override
   public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+    // this ensures that staying in the terminal state does not increase the value to infinity
     if (state.equals(TERMINAL_W))
       return RealScalar.ONE;
     // ---
     final Scalar stateS = state.Get();
-    Scalar value = ZeroScalar.get();
+    Tensor values = Tensors.empty();
+    Tensor probs = Tensors.of(P_win, RealScalar.ONE.subtract(P_win));
+    // Shangtong Zhang uses
     // headProb * stateValue[state + action] + (1 - headProb) * stateValue[state - action]
-    {
-      Scalar prob = P_win;
+    // which results in values in the interval [0,1]
+    { // win
       Scalar next = stateS.add(action);
-      Scalar reward = reward(next, null);
-      Scalar res1; //
-      res1 = prob.multiply(gvalues.Get(statesIndex.of(next)));
-      // res1 = prob.multiply(reward.add(gvalues.Get(statesIndex.of(next))));
-      value = value.add(res1);
+      values = values.append(gvalues.Get(statesIndex.of(next)));
+      // values = values.append(reward(next, null).add(gvalues.Get(statesIndex.of(next))));
     }
-    {
-      Scalar prob = RealScalar.ONE.subtract(P_win);
+    { // lose
       Scalar next = stateS.add(action.negate());
-      Scalar reward = reward(next, null);
-      Scalar res2; // = prob.multiply(reward.add(gvalues.Get(statesIndex.of(next))));
-      res2 = prob.multiply(gvalues.Get(statesIndex.of(next)));
-      // res2 = prob.multiply(reward.add(gvalues.Get(statesIndex.of(next))));
-      value = value.add(res2);
+      values = values.append(gvalues.Get(statesIndex.of(next)));
+      // values = values.append(reward(next, null).add(gvalues.Get(statesIndex.of(next))));
     }
-    return value;
+    return probs.dot(values).Get();
   }
 }
