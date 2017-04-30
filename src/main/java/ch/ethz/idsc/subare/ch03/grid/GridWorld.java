@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch03.grid;
 
+import ch.ethz.idsc.subare.core.MoveInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -12,7 +13,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-class GridWorld implements StandardModel {
+class GridWorld implements StandardModel, MoveInterface {
   private static final Tensor WARP1_ANTE = Tensors.vector(0, 1); // A
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'
   private static final Tensor WARP2_ANTE = Tensors.vector(0, 3); // B
@@ -53,7 +54,8 @@ class GridWorld implements StandardModel {
         ZeroScalar.get() : RealScalar.ONE.negate();
   }
 
-  Tensor move(Tensor state, Tensor action) {
+  @Override
+  public Tensor move(Tensor state, Tensor action) {
     if (state.equals(WARP1_ANTE))
       return WARP1_POST;
     if (state.equals(WARP2_ANTE))

@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
+import ch.ethz.idsc.subare.core.MoveInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -12,7 +13,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-class GridWorld implements StandardModel {
+class GridWorld implements StandardModel, MoveInterface {
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
   private static final Clip CLIP = Clip.function(0, 3);
@@ -48,7 +49,8 @@ class GridWorld implements StandardModel {
     return RealScalar.ONE.negate();
   }
 
-  Tensor move(Tensor state, Tensor action) {
+  @Override
+  public Tensor move(Tensor state, Tensor action) {
     if (state.equals(TERMINATE1))
       return TERMINATE1;
     if (state.equals(TERMINATE2))

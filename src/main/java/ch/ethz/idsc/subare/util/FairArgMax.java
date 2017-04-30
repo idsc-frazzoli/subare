@@ -43,11 +43,11 @@ public class FairArgMax {
   public int getOptionCount() {
     return list.size();
   }
-  
+
   public int first() {
     return list.get(0);
   }
-  
+
   public List<Integer> options() {
     return Collections.unmodifiableList(list);
   }

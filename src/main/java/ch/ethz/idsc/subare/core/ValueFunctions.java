@@ -6,7 +6,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Norm;
 
 // general bellman equation:
@@ -46,5 +45,4 @@ public class ValueFunctions {
         .map(action -> policyInterface.policy(state, action).multiply(standardModel.qsa(state, action, gvalues))) //
         .reduce(Scalar::add).get();
   }
-
 }
