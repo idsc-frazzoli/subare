@@ -56,7 +56,7 @@ class GridWorld_Ex3_12b {
       values = ValueFunctions.bellmanIteration( //
           gridWorld, //
           policy, //
-          statesIndex, DoubleScalar.of(.9), DecimalScalar.of(.0001));
+          DoubleScalar.of(.9), DecimalScalar.of(.0001));
       GreedyPolicy greedyPolicy = GreedyPolicy.build(gridWorld, values);
       policy = greedyPolicy;
     }

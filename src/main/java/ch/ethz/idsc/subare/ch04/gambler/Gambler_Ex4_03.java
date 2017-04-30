@@ -24,7 +24,7 @@ class Gambler_Ex4_03 {
         // RealScalar.of(.4)
         RationalScalar.of(40, 100) //
     );
-    Tensor values = ValueFunctions.bellmanIterationMax(gambler, gambler.statesIndex, RealScalar.ONE, RealScalar.of(1e-10));
+    Tensor values = ValueFunctions.bellmanIterationMax(gambler, RealScalar.ONE, RealScalar.of(1e-10));
     System.out.println(values);
     Put.of(new File("/home/datahaki/ex403_values"), values);
     GreedyPolicy greedyPolicy = GreedyPolicy.build(gambler, values);

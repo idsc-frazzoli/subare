@@ -20,6 +20,7 @@ import ch.ethz.idsc.tensor.red.Min;
 class Gambler implements StandardModel {
   // TODO report bug in STZ code
   // TODO report mistake in book
+  // TODO suggest action !=0 for 0<cash<100
   final Tensor states;
   final Index statesIndex;
   final Scalar TERMINAL_W;
@@ -42,6 +43,10 @@ class Gambler implements StandardModel {
   public Tensor actions(Tensor state) {
     if (state.equals(ZeroScalar.get()) || state.equals(TERMINAL_W))
       return Tensors.of(ZeroScalar.get());
+    // here we deviate from the book and the code by STZ:
+    // if the state is non-terminal, 0 < cash < 100,
+    // we require that the bet=action is non-zero.
+    // otherwise the player can stall (the iteration) forever.
     Scalar stateS = state.Get();
     return Range.of(1, Min.of(stateS, TERMINAL_W.subtract(stateS)).number().intValue() + 1);
   }

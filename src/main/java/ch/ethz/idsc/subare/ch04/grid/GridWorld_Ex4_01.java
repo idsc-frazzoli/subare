@@ -42,7 +42,7 @@ class GridWorld_Ex4_01 {
     Tensor result = ValueFunctions.bellmanIteration( //
         gridWorld, //
         new EquiprobablePolicy(gridWorld.actions.length()), //
-        statesIndex, RealScalar.ONE, DecimalScalar.of(.0001));
+        RealScalar.ONE, DecimalScalar.of(.0001));
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + result.get(stateI).map(ROUND));

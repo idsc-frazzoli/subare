@@ -50,8 +50,7 @@ class GridWorld_Ex3_12a {
     Tensor values = null;
     for (int iters = 0; iters < 5; ++iters) {
       values = ValueFunctions.bellmanIterationMax( //
-          gridWorld, //
-          statesIndex, DoubleScalar.of(.9), DecimalScalar.of(.0001));
+          gridWorld, DoubleScalar.of(.9), DecimalScalar.of(.0001));
     }
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);

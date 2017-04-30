@@ -7,7 +7,7 @@ import java.util.function.Function;
 import ch.ethz.idsc.subare.core.ValueFunctions;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.DoubleScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -26,8 +26,7 @@ class GridWorld_Ex4_01a {
     Tensor values = null;
     for (int iters = 0; iters < 10; ++iters) {
       values = ValueFunctions.bellmanIterationMax( //
-          gridWorld, //
-          statesIndex, DoubleScalar.of(1.0), DecimalScalar.of(.0001));
+          gridWorld, RealScalar.ONE, DecimalScalar.of(.0001));
     }
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
