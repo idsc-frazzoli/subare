@@ -7,7 +7,7 @@ import java.util.Map;
 import ch.ethz.idsc.tensor.Tensor;
 
 public class Index {
-  public static Index of(Tensor tensor) {
+  public static Index build(Tensor tensor) {
     return new Index(tensor);
   }
 
@@ -25,7 +25,7 @@ public class Index {
     return tensor.get(index);
   }
 
-  public int indexOf(Tensor row) {
+  public int of(Tensor row) {
     return map.get(row);
   }
 

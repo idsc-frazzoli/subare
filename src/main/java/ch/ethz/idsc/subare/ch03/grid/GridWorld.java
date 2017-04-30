@@ -30,8 +30,8 @@ class GridWorld implements StandardModel {
   final Index actionsIndex;
 
   public GridWorld() {
-    statesIndex = Index.of(states);
-    actionsIndex = Index.of(actions);
+    statesIndex = Index.build(states);
+    actionsIndex = Index.build(actions);
   }
 
   public Tensor states() {
@@ -39,11 +39,10 @@ class GridWorld implements StandardModel {
   }
 
   @Override
-  public Tensor actions() {
+  public Tensor actions(Tensor state) {
     return actions;
   }
 
-  @Override
   public Scalar reward(Tensor state, Tensor action) {
     if (state.equals(WARP1_ANTE))
       return RealScalar.of(10);
@@ -66,8 +65,12 @@ class GridWorld implements StandardModel {
 
   @Override
   public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+    // general term in bellman equation:
+    // Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
+    // simplifies here to
+    // 1 * (r + gamma * v_pi(s'))
     Tensor next = move(state, action);
-    int nextI = statesIndex.indexOf(next);
+    int nextI = statesIndex.of(next);
     return reward(state, action).add(gvalues.get(nextI));
   }
 }

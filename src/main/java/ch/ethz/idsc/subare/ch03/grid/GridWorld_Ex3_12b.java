@@ -49,7 +49,7 @@ class GridWorld_Ex3_12b {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    Index statesIndex = Index.of(gridWorld.states);
+    Index statesIndex = Index.build(gridWorld.states);
     PolicyInterface policy = new EquiprobablePolicy(gridWorld.actions.length());
     Tensor values = null;
     for (int iters = 0; iters < 5; ++iters) {
@@ -57,7 +57,8 @@ class GridWorld_Ex3_12b {
           gridWorld, //
           policy, //
           statesIndex, DoubleScalar.of(.9), DecimalScalar.of(.0001));
-      GreedyPolicy greedyPolicy = GreedyPolicy.build(gridWorld.states, gridWorld.actions, values, gridWorld);
+      GreedyPolicy greedyPolicy = GreedyPolicy.build( //
+          gridWorld, statesIndex, values);
       // greedyPolicy.print(gridWorld.states);
       policy = greedyPolicy;
     }

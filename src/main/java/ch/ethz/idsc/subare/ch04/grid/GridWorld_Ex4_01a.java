@@ -22,7 +22,7 @@ class GridWorld_Ex4_01a {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    Index statesIndex = Index.of(gridWorld.states);
+    Index statesIndex = Index.build(gridWorld.states);
     Tensor values = null;
     for (int iters = 0; iters < 10; ++iters) {
       values = ValueFunctions.bellmanIterationMax( //

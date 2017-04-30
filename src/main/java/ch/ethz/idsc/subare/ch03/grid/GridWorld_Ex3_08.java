@@ -45,7 +45,7 @@ class GridWorld_Ex3_08 {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    Index statesIndex = Index.of(gridWorld.states);
+    Index statesIndex = Index.build(gridWorld.states);
     Tensor result = ValueFunctions.bellmanIteration( //
         gridWorld, //
         new EquiprobablePolicy(gridWorld.actions.length()), //

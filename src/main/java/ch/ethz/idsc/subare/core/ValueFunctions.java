@@ -43,7 +43,7 @@ public class ValueFunctions {
         // v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
         // simplifies here to
         // v_pi(s) == Sum_a pi(a|s) * (r + gamma * v_pi(s'))
-        for (Tensor action : standardModel.actions()) {
+        for (Tensor action : standardModel.actions(state)) {
           Scalar policy = policyInterface.policy(state, action);
           Scalar delta = policy.multiply(standardModel.qsa(state, action, gvalues));
           v_new.set(s -> s.add(delta), stateI);
@@ -83,7 +83,7 @@ public class ValueFunctions {
         // v_*(s) == max_a (r + gamma * v_*(s'))
         Tensor va = Tensors.empty();
         // TODO can reduce code by streaming va
-        for (Tensor action : standardModel.actions())
+        for (Tensor action : standardModel.actions(state))
           va.append(standardModel.qsa(state, action, gvalues));
         v_new.set(va.flatten(-1).reduce(Max::of).get(), stateI);
       }

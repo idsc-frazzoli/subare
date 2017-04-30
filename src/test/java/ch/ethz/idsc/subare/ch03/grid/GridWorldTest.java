@@ -16,8 +16,8 @@ public class GridWorldTest extends TestCase {
 
   public void testIndex() {
     GridWorld gw = new GridWorld();
-    Index actionsIndex = Index.of(gw.actions);
-    int index = actionsIndex.indexOf(Tensors.vector(1, 0));
+    Index actionsIndex = Index.build(gw.actions);
+    int index = actionsIndex.of(Tensors.vector(1, 0));
     assertEquals(index, 3);
   }
 }

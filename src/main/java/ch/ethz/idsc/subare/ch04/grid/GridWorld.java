@@ -28,8 +28,8 @@ class GridWorld implements StandardModel {
   final Index actionsIndex;
 
   public GridWorld() {
-    statesIndex = Index.of(states);
-    actionsIndex = Index.of(actions);
+    statesIndex = Index.build(states);
+    actionsIndex = Index.build(actions);
   }
 
   public Tensor states() {
@@ -37,11 +37,10 @@ class GridWorld implements StandardModel {
   }
 
   @Override
-  public Tensor actions() {
+  public Tensor actions(Tensor state) {
     return actions;
   }
 
-  @Override
   public Scalar reward(Tensor state, Tensor action) {
     if (state.equals(TERMINATE1))
       return ZeroScalar.get();
@@ -62,7 +61,7 @@ class GridWorld implements StandardModel {
   @Override
   public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
     Tensor next = move(state, action);
-    int nextI = statesIndex.indexOf(next);
+    int nextI = statesIndex.of(next);
     return reward(state, action).add(gvalues.get(nextI));
   }
 }
