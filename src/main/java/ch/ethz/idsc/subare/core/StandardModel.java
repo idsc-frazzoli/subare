@@ -5,7 +5,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 // TODO MoveInterface is not required
-public interface StandardModel extends MoveInterface {
+public interface StandardModel {
   // ---
   /** @return */
   Tensor states();

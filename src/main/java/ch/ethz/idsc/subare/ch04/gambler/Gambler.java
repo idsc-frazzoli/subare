@@ -46,13 +46,7 @@ class Gambler implements StandardModel {
     return Range.of(1, Min.of(stateS, TERMINAL_W.subtract(stateS)).number().intValue() + 1);
   }
 
-  @Override
-  public Tensor move(Tensor state, Tensor action) {
-    throw new RuntimeException(); // non deterministic
-  }
-
-  // @Override
-  public Scalar reward(Tensor state, Tensor action) {
+  Scalar reward(Tensor state, Tensor action) {
     return KroneckerDelta.of(state, TERMINAL_W);
   }
 

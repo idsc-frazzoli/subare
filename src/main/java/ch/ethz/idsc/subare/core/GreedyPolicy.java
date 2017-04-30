@@ -13,10 +13,14 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Extract;
 
-/** exact implementation of greedy policy:
+/** exact implementation of equiprobable greedy policy:
  * if two or more states s1,s2, ... have equal value
  * v(s1)==v(s2)
- * then they are assigned equal probability */
+ * then they are assigned equal probability
+ * 
+ * in case there is no unique maximum value
+ * there are infinitely many greedy policies
+ * and not a unique one policy. */
 public class GreedyPolicy implements PolicyInterface {
   /** @param standardModel
    * @param values of standardModel.states()
@@ -46,7 +50,9 @@ public class GreedyPolicy implements PolicyInterface {
     return index.containsKey(action) ? RationalScalar.of(1, index.size()) : ZeroScalar.get();
   }
 
-  /** @param states
+  /** useful for export to Mathematica
+   * 
+   * @param states
    * @return list of actions optimal for */
   public Tensor flatten(Tensor states) {
     Tensor result = Tensors.empty();
@@ -56,6 +62,9 @@ public class GreedyPolicy implements PolicyInterface {
     return result;
   }
 
+  /** print overview of possible actions for given states in console
+   * 
+   * @param states */
   public void print(Tensor states) {
     System.out.println("greedy:");
     for (Tensor state : states) {

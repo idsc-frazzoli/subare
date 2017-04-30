@@ -15,7 +15,9 @@ import ch.ethz.idsc.tensor.io.Put;
 /** Shangtong Zhang states that using double precision in python
  * "due to tie and precision, can't reproduce the optimal policy in book"
  * 
- * here, using symbolic expressions we can reproduce the optimal policy in book */
+ * Unlike stated in the book, there is not a unique optimal policy but many
+ * using symbolic expressions we can reproduce the policy in book and
+ * all other optimal actions */
 class Gambler_Ex4_03 {
   public static void main(String[] args) throws IOException {
     Gambler gambler = new Gambler(100, //

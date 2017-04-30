@@ -50,8 +50,7 @@ class GridWorld implements StandardModel {
     return RealScalar.ONE.negate();
   }
 
-  @Override
-  public Tensor move(Tensor state, Tensor action) {
+  Tensor move(Tensor state, Tensor action) {
     if (state.equals(TERMINATE1))
       return TERMINATE1;
     if (state.equals(TERMINATE2))
