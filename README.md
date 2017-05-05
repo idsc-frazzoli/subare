@@ -10,7 +10,18 @@ by Shangtong Zhang
 
 ## Examples
 
-Gambler's problem
+### Repeated Prisoner's dilemma
+
+Expected average reward of two adversarial optimistic agents:
+
+![optimist](https://cloud.githubusercontent.com/assets/4012178/25737770/d2df9dee-3179-11e7-8fb4-0faf438cab33.png)
+
+Expected average reward of two adversarial Upper-Confidence-Bound agents:
+
+![ucb](https://cloud.githubusercontent.com/assets/4012178/25737893/69aabeb6-317a-11e7-9b21-73f1298cdc3d.png)
+
+
+### Gambler's problem
 
 ![gambler_sv](https://cloud.githubusercontent.com/assets/4012178/25566784/05d63bf0-2de1-11e7-88e8-a2c485071c38.png)
 
