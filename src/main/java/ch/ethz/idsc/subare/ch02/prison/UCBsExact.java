@@ -1,11 +1,9 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02.prison;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.UCBAgent;
@@ -14,7 +12,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Join;
-import ch.ethz.idsc.tensor.io.MathematicaFormat;
+import ch.ethz.idsc.tensor.io.Put;
 
 public class UCBsExact extends AbstractExact {
   public UCBsExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
@@ -35,7 +33,7 @@ public class UCBsExact extends AbstractExact {
     System.out.println(exact.getExpectedRewards());
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     Tensor init = Tensors.vector(i -> RationalScalar.of(40 + i, 80), 80);
     Tensor res = Tensors.empty();
     for (Tensor c0 : init) {
@@ -50,11 +48,6 @@ public class UCBsExact extends AbstractExact {
       }
       res.append(row);
     }
-    Stream<String> stream = MathematicaFormat.of(res);
-    try {
-      Files.write(Paths.get("/home/datahaki/ucb"), (Iterable<String>) stream::iterator);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    Put.of(new File("/home/datahaki/ucb"), res);
   }
 }

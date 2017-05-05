@@ -1,11 +1,9 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02.prison;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.OptimistAgent;
@@ -15,7 +13,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Join;
-import ch.ethz.idsc.tensor.io.MathematicaFormat;
+import ch.ethz.idsc.tensor.io.Put;
 
 public class OptimistsExact extends AbstractExact {
   public OptimistsExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
@@ -38,7 +36,7 @@ public class OptimistsExact extends AbstractExact {
     System.out.println(optimistsExact.getExpectedRewards());
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     Tensor init = Subdivide.range(RationalScalar.of(31, 10), RationalScalar.of(60, 10), 100);
     // System.out.println(init);
     Tensor res = Tensors.empty();
@@ -54,11 +52,6 @@ public class OptimistsExact extends AbstractExact {
       }
       res.append(row);
     }
-    Stream<String> stream = MathematicaFormat.of(res);
-    try {
-      Files.write(Paths.get("/home/datahaki/optimist"), (Iterable<String>) stream::iterator);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    Put.of(new File("/home/datahaki/optimist"), res);
   }
 }
