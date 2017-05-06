@@ -47,8 +47,11 @@ public class IterativePolicyEvaluation {
       v_new = Tensor.of(standardModel.states().flatten(0) //
           .parallel() //
           .map(state -> jacobiAdd(state, gvalues)));
+//      System.out.println(v_new);
       ++iterations;
-      if (Scalars.lessThan(Norm._1.of(v_new.subtract(v_old)), threshold))
+      Scalar delta = Norm._1.of(v_new.subtract(v_old));
+      System.out.println(delta);
+      if (Scalars.lessThan(delta, threshold))
         break;
       v_old = v_new.unmodifiable();
     }

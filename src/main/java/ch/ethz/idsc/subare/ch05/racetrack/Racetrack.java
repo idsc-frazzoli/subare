@@ -1,8 +1,12 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.racetrack;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
@@ -10,6 +14,7 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
+import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -30,31 +35,34 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   public static final Scalar MINUS_ONE = RealScalar.ONE.negate();
   // ---
   final int MAX_SPEED;
-  final Clip clip;
+  final Clip clipPositionY;
+  final Clip clipSpeed;
   final Tensor dimensions;
   final Tensor states = Tensors.empty(); // (px, py, vx, vy)
   final Tensor statesStart = Tensors.empty();
   final Tensor statesTerminal = Tensors.empty();
-  final Tensor actions = Tensor.of(Array.of(Tensors::vector, 3, 3).flatten(1)).map(Decrement.ONE);
+  private final Tensor actions = Tensor.of(Array.of(Tensors::vector, 3, 3).flatten(1)).map(Decrement.ONE).unmodifiable();
   final Index statesIndex;
   final Index statesStartIndex;
   final Index statesTerminalIndex;
   Random random = new Random();
+  private final Map<Tensor, Tensor> actionsMap = new HashMap<>();
 
   public Racetrack(Tensor track, int MAX_SPEED) {
-    this.MAX_SPEED = MAX_SPEED;
-    clip = Clip.function(0, MAX_SPEED);
     List<Integer> list = Dimensions.of(track);
     dimensions = Tensors.vector(list.subList(0, 2)).map(Decrement.ONE);
-    System.out.println(dimensions);
+    clipPositionY = Clip.function(ZeroScalar.get(), dimensions.Get(1));
+    this.MAX_SPEED = MAX_SPEED;
+    clipSpeed = Clip.function(0, MAX_SPEED);
+    // System.out.println(dimensions);
     for (int x = 0; x < list.get(0); ++x)
       for (int y = 0; y < list.get(1); ++y) {
         final Tensor rgba = track.get(x, y).unmodifiable();
         if (!rgba.equals(WHITE)) {
           final Tensor pstate = Tensors.vector(x, y);
           if (rgba.equals(BLACK))
-            for (int vx = 0; vx < MAX_SPEED; ++vx)
-              for (int vy = 0; vy < MAX_SPEED; ++vy)
+            for (int vx = 0; vx <= MAX_SPEED; ++vx)
+              for (int vy = 0; vy <= MAX_SPEED; ++vy)
                 if (vx != 0 || vy != 0)
                   states.append(Join.of(pstate, Tensors.vector(vx, vy)));
           // ---
@@ -65,8 +73,8 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
           }
           // ---
           if (rgba.equals(RED))
-            for (int vx = 0; vx < MAX_SPEED; ++vx)
-              for (int vy = 0; vy < MAX_SPEED; ++vy)
+            for (int vx = 0; vx <= MAX_SPEED; ++vx)
+              for (int vy = 0; vy <= MAX_SPEED; ++vy)
                 if (vx != 0 || vy != 0) {
                   Tensor state = Join.of(pstate, Tensors.vector(vx, vy));
                   states.append(state);
@@ -77,12 +85,9 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
     statesIndex = Index.build(states);
     statesStartIndex = Index.build(statesStart);
     statesTerminalIndex = Index.build(statesTerminal);
-    System.out.println(states.length());
-    System.out.println(statesStart);
-    // System.out.println(statesTerminal);
-    // System.out.println(actions.length());
-    System.out.println(Dimensions.isArray(states));
-    System.out.println(Dimensions.isArray(actions));
+    GlobalAssert.of(Dimensions.isArray(states));
+    GlobalAssert.of(Dimensions.isArray(actions));
+    _buildActionMap();
   }
 
   @Override
@@ -90,20 +95,25 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
     return states;
   }
 
+  private void _buildActionMap() {
+    for (Tensor state : states) {
+      Tensor filter = Tensors.empty();
+      Set<Tensor> set = new HashSet<>();
+      for (Tensor action : actions) {
+        Tensor next = move(state, action);
+        if (set.add(next))
+          filter.append(action);
+      }
+      if (filter.length() == 0)
+        throw new RuntimeException("no actions for " + state);
+      // return filter;
+      actionsMap.put(state, filter);
+    }
+  }
+
   @Override
   public Tensor actions(Tensor state) {
-    if (isTerminal(state))
-      return Tensors.of(Tensors.vector(0, 0)); // no gas in finish zone
-    Tensor filter = Tensors.empty();
-    for (Tensor action : actions) {
-      Tensor next = state.add(Join.of(Array.zeros(2), action)); // add velocity
-      Tensor effective = move(state, action);
-      if (next.equals(effective))
-        filter.append(action);
-    }
-    if (filter.length() == 0)
-      throw new RuntimeException("no actions for " + state);
-    return filter;
+    return actionsMap.get(state);
   }
 
   @Override
@@ -117,15 +127,26 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
     return reward(state, action, next).add(gvalues.get(nextI));
   }
 
+  private static Tensor shift(Tensor state, Tensor action) {
+    Tensor pos = state.extract(0, 2);
+    Tensor vel = state.extract(2, 4);
+    vel = vel.add(action); // .map(clipSpeed);
+    return Join.of(pos.add(vel), vel);
+  }
+
   @Override
   public Tensor move(Tensor state, Tensor action) {
-    if (isTerminal(state))
+    if (isTerminal(state)) {
+      // System.out.println("TERMINAL");
       return state;
-    Tensor delta = Join.of(Array.zeros(2), action);
+    }
     // System.out.println(state + " " + action + " " + delta);
-    Tensor next = state.add(delta); // add velocity
-    next.set(clip, 2); // vx
-    next.set(clip, 3); // vy
+    Tensor next = shift(state, action); // add velocity
+    // System.out.println("before clip " + next);
+    next.set(clipPositionY, 1);
+    next.set(clipSpeed, 2); // vx
+    next.set(clipSpeed, 3); // vy
+    // System.out.println("after clip " + next);
     // TODO collision checking
     if (statesIndex.containsKey(next))
       return next;

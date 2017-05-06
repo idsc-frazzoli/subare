@@ -20,9 +20,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Multinomial;
 
-/**
- * see box on p.100
- */
+/** see box on p.100 */
 public class FirstVisitPolicyEvaluation {
   private final StandardModel standardModel;
   private final PolicyInterface policyInterface;
@@ -53,7 +51,9 @@ public class FirstVisitPolicyEvaluation {
           first.put(state, trajectory.size());
         rewards.append(stepInterface.reward());
         trajectory.add(stepInterface);
+        // System.out.println(state+" "+stepInterface.action());
       }
+      // System.out.println("reached final");
       for (Entry<Tensor, Integer> entry : first.entrySet()) {
         Tensor state = entry.getKey();
         int fromIndex = entry.getValue();
