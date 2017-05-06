@@ -46,10 +46,10 @@ class GridWorld_Ex3_08 {
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
     Index statesIndex = Index.build(gridWorld.states);
-    Tensor result = new IterativePolicyEvaluation( //
-        gridWorld, //
-        new EquiprobablePolicy(gridWorld.actions.length()), //
-        DoubleScalar.of(.9), DecimalScalar.of(.0001)).values();
+    IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
+        gridWorld, new EquiprobablePolicy(gridWorld));
+    Tensor result = ipe.until(DoubleScalar.of(.9), DecimalScalar.of(.0001));
+    //
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + result.get(stateI).map(ROUND));

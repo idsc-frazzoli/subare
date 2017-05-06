@@ -8,7 +8,7 @@ Our implementation is inspired by the
 [python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction)
 by Shangtong Zhang
 
-Our implementation is different in two aspects
+Our implementation is different from the reference in two aspects
 
 * the algorithms are implemented separate from the problem scenarios
 * the math is in exact precision which reproduces symmetries in the results in case the problem features symmetries
@@ -24,11 +24,11 @@ Our implementation covers the algorithms
 
 ### Repeated Prisoner's dilemma
 
-Expected average reward of two adversarial optimistic agents:
+Expected average reward of two adversarial optimistic agents depending on their initial configuration:
 
 ![optimist](https://cloud.githubusercontent.com/assets/4012178/25737770/d2df9dee-3179-11e7-8fb4-0faf438cab33.png)
 
-Expected average reward of two adversarial Upper-Confidence-Bound agents:
+Expected average reward of two adversarial Upper-Confidence-Bound agents depending on their initial configuration:
 
 ![ucb](https://cloud.githubusercontent.com/assets/4012178/25737893/69aabeb6-317a-11e7-9b21-73f1298cdc3d.png)
 

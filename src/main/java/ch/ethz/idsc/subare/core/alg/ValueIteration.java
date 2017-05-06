@@ -25,6 +25,7 @@ public class ValueIteration {
   final Scalar gamma;
   private Tensor v_old;
   private Tensor v_new;
+  int iterations = 0;
 
   /** @param standardModel
    * @param gamma discount */
@@ -48,6 +49,7 @@ public class ValueIteration {
     v_new = Tensor.of(standardModel.states().flatten(0) //
         .parallel() //
         .map(state -> jacobiMax(state, gvalues)));
+    ++iterations;
     return v_new;
   }
 
@@ -68,5 +70,9 @@ public class ValueIteration {
     return standardModel.actions(state).flatten(0) //
         .map(action -> standardModel.qsa(state, action, gvalues)) //
         .reduce(Max::of).get();
+  }
+
+  public int iterations() {
+    return iterations;
   }
 }

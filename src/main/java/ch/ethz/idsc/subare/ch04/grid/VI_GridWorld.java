@@ -24,11 +24,11 @@ class VI_GridWorld {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    Index statesIndex = Index.build(gridWorld.states);
     Tensor values = new ValueIteration(gridWorld, RealScalar.ONE).untilBelow( //
         DecimalScalar.of(.0001));
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobable(gridWorld, values);
     greedyPolicy.print(gridWorld.states());
+    Index statesIndex = Index.build(gridWorld.states);
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + values.get(stateI).map(ROUND));

@@ -50,13 +50,11 @@ class GridWorld_Ex3_12b {
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
     Index statesIndex = Index.build(gridWorld.states);
-    PolicyInterface policy = new EquiprobablePolicy(gridWorld.actions.length());
+    PolicyInterface policy = new EquiprobablePolicy(gridWorld);
     Tensor values = null;
     for (int iters = 0; iters < 5; ++iters) {
-      values = new IterativePolicyEvaluation( //
-          gridWorld, //
-          policy, //
-          DoubleScalar.of(.9), DecimalScalar.of(.0001)).values();
+      IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(gridWorld, policy);
+      values = ipe.until(DoubleScalar.of(.9), DecimalScalar.of(.0001));
       GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobable(gridWorld, values);
       policy = greedyPolicy;
     }

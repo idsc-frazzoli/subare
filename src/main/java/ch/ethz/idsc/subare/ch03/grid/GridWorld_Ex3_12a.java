@@ -48,8 +48,10 @@ class GridWorld_Ex3_12a {
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
     Index statesIndex = Index.build(gridWorld.states);
-    Tensor values = new ValueIteration(gridWorld, DoubleScalar.of(.9)).untilBelow( //
+    ValueIteration vi = new ValueIteration(gridWorld, DoubleScalar.of(.9));
+    Tensor values = vi.untilBelow( //
         DecimalScalar.of(.0001));
+    System.out.println("iterations=" + vi.iterations());
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobable(gridWorld, values);
     greedyPolicy.print(gridWorld.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {

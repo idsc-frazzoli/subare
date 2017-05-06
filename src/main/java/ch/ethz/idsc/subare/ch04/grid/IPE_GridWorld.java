@@ -38,10 +38,9 @@ class IPE_GridWorld {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    Tensor result = new IterativePolicyEvaluation( //
-        gridWorld, //
-        new EquiprobablePolicy(gridWorld.actions.length()), //
-        RealScalar.ONE, DecimalScalar.of(.0001)).values();
+    IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
+        gridWorld, new EquiprobablePolicy(gridWorld));
+    Tensor result = ipe.until(RealScalar.ONE, DecimalScalar.of(.0001));
     Index statesIndex = Index.build(gridWorld.states);
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);

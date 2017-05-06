@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.ch03.grid;
 
 import ch.ethz.idsc.subare.core.MoveInterface;
+import ch.ethz.idsc.subare.core.RewardInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -13,7 +14,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-class GridWorld implements StandardModel, MoveInterface {
+class GridWorld implements StandardModel, MoveInterface, RewardInterface {
   private static final Tensor WARP1_ANTE = Tensors.vector(0, 1); // A
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'
   private static final Tensor WARP2_ANTE = Tensors.vector(0, 3); // B
@@ -43,7 +44,8 @@ class GridWorld implements StandardModel, MoveInterface {
     return actions;
   }
 
-  Scalar reward(Tensor state, Tensor action) {
+  @Override
+  public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (state.equals(WARP1_ANTE))
       return RealScalar.of(10);
     if (state.equals(WARP2_ANTE))
@@ -71,6 +73,6 @@ class GridWorld implements StandardModel, MoveInterface {
     // 1 * (r + gamma * v_pi(s'))
     Tensor next = move(state, action);
     int nextI = statesIndex.of(next);
-    return reward(state, action).add(gvalues.get(nextI));
+    return reward(state, action, next).add(gvalues.get(nextI));
   }
 }

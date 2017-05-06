@@ -30,13 +30,17 @@ public class IterativePolicyEvaluation {
    * 
    * @param standardModel
    * @param policyInterface
-   * @param gamma discount
-   * @param threshold
    * @return */
   public IterativePolicyEvaluation( //
-      StandardModel standardModel, PolicyInterface policyInterface, Scalar gamma, Scalar threshold) {
+      StandardModel standardModel, PolicyInterface policyInterface) {
     this.standardModel = standardModel;
     this.policyInterface = policyInterface;
+  }
+
+  /** @param gamma
+   * @param threshold
+   * @return */
+  public Tensor until(Scalar gamma, Scalar threshold) {
     Tensor v_old = Array.zeros(standardModel.states().length());
     while (true) {
       Tensor gvalues = v_old.multiply(gamma);
@@ -48,6 +52,7 @@ public class IterativePolicyEvaluation {
         break;
       v_old = v_new.unmodifiable();
     }
+    return values();
   }
 
   // helper function

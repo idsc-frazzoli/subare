@@ -13,7 +13,9 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** {0, 0} 0
+/** example
+ * 
+ * {0, 0} 0
  * {0, 1} -18.3
  * {0, 2} -27.5
  * {0, 3} -28.3
@@ -34,7 +36,7 @@ class FVMC_GridWorld {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld.actions.length());
+    PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gridWorld, policyInterface, RealScalar.ONE, gridWorld);
     Tensor result = fvpe.simulate(12300);

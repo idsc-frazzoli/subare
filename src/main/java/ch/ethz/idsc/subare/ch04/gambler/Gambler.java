@@ -100,6 +100,8 @@ class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   @Override
   public EpisodeInterface kickoff(PolicyInterface policyInterface) {
     Tensor start = states.get(random.nextInt(states.length() - 2) + 1);
+    if (isTerminal(start))
+      throw new RuntimeException();
     return new MonteCarloEpisode(this, policyInterface, start);
   }
 
