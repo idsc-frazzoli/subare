@@ -1,9 +1,11 @@
 // code by jph
-package ch.ethz.idsc.subare.core;
+package ch.ethz.idsc.subare.core.util;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;

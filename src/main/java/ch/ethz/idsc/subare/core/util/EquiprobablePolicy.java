@@ -1,6 +1,7 @@
 // code by jph
-package ch.ethz.idsc.subare.core;
+package ch.ethz.idsc.subare.core.util;
 
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;

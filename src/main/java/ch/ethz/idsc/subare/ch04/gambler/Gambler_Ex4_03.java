@@ -5,8 +5,8 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import java.io.File;
 import java.io.IOException;
 
-import ch.ethz.idsc.subare.core.GreedyPolicy;
-import ch.ethz.idsc.subare.core.ValueIteration;
+import ch.ethz.idsc.subare.core.alg.ValueIteration;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;

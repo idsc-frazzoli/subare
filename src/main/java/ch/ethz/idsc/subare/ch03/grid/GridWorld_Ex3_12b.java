@@ -4,10 +4,10 @@ package ch.ethz.idsc.subare.ch03.grid;
 
 import java.util.function.Function;
 
-import ch.ethz.idsc.subare.core.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.GreedyPolicy;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.ValueFunctions;
+import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
+import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.DoubleScalar;
@@ -53,10 +53,10 @@ class GridWorld_Ex3_12b {
     PolicyInterface policy = new EquiprobablePolicy(gridWorld.actions.length());
     Tensor values = null;
     for (int iters = 0; iters < 5; ++iters) {
-      values = ValueFunctions.bellmanIteration( //
+      values = new IterativePolicyEvaluation( //
           gridWorld, //
           policy, //
-          DoubleScalar.of(.9), DecimalScalar.of(.0001));
+          DoubleScalar.of(.9), DecimalScalar.of(.0001)).values();
       GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobable(gridWorld, values);
       policy = greedyPolicy;
     }

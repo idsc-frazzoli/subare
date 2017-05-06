@@ -1,7 +1,9 @@
 // code by jph
 // inspired by Shangtong Zhang
-package ch.ethz.idsc.subare.core;
+package ch.ethz.idsc.subare.core.alg;
 
+import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
@@ -12,7 +14,13 @@ import ch.ethz.idsc.tensor.red.Norm;
 // v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
 // bellman optimality equation:
 // v_*(s) == max_a Sum_{s',r} p(s',r | s,a) * (r + gamma * v_*(s'))
-public class ValueFunctions {
+public class IterativePolicyEvaluation {
+  StandardModel standardModel;
+  PolicyInterface policyInterface;
+  private Tensor v_new;
+  private int iterations = 0;
+
+  // ---
   /** iterative policy evaluation (4.5)
    * see box on p.81
    * 
@@ -25,24 +33,35 @@ public class ValueFunctions {
    * @param gamma discount
    * @param threshold
    * @return */
-  public static Tensor bellmanIteration( //
+  public IterativePolicyEvaluation( //
       StandardModel standardModel, PolicyInterface policyInterface, Scalar gamma, Scalar threshold) {
+    this.standardModel = standardModel;
+    this.policyInterface = policyInterface;
     Tensor v_old = Array.zeros(standardModel.states().length());
     while (true) {
       Tensor gvalues = v_old.multiply(gamma);
-      Tensor v_new = Tensor.of(standardModel.states().flatten(0) //
+      v_new = Tensor.of(standardModel.states().flatten(0) //
           .parallel() //
-          .map(state -> jacobiAdd(standardModel, policyInterface, state, gvalues)));
+          .map(state -> jacobiAdd(state, gvalues)));
+      ++iterations;
       if (Scalars.lessThan(Norm._1.of(v_new.subtract(v_old)), threshold))
-        return v_new;
+        break;
       v_old = v_new.unmodifiable();
     }
   }
 
   // helper function
-  private static Scalar jacobiAdd(StandardModel standardModel, PolicyInterface policyInterface, Tensor state, Tensor gvalues) {
+  private Scalar jacobiAdd(Tensor state, Tensor gvalues) {
     return standardModel.actions(state).flatten(0) //
         .map(action -> policyInterface.policy(state, action).multiply(standardModel.qsa(state, action, gvalues))) //
         .reduce(Scalar::add).get();
+  }
+
+  public Tensor values() {
+    return v_new;
+  }
+
+  public int iterations() {
+    return iterations;
   }
 }

@@ -1,6 +1,8 @@
 // code by jph
-package ch.ethz.idsc.subare.core;
+package ch.ethz.idsc.subare.core.alg;
 
+import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;

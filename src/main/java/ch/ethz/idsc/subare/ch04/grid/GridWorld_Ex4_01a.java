@@ -4,8 +4,8 @@ package ch.ethz.idsc.subare.ch04.grid;
 
 import java.util.function.Function;
 
-import ch.ethz.idsc.subare.core.GreedyPolicy;
-import ch.ethz.idsc.subare.core.ValueIteration;
+import ch.ethz.idsc.subare.core.alg.ValueIteration;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
