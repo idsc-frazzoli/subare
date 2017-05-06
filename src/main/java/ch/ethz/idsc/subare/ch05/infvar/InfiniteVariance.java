@@ -23,12 +23,6 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface, EpisodeSup
     statesIndex = Index.build(states);
   }
 
-  // List<Tensor> play() {
-  // List<Tensor> list = new ArrayList<>();
-  // // states.
-  // // for ()
-  // return null;
-  // }
   @Override
   public Tensor states() {
     return states;
@@ -36,9 +30,17 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface, EpisodeSup
 
   @Override
   public Tensor actions(Tensor state) {
-    return state.equals(ZeroScalar.get()) ? actions : ZeroScalar.get();
+    return isTerminal(state) ? ZeroScalar.get() : actions;
   }
 
+  @Override
+  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+    Tensor stateS = move(state, action);
+    Scalar reward = reward(state, action, stateS);
+    return reward.add(gvalues.Get(statesIndex.of(stateS)));
+  }
+
+  /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     return state.equals(ZeroScalar.get()) && action.equals(RealScalar.ONE) ? //
@@ -50,13 +52,7 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface, EpisodeSup
     return state.add(action);
   }
 
-  @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
-    Tensor stateS = move(state, action);
-    Scalar reward = reward(state, action, stateS);
-    return reward.add(gvalues.Get(statesIndex.of(stateS)));
-  }
-
+  /**************************************************/
   @Override
   public EpisodeInterface kickoff(PolicyInterface policyInterface) {
     return new MonteCarloEpisode(this, policyInterface, ZeroScalar.get());

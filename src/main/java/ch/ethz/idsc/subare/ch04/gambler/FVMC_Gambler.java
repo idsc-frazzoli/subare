@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
@@ -11,6 +13,7 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.io.Put;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** {0, 0} 0
@@ -30,9 +33,9 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 2} -13.1
  * {3, 3} 0 */
 class FVMC_Gambler {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
+  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.001));
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     Gambler gambler = new Gambler(100, //
         // RealScalar.of(.4)
         RationalScalar.of(40, 100) //
@@ -40,7 +43,8 @@ class FVMC_Gambler {
     PolicyInterface policyInterface = VI_Gambler.getOptimalPolicy(gambler);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gambler, policyInterface, RealScalar.ONE, gambler);
-    Tensor result = fvpe.simulate(1203);
+    Tensor result = fvpe.simulate(502030);
+    Put.of(new File("/home/datahaki/fvmc_gambler"), result);
     Index statesIndex = Index.build(gambler.states);
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);

@@ -50,6 +50,14 @@ class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   }
 
   @Override
+  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+    Tensor next = move(state, action);
+    int nextI = statesIndex.of(next);
+    return reward(state, action, null).add(gvalues.get(nextI));
+  }
+
+  /**************************************************/
+  @Override
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
     if (state.equals(TERMINATE1))
       return ZeroScalar.get();
@@ -67,17 +75,11 @@ class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
     return state.add(action).map(CLIP);
   }
 
-  @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
-    Tensor next = move(state, action);
-    int nextI = statesIndex.of(next);
-    return reward(state, action, null).add(gvalues.get(nextI));
-  }
-
+  /**************************************************/
   @Override
   public EpisodeInterface kickoff(PolicyInterface policyInterface) {
     Tensor start = TERMINATE1;
-    while (start.equals(TERMINATE1) || start.equals(TERMINATE2))
+    while (isTerminal(start))
       start = states.get(random.nextInt(states.length()));
     return new MonteCarloEpisode(this, policyInterface, start);
   }

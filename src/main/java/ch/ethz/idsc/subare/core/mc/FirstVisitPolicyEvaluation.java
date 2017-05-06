@@ -20,6 +20,9 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Multinomial;
 
+/**
+ * see box on p.100
+ */
 public class FirstVisitPolicyEvaluation {
   private final StandardModel standardModel;
   private final PolicyInterface policyInterface;
@@ -58,10 +61,9 @@ public class FirstVisitPolicyEvaluation {
       }
       for (StepInterface stepInterface : trajectory) {
         Tensor stateP = stepInterface.prevState();
-        Scalar G = gains.get(stateP);
         if (!map.containsKey(stateP))
           map.put(stateP, new Average());
-        map.get(stateP).track(G);
+        map.get(stateP).track(gains.get(stateP));
       }
       ++iteration;
     }

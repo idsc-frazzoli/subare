@@ -48,7 +48,7 @@ class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
 
   @Override
   public Tensor actions(Tensor state) {
-    if (state.equals(ZeroScalar.get()) || state.equals(TERMINAL_W))
+    if (isTerminal(state))
       return Tensors.of(ZeroScalar.get());
     // here we deviate from the book and the code by STZ:
     // if the state is non-terminal, 0 < cash < 100,

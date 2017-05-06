@@ -8,6 +8,18 @@ Our implementation is inspired by the
 [python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction)
 by Shangtong Zhang
 
+Our implementation is different in two aspects
+
+* the algorithms are implemented separate from the problem scenarios
+* the math is in exact precision which reproduces symmetries in the results in case the problem features symmetries
+
+Our implementation covers the algorithms
+
+* Iterative Policy Evaluation (from p.81)
+* Value iteration (from p.90)
+* First visit Monte Carlo (from p.100)
+
+
 ## Examples
 
 ### Repeated Prisoner's dilemma
