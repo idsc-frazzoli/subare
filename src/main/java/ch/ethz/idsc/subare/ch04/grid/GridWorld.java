@@ -1,11 +1,14 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
+import java.util.Random;
+
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
-import ch.ethz.idsc.subare.core.MoveInterface;
+import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -17,10 +20,11 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** produces results on p.83: */
-class GridWorld implements StandardModel, MoveInterface, EpisodeSupplier {
+class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
   private static final Clip CLIP = Clip.function(0, 3);
+  Random random = new Random();
   // ---
   final Tensor states = Flatten.of(Array.of(Tensors::vector, 4, 4), 1).unmodifiable();
   final Tensor actions = Tensors.matrix(new Number[][] { //
@@ -45,7 +49,8 @@ class GridWorld implements StandardModel, MoveInterface, EpisodeSupplier {
     return actions;
   }
 
-  Scalar reward(Tensor state, Tensor action) {
+  @Override
+  public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
     if (state.equals(TERMINATE1))
       return ZeroScalar.get();
     if (state.equals(TERMINATE2))
@@ -66,12 +71,19 @@ class GridWorld implements StandardModel, MoveInterface, EpisodeSupplier {
   public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
     Tensor next = move(state, action);
     int nextI = statesIndex.of(next);
-    return reward(state, action).add(gvalues.get(nextI));
+    return reward(state, action, null).add(gvalues.get(nextI));
   }
 
   @Override
   public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    // TODO Auto-generated method stub
-    return null;
+    Tensor start = TERMINATE1;
+    while (start.equals(TERMINATE1) || start.equals(TERMINATE2))
+      start = states.get(random.nextInt(states.length()));
+    return new MonteCarloEpisode(this, policyInterface, start);
+  }
+
+  @Override
+  public boolean isTerminal(Tensor state) {
+    return state.equals(TERMINATE1) || state.equals(TERMINATE2);
   }
 }

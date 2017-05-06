@@ -14,50 +14,55 @@ import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.util.Average;
 import ch.ethz.idsc.subare.util.Index;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.alg.Multinomial;
 
 public class FirstVisitPolicyEvaluation {
-  final StandardModel standardModel;
-  final PolicyInterface policyInterface; // TODO use policy
-  final EpisodeSupplier episodeSupplier;
-  Map<Tensor, Average> map = new HashMap<>();
+  private final StandardModel standardModel;
+  private final PolicyInterface policyInterface;
+  private final Scalar gamma;
+  private final EpisodeSupplier episodeSupplier;
 
   public FirstVisitPolicyEvaluation( //
-      StandardModel standardModel, PolicyInterface policyInterface, EpisodeSupplier episodeSupplier) {
+      StandardModel standardModel, PolicyInterface policyInterface, Scalar gamma, EpisodeSupplier episodeSupplier) {
     this.standardModel = standardModel;
     this.policyInterface = policyInterface;
+    this.gamma = gamma;
     this.episodeSupplier = episodeSupplier;
   }
 
   public Tensor simulate(final int iterations) {
     int iteration = 0;
+    Map<Tensor, Average> map = new HashMap<>();
     while (iteration < iterations) {
       EpisodeInterface episodeInterface = episodeSupplier.kickoff(policyInterface);
-      List<StepInterface> trajectory = new ArrayList<>();
       Map<Tensor, Integer> first = new HashMap<>();
+      Map<Tensor, Scalar> gains = new HashMap<>();
+      Tensor rewards = Tensors.empty();
+      List<StepInterface> trajectory = new ArrayList<>();
       while (episodeInterface.hasNext()) {
         StepInterface stepInterface = episodeInterface.step();
         Tensor state = stepInterface.prevState();
         if (!first.containsKey(state))
           first.put(state, trajectory.size());
+        rewards.append(stepInterface.reward());
         trajectory.add(stepInterface);
       }
-      // System.out.println(first);
+      for (Entry<Tensor, Integer> entry : first.entrySet()) {
+        Tensor state = entry.getKey();
+        int fromIndex = entry.getValue();
+        gains.put(state, Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma));
+      }
       for (StepInterface stepInterface : trajectory) {
         Tensor stateP = stepInterface.prevState();
-        Tensor action = stepInterface.action();
-        Scalar reward = stepInterface.reward();
-        Tensor stateS = stepInterface.nextState();
-        Scalar G = RealScalar.ONE; // FIXME
+        Scalar G = gains.get(stateP);
         if (!map.containsKey(stateP))
           map.put(stateP, new Average());
         map.get(stateP).track(G);
-        System.out.println(stateP + " + " + action + " == r=" + reward + " in " + stateS);
       }
-      System.out.println(map);
       ++iteration;
     }
     Tensor states = standardModel.states();

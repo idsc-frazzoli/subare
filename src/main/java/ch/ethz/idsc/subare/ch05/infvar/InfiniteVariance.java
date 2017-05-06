@@ -3,10 +3,10 @@ package ch.ethz.idsc.subare.ch05.infvar;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
-import ch.ethz.idsc.subare.core.MoveInterface;
+import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.RewardInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
 
-class InfiniteVariance implements StandardModel, RewardInterface, MoveInterface, EpisodeSupplier {
+class InfiniteVariance implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   final Tensor states = Tensors.vector(0, 1).unmodifiable();
   final Tensor actions = Tensors.vector(0, 1).unmodifiable(); // increment
   final Index statesIndex;
@@ -59,6 +59,11 @@ class InfiniteVariance implements StandardModel, RewardInterface, MoveInterface,
 
   @Override
   public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    return new InfiniteVarianceEpisode(this, policyInterface);
+    return new MonteCarloEpisode(this, policyInterface, ZeroScalar.get());
+  }
+
+  @Override
+  public boolean isTerminal(Tensor state) {
+    return state.equals(RealScalar.ONE);
   }
 }

@@ -16,9 +16,10 @@ import ch.ethz.idsc.tensor.sca.Round;
 /** solving grid world
  * gives the value function for the optimal policy equivalent to
  * shortest path to terminal state
- * 
- * produces results on p.71 */
-class GridWorld_Ex4_01a {
+ *
+ * produces results on p.71
+ * chapter 4, example 1 */
+class VI_GridWorld {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
 
   public static void main(String[] args) {

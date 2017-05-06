@@ -1,10 +1,19 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
+import java.util.Random;
+
+import ch.ethz.idsc.subare.core.EpisodeInterface;
+import ch.ethz.idsc.subare.core.EpisodeSupplier;
+import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
@@ -17,11 +26,12 @@ import ch.ethz.idsc.tensor.red.Min;
  * an action defines the amount of coins to bet
  * the action has to be non-zero unless the capital == 0
  * or the terminal cash has been reached */
-class Gambler implements StandardModel {
+class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   final Tensor states;
   final Index statesIndex;
   final Scalar TERMINAL_W;
   final Scalar P_win;
+  Random random = new Random();
 
   /** @param P_win probabilty of winning a coin toss */
   public Gambler(int length, Scalar P_win) {
@@ -48,11 +58,6 @@ class Gambler implements StandardModel {
     return Range.of(1, Min.of(stateS, TERMINAL_W.subtract(stateS)).number().intValue() + 1);
   }
 
-  // function is not used
-  Scalar reward(Tensor state, Tensor action) {
-    return KroneckerDelta.of(state, TERMINAL_W);
-  }
-
   @Override
   public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
     // this ensures that staying in the terminal state does not increase the value to infinity
@@ -76,5 +81,30 @@ class Gambler implements StandardModel {
       // values = values.append(reward(next, null).add(gvalues.Get(statesIndex.of(next))));
     }
     return probs.dot(values).Get();
+  }
+
+  /**************************************************/
+  @Override
+  public Tensor move(Tensor state, Tensor action) {
+    if (Scalars.lessThan(DoubleScalar.of(random.nextDouble()), P_win))
+      return state.add(action);
+    return state.subtract(action);
+  }
+
+  @Override
+  public Scalar reward(Tensor state, Tensor action, Tensor next) {
+    return KroneckerDelta.of(next, TERMINAL_W);
+  }
+
+  /**************************************************/
+  @Override
+  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
+    Tensor start = states.get(random.nextInt(states.length() - 2) + 1);
+    return new MonteCarloEpisode(this, policyInterface, start);
+  }
+
+  @Override
+  public boolean isTerminal(Tensor state) {
+    return state.equals(ZeroScalar.get()) || state.equals(TERMINAL_W);
   }
 }
