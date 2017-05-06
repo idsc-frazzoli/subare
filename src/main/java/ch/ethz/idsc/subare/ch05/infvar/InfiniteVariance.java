@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch05.infvar;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MoveInterface;
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.RewardInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.Index;
@@ -57,7 +58,7 @@ class InfiniteVariance implements StandardModel, RewardInterface, MoveInterface,
   }
 
   @Override
-  public EpisodeInterface kickoff() {
-    return new InfiniteVarianceEpisode(this, null);
+  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
+    return new InfiniteVarianceEpisode(this, policyInterface);
   }
 }

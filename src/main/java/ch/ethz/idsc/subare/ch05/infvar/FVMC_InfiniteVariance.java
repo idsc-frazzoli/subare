@@ -9,7 +9,9 @@ class FVMC_InfiniteVariance {
   public static void main(String[] args) {
     InfiniteVariance infiniteVariance = new InfiniteVariance();
     PolicyInterface policyInterface = new ConstantPolicy(RationalScalar.of(9, 10));
-    FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation(infiniteVariance, policyInterface, infiniteVariance);
+    FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
+        infiniteVariance, policyInterface, infiniteVariance);
+    fvpe.simulate(123);
     // IterativePolicyEvaluation a = new IterativePolicyEvaluation( //
     // standardModel, policyInterface, RealScalar.ONE, RealScalar.of(.001));
     // Tensor result = a.values();

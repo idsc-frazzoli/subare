@@ -1,7 +1,10 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
+import ch.ethz.idsc.subare.core.EpisodeInterface;
+import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MoveInterface;
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -14,7 +17,7 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** produces results on p.83: */
-class GridWorld implements StandardModel, MoveInterface {
+class GridWorld implements StandardModel, MoveInterface, EpisodeSupplier {
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
   private static final Clip CLIP = Clip.function(0, 3);
@@ -64,5 +67,11 @@ class GridWorld implements StandardModel, MoveInterface {
     Tensor next = move(state, action);
     int nextI = statesIndex.of(next);
     return reward(state, action).add(gvalues.get(nextI));
+  }
+
+  @Override
+  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
