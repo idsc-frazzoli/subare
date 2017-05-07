@@ -14,7 +14,9 @@ import ch.ethz.idsc.tensor.Tensor;
  * 
  * eq (6.7)
  * 
- * box on p.138 */
+ * box on p.138
+ * 
+ * the Sarsa algorithm was introduced by Rummery and Niranjan 1994 */
 public class Sarsa extends AbstractTemporalDifference {
   private final DiscreteModel discreteModel;
   final PolicyWrap policyWrap;

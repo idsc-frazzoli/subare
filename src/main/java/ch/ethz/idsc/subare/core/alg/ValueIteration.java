@@ -21,8 +21,8 @@ import ch.ethz.idsc.tensor.red.Norm;
  * initial values are set to zeros
  * Jacobi style, i.e. updates take effect only in the next iteration */
 public class ValueIteration {
-  final StandardModel standardModel;
-  final Scalar gamma;
+  private final StandardModel standardModel;
+  private final Scalar gamma;
   private Tensor v_old;
   private Tensor v_new;
   int iterations = 0;
@@ -58,9 +58,16 @@ public class ValueIteration {
    * @param threshold
    * @return */
   public Tensor untilBelow(Scalar threshold) {
+    Scalar past = null;
     while (true) {
       step();
-      if (Scalars.lessThan(Norm._1.of(v_new.subtract(v_old)), threshold))
+      Scalar delta = Norm._1.of(v_new.subtract(v_old));
+      if (past != null && Scalars.lessThan(past, delta)) {
+        System.out.println("give up at " + past + " -> " + delta);
+        return v_old;
+      }
+      past = delta;
+      if (Scalars.lessThan(delta, threshold))
         return v_new;
     }
   }

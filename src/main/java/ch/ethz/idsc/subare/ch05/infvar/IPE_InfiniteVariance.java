@@ -14,8 +14,8 @@ class IPE_InfiniteVariance {
     StandardModel standardModel = new InfiniteVariance();
     PolicyInterface policyInterface = new ConstantPolicy(RationalScalar.of(9, 10));
     IterativePolicyEvaluation a = new IterativePolicyEvaluation( //
-        standardModel, policyInterface);
-    Tensor result = a.until(RealScalar.ONE, RealScalar.of(.001));
+        standardModel, policyInterface, RealScalar.ONE);
+    Tensor result = a.until(RealScalar.of(.001));
     System.out.println(a.iterations());
     Index statesIndex = Index.build(standardModel.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {

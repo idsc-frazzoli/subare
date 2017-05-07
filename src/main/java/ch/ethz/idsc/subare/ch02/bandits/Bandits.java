@@ -18,7 +18,7 @@ import ch.ethz.idsc.tensor.sca.Sqrt;
 
 /** implementation corresponds to Figure 2.1, p. 30 */
 class Bandits {
-  public static final Random random = new Random();
+  private static final Random random = new Random();
 
   private static Tensor createGaussian(int n) {
     return Tensors.vector(i -> DoubleScalar.of(random.nextGaussian()), n);

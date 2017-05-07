@@ -24,8 +24,8 @@ class IPE_RaceTrack {
     String path = "".getClass().getResource("/ch05/track0.png").getPath();
     Racetrack racetrack = new Racetrack(Import.of(new File(path)), 3);
     PolicyInterface policyInterface = new EquiprobablePolicy(racetrack);
-    IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(racetrack, policyInterface);
-    Tensor result = ipe.until(RealScalar.of(.5), RealScalar.of(.1));
+    IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(racetrack, policyInterface, RealScalar.of(.5));
+    Tensor result = ipe.until(RealScalar.of(.1));
     Index statesIndex = Index.build(racetrack.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);

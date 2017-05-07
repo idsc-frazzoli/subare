@@ -11,13 +11,20 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** Expected Sarsa: An on-policy TD control algorithm
  * 
- * eq (6.9) */
+ * eq (6.9) on p.142 */
 public class ExpectedSarsa extends AbstractTemporalDifference {
   private final DiscreteModel discreteModel;
   private final QsaInterface qsa;
   private final Scalar gamma;
   private final Scalar alpha;
 
+  /** @param episodeSupplier
+   * @param policyInterface
+   * @param discreteModel
+   * @param qsa
+   * @param gamma
+   * @param alpha if all state transtions are deterministic and all randomness comes
+   * from the policy then alpha can be set to 1 */
   public ExpectedSarsa( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
       DiscreteModel discreteModel, //

@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.tensor.io.Put;
 
-class Export {
+class AllPairsExport {
   public static void main(String[] args) throws IOException {
     // List<Supplier<Agent>> list = AgentSupplier.getOptimists(.01, .8, 30);
     // List<Supplier<Agent>> list = AgentSupplier.getUCBs(0, 6, 30);

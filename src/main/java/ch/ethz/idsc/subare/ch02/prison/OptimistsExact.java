@@ -7,15 +7,15 @@ import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.OptimistAgent;
-import ch.ethz.idsc.subare.util.Subdivide;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Join;
+import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.Put;
 
-public class OptimistsExact extends AbstractExact {
+class OptimistsExact extends AbstractExact {
   public OptimistsExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
     super(sup1, sup2, epochs);
     // ---
@@ -37,7 +37,7 @@ public class OptimistsExact extends AbstractExact {
   }
 
   public static void main(String[] args) throws IOException {
-    Tensor init = Subdivide.range(RationalScalar.of(31, 10), RationalScalar.of(60, 10), 100);
+    Tensor init = Subdivide.of(RationalScalar.of(31, 10), RationalScalar.of(60, 10), 100);
     // System.out.println(init);
     Tensor res = Tensors.empty();
     for (Tensor c0 : init) {

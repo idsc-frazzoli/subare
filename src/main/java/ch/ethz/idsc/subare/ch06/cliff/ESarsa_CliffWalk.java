@@ -23,13 +23,12 @@ class ESarsa_CliffWalk {
     System.out.println(qsa.size());
     for (int c = 0; c < 100; ++c) {
       System.out.println(c);
-      ExpectedSarsa sarsa = new ExpectedSarsa( //
+      ExpectedSarsa expectedSarsa = new ExpectedSarsa( //
           windyGrid, policy, //
           windyGrid, //
           qsa, RealScalar.ONE, RealScalar.of(.25));
-      sarsa.simulate(3);
+      expectedSarsa.simulate(3);
       policy = EGreedyPolicy.bestEquiprobable(windyGrid, qsa, RealScalar.of(.1));
-      // policy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, qsa); //
     }
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");

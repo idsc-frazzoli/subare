@@ -5,6 +5,7 @@ package ch.ethz.idsc.subare.ch03.grid;
 import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
+import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -47,9 +48,9 @@ class GridWorld_Ex3_08 {
     GridWorld gridWorld = new GridWorld();
     Index statesIndex = Index.build(gridWorld.states());
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
-        gridWorld, new EquiprobablePolicy(gridWorld));
-    Tensor result = ipe.until(DoubleScalar.of(.9), DecimalScalar.of(.0001));
-    //
+        gridWorld, new EquiprobablePolicy(gridWorld), DoubleScalar.of(.9));
+    Tensor result = ipe.until(DecimalScalar.of(.0001));
+//    DiscreteVs.build(gridWorld);
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + result.get(stateI).map(ROUND));

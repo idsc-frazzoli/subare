@@ -1,8 +1,9 @@
+// code by jph
 package ch.ethz.idsc.subare.ch02.prison;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 
-public class SummaryString {
+class SummaryString {
   public static String of(Agent agent) {
     int rnd = agent.getRandomizedDecisionCount();
     double avg = agent.getRewardAverage().number().doubleValue();

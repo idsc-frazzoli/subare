@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.io.Put;
 
-public class UCBsExact extends AbstractExact {
+class UCBsExact extends AbstractExact {
   public UCBsExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
     super(sup1, sup2, epochs);
     // ---

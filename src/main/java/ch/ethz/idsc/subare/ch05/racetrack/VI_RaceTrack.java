@@ -27,11 +27,11 @@ class VI_RaceTrack {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.01));
 
   public static void main(String[] args) throws ClassNotFoundException, DataFormatException, IOException {
-    String path = "".getClass().getResource("/ch05/track2.png").getPath();
-    Tensor image = Import.of(new File(path));
+    String path = "".getClass().getResource("/ch05/track1.png").getPath();
+    Tensor image = Import.of(new File(path)).unmodifiable();
     Racetrack racetrack = new Racetrack(image, 5);
-    ValueIteration vi = new ValueIteration(racetrack, RealScalar.of(.5));
-    final Tensor values = vi.untilBelow(DecimalScalar.of(2));
+    ValueIteration vi = new ValueIteration(racetrack, RealScalar.ONE);
+    final Tensor values = vi.untilBelow(DecimalScalar.of(10));
     System.out.println("iterations=" + vi.iterations());
     Index statesIndex = Index.build(racetrack.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
@@ -47,21 +47,28 @@ class VI_RaceTrack {
       // System.out.println();
     }
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(racetrack, values);
-    MonteCarloEpisode mce = new MonteCarloEpisode( //
-        racetrack, policyInterface, racetrack.statesStart.get(22));
-    while (mce.hasNext()) {
-      StepInterface stepInterface = mce.step();
-      {
-        Tensor state = stepInterface.prevState();
-        int[] index = ExtractPrimitives.toArrayInt(state);
-        image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
+    int k = 0;
+    for (Tensor start : racetrack.statesStart) {
+      Tensor copy = image.copy();
+      MonteCarloEpisode mce = new MonteCarloEpisode( //
+          racetrack, policyInterface, start);
+      while (mce.hasNext()) {
+        StepInterface stepInterface = mce.step();
+        {
+          Tensor state = stepInterface.prevState();
+          int[] index = ExtractPrimitives.toArrayInt(state);
+          copy.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
+        }
+        {
+          Tensor state = stepInterface.nextState();
+          int[] index = ExtractPrimitives.toArrayInt(state);
+          copy.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
+        }
       }
-      {
-        Tensor state = stepInterface.nextState();
-        int[] index = ExtractPrimitives.toArrayInt(state);
-        image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
-      }
+      Export.of( //
+          new File("/home/datahaki/Pictures/racetrack", String.format("track1_%02d.png", k)), //
+          ImageResize.of(copy, 8));
+      ++k;
     }
-    Export.of(new File("/home/datahaki/track2_sol.png"), ImageResize.of(image, 10));
   }
 }

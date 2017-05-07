@@ -35,7 +35,7 @@ public class DiscreteVs implements VsInterface {
   }
 
   @Override
-  public void increment(Tensor state, Scalar delta) {
+  public synchronized void increment(Tensor state, Scalar delta) {
     values.set(scalar -> scalar.add(delta), index.of(state));
   }
   

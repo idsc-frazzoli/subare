@@ -53,8 +53,9 @@ class GridWorld_Ex3_12b {
     PolicyInterface policy = new EquiprobablePolicy(gridWorld);
     Tensor values = null;
     for (int iters = 0; iters < 5; ++iters) {
-      IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(gridWorld, policy);
-      values = ipe.until(DoubleScalar.of(.9), DecimalScalar.of(.0001));
+      IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
+          gridWorld, policy, DoubleScalar.of(.9));
+      values = ipe.until(DecimalScalar.of(.0001));
       GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, values);
       policy = greedyPolicy;
     }
