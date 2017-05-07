@@ -1,12 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.racetrack;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
@@ -14,6 +10,7 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
+import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -54,7 +51,7 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   final Index statesStartIndex;
   final Index statesTerminalIndex;
   Random random = new Random();
-  private final Map<Tensor, Tensor> actionsMap = new HashMap<>();
+  private final StateActionMap stateActionMap;
 
   public Racetrack(Tensor track, int maxSpeed) {
     List<Integer> list = Dimensions.of(track);
@@ -93,7 +90,7 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
     statesTerminalIndex = Index.build(statesTerminal);
     GlobalAssert.of(Dimensions.isArray(states));
     GlobalAssert.of(Dimensions.isArray(actions));
-    _buildActionMap();
+    stateActionMap = StateActionMap.build(this, actions, this);
   }
 
   @Override
@@ -101,24 +98,9 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
     return states.unmodifiable();
   }
 
-  private void _buildActionMap() {
-    for (Tensor state : states) {
-      Tensor filter = Tensors.empty();
-      Set<Tensor> set = new HashSet<>();
-      for (Tensor action : actions) {
-        Tensor next = move(state, action);
-        if (set.add(next))
-          filter.append(action);
-      }
-      if (filter.length() == 0)
-        throw new RuntimeException("no actions for " + state);
-      actionsMap.put(state, filter.unmodifiable());
-    }
-  }
-
   @Override
   public Tensor actions(Tensor state) {
-    return actionsMap.get(state);
+    return stateActionMap.actions(state);
   }
 
   @Override

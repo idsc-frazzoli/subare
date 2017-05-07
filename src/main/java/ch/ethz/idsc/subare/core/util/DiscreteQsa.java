@@ -52,4 +52,8 @@ public class DiscreteQsa implements QsaInterface {
       System.out.println(key + " " + value.map(ROUND));
     }
   }
+
+  public int size() {
+    return index.size();
+  }
 }

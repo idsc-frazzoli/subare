@@ -40,7 +40,7 @@ class FVMC_GridWorld {
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gridWorld, policyInterface, RealScalar.ONE, gridWorld);
     Tensor result = fvpe.simulate(12300);
-    Index statesIndex = Index.build(gridWorld.states);
+    Index statesIndex = Index.build(gridWorld.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + result.get(stateI).map(ROUND)); // .map(ROUND)

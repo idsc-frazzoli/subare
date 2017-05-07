@@ -41,7 +41,7 @@ class IPE_GridWorld {
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         gridWorld, new EquiprobablePolicy(gridWorld));
     Tensor result = ipe.until(RealScalar.ONE, DecimalScalar.of(.0001));
-    Index statesIndex = Index.build(gridWorld.states);
+    Index statesIndex = Index.build(gridWorld.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + result.get(stateI).map(ROUND));

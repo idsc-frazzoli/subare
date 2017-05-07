@@ -28,7 +28,7 @@ class VI_GridWorld {
         DecimalScalar.of(.0001));
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, values);
     greedyPolicy.print(gridWorld.states());
-    Index statesIndex = Index.build(gridWorld.states);
+    Index statesIndex = Index.build(gridWorld.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + values.get(stateI).map(ROUND));

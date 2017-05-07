@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
@@ -24,7 +25,7 @@ public class EGreedyPolicy extends AbstractPolicy {
     Map<Tensor, Integer> sizes = new HashMap<>();
     for (Tensor state : discreteModel.states()) {
       Tensor actions = discreteModel.actions(state);
-      Tensor va = actions.map(action -> qsa.value(state, action));
+      Tensor va = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
       FairArgMax fairArgMax = FairArgMax.of(va);
       Tensor feasible = Extract.of(actions, fairArgMax.options());
       map.put(state, Index.build(feasible));
@@ -42,6 +43,8 @@ public class EGreedyPolicy extends AbstractPolicy {
     this.map = map;
     this.epsilon = epsilon;
     this.sizes = sizes;
+    if (sizes == null && Scalars.nonZero(epsilon))
+      throw new RuntimeException("sizes invalid for " + epsilon);
   }
 
   @Override

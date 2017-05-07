@@ -26,8 +26,8 @@ class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   private static final Clip CLIP = Clip.function(0, 3);
   Random random = new Random();
   // ---
-  final Tensor states = Flatten.of(Array.of(Tensors::vector, 4, 4), 1).unmodifiable();
-  final Tensor actions = Tensors.matrix(new Number[][] { //
+  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 4, 4), 1).unmodifiable();
+  private final Tensor actions = Tensors.matrix(new Number[][] { //
       { 0, -1 }, //
       { 0, +1 }, //
       { -1, 0 }, //
