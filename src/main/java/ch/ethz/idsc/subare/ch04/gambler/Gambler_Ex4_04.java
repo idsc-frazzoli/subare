@@ -28,8 +28,10 @@ class Gambler_Ex4_04 {
     );
     ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
     Tensor record = Tensors.empty();
-    for (int iters = 0; iters < 20; ++iters)
-      record.append(vi.step());
+    for (int iters = 0; iters < 20; ++iters) {
+      vi.step();
+      record.append(vi.vs().values());
+    }
     Tensor values = Last.of(record);
     // .untilBelow(RealScalar.of(1e-10));
     System.out.println(values);

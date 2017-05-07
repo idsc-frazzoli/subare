@@ -1,8 +1,10 @@
 // code by jph
 package ch.ethz.idsc.subare.ch03.grid;
 
-import ch.ethz.idsc.subare.core.MoveInterface;
-import ch.ethz.idsc.subare.core.RewardInterface;
+import ch.ethz.idsc.subare.core.EpisodeInterface;
+import ch.ethz.idsc.subare.core.EpisodeSupplier;
+import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -14,7 +16,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-class GridWorld implements StandardModel, MoveInterface, RewardInterface {
+class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   private static final Tensor WARP1_ANTE = Tensors.vector(0, 1); // A
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'
   private static final Tensor WARP2_ANTE = Tensors.vector(0, 3); // B
@@ -74,5 +76,16 @@ class GridWorld implements StandardModel, MoveInterface, RewardInterface {
     Tensor next = move(state, action);
     int nextI = statesIndex.of(next);
     return reward(state, action, next).add(gvalues.get(nextI));
+  }
+
+  @Override
+  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
+    throw new RuntimeException();
+    // return new MonteCarloEpisode(this, policyInterface, state);
+  }
+
+  @Override
+  public boolean isTerminal(Tensor state) {
+    throw new RuntimeException();
   }
 }

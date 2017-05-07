@@ -9,11 +9,9 @@ import java.util.zip.DataFormatException;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.Import;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -25,11 +23,7 @@ class IPE_RaceTrack {
     Racetrack racetrack = new Racetrack(Import.of(new File(path)), 3);
     PolicyInterface policyInterface = new EquiprobablePolicy(racetrack);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(racetrack, policyInterface, RealScalar.of(.5));
-    Tensor result = ipe.until(RealScalar.of(.1));
-    Index statesIndex = Index.build(racetrack.states());
-    for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
-      Tensor state = statesIndex.get(stateI);
-      System.out.println(state + " " + result.get(stateI).map(ROUND)); // .map(ROUND)
-    }
+    ipe.until(RealScalar.of(.1));
+    ipe.vs().print(ROUND);
   }
 }

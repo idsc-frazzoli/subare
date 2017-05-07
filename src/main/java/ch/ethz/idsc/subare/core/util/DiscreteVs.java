@@ -22,7 +22,7 @@ public class DiscreteVs implements VsInterface {
   }
 
   private final Index index;
-  private final Tensor values;
+  private Tensor values;
 
   private DiscreteVs(Index index) {
     this.index = index;
@@ -39,8 +39,12 @@ public class DiscreteVs implements VsInterface {
     values.set(scalar -> scalar.add(delta), index.of(state));
   }
   
+  public void setAll(Tensor values) {
+    this.values = values.copy();
+  }
+  
   public Tensor values() {
-    return values.unmodifiable();
+    return values;
   }
 
   public void print() {

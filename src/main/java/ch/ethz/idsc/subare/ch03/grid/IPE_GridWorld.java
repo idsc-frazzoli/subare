@@ -2,16 +2,10 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch03.grid;
 
-import java.util.function.Function;
-
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
-import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.DoubleScalar;
-import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** produces results on p.64-65:
@@ -41,19 +35,12 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {4, 2} -1.2
  * {4, 3} -1.4
  * {4, 4} -2.0 */
-class GridWorld_Ex3_08 {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
-
+class IPE_GridWorld {
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    Index statesIndex = Index.build(gridWorld.states());
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         gridWorld, new EquiprobablePolicy(gridWorld), DoubleScalar.of(.9));
-    Tensor result = ipe.until(DecimalScalar.of(.0001));
-//    DiscreteVs.build(gridWorld);
-    for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
-      Tensor state = statesIndex.get(stateI);
-      System.out.println(state + " " + result.get(stateI).map(ROUND));
-    }
+    ipe.until(DecimalScalar.of(.0001));
+    ipe.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }
 }

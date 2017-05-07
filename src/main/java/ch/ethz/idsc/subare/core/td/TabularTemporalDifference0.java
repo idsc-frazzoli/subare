@@ -16,17 +16,16 @@ import ch.ethz.idsc.tensor.Tensor;
  * see box on p.128 */
 public class TabularTemporalDifference0 extends AbstractTemporalDifference {
   private final VsInterface vs;
-  private final Scalar alpha;
   private final Scalar gamma;
+  private final Scalar alpha;
 
   public TabularTemporalDifference0( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
-      VsInterface vs, Scalar alpha, Scalar gamma //
-  ) {
+      VsInterface vs, Scalar gamma, Scalar alpha) {
     super(episodeSupplier, policyInterface);
     this.vs = vs;
-    this.alpha = alpha;
     this.gamma = gamma;
+    this.alpha = alpha;
   }
 
   @Override

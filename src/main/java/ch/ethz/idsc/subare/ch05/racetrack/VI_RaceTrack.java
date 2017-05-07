@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.ch05.racetrack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Function;
 import java.util.zip.DataFormatException;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
@@ -12,40 +11,23 @@ import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.ImageResize;
-import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.ExtractPrimitives;
 import ch.ethz.idsc.tensor.io.Import;
-import ch.ethz.idsc.tensor.sca.Round;
 
 class VI_RaceTrack {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.01));
-
   public static void main(String[] args) throws ClassNotFoundException, DataFormatException, IOException {
     String path = "".getClass().getResource("/ch05/track1.png").getPath();
     Tensor image = Import.of(new File(path)).unmodifiable();
     Racetrack racetrack = new Racetrack(image, 5);
     ValueIteration vi = new ValueIteration(racetrack, RealScalar.ONE);
-    final Tensor values = vi.untilBelow(DecimalScalar.of(10));
+    vi.untilBelow(DecimalScalar.of(10), 5);
+    final Tensor values = vi.vs().values();
     System.out.println("iterations=" + vi.iterations());
-    Index statesIndex = Index.build(racetrack.states());
-    for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
-      Tensor state = statesIndex.get(stateI);
-      boolean isStart = racetrack.isStart(state);
-      boolean isTerminal = racetrack.isTerminal(state);
-      // System.out.print(state + " " + racetrack.actions(state).length() + " " + values.get(stateI).map(ROUND) + " ");
-      // if (isStart)
-      // System.out.println("start");
-      // else if (isTerminal)
-      // System.out.println("final");
-      // else
-      // System.out.println();
-    }
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(racetrack, values);
     int k = 0;
     for (Tensor start : racetrack.statesStart) {

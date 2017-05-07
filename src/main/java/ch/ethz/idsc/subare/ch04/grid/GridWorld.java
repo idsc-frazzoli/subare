@@ -34,9 +34,11 @@ class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
       { +1, 0 } //
   }).unmodifiable();
   final Index statesIndex;
+  // final StateActionMap stateActionMap;
 
   public GridWorld() {
     statesIndex = Index.build(states);
+    // stateActionMap = StateActionMap.build(this, actions, this);
   }
 
   @Override
@@ -46,6 +48,7 @@ class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
 
   @Override
   public Tensor actions(Tensor state) {
+    // return stateActionMap.actions(state);
     return actions;
   }
 

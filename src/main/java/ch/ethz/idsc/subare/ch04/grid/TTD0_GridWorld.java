@@ -10,20 +10,20 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** {0, 0} 0
- * {0, 1} -14.01
- * {0, 2} -18.77
- * {0, 3} -22.19
- * {1, 0} -12.14
- * {1, 1} -15.75
- * {1, 2} -19.44
- * {1, 3} -21.50
- * {2, 0} -18.98
- * {2, 1} -19.12
- * {2, 2} -16.80
- * {2, 3} -16.13
- * {3, 0} -21.88
- * {3, 1} -20.04
- * {3, 2} -12.08
+ * {0, 1} -9.00
+ * {0, 2} -19.90
+ * {0, 3} -20.52
+ * {1, 0} -13.61
+ * {1, 1} -16.52
+ * {1, 2} -17.52
+ * {1, 3} -19.84
+ * {2, 0} -16.20
+ * {2, 1} -17.77
+ * {2, 2} -19.94
+ * {2, 3} -11.45
+ * {3, 0} -21.01
+ * {3, 1} -19.68
+ * {3, 2} -18.52
  * {3, 3} 0 */
 public class TTD0_GridWorld {
   public static void main(String[] args) {
@@ -32,8 +32,8 @@ public class TTD0_GridWorld {
     DiscreteVs vs = DiscreteVs.build(gridWorld);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
         gridWorld, policyInterface, //
-        vs, RealScalar.ONE, RealScalar.of(.1));
-    ttd0.simulate(10230);
+        vs, RealScalar.ONE, RealScalar.of(.5));
+    ttd0.simulate(50230);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

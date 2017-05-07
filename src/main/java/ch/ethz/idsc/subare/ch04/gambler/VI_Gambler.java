@@ -23,16 +23,16 @@ import ch.ethz.idsc.tensor.io.Put;
  * chapter 4, example 3 */
 class VI_Gambler {
   public static PolicyInterface getOptimalPolicy(Gambler gambler) {
-    Tensor values = new ValueIteration(gambler, RealScalar.ONE).untilBelow(RealScalar.of(1e-10));
-    return GreedyPolicy.bestEquiprobableGreedy(gambler, values);
+    ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
+    vi.untilBelow(RealScalar.of(1e-10));
+    return GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs().values());
   }
 
   public static void main(String[] args) throws IOException {
-    Gambler gambler = new Gambler(100, //
-        // RealScalar.of(.4)
-        RationalScalar.of(40, 100) //
-    );
-    Tensor values = new ValueIteration(gambler, RealScalar.ONE).untilBelow(RealScalar.of(1e-10));
+    Gambler gambler = new Gambler(100, RationalScalar.of(40, 100));
+    ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
+    vi.untilBelow(RealScalar.of(1e-10));
+    Tensor values = vi.vs().values();
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, values);
     System.out.println(values);
     Put.of(new File("/home/datahaki/ex403_values"), values);

@@ -14,7 +14,8 @@ import ch.ethz.idsc.tensor.Tensor;
 class VI_WindyGrid {
   public VI_WindyGrid(WindyGrid windyGrid) {
     ValueIteration vi = new ValueIteration(windyGrid, RealScalar.ONE);
-    final Tensor values = vi.untilBelow(DecimalScalar.of(.001));
+    vi.untilBelow(DecimalScalar.of(.001));
+    final Tensor values = vi.vs().values();
     System.out.println("iterations=" + vi.iterations());
     System.out.println(values);
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(windyGrid, values);

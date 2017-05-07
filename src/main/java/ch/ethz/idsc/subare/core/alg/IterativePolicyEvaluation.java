@@ -4,12 +4,10 @@ package ch.ethz.idsc.subare.core.alg;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Norm;
 
 // general bellman equation:
@@ -20,10 +18,8 @@ public class IterativePolicyEvaluation {
   private final StandardModel standardModel;
   private final PolicyInterface policyInterface;
   private final Scalar gamma;
-  private Tensor v_old;
-  private Tensor v_new;
-  VsInterface vs_new;
-  VsInterface vs_old;
+  private final DiscreteVs vs_new;
+  private final DiscreteVs vs_old;
   private int iterations = 0;
 
   // ---
@@ -42,7 +38,6 @@ public class IterativePolicyEvaluation {
     this.standardModel = standardModel;
     this.policyInterface = policyInterface;
     this.gamma = gamma;
-    v_new = Array.zeros(standardModel.states().length());
     vs_new = DiscreteVs.build(standardModel);
     vs_old = DiscreteVs.build(standardModel);
   }
@@ -50,30 +45,28 @@ public class IterativePolicyEvaluation {
   /** @param gamma
    * @param threshold
    * @return */
-  public Tensor until(Scalar threshold) {
+  public void until(Scalar threshold) {
     Scalar past = null;
     while (true) {
       step();
-      Scalar delta = Norm._1.of(v_new.subtract(v_old));
-      if (past != null && Scalars.lessThan(past, delta)) {
-        System.out.println("give up at " + past + " -> " + delta);
-        return v_old;
-      }
+      Scalar delta = Norm._1.of(vs_new.values().subtract(vs_old.values()));
+//      if (past != null && Scalars.lessThan(past, delta)) {
+//        System.out.println("give up at " + past + " -> " + delta);
+//        break;
+//      }
       past = delta;
       if (Scalars.lessThan(delta, threshold))
         break;
     }
-    return values();
   }
 
-  public Tensor step() {
-    v_old = v_new; // <- preserve old values for advancing iteration via step() and comparison
-    Tensor gvalues = v_old.multiply(gamma);
-    v_new = Tensor.of(standardModel.states().flatten(0) //
+  public void step() {
+    vs_old.setAll(vs_new.values());
+    Tensor gvalues = vs_new.values().multiply(gamma);
+    vs_new.setAll(Tensor.of(standardModel.states().flatten(0) //
         .parallel() //
-        .map(state -> jacobiAdd(state, gvalues)));
+        .map(state -> jacobiAdd(state, gvalues))));
     ++iterations;
-    return v_new;
   }
 
   // helper function
@@ -83,8 +76,8 @@ public class IterativePolicyEvaluation {
         .reduce(Scalar::add).get();
   }
 
-  public Tensor values() {
-    return v_new;
+  public DiscreteVs vs() {
+    return vs_new;
   }
 
   public int iterations() {

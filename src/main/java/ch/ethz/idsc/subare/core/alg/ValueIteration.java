@@ -2,11 +2,11 @@
 package ch.ethz.idsc.subare.core.alg;
 
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Norm;
 
@@ -23,52 +23,54 @@ import ch.ethz.idsc.tensor.red.Norm;
 public class ValueIteration {
   private final StandardModel standardModel;
   private final Scalar gamma;
-  private Tensor v_old;
-  private Tensor v_new;
+  private final DiscreteVs vs_new;
+  private final DiscreteVs vs_old;
   int iterations = 0;
+  int alternate = 0;
 
   /** @param standardModel
    * @param gamma discount */
   public ValueIteration(StandardModel standardModel, Scalar gamma) {
     this.standardModel = standardModel;
     this.gamma = gamma;
-    initialize(Array.zeros(standardModel.states().length()));
-  }
-
-  /** @param v_new */
-  public void initialize(Tensor v_new) {
-    this.v_new = v_new;
+    vs_new = DiscreteVs.build(standardModel);
+    vs_old = DiscreteVs.build(standardModel);
   }
 
   /** perform one step of the iteration
    * 
    * @return */
-  public Tensor step() {
-    v_old = v_new; // <- preserve old values for advancing iteration via step() and comparison
-    Tensor gvalues = v_new.multiply(gamma);
-    v_new = Tensor.of(standardModel.states().flatten(0) //
+  public void step() {
+    vs_old.setAll(vs_new.values());
+    Tensor gvalues = vs_new.values().multiply(gamma);
+    vs_new.setAll(Tensor.of(standardModel.states().flatten(0) //
         .parallel() //
-        .map(state -> jacobiMax(state, gvalues)));
+        .map(state -> jacobiMax(state, gvalues))));
     ++iterations;
-    return v_new;
   }
 
   /** perform iteration until values don't change more than threshold
    * 
    * @param threshold
    * @return */
-  public Tensor untilBelow(Scalar threshold) {
+  public void untilBelow(Scalar threshold) {
+    untilBelow(threshold, Integer.MAX_VALUE);
+  }
+
+  public void untilBelow(Scalar threshold, int flips) {
     Scalar past = null;
     while (true) {
       step();
-      Scalar delta = Norm._1.of(v_new.subtract(v_old));
+      Scalar delta = Norm._1.of(vs_new.values().subtract(vs_old.values()));
       if (past != null && Scalars.lessThan(past, delta)) {
-        System.out.println("give up at " + past + " -> " + delta);
-        return v_old;
+        if (flips < ++alternate) {
+          System.out.println("give up at " + past + " -> " + delta);
+          break;
+        }
       }
       past = delta;
       if (Scalars.lessThan(delta, threshold))
-        return v_new;
+        break;
     }
   }
 
@@ -77,6 +79,10 @@ public class ValueIteration {
     return standardModel.actions(state).flatten(0) //
         .map(action -> standardModel.qsa(state, action, gvalues)) //
         .reduce(Max::of).get();
+  }
+
+  public DiscreteVs vs() {
+    return vs_new;
   }
 
   public int iterations() {

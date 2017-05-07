@@ -32,7 +32,7 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 1} -21.5
  * {3, 2} -13.1
  * {3, 3} 0 */
-class FVMC_Gambler {
+class FVPE_Gambler {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.001));
 
   public static void main(String[] args) throws IOException {
