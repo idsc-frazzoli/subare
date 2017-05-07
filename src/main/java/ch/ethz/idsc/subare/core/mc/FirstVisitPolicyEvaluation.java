@@ -59,6 +59,7 @@ public class FirstVisitPolicyEvaluation {
         int fromIndex = entry.getValue();
         gains.put(state, Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma));
       }
+      // TODO more efficient update of average
       for (StepInterface stepInterface : trajectory) {
         Tensor stateP = stepInterface.prevState();
         if (!map.containsKey(stateP))

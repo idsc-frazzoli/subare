@@ -27,6 +27,15 @@ import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Decrement;
 
+/** Exercise 5.8: Racetrack (programming), p. 119
+ * 
+ * Figure 5.6
+ * 
+ * the book states that the velocity components should be non-negative
+ * the track layout however encourages nudging in the negative direction
+ * so we make a compromise by using the following integration procedure
+ * p' = p + v + a
+ * v' = clip(v + a) */
 class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   public static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   public static final Tensor RED = Tensors.vector(255, 0, 0, 255);
@@ -34,11 +43,10 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   public static final Tensor BLACK = Tensors.vector(0, 0, 0, 255);
   public static final Scalar MINUS_ONE = RealScalar.ONE.negate();
   // ---
-  final int MAX_SPEED;
   final Clip clipPositionY;
   final Clip clipSpeed;
   final Tensor dimensions;
-  final Tensor states = Tensors.empty(); // (px, py, vx, vy)
+  private final Tensor states = Tensors.empty(); // (px, py, vx, vy)
   final Tensor statesStart = Tensors.empty();
   final Tensor statesTerminal = Tensors.empty();
   private final Tensor actions = Tensor.of(Array.of(Tensors::vector, 3, 3).flatten(1)).map(Decrement.ONE).unmodifiable();
@@ -48,21 +56,19 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   Random random = new Random();
   private final Map<Tensor, Tensor> actionsMap = new HashMap<>();
 
-  public Racetrack(Tensor track, int MAX_SPEED) {
+  public Racetrack(Tensor track, int maxSpeed) {
     List<Integer> list = Dimensions.of(track);
     dimensions = Tensors.vector(list.subList(0, 2)).map(Decrement.ONE);
     clipPositionY = Clip.function(ZeroScalar.get(), dimensions.Get(1));
-    this.MAX_SPEED = MAX_SPEED;
-    clipSpeed = Clip.function(0, MAX_SPEED);
-    // System.out.println(dimensions);
+    clipSpeed = Clip.function(0, maxSpeed);
     for (int x = 0; x < list.get(0); ++x)
       for (int y = 0; y < list.get(1); ++y) {
         final Tensor rgba = track.get(x, y).unmodifiable();
         if (!rgba.equals(WHITE)) {
           final Tensor pstate = Tensors.vector(x, y);
           if (rgba.equals(BLACK))
-            for (int vx = 0; vx <= MAX_SPEED; ++vx)
-              for (int vy = 0; vy <= MAX_SPEED; ++vy)
+            for (int vx = 0; vx <= maxSpeed; ++vx)
+              for (int vy = 0; vy <= maxSpeed; ++vy)
                 if (vx != 0 || vy != 0)
                   states.append(Join.of(pstate, Tensors.vector(vx, vy)));
           // ---
@@ -73,8 +79,8 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
           }
           // ---
           if (rgba.equals(RED))
-            for (int vx = 0; vx <= MAX_SPEED; ++vx)
-              for (int vy = 0; vy <= MAX_SPEED; ++vy)
+            for (int vx = 0; vx <= maxSpeed; ++vx)
+              for (int vy = 0; vy <= maxSpeed; ++vy)
                 if (vx != 0 || vy != 0) {
                   Tensor state = Join.of(pstate, Tensors.vector(vx, vy));
                   states.append(state);
@@ -92,7 +98,7 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
 
   @Override
   public Tensor states() {
-    return states;
+    return states.unmodifiable();
   }
 
   private void _buildActionMap() {
@@ -106,8 +112,7 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
       }
       if (filter.length() == 0)
         throw new RuntimeException("no actions for " + state);
-      // return filter;
-      actionsMap.put(state, filter);
+      actionsMap.put(state, filter.unmodifiable());
     }
   }
 
@@ -130,25 +135,20 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   private static Tensor shift(Tensor state, Tensor action) {
     Tensor pos = state.extract(0, 2);
     Tensor vel = state.extract(2, 4);
-    vel = vel.add(action); // .map(clipSpeed);
+    vel = vel.add(action);
     return Join.of(pos.add(vel), vel);
   }
 
   @Override
   public Tensor move(Tensor state, Tensor action) {
-    if (isTerminal(state)) {
-      // System.out.println("TERMINAL");
+    if (isTerminal(state))
       return state;
-    }
-    // System.out.println(state + " " + action + " " + delta);
     Tensor next = shift(state, action); // add velocity
-    // System.out.println("before clip " + next);
     next.set(clipPositionY, 1);
     next.set(clipSpeed, 2); // vx
     next.set(clipSpeed, 3); // vy
-    // System.out.println("after clip " + next);
-    // TODO collision checking
     if (statesIndex.containsKey(next))
+      // TODO collision checking
       return next;
     return statesStart.get(random.nextInt(statesStart.length()));
   }

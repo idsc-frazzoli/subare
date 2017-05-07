@@ -4,11 +4,12 @@ package ch.ethz.idsc.subare.core;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
+/** adapter to hold the four entries (s,a,r,s') */
 public class StepAdapter implements StepInterface {
-  final Tensor prev;
-  final Tensor action;
-  final Scalar reward;
-  final Tensor stateS;
+  private final Tensor prev;
+  private final Tensor action;
+  private final Scalar reward;
+  private final Tensor stateS;
 
   public StepAdapter(Tensor prev, Tensor action, Scalar reward, Tensor stateS) {
     this.prev = prev;
