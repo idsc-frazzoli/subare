@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.ch06.windy;
+package ch.ethz.idsc.subare.ch06.cliff;
 
 import java.util.Random;
 
@@ -13,6 +13,7 @@ import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
@@ -20,45 +21,25 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-/** produces results on p.83: */
-class WindyGrid implements StandardModel, MonteCarloInterface, EpisodeSupplier {
-  static final Tensor START = Tensors.vector(3, 0);
-  static final Tensor GOAL = Tensors.vector(3, 7).unmodifiable();
-  private static final Tensor WIND = Tensors.vector(0, 0, 0, 1, 1, 1, 2, 2, 1, 0).negate();
-  private static final Clip CLIP_X = Clip.function(0, 6);
-  private static final Clip CLIP_Y = Clip.function(0, 9);
+/** Example 6.6 cliff walking */
+class CliffWalk implements StandardModel, MonteCarloInterface, EpisodeSupplier {
+  static final Tensor START = Tensors.vector(3, 0).unmodifiable();
+  static final Tensor GOAL = Tensors.vector(3, 11).unmodifiable();
+  private static final Clip CLIP_X = Clip.function(0, 3);
+  private static final Clip CLIP_Y = Clip.function(0, 11);
   Random random = new Random();
   // ---
-  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 7, 10), 1).unmodifiable();
+  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 4, 12), 1).unmodifiable();
   private final Index statesIndex;
   private final StateActionMap stateActionMap;
+  private final Tensor actions = Tensors.matrix(new Number[][] { //
+      { 0, -1 }, //
+      { 0, +1 }, //
+      { -1, 0 }, //
+      { +1, 0 } //
+  }).unmodifiable();
 
-  public static WindyGrid createFour() {
-    Tensor actions = Tensors.matrix(new Number[][] { //
-        { 0, -1 }, //
-        { 0, +1 }, //
-        { -1, 0 }, //
-        { +1, 0 } //
-    }).unmodifiable();
-    return new WindyGrid(actions);
-  }
-
-  public static WindyGrid createKing() {
-    Tensor actions = Tensors.matrix(new Number[][] { //
-        { 0, -1 }, //
-        { 0, +1 }, //
-        { -1, 0 }, //
-        { +1, 0 }, //
-        // ---
-        { +1, -1 }, //
-        { +1, +1 }, //
-        { -1, -1 }, //
-        { -1, +1 } //
-    }).unmodifiable();
-    return new WindyGrid(actions);
-  }
-
-  private WindyGrid(Tensor actions) {
+  public CliffWalk() {
     statesIndex = Index.build(states);
     stateActionMap = StateActionMap.build(this, actions, this);
   }
@@ -85,6 +66,8 @@ class WindyGrid implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
     if (isTerminal(stateS)) // -1 until goal is reached
       return ZeroScalar.get();
+    if (stateS.equals(START))
+      return RealScalar.of(-100);
     return RealScalar.ONE.negate();
   }
 
@@ -92,15 +75,18 @@ class WindyGrid implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
-    // wind is added first
-    Tensor next = state.copy();
-    int y = next.Get(1).number().intValue();
-    next.set(scalar -> scalar.add(WIND.Get(y)), 0); // shift in x coordinate
-    next.set(CLIP_X, 0);
-    next = next.add(action);
+    Tensor next = state.add(action);
     next.set(CLIP_X, 0);
     next.set(CLIP_Y, 1);
+    if (isCliff(next))
+      return START;
     return next;
+  }
+
+  boolean isCliff(Tensor state) {
+    Scalar y = state.Get(1);
+    return state.get(0).equals(RealScalar.of(3)) && //
+        Scalars.lessThan(ZeroScalar.get(), y) && Scalars.lessThan(y, RealScalar.of(11));
   }
 
   /**************************************************/

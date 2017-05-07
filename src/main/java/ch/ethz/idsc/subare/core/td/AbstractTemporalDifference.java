@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.StepDigest;
 
 public abstract class AbstractTemporalDifference implements StepDigest {
   private final EpisodeSupplier episodeSupplier;
-  private final PolicyInterface policyInterface;
+  protected final PolicyInterface policyInterface;
 
   public AbstractTemporalDifference(EpisodeSupplier episodeSupplier, PolicyInterface policyInterface) {
     this.episodeSupplier = episodeSupplier;

@@ -36,12 +36,10 @@ public class MCES_Gambler {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.001));
 
   public static void main(String[] args) throws IOException {
-    Gambler gambler = new Gambler(100, //
-        RationalScalar.of(40, 100) //
-    );
+    Gambler gambler = new Gambler(100, RationalScalar.of(40, 100));
     PolicyInterface policyInterface = VI_Gambler.getOptimalPolicy(gambler);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
-        gambler, policyInterface, gambler, RealScalar.of(.97), RealScalar.of(.1));
+        gambler, policyInterface, gambler, RealScalar.ONE, RealScalar.of(.1));
     mces.simulate(10000);
     DiscreteVs discreteVs = DiscreteVs.create(gambler, mces.getQsa());
     discreteVs.print();
