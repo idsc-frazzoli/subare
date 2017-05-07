@@ -1,8 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.walk;
 
-import java.util.Random;
-
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;

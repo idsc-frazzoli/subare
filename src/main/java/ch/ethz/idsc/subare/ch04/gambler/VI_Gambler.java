@@ -24,7 +24,7 @@ import ch.ethz.idsc.tensor.io.Put;
 class VI_Gambler {
   public static PolicyInterface getOptimalPolicy(Gambler gambler) {
     Tensor values = new ValueIteration(gambler, RealScalar.ONE).untilBelow(RealScalar.of(1e-10));
-    return GreedyPolicy.bestEquiprobable(gambler, values);
+    return GreedyPolicy.bestEquiprobableGreedy(gambler, values);
   }
 
   public static void main(String[] args) throws IOException {
@@ -33,7 +33,7 @@ class VI_Gambler {
         RationalScalar.of(40, 100) //
     );
     Tensor values = new ValueIteration(gambler, RealScalar.ONE).untilBelow(RealScalar.of(1e-10));
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobable(gambler, values);
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, values);
     System.out.println(values);
     Put.of(new File("/home/datahaki/ex403_values"), values);
     greedyPolicy.print(gambler.states());

@@ -35,7 +35,7 @@ class Gambler_Ex4_04 {
     System.out.println(values);
     Put.of(new File("/home/datahaki/ex403_values"), values);
     Put.of(new File("/home/datahaki/ex403_record"), record);
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobable(gambler, values);
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, values);
     greedyPolicy.print(gambler.states());
     // System.out.println(greedyPolicy.policy(RealScalar.of(49), RealScalar.of(1)));
     Tensor greedy = greedyPolicy.flatten(gambler.states);

@@ -26,7 +26,7 @@ class VI_GridWorld {
     GridWorld gridWorld = new GridWorld();
     Tensor values = new ValueIteration(gridWorld, RealScalar.ONE).untilBelow( //
         DecimalScalar.of(.0001));
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobable(gridWorld, values);
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, values);
     greedyPolicy.print(gridWorld.states());
     Index statesIndex = Index.build(gridWorld.states);
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {

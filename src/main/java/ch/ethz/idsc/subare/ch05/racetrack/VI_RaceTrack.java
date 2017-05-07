@@ -38,15 +38,15 @@ class VI_RaceTrack {
       Tensor state = statesIndex.get(stateI);
       boolean isStart = racetrack.isStart(state);
       boolean isTerminal = racetrack.isTerminal(state);
-//      System.out.print(state + " " + racetrack.actions(state).length() + " " + values.get(stateI).map(ROUND) + " ");
-//      if (isStart)
-//        System.out.println("start");
-//      else if (isTerminal)
-//        System.out.println("final");
-//      else
-//        System.out.println();
+      // System.out.print(state + " " + racetrack.actions(state).length() + " " + values.get(stateI).map(ROUND) + " ");
+      // if (isStart)
+      // System.out.println("start");
+      // else if (isTerminal)
+      // System.out.println("final");
+      // else
+      // System.out.println();
     }
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(racetrack, values);
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(racetrack, values);
     MonteCarloEpisode mce = new MonteCarloEpisode( //
         racetrack, policyInterface, racetrack.statesStart.get(22));
     while (mce.hasNext()) {

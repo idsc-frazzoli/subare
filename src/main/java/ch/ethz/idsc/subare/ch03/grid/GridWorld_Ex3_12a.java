@@ -52,7 +52,7 @@ class GridWorld_Ex3_12a {
     Tensor values = vi.untilBelow( //
         DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobable(gridWorld, values);
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, values);
     greedyPolicy.print(gridWorld.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
