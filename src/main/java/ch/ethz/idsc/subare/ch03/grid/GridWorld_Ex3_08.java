@@ -45,7 +45,7 @@ class GridWorld_Ex3_08 {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    Index statesIndex = Index.build(gridWorld.states);
+    Index statesIndex = Index.build(gridWorld.states());
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         gridWorld, new EquiprobablePolicy(gridWorld));
     Tensor result = ipe.until(DoubleScalar.of(.9), DecimalScalar.of(.0001));

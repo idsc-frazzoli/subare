@@ -30,7 +30,7 @@ class IPE_RandomWalk {
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         randomWalk, new EquiprobablePolicy(randomWalk));
     Tensor result = ipe.until(RealScalar.ONE, DecimalScalar.of(.0001));
-    Index statesIndex = Index.build(randomWalk.states);
+    Index statesIndex = Index.build(randomWalk.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + result.get(stateI).map(ROUND));

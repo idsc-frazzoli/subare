@@ -18,9 +18,10 @@ List of algorithms:
 * Iterative Policy Evaluation (from p.81)
 * Value iteration (from p.90)
 * First visit Monte Carlo (from p.100)
-* [Monte Carlo Exploring Starts (from p.107)]
+* Monte Carlo Exploring Starts (from p.107)
 * Tabular Temporal Difference (from p.128)
 * Sarsa: An on-policy TD control algorithm (from p.138)
+* Q-learning: An off-policy TD control algorithm (from p.140)
 
 
 ## Examples

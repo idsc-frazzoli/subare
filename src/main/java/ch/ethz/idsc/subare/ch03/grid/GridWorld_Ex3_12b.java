@@ -49,7 +49,7 @@ class GridWorld_Ex3_12b {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    Index statesIndex = Index.build(gridWorld.states);
+    Index statesIndex = Index.build(gridWorld.states());
     PolicyInterface policy = new EquiprobablePolicy(gridWorld);
     Tensor values = null;
     for (int iters = 0; iters < 5; ++iters) {

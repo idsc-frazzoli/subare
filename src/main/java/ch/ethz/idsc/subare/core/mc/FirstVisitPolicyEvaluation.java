@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.util.Average;
 import ch.ethz.idsc.subare.util.Index;
@@ -22,13 +22,14 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** see box on p.100 */
 public class FirstVisitPolicyEvaluation {
-  private final StandardModel standardModel;
+  private final DiscreteModel standardModel;
   private final PolicyInterface policyInterface;
   private final Scalar gamma;
   private final EpisodeSupplier episodeSupplier;
 
   public FirstVisitPolicyEvaluation( //
-      StandardModel standardModel, PolicyInterface policyInterface, Scalar gamma, EpisodeSupplier episodeSupplier) {
+      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
+      DiscreteModel standardModel, Scalar gamma) {
     this.standardModel = standardModel;
     this.policyInterface = policyInterface;
     this.gamma = gamma;

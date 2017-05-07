@@ -15,7 +15,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
 
 class InfiniteVariance implements StandardModel, MonteCarloInterface, EpisodeSupplier {
-  final Tensor states = Tensors.vector(0, 1).unmodifiable();
+  private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   final Tensor actions = Tensors.vector(0, 1).unmodifiable(); // increment
   final Index statesIndex;
 
@@ -30,7 +30,7 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface, EpisodeSup
 
   @Override
   public Tensor actions(Tensor state) {
-    return isTerminal(state) ? ZeroScalar.get() : actions;
+    return isTerminal(state) ? Tensors.of(ZeroScalar.get()) : actions;
   }
 
   @Override

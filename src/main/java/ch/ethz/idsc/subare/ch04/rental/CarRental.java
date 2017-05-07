@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.sca.Clip;
 class CarRental implements StandardModel, MoveInterface {
   private static final Clip CLIP = Clip.function(0, 20);
   // ---
-  final Tensor states = Flatten.of(Array.of(Tensors::vector, 21, 21), 1).unmodifiable();
+  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 21, 21), 1).unmodifiable();
   PoissonDistribution p1_in = PoissonDistribution.of(RealScalar.of(3));
   PoissonDistribution p1out = PoissonDistribution.of(RealScalar.of(3));
   PoissonDistribution p2_in = PoissonDistribution.of(RealScalar.of(4));

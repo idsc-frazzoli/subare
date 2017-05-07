@@ -38,7 +38,12 @@ public class DiscreteQsa implements QsaInterface {
     values.set(scalar -> scalar.add(delta), index.of(createKey(state, action)));
   }
 
-  private static Tensor createKey(Tensor state, Tensor action) {
+  @Override
+  public void set(Tensor state, Tensor action, Scalar value) {
+    values.set(value, index.of(createKey(state, action)));
+  }
+
+  public static Tensor createKey(Tensor state, Tensor action) {
     return Tensors.of(state, action);
   }
 

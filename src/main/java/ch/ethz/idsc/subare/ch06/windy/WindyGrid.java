@@ -30,7 +30,6 @@ class WindyGrid implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   Random random = new Random();
   // ---
   private final Tensor states = Flatten.of(Array.of(Tensors::vector, 7, 10), 1).unmodifiable();
-  // private final Tensor actions;
   private final Index statesIndex;
   private final StateActionMap stateActionMap;
 

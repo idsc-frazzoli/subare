@@ -47,7 +47,7 @@ class GridWorld_Ex3_12a {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    Index statesIndex = Index.build(gridWorld.states);
+    Index statesIndex = Index.build(gridWorld.states());
     ValueIteration vi = new ValueIteration(gridWorld, DoubleScalar.of(.9));
     Tensor values = vi.untilBelow( //
         DecimalScalar.of(.0001));

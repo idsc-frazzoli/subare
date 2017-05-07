@@ -26,7 +26,8 @@ class FVMC_RaceTrack {
     // Tensor actions = racetrack.actions(Tensors.vector(8, 4, 0, 1));
     PolicyInterface policyInterface = new EquiprobablePolicy(racetrack);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        racetrack, policyInterface, RealScalar.ONE, racetrack);
+        racetrack, policyInterface, //
+        racetrack, RealScalar.ONE);
     Tensor result = fvpe.simulate(1200);
     Index statesIndex = Index.build(racetrack.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {

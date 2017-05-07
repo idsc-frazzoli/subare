@@ -4,13 +4,19 @@ package ch.ethz.idsc.subare.core.util;
 import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.red.Max;
 
 public class DiscreteVs implements VsInterface {
+  /** initializes all state value to zero
+   * 
+   * @param discreteModel
+   * @return */
   public static DiscreteVs build(DiscreteModel discreteModel) {
     return new DiscreteVs(Index.build(discreteModel.states()));
   }
@@ -32,6 +38,10 @@ public class DiscreteVs implements VsInterface {
   public void increment(Tensor state, Scalar delta) {
     values.set(scalar -> scalar.add(delta), index.of(state));
   }
+  
+  public Tensor values() {
+    return values.unmodifiable();
+  }
 
   public void print() {
     print(Function.identity());
@@ -42,5 +52,16 @@ public class DiscreteVs implements VsInterface {
       Scalar value = values.Get(index.of(key));
       System.out.println(key + " " + value.map(ROUND));
     }
+  }
+
+  public static DiscreteVs create(DiscreteModel discreteModel, QsaInterface qsa) {
+    DiscreteVs discreteVs = build(discreteModel);
+    for (Tensor state : discreteModel.states()) {
+      Scalar max = discreteModel.actions(state).flatten(0) //
+          .map(action -> qsa.value(state, action)) //
+          .reduce(Max::of).get();
+      discreteVs.increment(state, max);
+    }
+    return discreteVs;
   }
 }

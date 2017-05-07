@@ -14,4 +14,9 @@ public interface QsaInterface {
    * @param action
    * @param delta amount that value of given state action pair should be changed */
   void increment(Tensor state, Tensor action, Scalar delta);
+
+  /** @param state
+   * @param action
+   * @param value */
+  void set(Tensor state, Tensor action, Scalar value); // TODO consider removing increment
 }

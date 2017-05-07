@@ -38,7 +38,8 @@ class FVMC_GridWorld {
     GridWorld gridWorld = new GridWorld();
     PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        gridWorld, policyInterface, RealScalar.ONE, gridWorld);
+        gridWorld, policyInterface, //
+        gridWorld, RealScalar.ONE);
     Tensor result = fvpe.simulate(12300);
     Index statesIndex = Index.build(gridWorld.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {

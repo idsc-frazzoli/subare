@@ -21,7 +21,7 @@ class GridWorld implements StandardModel, MoveInterface, RewardInterface {
   private static final Tensor WARP2_POST = Tensors.vector(2, 3); // B'
   private static final Clip CLIP = Clip.function(0, 4);
   // ---
-  final Tensor states = Flatten.of(Array.of(Tensors::vector, 5, 5), 1).unmodifiable();
+  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 5, 5), 1).unmodifiable();
   final Tensor actions = Tensors.matrix(new Number[][] { //
       { 0, -1 }, //
       { 0, +1 }, //

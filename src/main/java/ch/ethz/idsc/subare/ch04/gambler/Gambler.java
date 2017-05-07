@@ -27,8 +27,8 @@ import ch.ethz.idsc.tensor.red.Min;
  * the action has to be non-zero unless the capital == 0
  * or the terminal cash has been reached */
 class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
-  final Tensor states;
-  final Index statesIndex;
+  private final Tensor states;
+  private final Index statesIndex;
   final Scalar TERMINAL_W;
   final Scalar P_win;
   Random random = new Random();

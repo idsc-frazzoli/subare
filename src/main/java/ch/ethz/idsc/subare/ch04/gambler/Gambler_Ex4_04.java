@@ -38,7 +38,7 @@ class Gambler_Ex4_04 {
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, values);
     greedyPolicy.print(gambler.states());
     // System.out.println(greedyPolicy.policy(RealScalar.of(49), RealScalar.of(1)));
-    Tensor greedy = greedyPolicy.flatten(gambler.states);
+    Tensor greedy = greedyPolicy.flatten(gambler.states());
     Put.of(new File("/home/datahaki/ex403_greedy"), greedy);
   }
 }

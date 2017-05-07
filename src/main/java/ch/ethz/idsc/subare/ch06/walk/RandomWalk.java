@@ -20,7 +20,7 @@ class RandomWalk implements StandardModel, MonteCarloInterface, EpisodeSupplier 
   private static final Tensor TERMINATE1 = ZeroScalar.get(); // A
   private static final Tensor TERMINATE2 = RealScalar.of(6); // A'
   // ---
-  final Tensor states = Range.of(0, 7).unmodifiable();
+  private final Tensor states = Range.of(0, 7).unmodifiable();
   final Index statesIndex;
 
   public RandomWalk() {

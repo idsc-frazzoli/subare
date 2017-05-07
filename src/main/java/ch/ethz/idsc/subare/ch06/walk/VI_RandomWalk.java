@@ -15,7 +15,7 @@ public class VI_RandomWalk {
         DecimalScalar.of(.0001));
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, values);
     greedyPolicy.print(randomWalk.states());
-    Index statesIndex = Index.build(randomWalk.states);
+    Index statesIndex = Index.build(randomWalk.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + values.get(stateI));
