@@ -2,7 +2,7 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch06.walk;
 
-import ch.ethz.idsc.subare.core.td.Sarsa;
+import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -13,25 +13,25 @@ import ch.ethz.idsc.tensor.sca.Round;
  * 
  * {0, 0} 0
  * {1, -1} 0
- * {1, 1} 0.42
- * {2, -1} 0.25
- * {2, 1} 0.53
- * {3, -1} 0.35
- * {3, 1} 0.70
- * {4, -1} 0.55
- * {4, 1} 0.82
- * {5, -1} 0.60
+ * {1, 1} 1.00
+ * {2, -1} 1.00
+ * {2, 1} 1.00
+ * {3, -1} 1.00
+ * {3, 1} 1.00
+ * {4, -1} 1.00
+ * {4, 1} 1.00
+ * {5, -1} 1.00
  * {5, 1} 1.00
  * {6, 0} 0 */
-class Sarsa_RandomWalk {
+class QL_RandomWalk {
   public static void main(String[] args) {
     RandomWalk randomWalk = new RandomWalk();
     DiscreteQsa qsa = DiscreteQsa.build(randomWalk);
-    Sarsa sarsa = new Sarsa( //
+    QLearning qLearning = new QLearning( //
         randomWalk, new EquiprobablePolicy(randomWalk), //
         randomWalk, //
-        qsa, RealScalar.ONE, RealScalar.of(.1));
-    sarsa.simulate(10000);
+        qsa, RealScalar.ONE, RealScalar.of(.1)); // TODO ask jz
+    qLearning.simulate(10000);
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }
