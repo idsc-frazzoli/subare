@@ -21,6 +21,7 @@ public class IterativePolicyEvaluation {
   private final DiscreteVs vs_new;
   private final DiscreteVs vs_old;
   private int iterations = 0;
+  private int alternate = 0;
 
   // ---
   /** iterative policy evaluation (4.5)
@@ -46,14 +47,19 @@ public class IterativePolicyEvaluation {
    * @param threshold
    * @return */
   public void until(Scalar threshold) {
+    until(threshold, Integer.MAX_VALUE);
+  }
+
+  public void until(Scalar threshold, int flips) {
     Scalar past = null;
     while (true) {
       step();
       Scalar delta = Norm._1.of(vs_new.values().subtract(vs_old.values()));
-//      if (past != null && Scalars.lessThan(past, delta)) {
-//        System.out.println("give up at " + past + " -> " + delta);
-//        break;
-//      }
+      if (past != null && Scalars.lessThan(past, delta))
+        if (flips < ++alternate) {
+          System.out.println("give up at " + past + " -> " + delta);
+          break;
+        }
       past = delta;
       if (Scalars.lessThan(delta, threshold))
         break;

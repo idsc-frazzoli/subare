@@ -25,8 +25,8 @@ public class ValueIteration {
   private final Scalar gamma;
   private final DiscreteVs vs_new;
   private final DiscreteVs vs_old;
-  int iterations = 0;
-  int alternate = 0;
+  private int iterations = 0;
+  private int alternate = 0;
 
   /** @param standardModel
    * @param gamma discount */
@@ -62,12 +62,11 @@ public class ValueIteration {
     while (true) {
       step();
       Scalar delta = Norm._1.of(vs_new.values().subtract(vs_old.values()));
-      if (past != null && Scalars.lessThan(past, delta)) {
+      if (past != null && Scalars.lessThan(past, delta)) 
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);
           break;
         }
-      }
       past = delta;
       if (Scalars.lessThan(delta, threshold))
         break;

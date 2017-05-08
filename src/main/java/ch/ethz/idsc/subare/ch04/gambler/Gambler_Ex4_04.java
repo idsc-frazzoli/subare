@@ -22,10 +22,7 @@ import ch.ethz.idsc.tensor.io.Put;
  * all other optimal actions */
 class Gambler_Ex4_04 {
   public static void main(String[] args) throws IOException {
-    Gambler gambler = new Gambler(100, //
-        // RealScalar.of(.4)
-        RationalScalar.of(40, 100) //
-    );
+    Gambler gambler = new Gambler(100, RationalScalar.of(4, 10));
     ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
     Tensor record = Tensors.empty();
     for (int iters = 0; iters < 20; ++iters) {

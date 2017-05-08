@@ -45,3 +45,5 @@ Expected reward of two adversarial Upper-Confidence-Bound agents depending on th
 ![gambler_act](https://cloud.githubusercontent.com/assets/4012178/25566785/092e2a2e-2de1-11e7-85d8-89782c9357ab.png)
 
 ### Racetrack
+
+![track2](https://cloud.githubusercontent.com/assets/4012178/25793771/55d5754c-33ce-11e7-8079-48e47c1f2a6d.gif)
