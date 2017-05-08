@@ -1,3 +1,4 @@
+// code by jph
 package ch.ethz.idsc.subare.ch02.prison;
 
 import ch.ethz.idsc.subare.ch02.Agent;
@@ -6,7 +7,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
-public class TitForTatAgent extends Agent {
+class TitForTatAgent extends Agent {
   private int nextAction = 1;
 
   @Override

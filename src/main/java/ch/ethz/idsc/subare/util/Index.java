@@ -15,14 +15,14 @@ public class Index {
   private final Map<Tensor, Integer> map = new HashMap<>();
 
   private Index(Tensor tensor) {
-    this.tensor = tensor.copy();
+    this.tensor = tensor;
     int index = -1;
     for (Tensor row : this.tensor)
       map.put(row, ++index);
   }
 
   public Tensor keys() {
-    return tensor.unmodifiable();
+    return tensor;
   }
 
   public Tensor get(int index) {

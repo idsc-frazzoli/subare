@@ -1,3 +1,4 @@
+// code by jph
 package ch.ethz.idsc.subare.ch02;
 
 import ch.ethz.idsc.subare.util.FairArgMax;

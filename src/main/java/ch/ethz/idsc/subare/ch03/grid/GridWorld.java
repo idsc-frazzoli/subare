@@ -1,7 +1,10 @@
 // code by jph
 package ch.ethz.idsc.subare.ch03.grid;
 
-import ch.ethz.idsc.subare.core.MoveInterface;
+import ch.ethz.idsc.subare.core.EpisodeInterface;
+import ch.ethz.idsc.subare.core.EpisodeSupplier;
+import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -13,14 +16,14 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-class GridWorld implements StandardModel, MoveInterface {
+class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   private static final Tensor WARP1_ANTE = Tensors.vector(0, 1); // A
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'
   private static final Tensor WARP2_ANTE = Tensors.vector(0, 3); // B
   private static final Tensor WARP2_POST = Tensors.vector(2, 3); // B'
   private static final Clip CLIP = Clip.function(0, 4);
   // ---
-  final Tensor states = Flatten.of(Array.of(Tensors::vector, 5, 5), 1).unmodifiable();
+  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 5, 5), 1).unmodifiable();
   final Tensor actions = Tensors.matrix(new Number[][] { //
       { 0, -1 }, //
       { 0, +1 }, //
@@ -43,7 +46,8 @@ class GridWorld implements StandardModel, MoveInterface {
     return actions;
   }
 
-  Scalar reward(Tensor state, Tensor action) {
+  @Override
+  public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (state.equals(WARP1_ANTE))
       return RealScalar.of(10);
     if (state.equals(WARP2_ANTE))
@@ -71,6 +75,17 @@ class GridWorld implements StandardModel, MoveInterface {
     // 1 * (r + gamma * v_pi(s'))
     Tensor next = move(state, action);
     int nextI = statesIndex.of(next);
-    return reward(state, action).add(gvalues.get(nextI));
+    return reward(state, action, next).add(gvalues.get(nextI));
+  }
+
+  @Override
+  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
+    throw new RuntimeException();
+    // return new MonteCarloEpisode(this, policyInterface, state);
+  }
+
+  @Override
+  public boolean isTerminal(Tensor state) {
+    throw new RuntimeException();
   }
 }
