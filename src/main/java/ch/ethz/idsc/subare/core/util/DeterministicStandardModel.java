@@ -8,7 +8,8 @@ import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-public abstract class DeterministicStandardModel implements StandardModel, MoveInterface, RewardInterface {
+public abstract class DeterministicStandardModel implements StandardModel, //
+    MoveInterface, RewardInterface {
   @Override
   public final Scalar qsa(Tensor state, Tensor action, VsInterface vs) {
     // general term in bellman equation:

@@ -23,6 +23,7 @@ List of algorithms:
 * Sarsa: An on-policy TD control algorithm (from p.138)
 * Q-learning: An off-policy TD control algorithm (from p.140)
 * Expected Sarsa (from p.142)
+* Random-sample one-step tabular Q-planning (from p.169)
 
 
 ## Examples

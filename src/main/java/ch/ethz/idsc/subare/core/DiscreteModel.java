@@ -8,6 +8,6 @@ public interface DiscreteModel {
   Tensor states();
 
   /** @param state
-   * @return all action possible to execute from given state */
+   * @return all actions possible to execute from given state */
   Tensor actions(Tensor state);
 }
