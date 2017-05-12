@@ -5,8 +5,8 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
+import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
 
-class InfiniteVariance implements StandardModel, MonteCarloInterface, EpisodeSupplier {
+class InfiniteVariance extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   final Tensor actions = Tensors.vector(0, 1).unmodifiable(); // increment
   final Index statesIndex;
@@ -31,13 +31,6 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface, EpisodeSup
   @Override
   public Tensor actions(Tensor state) {
     return isTerminal(state) ? Tensors.of(ZeroScalar.get()) : actions;
-  }
-
-  @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
-    Tensor stateS = move(state, action);
-    Scalar reward = reward(state, action, stateS);
-    return reward.add(gvalues.Get(statesIndex.of(stateS)));
   }
 
   /**************************************************/

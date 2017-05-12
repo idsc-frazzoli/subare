@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.ch04.rental;
 
 import ch.ethz.idsc.subare.core.MoveInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.PoissonDistribution;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -51,7 +52,7 @@ class CarRental implements StandardModel, MoveInterface {
   }
 
   @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
     // TODO Auto-generated method stub
     return null;
   }

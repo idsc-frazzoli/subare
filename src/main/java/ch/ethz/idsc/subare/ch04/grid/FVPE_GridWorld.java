@@ -34,8 +34,7 @@ class FVPE_GridWorld {
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gridWorld, policyInterface, //
         gridWorld, RealScalar.ONE);
-    DiscreteVs vs = DiscreteVs.build(gridWorld);
-    vs.setAll(fvpe.simulate(12300));
+    DiscreteVs vs = fvpe.simulate(12300);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }
 }

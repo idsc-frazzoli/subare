@@ -7,10 +7,9 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
+import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
-import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -21,7 +20,7 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** produces results on p.83: */
-class WindyGrid implements StandardModel, MonteCarloInterface, EpisodeSupplier {
+class WindyGrid extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
   static final Tensor START = Tensors.vector(3, 0);
   static final Tensor GOAL = Tensors.vector(3, 7).unmodifiable();
   private static final Tensor WIND = Tensors.vector(0, 0, 0, 1, 1, 1, 2, 2, 1, 0).negate();
@@ -30,7 +29,6 @@ class WindyGrid implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   Random random = new Random();
   // ---
   private final Tensor states = Flatten.of(Array.of(Tensors::vector, 7, 10), 1).unmodifiable();
-  private final Index statesIndex;
   private final StateActionMap stateActionMap;
 
   public static WindyGrid createFour() {
@@ -59,7 +57,6 @@ class WindyGrid implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   }
 
   private WindyGrid(Tensor actions) {
-    statesIndex = Index.build(states);
     stateActionMap = StateActionMap.build(this, actions, this);
   }
 
@@ -71,13 +68,6 @@ class WindyGrid implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   @Override
   public Tensor actions(Tensor state) {
     return stateActionMap.actions(state);
-  }
-
-  @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
-    Tensor next = move(state, action);
-    int nextI = statesIndex.of(next);
-    return reward(state, action, next).add(gvalues.get(nextI));
   }
 
   /**************************************************/

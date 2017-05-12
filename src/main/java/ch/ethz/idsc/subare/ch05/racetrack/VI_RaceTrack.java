@@ -26,9 +26,8 @@ class VI_RaceTrack {
     Racetrack racetrack = new Racetrack(image, 5);
     ValueIteration vi = new ValueIteration(racetrack, RealScalar.ONE);
     vi.untilBelow(DecimalScalar.of(10), 5);
-    final Tensor values = vi.vs().values();
     System.out.println("iterations=" + vi.iterations());
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(racetrack, values);
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(racetrack, vi.vs());
     int k = 0;
     for (Tensor start : racetrack.statesStart) {
       Tensor copy = image.copy();

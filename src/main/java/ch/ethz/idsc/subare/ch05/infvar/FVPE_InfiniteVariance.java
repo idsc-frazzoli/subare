@@ -5,7 +5,6 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Tensor;
 
 class FVPE_InfiniteVariance {
   public static void main(String[] args) {
@@ -14,7 +13,6 @@ class FVPE_InfiniteVariance {
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         infiniteVariance, policyInterface, //
         infiniteVariance, RealScalar.ONE);
-    Tensor values = fvpe.simulate(123);
-    System.out.println(values);
+    System.out.println(fvpe.simulate(123).values());
   }
 }

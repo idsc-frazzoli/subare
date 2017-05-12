@@ -11,6 +11,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Max;
+import ch.ethz.idsc.tensor.red.Norm;
 
 public class DiscreteVs implements VsInterface {
   /** initializes all state value to zero
@@ -18,15 +19,33 @@ public class DiscreteVs implements VsInterface {
    * @param discreteModel
    * @return */
   public static DiscreteVs build(DiscreteModel discreteModel) {
-    return new DiscreteVs(Index.build(discreteModel.states()));
+    Index index = Index.build(discreteModel.states());
+    return new DiscreteVs(index, Array.zeros(index.size()));
+  }
+
+  public static DiscreteVs build(DiscreteModel discreteModel, Tensor values) {
+    return new DiscreteVs(Index.build(discreteModel.states()), values);
+  }
+
+  // TODO function does not belong here
+  public static DiscreteVs create(DiscreteModel discreteModel, QsaInterface qsa) {
+    return build(discreteModel, //
+        Tensor.of(discreteModel.states().flatten(0) //
+            .map(state -> discreteModel.actions(state).flatten(0) //
+                .map(action -> qsa.value(state, action)) //
+                .reduce(Max::of).get()))); // <- assumes greedy policy
   }
 
   private final Index index;
   private Tensor values;
 
-  private DiscreteVs(Index index) {
+  /** @param index
+   * @param values */
+  public DiscreteVs(Index index, Tensor values) {
+    if (index.size() != values.length())
+      throw new RuntimeException();
     this.index = index;
-    values = Array.zeros(index.size());
+    this.values = values;
   }
 
   @Override
@@ -35,16 +54,22 @@ public class DiscreteVs implements VsInterface {
   }
 
   @Override
-  public synchronized void increment(Tensor state, Scalar delta) {
-    values.set(scalar -> scalar.add(delta), index.of(state));
+  public void assign(Tensor state, Scalar value) {
+    values.set(value, index.of(state));
   }
-  
-  public void setAll(Tensor values) {
-    this.values = values.copy();
+
+  @Override
+  public DiscreteVs copy() {
+    return new DiscreteVs(index, values.copy());
   }
-  
+
+  @Override
+  public DiscreteVs discounted(Scalar gamma) {
+    return new DiscreteVs(index, values.multiply(gamma));
+  }
+
   public Tensor values() {
-    return values;
+    return values.unmodifiable();
   }
 
   public void print() {
@@ -58,14 +83,8 @@ public class DiscreteVs implements VsInterface {
     }
   }
 
-  public static DiscreteVs create(DiscreteModel discreteModel, QsaInterface qsa) {
-    DiscreteVs discreteVs = build(discreteModel);
-    for (Tensor state : discreteModel.states()) {
-      Scalar max = discreteModel.actions(state).flatten(0) //
-          .map(action -> qsa.value(state, action)) //
-          .reduce(Max::of).get();
-      discreteVs.increment(state, max);
-    }
-    return discreteVs;
+  @Override
+  public Scalar distance(VsInterface vs) {
+    return Norm._1.of(values.subtract(((DiscreteVs) vs).values));
   }
 }

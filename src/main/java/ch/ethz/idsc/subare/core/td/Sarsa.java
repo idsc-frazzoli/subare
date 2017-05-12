@@ -37,7 +37,7 @@ public class Sarsa extends AbstractTemporalDifference {
   }
 
   @Override
-  public void digest(StepInterface stepInterface) {
+  public final void digest(StepInterface stepInterface) {
     Tensor state0 = stepInterface.prevState();
     Tensor action0 = stepInterface.action();
     Scalar reward = stepInterface.reward();
@@ -45,7 +45,7 @@ public class Sarsa extends AbstractTemporalDifference {
     Tensor action1 = policyWrap.next(state1, discreteModel.actions(state1));
     Scalar value0 = qsa.value(state0, action0);
     Scalar value1 = qsa.value(state1, action1);
-    qsa.increment(state0, action0, //
-        reward.add(value1.multiply(gamma)).subtract(value0).multiply(alpha));
+    Scalar delta = reward.add(value1.multiply(gamma)).subtract(value0).multiply(alpha);
+    qsa.assign(state0, action0, value0.add(delta));
   }
 }

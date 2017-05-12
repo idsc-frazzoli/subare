@@ -31,7 +31,7 @@ public class MonteCarloExploringStarts {
   private final QsaInterface qsa;
 
   public MonteCarloExploringStarts( //
-      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, // 
+      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
       DiscreteModel discreteModel, Scalar gamma, Scalar epsilon) {
     this.episodeSupplier = episodeSupplier;
     this.policy = policyInterface;
@@ -79,7 +79,7 @@ public class MonteCarloExploringStarts {
           Tensor key = entry.getKey();
           Tensor state = key.get(0);
           Tensor action = key.get(1);
-          qsa.set(state, action, entry.getValue().get());
+          qsa.assign(state, action, entry.getValue().get());
         }
         policy = EGreedyPolicy.bestEquiprobable(discreteModel, qsa, epsilon);
       }

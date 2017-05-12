@@ -6,12 +6,21 @@ import ch.ethz.idsc.tensor.Tensor;
 
 public interface VsInterface {
   /** @param state
-   * @param action
-   * @return value of state action pair */
+   * @return value of state */
   Scalar value(Tensor state);
 
   /** @param state
-   * @param action
-   * @param delta amount that value of given state action pair should be changed */
-  void increment(Tensor state, Scalar delta);
+   * @param value */
+  void assign(Tensor state, Scalar value);
+
+  /** @return */
+  VsInterface copy();
+
+  /** @param gamma
+   * @return */
+  VsInterface discounted(Scalar gamma);
+
+  /** @param vs
+   * @return */
+  Scalar distance(VsInterface vs);
 }

@@ -11,7 +11,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.Put;
 
 class QL_Gambler {
@@ -25,8 +24,6 @@ class QL_Gambler {
     qLearning.simulate(30000);
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     DiscreteVs discreteVs = DiscreteVs.create(gambler, qsa);
-    // discreteVs.print();
-    Tensor result = discreteVs.values();
-    Put.of(new File("/home/datahaki/ql_gambler"), result);
+    Put.of(new File("/home/datahaki/ql_gambler"), discreteVs.values());
   }
 }

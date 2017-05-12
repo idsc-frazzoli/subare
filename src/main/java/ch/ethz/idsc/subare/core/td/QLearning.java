@@ -35,16 +35,17 @@ public class QLearning extends AbstractTemporalDifference {
   }
 
   @Override
-  public void digest(StepInterface stepInterface) {
+  public final void digest(StepInterface stepInterface) {
     Tensor state0 = stepInterface.prevState();
     Tensor action0 = stepInterface.action();
     Scalar reward = stepInterface.reward();
     Tensor state1 = stepInterface.nextState();
+    // ---
     Scalar max = standardModel.actions(state1).flatten(0) //
         .map(action1 -> qsa.value(state1, action1)) //
         .reduce(Max::of).get();
     Scalar value0 = qsa.value(state0, action0);
-    qsa.increment(state0, action0, //
-        reward.add(gamma.multiply(max)).subtract(value0).multiply(alpha));
+    Scalar delta = reward.add(gamma.multiply(max)).subtract(value0).multiply(alpha);
+    qsa.assign(state0, action0, value0.add(delta));
   }
 }

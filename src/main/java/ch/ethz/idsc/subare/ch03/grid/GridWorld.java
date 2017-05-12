@@ -5,8 +5,7 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -16,7 +15,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
+class GridWorld extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
   private static final Tensor WARP1_ANTE = Tensors.vector(0, 1); // A
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'
   private static final Tensor WARP2_ANTE = Tensors.vector(0, 3); // B
@@ -30,11 +29,6 @@ class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
       { -1, 0 }, //
       { +1, 0 } //
   }).unmodifiable();
-  final Index statesIndex;
-
-  public GridWorld() {
-    statesIndex = Index.build(states);
-  }
 
   @Override
   public Tensor states() {
@@ -65,17 +59,6 @@ class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
     if (state.equals(WARP2_ANTE))
       return WARP2_POST;
     return state.add(action).map(CLIP);
-  }
-
-  @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
-    // general term in bellman equation:
-    // Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
-    // simplifies here to
-    // 1 * (r + gamma * v_pi(s'))
-    Tensor next = move(state, action);
-    int nextI = statesIndex.of(next);
-    return reward(state, action, next).add(gvalues.get(nextI));
   }
 
   @Override

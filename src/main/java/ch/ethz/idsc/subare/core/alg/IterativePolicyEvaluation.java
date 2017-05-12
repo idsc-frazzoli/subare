@@ -4,11 +4,11 @@ package ch.ethz.idsc.subare.core.alg;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.red.Norm;
 
 // general bellman equation:
 // v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
@@ -18,8 +18,8 @@ public class IterativePolicyEvaluation {
   private final StandardModel standardModel;
   private final PolicyInterface policyInterface;
   private final Scalar gamma;
-  private final DiscreteVs vs_new;
-  private final DiscreteVs vs_old;
+  private final VsInterface vs_new;
+  private VsInterface vs_old;
   private int iterations = 0;
   private int alternate = 0;
 
@@ -40,7 +40,6 @@ public class IterativePolicyEvaluation {
     this.policyInterface = policyInterface;
     this.gamma = gamma;
     vs_new = DiscreteVs.build(standardModel);
-    vs_old = DiscreteVs.build(standardModel);
   }
 
   /** @param gamma
@@ -54,7 +53,7 @@ public class IterativePolicyEvaluation {
     Scalar past = null;
     while (true) {
       step();
-      Scalar delta = Norm._1.of(vs_new.values().subtract(vs_old.values()));
+      Scalar delta = vs_new.distance(vs_old);
       if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);
@@ -67,23 +66,24 @@ public class IterativePolicyEvaluation {
   }
 
   public void step() {
-    vs_old.setAll(vs_new.values());
-    Tensor gvalues = vs_new.values().multiply(gamma);
-    vs_new.setAll(Tensor.of(standardModel.states().flatten(0) //
+    vs_old = vs_new.copy();
+    VsInterface discounted = vs_new.discounted(gamma);
+    standardModel.states().flatten(0) //
         .parallel() //
-        .map(state -> jacobiAdd(state, gvalues))));
+        .forEach(state -> vs_new.assign(state, jacobiAdd(state, discounted)));
     ++iterations;
   }
 
   // helper function
-  private Scalar jacobiAdd(Tensor state, Tensor gvalues) {
+  private Scalar jacobiAdd(Tensor state, VsInterface gvalues) {
     return standardModel.actions(state).flatten(0) //
-        .map(action -> policyInterface.policy(state, action).multiply(standardModel.qsa(state, action, gvalues))) //
+        .map(action -> policyInterface.policy(state, action).multiply( //
+            standardModel.qsa(state, action, gvalues))) //
         .reduce(Scalar::add).get();
   }
 
   public DiscreteVs vs() {
-    return vs_new;
+    return (DiscreteVs) vs_new;
   }
 
   public int iterations() {

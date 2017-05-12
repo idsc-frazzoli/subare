@@ -24,7 +24,7 @@ public class PolicyWrap {
   public Tensor next(Tensor state, Tensor actions) {
     Tensor prob = Accumulate.of( //
         Tensor.of(actions.flatten(0).map(action -> policyInterface.policy(state, action))));
-    if (!Chop.isZero(Last.of(prob).subtract(RealScalar.ONE)))
+    if (!Chop.isZeros(Last.of(prob).subtract(RealScalar.ONE)))
       throw new RuntimeException("no distribution " + prob);
     Scalar threshold = DoubleScalar.of(random.nextDouble());
     int index = 0;

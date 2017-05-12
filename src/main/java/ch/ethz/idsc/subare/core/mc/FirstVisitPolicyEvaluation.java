@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.Average;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
@@ -36,7 +37,7 @@ public class FirstVisitPolicyEvaluation {
     this.episodeSupplier = episodeSupplier;
   }
 
-  public Tensor simulate(final int iterations) {
+  public DiscreteVs simulate(final int iterations) {
     int iteration = 0;
     Map<Tensor, Average> map = new HashMap<>();
     while (iteration < iterations) {
@@ -70,10 +71,10 @@ public class FirstVisitPolicyEvaluation {
       ++iteration;
     }
     Tensor states = standardModel.states();
-    Index statesIndex = Index.build(states);
-    Tensor values = Array.zeros(statesIndex.size());
+    Index index = Index.build(states);
+    Tensor values = Array.zeros(index.size());
     for (Entry<Tensor, Average> entry : map.entrySet())
-      values.set(entry.getValue().get(), statesIndex.of(entry.getKey()));
-    return values;
+      values.set(entry.getValue().get(), index.of(entry.getKey()));
+    return new DiscreteVs(index, values);
   }
 }
