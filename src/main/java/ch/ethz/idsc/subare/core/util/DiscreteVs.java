@@ -27,17 +27,17 @@ public class DiscreteVs implements VsInterface {
     return new DiscreteVs(Index.build(discreteModel.states()), values);
   }
 
-  // TODO this assumes greedy policy
   // TODO function does not belong here
   public static DiscreteVs create(DiscreteModel discreteModel, QsaInterface qsa) {
-    DiscreteVs discreteVs = build(discreteModel);
-    for (Tensor state : discreteModel.states()) {
-      Scalar max = discreteModel.actions(state).flatten(0) //
-          .map(action -> qsa.value(state, action)) //
-          .reduce(Max::of).get();
-      discreteVs.increment(state, max); // assumes that initialized to 0
-    }
-    return discreteVs;
+    return build(discreteModel, //
+        Tensor.of(discreteModel.states().flatten(0) //
+            .map(state -> discreteModel.actions(state).flatten(0) //
+                .map(action -> qsa.value(state, action)) //
+                .reduce(Max::of).get()))); // <- assumes greedy policy
+  }
+
+  public static Scalar difference(DiscreteVs d1, DiscreteVs d2) {
+    return Norm._1.of(d1.values.subtract(d2.values));
   }
 
   private final Index index;
@@ -58,13 +58,8 @@ public class DiscreteVs implements VsInterface {
   }
 
   @Override
-  public synchronized void increment(Tensor state, Scalar delta) {
-    values.set(scalar -> scalar.add(delta), index.of(state));
-  }
-
-  @Deprecated
-  public void setAll(Tensor values) {
-    this.values = values.copy();
+  public void assign(Tensor state, Scalar value) {
+    values.set(value, index.of(state));
   }
 
   public DiscreteVs copy() {
@@ -76,11 +71,7 @@ public class DiscreteVs implements VsInterface {
   }
 
   public Tensor values() {
-    return values;
-  }
-
-  public static Scalar difference(DiscreteVs d1, DiscreteVs d2) {
-    return Norm._1.of(d1.values().subtract(d2.values()));
+    return values.unmodifiable();
   }
 
   public void print() {

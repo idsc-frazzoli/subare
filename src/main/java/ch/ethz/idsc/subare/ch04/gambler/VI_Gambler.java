@@ -32,8 +32,8 @@ class VI_Gambler {
     Gambler gambler = new Gambler(100, RationalScalar.of(40, 100));
     ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
     vi.untilBelow(RealScalar.of(1e-10));
-    Tensor values = vi.vs().values();
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
+    Tensor values = vi.vs().values();
     System.out.println(values);
     Put.of(new File("/home/datahaki/ex403_values"), values);
     greedyPolicy.print(gambler.states());

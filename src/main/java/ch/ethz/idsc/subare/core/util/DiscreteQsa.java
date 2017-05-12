@@ -34,12 +34,7 @@ public class DiscreteQsa implements QsaInterface {
   }
 
   @Override
-  public synchronized void increment(Tensor state, Tensor action, Scalar delta) {
-    values.set(scalar -> scalar.add(delta), index.of(createKey(state, action)));
-  }
-
-  @Override
-  public void set(Tensor state, Tensor action, Scalar value) {
+  public void assign(Tensor state, Tensor action, Scalar value) {
     values.set(value, index.of(createKey(state, action)));
   }
 

@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.Put;
 
 class MCES_Gambler {
@@ -21,7 +20,6 @@ class MCES_Gambler {
     mces.simulate(10000);
     DiscreteVs discreteVs = DiscreteVs.create(gambler, mces.getQsa());
     discreteVs.print();
-    Tensor result = discreteVs.values();
-    Put.of(new File("/home/datahaki/mces_gambler"), result);
+    Put.of(new File("/home/datahaki/mces_gambler"), discreteVs.values());
   }
 }

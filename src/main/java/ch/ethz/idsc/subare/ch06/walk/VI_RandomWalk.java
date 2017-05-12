@@ -13,11 +13,11 @@ class VI_RandomWalk {
     RandomWalk randomWalk = new RandomWalk();
     ValueIteration vi = new ValueIteration(randomWalk, RealScalar.ONE);
     vi.untilBelow(DecimalScalar.of(.0001));
-    Tensor values = vi.vs().values();
-    System.out.println(values);
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, vi.vs());
     greedyPolicy.print(randomWalk.states());
     Index statesIndex = Index.build(randomWalk.states());
+    Tensor values = vi.vs().values();
+    System.out.println(values);
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {
       Tensor state = statesIndex.get(stateI);
       System.out.println(state + " " + values.get(stateI));

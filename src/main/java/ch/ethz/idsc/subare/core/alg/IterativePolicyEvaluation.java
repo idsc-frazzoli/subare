@@ -8,7 +8,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.red.Norm;
 
 // general bellman equation:
 // v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
@@ -54,7 +53,7 @@ public class IterativePolicyEvaluation {
     Scalar past = null;
     while (true) {
       step();
-      Scalar delta = Norm._1.of(vs_new.values().subtract(vs_old.values()));
+      Scalar delta = DiscreteVs.difference(vs_new, vs_old);
       if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);
@@ -69,9 +68,9 @@ public class IterativePolicyEvaluation {
   public void step() {
     vs_old = vs_new.copy();
     DiscreteVs discounted = vs_new.discounted(gamma);
-    vs_new.setAll(Tensor.of(standardModel.states().flatten(0) //
+    standardModel.states().flatten(0) //
         .parallel() //
-        .map(state -> jacobiAdd(state, discounted))));
+        .forEach(state -> vs_new.assign(state, jacobiAdd(state, discounted)));
     ++iterations;
   }
 

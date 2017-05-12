@@ -47,7 +47,7 @@ public class ExpectedSarsa extends AbstractTemporalDifference {
     Scalar expected = discreteModel.actions(state1).flatten(0) //
         .map(action1 -> policyInterface.policy(state1, action1).multiply(qsa.value(state1, action1))) //
         .reduce(Scalar::add).get();
-    qsa.increment(state0, action0, //
-        reward.add(expected.multiply(gamma)).subtract(value0).multiply(alpha));
+    Scalar delta = reward.add(expected.multiply(gamma)).subtract(value0).multiply(alpha);
+    qsa.assign(state0, action0, value0.add(delta));
   }
 }

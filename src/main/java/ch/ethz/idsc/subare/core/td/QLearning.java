@@ -44,7 +44,7 @@ public class QLearning extends AbstractTemporalDifference {
         .map(action1 -> qsa.value(state1, action1)) //
         .reduce(Max::of).get();
     Scalar value0 = qsa.value(state0, action0);
-    qsa.increment(state0, action0, //
-        reward.add(gamma.multiply(max)).subtract(value0).multiply(alpha));
+    Scalar delta = reward.add(gamma.multiply(max)).subtract(value0).multiply(alpha);
+    qsa.assign(state0, action0, value0.add(delta));
   }
 }

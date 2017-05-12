@@ -42,10 +42,9 @@ public class ValueIteration {
   public void step() {
     vs_old = vs_new.copy();
     DiscreteVs discounted = vs_new.discounted(gamma);
-    // Tensor gvalues = vs_new.values().multiply(gamma);
-    vs_new.setAll(Tensor.of(standardModel.states().flatten(0) //
+    standardModel.states().flatten(0) //
         .parallel() //
-        .map(state -> jacobiMax(state, discounted))));
+        .forEach(state -> vs_new.assign(state, jacobiMax(state, discounted)));
     ++iterations;
   }
 
