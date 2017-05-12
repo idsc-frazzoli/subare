@@ -9,5 +9,5 @@ public interface StandardModel extends DiscreteModel {
    * @param action
    * @param gvalues
    * @return expected value of state-action pair */
-  Scalar qsa(Tensor state, Tensor action, Tensor gvalues);
+  Scalar qsa(Tensor state, Tensor action, VsInterface gvalues);
 }

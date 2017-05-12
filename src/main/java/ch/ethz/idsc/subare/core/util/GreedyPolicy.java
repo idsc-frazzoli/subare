@@ -7,6 +7,7 @@ import java.util.Map;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
@@ -26,7 +27,7 @@ public class GreedyPolicy extends EGreedyPolicy {
    * @param standardModel
    * @param values of standardModel.states()
    * @return */
-  public static GreedyPolicy bestEquiprobableGreedy(StandardModel standardModel, Tensor values) {
+  public static GreedyPolicy bestEquiprobableGreedy(StandardModel standardModel, VsInterface values) {
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : standardModel.states()) {
       Tensor actions = standardModel.actions(state);

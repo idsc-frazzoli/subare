@@ -25,7 +25,7 @@ class VI_Gambler {
   public static PolicyInterface getOptimalPolicy(Gambler gambler) {
     ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
     vi.untilBelow(RealScalar.of(1e-10));
-    return GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs().values());
+    return GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
   }
 
   public static void main(String[] args) throws IOException {
@@ -33,7 +33,7 @@ class VI_Gambler {
     ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
     vi.untilBelow(RealScalar.of(1e-10));
     Tensor values = vi.vs().values();
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, values);
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
     System.out.println(values);
     Put.of(new File("/home/datahaki/ex403_values"), values);
     greedyPolicy.print(gambler.states());

@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.subare.util.Index;
@@ -74,10 +75,10 @@ class WindyGrid implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   }
 
   @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
     Tensor next = move(state, action);
-    int nextI = statesIndex.of(next);
-    return reward(state, action, next).add(gvalues.get(nextI));
+    // int nextI = statesIndex.of(next);
+    return reward(state, action, next).add(gvalues.value(next));
   }
 
   /**************************************************/

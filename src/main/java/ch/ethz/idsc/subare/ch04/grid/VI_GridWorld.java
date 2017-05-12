@@ -20,7 +20,7 @@ class VI_GridWorld {
     ValueIteration vi = new ValueIteration(gridWorld, RealScalar.ONE);
     vi.untilBelow(DecimalScalar.of(.0001));
     vi.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, vi.vs().values());
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, vi.vs());
     greedyPolicy.print(gridWorld.states());
   }
 }

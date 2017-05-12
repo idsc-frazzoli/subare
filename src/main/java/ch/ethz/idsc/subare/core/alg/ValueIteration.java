@@ -23,8 +23,8 @@ import ch.ethz.idsc.tensor.red.Norm;
 public class ValueIteration {
   private final StandardModel standardModel;
   private final Scalar gamma;
-  private final DiscreteVs vs_new;
-  private final DiscreteVs vs_old;
+  private DiscreteVs vs_new;
+  private DiscreteVs vs_old;
   private int iterations = 0;
   private int alternate = 0;
 
@@ -41,11 +41,12 @@ public class ValueIteration {
    * 
    * @return */
   public void step() {
-    vs_old.setAll(vs_new.values());
-    Tensor gvalues = vs_new.values().multiply(gamma);
+    vs_old = vs_new.copy();
+    DiscreteVs discounted = vs_new.discounted(gamma);
+//    Tensor gvalues = vs_new.values().multiply(gamma);
     vs_new.setAll(Tensor.of(standardModel.states().flatten(0) //
         .parallel() //
-        .map(state -> jacobiMax(state, gvalues))));
+        .map(state -> jacobiMax(state, discounted))));
     ++iterations;
   }
 
@@ -61,7 +62,7 @@ public class ValueIteration {
     Scalar past = null;
     while (true) {
       step();
-      Scalar delta = Norm._1.of(vs_new.values().subtract(vs_old.values()));
+      final Scalar delta = DiscreteVs.difference(vs_new, vs_old);
       if (past != null && Scalars.lessThan(past, delta)) 
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);
@@ -74,7 +75,7 @@ public class ValueIteration {
   }
 
   // helper function
-  private Scalar jacobiMax(Tensor state, Tensor gvalues) {
+  private Scalar jacobiMax(Tensor state, DiscreteVs gvalues) {
     return standardModel.actions(state).flatten(0) //
         .map(action -> standardModel.qsa(state, action, gvalues)) //
         .reduce(Max::of).get();

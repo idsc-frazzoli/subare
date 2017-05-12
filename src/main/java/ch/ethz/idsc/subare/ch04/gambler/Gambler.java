@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DoubleScalar;
@@ -59,7 +60,7 @@ class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   }
 
   @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
     // this ensures that staying in the terminal state does not increase the value to infinity
     if (state.equals(TERMINAL_W))
       return RealScalar.ONE;
@@ -72,12 +73,12 @@ class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
     // which results in values in the interval [0,1]
     { // win
       Scalar next = stateS.add(action);
-      values = values.append(gvalues.Get(statesIndex.of(next)));
+      values = values.append(gvalues.value(next));
       // values = values.append(reward(next, null).add(gvalues.Get(statesIndex.of(next))));
     }
     { // lose
       Scalar next = stateS.add(action.negate());
-      values = values.append(gvalues.Get(statesIndex.of(next)));
+      values = values.append(gvalues.value(next));
       // values = values.append(reward(next, null).add(gvalues.Get(statesIndex.of(next))));
     }
     return probs.dot(values).Get();

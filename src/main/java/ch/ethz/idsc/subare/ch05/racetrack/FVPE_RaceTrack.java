@@ -23,8 +23,7 @@ class FVPE_RaceTrack {
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         racetrack, policyInterface, //
         racetrack, RealScalar.ONE);
-    DiscreteVs vs = DiscreteVs.build(racetrack);
-    vs.setAll(fvpe.simulate(1200));
+    DiscreteVs vs = fvpe.simulate(1200);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }
 }

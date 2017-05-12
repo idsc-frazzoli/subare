@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
+import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -41,7 +42,8 @@ class FVPE_Gambler {
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gambler, policyInterface, //
         gambler, RealScalar.ONE);
-    Tensor result = fvpe.simulate(502030);
+    DiscreteVs vs = fvpe.simulate(502030);
+    Tensor result = vs.values();
     Put.of(new File("/home/datahaki/fvmc_gambler"), result);
     Index statesIndex = Index.build(gambler.states());
     for (int stateI = 0; stateI < statesIndex.size(); ++stateI) {

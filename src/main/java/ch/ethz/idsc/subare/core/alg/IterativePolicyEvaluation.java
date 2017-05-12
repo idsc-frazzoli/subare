@@ -18,8 +18,8 @@ public class IterativePolicyEvaluation {
   private final StandardModel standardModel;
   private final PolicyInterface policyInterface;
   private final Scalar gamma;
-  private final DiscreteVs vs_new;
-  private final DiscreteVs vs_old;
+  private DiscreteVs vs_new;
+  private DiscreteVs vs_old;
   private int iterations = 0;
   private int alternate = 0;
 
@@ -67,18 +67,19 @@ public class IterativePolicyEvaluation {
   }
 
   public void step() {
-    vs_old.setAll(vs_new.values());
-    Tensor gvalues = vs_new.values().multiply(gamma);
+    vs_old = vs_new.copy();
+    DiscreteVs discounted = vs_new.discounted(gamma);
     vs_new.setAll(Tensor.of(standardModel.states().flatten(0) //
         .parallel() //
-        .map(state -> jacobiAdd(state, gvalues))));
+        .map(state -> jacobiAdd(state, discounted))));
     ++iterations;
   }
 
   // helper function
-  private Scalar jacobiAdd(Tensor state, Tensor gvalues) {
+  private Scalar jacobiAdd(Tensor state, DiscreteVs gvalues) {
     return standardModel.actions(state).flatten(0) //
-        .map(action -> policyInterface.policy(state, action).multiply(standardModel.qsa(state, action, gvalues))) //
+        .map(action -> policyInterface.policy(state, action).multiply( //
+            standardModel.qsa(state, action, gvalues))) //
         .reduce(Scalar::add).get();
   }
 

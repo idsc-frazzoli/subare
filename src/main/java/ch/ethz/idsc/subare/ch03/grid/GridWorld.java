@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -68,14 +69,14 @@ class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   }
 
   @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
     // general term in bellman equation:
     // Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
     // simplifies here to
     // 1 * (r + gamma * v_pi(s'))
     Tensor next = move(state, action);
-    int nextI = statesIndex.of(next);
-    return reward(state, action, next).add(gvalues.get(nextI));
+    // int nextI = statesIndex.of(next);
+    return reward(state, action, next).add(gvalues.value(next));
   }
 
   @Override

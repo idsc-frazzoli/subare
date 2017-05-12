@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -34,10 +35,10 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface, EpisodeSup
   }
 
   @Override
-  public Scalar qsa(Tensor state, Tensor action, Tensor gvalues) {
+  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
     Tensor stateS = move(state, action);
     Scalar reward = reward(state, action, stateS);
-    return reward.add(gvalues.Get(statesIndex.of(stateS)));
+    return reward.add(gvalues.value(stateS));
   }
 
   /**************************************************/

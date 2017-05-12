@@ -44,7 +44,7 @@ class VI_GridWorld {
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
     vi.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, vi.vs().values());
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, vi.vs());
     greedyPolicy.print(gridWorld.states());
   }
 }

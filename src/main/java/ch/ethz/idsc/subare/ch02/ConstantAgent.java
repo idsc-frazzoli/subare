@@ -32,6 +32,6 @@ public class ConstantAgent extends Agent {
 
   @Override
   protected Tensor protected_QValues() {
-    return UnitVector.of(action, n);
+    return UnitVector.of(n, action);
   }
 }
