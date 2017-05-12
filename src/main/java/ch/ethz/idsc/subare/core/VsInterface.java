@@ -12,4 +12,15 @@ public interface VsInterface {
   /** @param state
    * @param value */
   void assign(Tensor state, Scalar value);
+
+  /** @return */
+  VsInterface copy();
+
+  /** @param gamma
+   * @return */
+  VsInterface discounted(Scalar gamma);
+
+  /** @param vs
+   * @return */
+  Scalar distance(VsInterface vs);
 }

@@ -29,10 +29,12 @@ public class TabularTemporalDifference0 extends AbstractTemporalDifference {
   }
 
   @Override
-  public void digest(StepInterface stepInterface) {
+  public final void digest(StepInterface stepInterface) {
     Tensor state0 = stepInterface.prevState();
+    // action is not required
     Scalar reward = stepInterface.reward();
     Tensor state1 = stepInterface.nextState();
+    // ---
     Scalar value0 = vs.value(state0);
     Scalar value1 = vs.value(state1);
     Scalar delta = reward.add(value1.multiply(gamma)).subtract(value0).multiply(alpha);

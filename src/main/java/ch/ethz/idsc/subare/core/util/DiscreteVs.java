@@ -36,10 +36,6 @@ public class DiscreteVs implements VsInterface {
                 .reduce(Max::of).get()))); // <- assumes greedy policy
   }
 
-  public static Scalar difference(DiscreteVs d1, DiscreteVs d2) {
-    return Norm._1.of(d1.values.subtract(d2.values));
-  }
-
   private final Index index;
   private Tensor values;
 
@@ -62,10 +58,12 @@ public class DiscreteVs implements VsInterface {
     values.set(value, index.of(state));
   }
 
+  @Override
   public DiscreteVs copy() {
     return new DiscreteVs(index, values.copy());
   }
 
+  @Override
   public DiscreteVs discounted(Scalar gamma) {
     return new DiscreteVs(index, values.multiply(gamma));
   }
@@ -83,5 +81,10 @@ public class DiscreteVs implements VsInterface {
       Scalar value = values.Get(index.of(key));
       System.out.println(key + " " + value.map(ROUND));
     }
+  }
+
+  @Override
+  public Scalar distance(VsInterface vs) {
+    return Norm._1.of(values.subtract(((DiscreteVs) vs).values));
   }
 }

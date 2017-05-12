@@ -37,7 +37,7 @@ public class ExpectedSarsa extends AbstractTemporalDifference {
   }
 
   @Override
-  public void digest(StepInterface stepInterface) {
+  public final void digest(StepInterface stepInterface) {
     Tensor state0 = stepInterface.prevState();
     Tensor action0 = stepInterface.action();
     Scalar reward = stepInterface.reward();

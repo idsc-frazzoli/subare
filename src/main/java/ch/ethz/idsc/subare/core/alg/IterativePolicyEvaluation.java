@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.alg;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -17,8 +18,8 @@ public class IterativePolicyEvaluation {
   private final StandardModel standardModel;
   private final PolicyInterface policyInterface;
   private final Scalar gamma;
-  private DiscreteVs vs_new;
-  private DiscreteVs vs_old;
+  private final VsInterface vs_new;
+  private VsInterface vs_old;
   private int iterations = 0;
   private int alternate = 0;
 
@@ -39,7 +40,6 @@ public class IterativePolicyEvaluation {
     this.policyInterface = policyInterface;
     this.gamma = gamma;
     vs_new = DiscreteVs.build(standardModel);
-    vs_old = DiscreteVs.build(standardModel);
   }
 
   /** @param gamma
@@ -53,7 +53,7 @@ public class IterativePolicyEvaluation {
     Scalar past = null;
     while (true) {
       step();
-      Scalar delta = DiscreteVs.difference(vs_new, vs_old);
+      Scalar delta = vs_new.distance(vs_old);
       if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);
@@ -67,7 +67,7 @@ public class IterativePolicyEvaluation {
 
   public void step() {
     vs_old = vs_new.copy();
-    DiscreteVs discounted = vs_new.discounted(gamma);
+    VsInterface discounted = vs_new.discounted(gamma);
     standardModel.states().flatten(0) //
         .parallel() //
         .forEach(state -> vs_new.assign(state, jacobiAdd(state, discounted)));
@@ -75,7 +75,7 @@ public class IterativePolicyEvaluation {
   }
 
   // helper function
-  private Scalar jacobiAdd(Tensor state, DiscreteVs gvalues) {
+  private Scalar jacobiAdd(Tensor state, VsInterface gvalues) {
     return standardModel.actions(state).flatten(0) //
         .map(action -> policyInterface.policy(state, action).multiply( //
             standardModel.qsa(state, action, gvalues))) //
@@ -83,7 +83,7 @@ public class IterativePolicyEvaluation {
   }
 
   public DiscreteVs vs() {
-    return vs_new;
+    return (DiscreteVs) vs_new;
   }
 
   public int iterations() {
