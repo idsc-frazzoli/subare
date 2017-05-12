@@ -10,9 +10,8 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
+import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.subare.util.Index;
@@ -39,7 +38,7 @@ import ch.ethz.idsc.tensor.sca.Decrement;
  * so we make a compromise by using the following integration procedure
  * p' = p + v + a
  * v' = clip(v + a) */
-class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
+class Racetrack extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
   public static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   public static final Tensor RED = Tensors.vector(255, 0, 0, 255);
   public static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);
@@ -110,16 +109,6 @@ class Racetrack implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   @Override
   public Tensor actions(Tensor state) {
     return stateActionMap.actions(state);
-  }
-
-  @Override
-  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
-    // general term in bellman equation:
-    // Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
-    // simplifies here to
-    // 1 * (r + gamma * v_pi(s'))
-    Tensor next = move(state, action);
-    return reward(state, action, next).add(gvalues.value(next));
   }
 
   private static Tensor shift(Tensor state, Tensor action) {

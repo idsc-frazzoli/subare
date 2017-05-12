@@ -10,7 +10,6 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
-import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -29,7 +28,6 @@ import ch.ethz.idsc.tensor.red.Min;
  * or the terminal cash has been reached */
 class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   private final Tensor states;
-  private final Index statesIndex;
   final Scalar TERMINAL_W;
   final Scalar P_win;
   Random random = new Random();
@@ -37,7 +35,6 @@ class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   /** @param P_win probabilty of winning a coin toss */
   public Gambler(int length, Scalar P_win) {
     states = Range.of(0, length + 1).unmodifiable();
-    statesIndex = Index.build(states);
     TERMINAL_W = (Scalar) Last.of(states);
     this.P_win = P_win;
   }

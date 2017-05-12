@@ -7,9 +7,8 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
+import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -21,7 +20,7 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** produces results on p.83: */
-class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
+class GridWorld extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
   private static final Clip CLIP = Clip.function(0, 3);
@@ -51,12 +50,6 @@ class GridWorld implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   public Tensor actions(Tensor state) {
     // return stateActionMap.actions(state);
     return actions;
-  }
-
-  @Override
-  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
-    Tensor next = move(state, action);
-    return reward(state, action, null).add(gvalues.value(next));
   }
 
   /**************************************************/

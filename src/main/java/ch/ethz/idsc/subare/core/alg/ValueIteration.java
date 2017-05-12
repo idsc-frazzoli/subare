@@ -8,7 +8,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
-import ch.ethz.idsc.tensor.red.Norm;
 
 /** value iteration: "policy evaluation is stopped after just one sweep"
  * (3.17) on p.69
@@ -43,7 +42,7 @@ public class ValueIteration {
   public void step() {
     vs_old = vs_new.copy();
     DiscreteVs discounted = vs_new.discounted(gamma);
-//    Tensor gvalues = vs_new.values().multiply(gamma);
+    // Tensor gvalues = vs_new.values().multiply(gamma);
     vs_new.setAll(Tensor.of(standardModel.states().flatten(0) //
         .parallel() //
         .map(state -> jacobiMax(state, discounted))));
@@ -63,7 +62,7 @@ public class ValueIteration {
     while (true) {
       step();
       final Scalar delta = DiscreteVs.difference(vs_new, vs_old);
-      if (past != null && Scalars.lessThan(past, delta)) 
+      if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);
           break;
