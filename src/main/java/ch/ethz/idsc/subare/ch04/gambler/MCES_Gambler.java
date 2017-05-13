@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -20,6 +21,6 @@ class MCES_Gambler {
     mces.simulate(10000);
     DiscreteVs discreteVs = DiscreteVs.create(gambler, mces.getQsa());
     discreteVs.print();
-    Put.of(new File("/home/datahaki/mces_gambler"), discreteVs.values());
+    Put.of(new File(Settings.root(), "mces_gambler"), discreteVs.values());
   }
 }

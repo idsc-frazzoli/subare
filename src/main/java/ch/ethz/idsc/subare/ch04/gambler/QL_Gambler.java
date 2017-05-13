@@ -5,6 +5,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import java.io.File;
 import java.io.IOException;
 
+import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
@@ -24,6 +25,6 @@ class QL_Gambler {
     qLearning.simulate(30000);
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     DiscreteVs discreteVs = DiscreteVs.create(gambler, qsa);
-    Put.of(new File("/home/datahaki/ql_gambler"), discreteVs.values());
+    Put.of(new File(Settings.root(), "ql_gambler"), discreteVs.values());
   }
 }

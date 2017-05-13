@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -22,6 +23,6 @@ class FVPE_Gambler {
         gambler, RealScalar.ONE);
     DiscreteVs vs = fvpe.simulate(12030);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.001)));
-    Put.of(new File("/home/datahaki/fvmc_gambler"), vs.values());
+    Put.of(new File(Settings.root(), "fvmc_gambler"), vs.values());
   }
 }

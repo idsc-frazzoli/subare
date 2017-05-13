@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.zip.DataFormatException;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
@@ -47,7 +48,8 @@ class VI_RaceTrack {
         }
       }
       Export.of( //
-          new File("/home/datahaki/Pictures/racetrack", String.format("track1_%02d.png", k)), //
+          new File(new File(Settings.root(), "Pictures/racetrack"), //
+              String.format("track1_%02d.png", k)), //
           ImageResize.of(copy, 8));
       ++k;
     }
