@@ -2,8 +2,9 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.grid;
 
-import ch.ethz.idsc.subare.core.alg.ValueIteration;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -31,13 +32,13 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 1} -2.0
  * {3, 2} -1.0
  * {3, 3} 0 */
-class VI_GridWorld {
+class AVI_GridWorld {
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    ValueIteration vi = new ValueIteration(gridWorld, RealScalar.ONE);
+    ActionValueIteration vi = new ActionValueIteration(gridWorld, gridWorld, RealScalar.ONE);
     vi.untilBelow(DecimalScalar.of(.0001));
-    vi.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, vi.vs());
-    greedyPolicy.print(gridWorld.states());
+    vi.qsa().print(Round.toMultipleOf(DecimalScalar.of(.1)));
+    DiscreteVs dvs = DiscreteUtils.createVs(gridWorld, vi.qsa());
+    dvs.print();
   }
 }

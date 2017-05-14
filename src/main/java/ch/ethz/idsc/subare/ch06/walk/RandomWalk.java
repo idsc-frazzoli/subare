@@ -5,10 +5,8 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
-import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -17,16 +15,11 @@ import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Range;
 
 /** Example 6.2: Random Walk, p.133 */
-class RandomWalk extends DeterministicStandardModel implements StandardModel, MonteCarloInterface, EpisodeSupplier {
+class RandomWalk extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
   private static final Tensor TERMINATE1 = ZeroScalar.get(); // A
   private static final Tensor TERMINATE2 = RealScalar.of(6); // A'
   // ---
   private final Tensor states = Range.of(0, 7).unmodifiable();
-  final Index statesIndex;
-
-  public RandomWalk() {
-    statesIndex = Index.build(states);
-  }
 
   @Override
   public Tensor states() {
