@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.red.Max;
 public class ValueIteration {
   private final StandardModel standardModel;
   private final Scalar gamma;
-  private final VsInterface vs_new;
+  private DiscreteVs vs_new;
   private VsInterface vs_old;
   private int iterations = 0;
   private int alternate = 0;
@@ -66,9 +66,9 @@ public class ValueIteration {
   public void step() {
     vs_old = vs_new.copy();
     VsInterface discounted = vs_new.discounted(gamma);
-    standardModel.states().flatten(0) //
+    vs_new = vs_new.create(standardModel.states().flatten(0) //
         .parallel() //
-        .forEach(state -> vs_new.assign(state, jacobiMax(state, discounted)));
+        .map(state -> jacobiMax(state, discounted)));
     ++iterations;
   }
 
@@ -80,7 +80,7 @@ public class ValueIteration {
   }
 
   public DiscreteVs vs() {
-    return (DiscreteVs) vs_new;
+    return vs_new;
   }
 
   public int iterations() {

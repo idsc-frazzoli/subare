@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
@@ -37,7 +38,7 @@ public class DiscreteVs implements VsInterface {
   }
 
   private final Index index;
-  private Tensor values;
+  private final Tensor values;
 
   /** @param index
    * @param values */
@@ -56,6 +57,10 @@ public class DiscreteVs implements VsInterface {
   @Override
   public void assign(Tensor state, Scalar value) {
     values.set(value, index.of(state));
+  }
+
+  public DiscreteVs create(Stream<Tensor> stream) {
+    return new DiscreteVs(index, Tensor.of(stream));
   }
 
   @Override
