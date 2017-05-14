@@ -7,6 +7,7 @@ import java.io.IOException;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -19,7 +20,7 @@ class MCES_Gambler {
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
         gambler, policyInterface, gambler, RealScalar.ONE, RealScalar.of(.1));
     mces.simulate(10000);
-    DiscreteVs discreteVs = DiscreteVs.create(gambler, mces.getQsa());
+    DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, mces.getQsa());
     discreteVs.print();
     Put.of(new File(Settings.root(), "mces_gambler"), discreteVs.values());
   }

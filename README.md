@@ -6,22 +6,23 @@ Java 8 implementation of algorithms, examples, and exercises from the 2nd editio
 
 Our implementation is inspired by the 
 [python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction)
-by Shangtong Zhang
+by Shangtong Zhang.
 
-Our implementation is different from the reference in two aspects
+Our implementation is different from the reference in two aspects:
 
-* the algorithms are implemented separate from the problem scenarios
-* the math is in exact precision which reproduces symmetries in the results in case the problem features symmetries
+* the algorithms are implemented **separate** from the problem scenarios
+* the math is in **exact** precision which reproduces symmetries in the results in case the problem features symmetries
 
 List of algorithms:
 
 * Iterative Policy Evaluation (parallel, from p.81)
-* Value Iteration (parallel, from p.90)
+* *Value Iteration* to determine V*(s) (parallel, from p.90)
+* *Action-Value Iteration* to determine Q*(s,a) (parallel)
 * First Visit Policy Evaluation (from p.100)
 * Monte Carlo Exploring Starts (from p.107)
 * Tabular Temporal Difference (from p.128)
-* Sarsa: An on-policy TD control algorithm (from p.138)
-* Q-learning: An off-policy TD control algorithm (from p.140)
+* *Sarsa*: An on-policy TD control algorithm (from p.138)
+* *Q-learning*: An off-policy TD control algorithm (from p.140)
 * Expected Sarsa (from p.142)
 * Random-sample one-step tabular Q-planning (from p.169)
 

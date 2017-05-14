@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.ExpectedSarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
@@ -42,7 +43,7 @@ class ESarsa_Gambler {
     }
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
-    DiscreteVs vs = DiscreteVs.create(gambler, qsa);
+    DiscreteVs vs = DiscreteUtils.createVs(gambler, qsa);
     Put.of(new File(Settings.root(), "esarsa_gambler"), vs.values());
     EpisodeInterface mce = gambler.kickoff(policy);
     while (mce.hasNext()) {

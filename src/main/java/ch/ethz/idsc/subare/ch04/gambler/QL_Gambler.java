@@ -8,6 +8,7 @@ import java.io.IOException;
 import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -24,7 +25,7 @@ class QL_Gambler {
         qsa, RealScalar.ONE, RealScalar.of(.1)); // TODO ask jz
     qLearning.simulate(30000);
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
-    DiscreteVs discreteVs = DiscreteVs.create(gambler, qsa);
+    DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, qsa);
     Put.of(new File(Settings.root(), "ql_gambler"), discreteVs.values());
   }
 }

@@ -14,4 +14,11 @@ public interface QsaInterface {
    * @param action
    * @param value */
   void assign(Tensor state, Tensor action, Scalar value);
+
+  /** @return */
+  QsaInterface copy();
+
+  /** @param vs
+   * @return */
+  Scalar distance(QsaInterface vs);
 }
