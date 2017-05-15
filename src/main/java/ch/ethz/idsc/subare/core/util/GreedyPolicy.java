@@ -45,7 +45,7 @@ public class GreedyPolicy extends EGreedyPolicy {
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : discreteModel.states()) {
       Tensor actions = discreteModel.actions(state);
-      Tensor va = actions.map(action -> qsa.value(state, action));
+      Tensor va = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
       FairArgMax fairArgMax = FairArgMax.of(va);
       Tensor feasible = Extract.of(actions, fairArgMax.options());
       map.put(state, Index.build(feasible));

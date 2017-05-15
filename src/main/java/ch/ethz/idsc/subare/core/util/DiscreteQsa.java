@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
@@ -10,6 +11,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.red.Norm;
 
 public class DiscreteQsa implements QsaInterface {
   public static DiscreteQsa build(DiscreteModel discreteModel) {
@@ -17,15 +19,17 @@ public class DiscreteQsa implements QsaInterface {
     for (Tensor state : discreteModel.states())
       for (Tensor action : discreteModel.actions(state))
         tensor.append(Tensors.of(state, action));
-    return new DiscreteQsa(Index.build(tensor));
+    return new DiscreteQsa(Index.build(tensor), Array.zeros(tensor.length()));
   }
 
   private final Index index;
   private final Tensor values;
 
-  private DiscreteQsa(Index index) {
+  private DiscreteQsa(Index index, Tensor values) {
+    if (index.size() != values.length())
+      throw new RuntimeException();
     this.index = index;
-    values = Array.zeros(index.size());
+    this.values = values;
   }
 
   @Override
@@ -38,12 +42,21 @@ public class DiscreteQsa implements QsaInterface {
     values.set(value, index.of(createKey(state, action)));
   }
 
+  public DiscreteQsa create(Stream<Tensor> stream) {
+    return new DiscreteQsa(index, Tensor.of(stream));
+  }
+
   public static Tensor createKey(Tensor state, Tensor action) {
     return Tensors.of(state, action);
   }
 
   public void print() {
     print(Function.identity());
+  }
+
+  @Override
+  public DiscreteQsa copy() {
+    return new DiscreteQsa(index, values.copy());
   }
 
   public void print(Function<Scalar, Scalar> ROUND) {
@@ -55,5 +68,14 @@ public class DiscreteQsa implements QsaInterface {
 
   public int size() {
     return index.size();
+  }
+
+  @Override
+  public Scalar distance(QsaInterface vs) {
+    return Norm._1.of(values.subtract(((DiscreteQsa) vs).values));
+  }
+
+  public Tensor keys() {
+    return index.keys();
   }
 }

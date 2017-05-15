@@ -10,7 +10,6 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
-import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -30,7 +29,6 @@ class CliffWalk extends DeterministicStandardModel implements MonteCarloInterfac
   Random random = new Random();
   // ---
   private final Tensor states = Flatten.of(Array.of(Tensors::vector, 4, 12), 1).unmodifiable();
-  private final Index statesIndex;
   private final StateActionMap stateActionMap;
   private final Tensor actions = Tensors.matrix(new Number[][] { //
       { 0, -1 }, //
@@ -40,7 +38,6 @@ class CliffWalk extends DeterministicStandardModel implements MonteCarloInterfac
   }).unmodifiable();
 
   public CliffWalk() {
-    statesIndex = Index.build(states);
     stateActionMap = StateActionMap.build(this, actions, this);
   }
 

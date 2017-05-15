@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -35,10 +36,10 @@ class VI_Gambler {
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
     Tensor values = vi.vs().values();
     System.out.println(values);
-    Put.of(new File("/home/datahaki/ex403_values"), values);
+    Put.of(new File(Settings.root(), "ex403_values"), values);
     greedyPolicy.print(gambler.states());
     // System.out.println(greedyPolicy.policy(RealScalar.of(49), RealScalar.of(1)));
     Tensor greedy = greedyPolicy.flatten(gambler.states());
-    Put.of(new File("/home/datahaki/ex403_greedy"), greedy);
+    Put.of(new File(Settings.root(), "ex403_greedy"), greedy);
   }
 }

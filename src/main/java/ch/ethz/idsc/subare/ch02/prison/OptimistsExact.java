@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.OptimistAgent;
+import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -52,6 +53,6 @@ class OptimistsExact extends AbstractExact {
       }
       res.append(row);
     }
-    Put.of(new File("/home/datahaki/optimist"), res);
+    Put.of(new File(Settings.root(), "optimist"), res);
   }
 }
