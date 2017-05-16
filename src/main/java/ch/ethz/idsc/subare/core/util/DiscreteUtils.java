@@ -9,7 +9,9 @@ import ch.ethz.idsc.tensor.red.Max;
 public enum DiscreteUtils {
   ;
   // ---
-  /** @param discreteModel
+  /** compute state value function v(s) based on given action-value function q(s,a)
+   * 
+   * @param discreteModel
    * @param qsa
    * @return state values */
   public static DiscreteVs createVs(DiscreteModel discreteModel, QsaInterface qsa) {

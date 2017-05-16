@@ -1,5 +1,4 @@
 // code by jph
-// inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.io.File;
@@ -44,7 +43,7 @@ class ESarsa_Gambler {
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gambler, qsa);
-    Put.of(new File(Settings.root(), "esarsa_gambler"), vs.values());
+    Put.of(new File(Settings.home(), "esarsa_gambler"), vs.values());
     EpisodeInterface mce = gambler.kickoff(policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();

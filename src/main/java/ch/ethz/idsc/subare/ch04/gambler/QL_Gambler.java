@@ -1,5 +1,4 @@
 // code by jph
-// inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.io.File;
@@ -26,6 +25,6 @@ class QL_Gambler {
     qLearning.simulate(30000);
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, qsa);
-    Put.of(new File(Settings.root(), "ql_gambler"), discreteVs.values());
+    Put.of(new File(Settings.home(), "ql_gambler"), discreteVs.values());
   }
 }

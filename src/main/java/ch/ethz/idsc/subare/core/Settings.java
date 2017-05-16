@@ -5,9 +5,9 @@ import java.io.File;
 
 public enum Settings {
   ;
-  private static final File ROOT = new File("/home/datahaki");
+  private static final File HOME = new File("/home/datahaki");
 
-  public static File root() {
-    return ROOT;
+  public static File home() {
+    return HOME;
   }
 }

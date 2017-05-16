@@ -33,12 +33,12 @@ class Gambler_Ex4_04 {
     Tensor values = Last.of(record);
     // .untilBelow(RealScalar.of(1e-10));
     System.out.println(values);
-    Put.of(new File(Settings.root(), "ex403_values"), values);
-    Put.of(new File(Settings.root(), "ex403_record"), record);
+    Put.of(new File(Settings.home(), "ex403_values"), values);
+    Put.of(new File(Settings.home(), "ex403_record"), record);
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
     greedyPolicy.print(gambler.states());
     // System.out.println(greedyPolicy.policy(RealScalar.of(49), RealScalar.of(1)));
     Tensor greedy = greedyPolicy.flatten(gambler.states());
-    Put.of(new File(Settings.root(), "ex403_greedy"), greedy);
+    Put.of(new File(Settings.home(), "ex403_greedy"), greedy);
   }
 }

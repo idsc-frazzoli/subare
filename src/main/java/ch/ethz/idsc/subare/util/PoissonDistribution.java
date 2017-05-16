@@ -8,7 +8,6 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.sca.Exp;
 
 public class PoissonDistribution {
@@ -37,11 +36,5 @@ public class PoissonDistribution {
       values.append(values.Get(index - 1).multiply(factor));
     }
     return values.Get(n);
-  }
-
-  public static void main(String[] args) {
-    PoissonDistribution poissonDistribution = new PoissonDistribution(RealScalar.of(2));
-    Scalar expected = poissonDistribution.values.dot(Range.of(0, poissonDistribution.values.length())).Get();
-    System.out.println(expected);
   }
 }

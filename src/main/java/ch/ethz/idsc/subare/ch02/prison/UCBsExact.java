@@ -49,6 +49,6 @@ class UCBsExact extends AbstractExact {
       }
       res.append(row);
     }
-    Put.of(new File(Settings.root(), "ucb"), res);
+    Put.of(new File(Settings.home(), "ucb"), res);
   }
 }

@@ -48,7 +48,7 @@ class VI_RaceTrack {
         }
       }
       Export.of( //
-          new File(new File(Settings.root(), "Pictures/racetrack"), //
+          new File(new File(Settings.home(), "Pictures/racetrack"), //
               String.format("track1_%02d.png", k)), //
           ImageResize.of(copy, 8));
       ++k;
