@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
@@ -72,15 +73,19 @@ public class ActionValueIteration {
   // helper function
   private Scalar jacobiMax(Tensor state, Tensor action) {
     Scalar ersa = actionValueInterface.expectedReward(state, action);
-    Scalar sum = ZeroScalar.get();
+    Scalar eqsa = ZeroScalar.get();
+    Scalar norm = ZeroScalar.get();
     for (Tensor next : actionValueInterface.transitions(state, action)) {
       Scalar prob = actionValueInterface.transitionProbability(state, action, next);
       Scalar max = standardModel.actions(next).flatten(0) //
           .map(actionN -> qsa_new.value(next, actionN)) //
           .reduce(Max::of).get();
-      sum = sum.add(prob.multiply(max));
+      eqsa = eqsa.add(prob.multiply(max));
+      norm = norm.add(prob);
     }
-    return ersa.add(gamma.multiply(sum));
+    if (!norm.equals(RealScalar.ONE))
+      throw new RuntimeException(); // probabilities have to sum up to 1
+    return ersa.add(gamma.multiply(eqsa));
   }
 
   public DiscreteQsa qsa() {

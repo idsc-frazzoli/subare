@@ -53,6 +53,6 @@ class OptimistsExact extends AbstractExact {
       }
       res.append(row);
     }
-    Put.of(new File(Settings.root(), "optimist"), res);
+    Put.of(new File(Settings.home(), "optimist"), res);
   }
 }

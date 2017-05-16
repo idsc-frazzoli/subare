@@ -17,12 +17,12 @@ import ch.ethz.idsc.tensor.sca.Round;
 class FVPE_Gambler {
   public static void main(String[] args) throws IOException {
     Gambler gambler = new Gambler(100, RationalScalar.of(40, 100));
-    PolicyInterface policyInterface = VI_Gambler.getOptimalPolicy(gambler);
+    PolicyInterface policyInterface = GamblerHelper.getOptimalPolicy(gambler);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gambler, policyInterface, //
         gambler, RealScalar.ONE);
     DiscreteVs vs = fvpe.simulate(12030);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.001)));
-    Put.of(new File(Settings.root(), "fvmc_gambler"), vs.values());
+    Put.of(new File(Settings.home(), "fvmc_gambler"), vs.values());
   }
 }

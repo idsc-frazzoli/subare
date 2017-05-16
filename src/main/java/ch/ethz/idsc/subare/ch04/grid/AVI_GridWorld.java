@@ -35,10 +35,10 @@ import ch.ethz.idsc.tensor.sca.Round;
 class AVI_GridWorld {
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    ActionValueIteration vi = new ActionValueIteration(gridWorld, gridWorld, RealScalar.ONE);
-    vi.untilBelow(DecimalScalar.of(.0001));
-    vi.qsa().print(Round.toMultipleOf(DecimalScalar.of(.1)));
-    DiscreteVs dvs = DiscreteUtils.createVs(gridWorld, vi.qsa());
+    ActionValueIteration avi = new ActionValueIteration(gridWorld, gridWorld, RealScalar.ONE);
+    avi.untilBelow(DecimalScalar.of(.0001));
+    avi.qsa().print(Round.toMultipleOf(DecimalScalar.of(.1)));
+    DiscreteVs dvs = DiscreteUtils.createVs(gridWorld, avi.qsa());
     dvs.print();
   }
 }

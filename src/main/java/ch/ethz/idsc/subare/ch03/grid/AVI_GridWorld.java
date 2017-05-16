@@ -46,11 +46,11 @@ class AVI_GridWorld {
 
   public static void main(String[] args) {
     GridWorld gridWorld = new GridWorld();
-    ActionValueIteration vi = new ActionValueIteration(gridWorld, gridWorld, DoubleScalar.of(.9));
-    vi.untilBelow(DecimalScalar.of(.0001));
-    System.out.println("iterations=" + vi.iterations());
-    vi.qsa().print(ROUND);
-    DiscreteVs dvs = DiscreteUtils.createVs(gridWorld, vi.qsa());
+    ActionValueIteration avi = new ActionValueIteration(gridWorld, gridWorld, DoubleScalar.of(.9));
+    avi.untilBelow(DecimalScalar.of(.0001));
+    System.out.println("iterations=" + avi.iterations());
+    avi.qsa().print(ROUND);
+    DiscreteVs dvs = DiscreteUtils.createVs(gridWorld, avi.qsa());
     dvs.print(ROUND);
   }
 }

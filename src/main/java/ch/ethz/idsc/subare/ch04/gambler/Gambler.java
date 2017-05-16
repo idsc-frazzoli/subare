@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.util.Random;
 
+import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -26,7 +27,8 @@ import ch.ethz.idsc.tensor.red.Min;
  * an action defines the amount of coins to bet
  * the action has to be non-zero unless the capital == 0
  * or the terminal cash has been reached */
-class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
+class Gambler implements StandardModel, //
+    MonteCarloInterface, EpisodeSupplier, ActionValueInterface {
   private final Tensor states;
   final Scalar TERMINAL_W;
   final Scalar P_win;
@@ -49,8 +51,8 @@ class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
     if (isTerminal(state))
       return Tensors.of(ZeroScalar.get());
     // here we deviate from the book and the code by STZ:
-    // if the state is non-terminal, 0 < cash < 100,
-    // we require that the bet=action is non-zero.
+    // we require that the bet=action is non-zero,
+    // if the state is non-terminal, 0 < cash < 100.
     // otherwise the player can stall (the iteration) forever.
     Scalar stateS = state.Get();
     return Range.of(1, Min.of(stateS, TERMINAL_W.subtract(stateS)).number().intValue() + 1);
@@ -106,5 +108,35 @@ class Gambler implements StandardModel, MonteCarloInterface, EpisodeSupplier {
   @Override
   public boolean isTerminal(Tensor state) {
     return state.equals(ZeroScalar.get()) || state.equals(TERMINAL_W);
+  }
+
+  /**************************************************/
+  @Override
+  public Scalar expectedReward(Tensor state, Tensor action) {
+    if (isTerminal(state))
+      return ZeroScalar.get();
+    if (state.add(action).equals(TERMINAL_W))
+      return P_win; // P_win * 1
+    return ZeroScalar.get();
+  }
+
+  @Override
+  public Tensor transitions(Tensor state, Tensor action) {
+    if (isTerminal(state))
+      return Tensors.of(state); // next \in {state}
+    return Tensors.of( //
+        state.add(action), // P_win
+        state.subtract(action)); // 1 - P_win
+  }
+
+  @Override
+  public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
+    if (isTerminal(state))
+      return RealScalar.ONE;
+    if (state.add(action).equals(next))
+      return P_win;
+    if (state.subtract(action).equals(next))
+      return RealScalar.ONE.subtract(P_win);
+    throw new RuntimeException();
   }
 }

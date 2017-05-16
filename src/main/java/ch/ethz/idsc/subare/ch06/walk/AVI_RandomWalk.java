@@ -9,11 +9,11 @@ import ch.ethz.idsc.tensor.RealScalar;
 class AVI_RandomWalk {
   public static void main(String[] args) {
     RandomWalk randomWalk = new RandomWalk();
-    ActionValueIteration vi = new ActionValueIteration(randomWalk, randomWalk, RealScalar.ONE);
-    vi.untilBelow(DecimalScalar.of(.0001));
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, vi.qsa());
+    ActionValueIteration avi = new ActionValueIteration(randomWalk, randomWalk, RealScalar.ONE);
+    avi.untilBelow(DecimalScalar.of(.0001));
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, avi.qsa());
     greedyPolicy.print(randomWalk.states());
     System.out.println("q*(s,a)");
-    vi.qsa().print();
+    avi.qsa().print();
   }
 }

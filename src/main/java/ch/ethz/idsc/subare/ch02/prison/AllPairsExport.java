@@ -15,7 +15,7 @@ class AllPairsExport {
     // List<Supplier<Agent>> list = AgentSupplier.getOptimists(.01, .8, 30);
     // List<Supplier<Agent>> list = AgentSupplier.getUCBs(0, 6, 30);
     List<Supplier<Agent>> list = AgentSupplier.getEgreedyC(0.1, .8, 20);
-    Put.of(new File(Settings.root(), "egreedyc"), AllPairs.performance(list, 20, 500));
+    Put.of(new File(Settings.home(), "egreedyc"), AllPairs.performance(list, 20, 500));
     System.out.println("done.");
   }
 }
