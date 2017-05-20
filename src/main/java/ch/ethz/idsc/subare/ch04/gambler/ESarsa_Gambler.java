@@ -1,12 +1,10 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
-import java.io.File;
 import java.io.IOException;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.ExpectedSarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -14,6 +12,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -43,7 +42,7 @@ class ESarsa_Gambler {
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gambler, qsa);
-    Put.of(new File(Settings.home(), "esarsa_gambler"), vs.values());
+    Put.of(UserHome.file("esarsa_gambler"), vs.values());
     EpisodeInterface mce = gambler.kickoff(policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();

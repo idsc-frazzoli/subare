@@ -1,15 +1,14 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
-import java.io.File;
 import java.io.IOException;
 
-import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Put;
@@ -25,6 +24,6 @@ class QL_Gambler {
     qLearning.simulate(30000);
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, qsa);
-    Put.of(new File(Settings.home(), "ql_gambler"), discreteVs.values());
+    Put.of(UserHome.file("ql_gambler"), discreteVs.values());
   }
 }

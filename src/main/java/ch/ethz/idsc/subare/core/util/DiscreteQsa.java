@@ -11,6 +11,8 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.red.Max;
+import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Norm;
 
 public class DiscreteQsa implements QsaInterface {
@@ -64,6 +66,14 @@ public class DiscreteQsa implements QsaInterface {
       Scalar value = values.Get(index.of(key));
       System.out.println(key + " " + value.map(ROUND));
     }
+  }
+
+  public Scalar getMin() {
+    return values.flatten(-1).map(Scalar.class::cast).reduce(Min::of).get();
+  }
+
+  public Scalar getMax() {
+    return values.flatten(-1).map(Scalar.class::cast).reduce(Max::of).get();
   }
 
   public int size() {

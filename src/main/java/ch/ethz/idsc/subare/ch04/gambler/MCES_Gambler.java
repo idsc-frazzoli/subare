@@ -1,14 +1,13 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
-import java.io.File;
 import java.io.IOException;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Put;
@@ -22,6 +21,6 @@ class MCES_Gambler {
     mces.simulate(10000);
     DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, mces.getQsa());
     discreteVs.print();
-    Put.of(new File(Settings.home(), "mces_gambler"), discreteVs.values());
+    Put.of(UserHome.file("mces_gambler"), discreteVs.values());
   }
 }
