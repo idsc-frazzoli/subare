@@ -15,7 +15,7 @@ class MCES_InfiniteVariance {
         infiniteVariance, policyInterface, //
         infiniteVariance, RealScalar.ONE, RealScalar.of(.5));
     mces.simulate(1);
-    DiscreteQsa discreteQsa = (DiscreteQsa) mces.getQsa();
+    DiscreteQsa discreteQsa = (DiscreteQsa) mces.qsa();
     discreteQsa.print();
   }
 }
