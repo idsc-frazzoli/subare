@@ -8,14 +8,18 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.opt.LinearInterpolation;
 
 public class Colorscheme {
-  public static Interpolation classic() {
+  private static Interpolation of(String string) {
     try {
       return LinearInterpolation.of( //
-          Import.of(new File("".getClass().getResource("/util/colorscheme/classic.csv").getPath())));
+          Import.of(new File("".getClass().getResource("/util/colorscheme/" + string + ".csv").getPath())));
     } catch (Exception exception) {
       // ---
     }
     return null;
+  }
+
+  public static Interpolation classic() {
+    return of("classic");
   }
 
   public static void main(String[] args) throws Exception {

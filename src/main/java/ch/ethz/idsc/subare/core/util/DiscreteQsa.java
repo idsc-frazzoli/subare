@@ -67,6 +67,10 @@ public class DiscreteQsa implements QsaInterface {
       System.out.println(key + " " + value.map(ROUND));
     }
   }
+  
+  public Tensor values() {
+    return values.unmodifiable();
+  }
 
   public Scalar getMin() {
     return values.flatten(-1).map(Scalar.class::cast).reduce(Min::of).get();

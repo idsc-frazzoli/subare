@@ -1,8 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.cliff;
 
-import java.util.Random;
-
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -21,23 +19,27 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** Example 6.6 cliff walking */
-class CliffWalk extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
-  static final Tensor START = Tensors.vector(3, 0).unmodifiable();
-  static final Tensor GOAL = Tensors.vector(3, 11).unmodifiable();
-  private static final Clip CLIP_X = Clip.function(0, 3);
-  private static final Clip CLIP_Y = Clip.function(0, 11);
-  Random random = new Random();
+class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+  static final int NX = 20;
+  static final int NY = 6;
+  static final int MX = NX - 1;
+  static final int MY = NY - 1;
+  static final Tensor START = Tensors.vector(0, MY).unmodifiable();
+  static final Tensor GOAL = Tensors.vector(MX, MY).unmodifiable();
+  private static final Clip CLIP_X = Clip.function(0, MX);
+  private static final Clip CLIP_Y = Clip.function(0, MY);
   // ---
-  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 4, 12), 1).unmodifiable();
+  // TODO remove cliff states!
+  private final Tensor states = Flatten.of(Array.of(Tensors::vector, NX, NY), 1).unmodifiable();
   private final StateActionMap stateActionMap;
-  private final Tensor actions = Tensors.matrix(new Number[][] { //
-      { 0, -1 }, //
-      { 0, +1 }, //
+  final Tensor actions = Tensors.matrix(new Number[][] { //
+      { +1, 0 }, //
       { -1, 0 }, //
-      { +1, 0 } //
+      { 0, +1 }, //
+      { 0, -1 } //
   }).unmodifiable();
 
-  public CliffWalk() {
+  public Cliffwalk() {
     stateActionMap = StateActionMap.build(this, actions, this);
   }
 
@@ -54,11 +56,11 @@ class CliffWalk extends DeterministicStandardModel implements MonteCarloInterfac
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
-    if (isTerminal(stateS)) // -1 until goal is reached
+    if (isTerminal(stateS))
       return ZeroScalar.get();
     if (stateS.equals(START))
-      return RealScalar.of(-100);
-    return RealScalar.ONE.negate();
+      return RealScalar.of(-10); // walked off cliff
+    return RealScalar.ONE.negate(); // -1 until goal is reached
   }
 
   @Override
@@ -74,9 +76,9 @@ class CliffWalk extends DeterministicStandardModel implements MonteCarloInterfac
   }
 
   boolean isCliff(Tensor state) {
-    Scalar y = state.Get(1);
-    return state.get(0).equals(RealScalar.of(3)) && //
-        Scalars.lessThan(ZeroScalar.get(), y) && Scalars.lessThan(y, RealScalar.of(11));
+    Scalar x = state.Get(0);
+    return state.get(1).equals(RealScalar.of(MY)) && //
+        Scalars.lessThan(ZeroScalar.get(), x) && Scalars.lessThan(x, RealScalar.of(MX));
   }
 
   /**************************************************/

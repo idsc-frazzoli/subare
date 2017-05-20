@@ -25,7 +25,7 @@ enum GamblerHelper {
 
   public static Tensor render(Gambler gambler, DiscreteQsa qsa) {
     Interpolation colorscheme = Colorscheme.classic();
-    final Tensor tensor = Array.zeros(101, 51, 4);
+    final Tensor tensor = Array.zeros(101, 51, 4); // TODO lookup constants
     final Scalar max = qsa.getMax();
     for (Tensor state : gambler.states())
       for (Tensor action : gambler.actions(state)) {
