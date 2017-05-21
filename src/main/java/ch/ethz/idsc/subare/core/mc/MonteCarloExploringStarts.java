@@ -11,7 +11,6 @@ import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -28,7 +27,8 @@ public class MonteCarloExploringStarts {
   private final DiscreteModel discreteModel;
   private final Scalar gamma;
   private final Scalar epsilon;
-  private final QsaInterface qsa;
+  private final DiscreteQsa qsa;
+  private final Map<Tensor, Average> map = new HashMap<>();
 
   public MonteCarloExploringStarts( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
@@ -43,7 +43,6 @@ public class MonteCarloExploringStarts {
 
   public void simulate(final int iterations) {
     int iteration = 0;
-    Map<Tensor, Average> map = new HashMap<>();
     while (iteration < iterations) {
       // policy has to satisfy exploring starts condition
       EpisodeInterface episodeInterface = episodeSupplier.kickoff(policy);
@@ -87,7 +86,7 @@ public class MonteCarloExploringStarts {
     }
   }
 
-  public QsaInterface getQsa() {
+  public DiscreteQsa qsa() {
     return qsa;
   }
 }

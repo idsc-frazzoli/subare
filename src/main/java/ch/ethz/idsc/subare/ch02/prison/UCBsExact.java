@@ -1,13 +1,12 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02.prison;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.UCBAgent;
-import ch.ethz.idsc.subare.core.Settings;
+import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -49,6 +48,6 @@ class UCBsExact extends AbstractExact {
       }
       res.append(row);
     }
-    Put.of(new File(Settings.home(), "ucb"), res);
+    Put.of(UserHome.file("ucb"), res);
   }
 }

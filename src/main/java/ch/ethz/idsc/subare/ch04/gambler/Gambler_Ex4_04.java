@@ -2,13 +2,11 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.gambler;
 
-import java.io.File;
 import java.io.IOException;
 
-import ch.ethz.idsc.subare.core.Settings;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
-import ch.ethz.idsc.tensor.RationalScalar;
+import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -23,7 +21,7 @@ import ch.ethz.idsc.tensor.io.Put;
  * all other optimal actions */
 class Gambler_Ex4_04 {
   public static void main(String[] args) throws IOException {
-    Gambler gambler = new Gambler(100, RationalScalar.of(4, 10));
+    Gambler gambler = Gambler.createDefault();
     ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
     Tensor record = Tensors.empty();
     for (int iters = 0; iters < 20; ++iters) {
@@ -33,12 +31,12 @@ class Gambler_Ex4_04 {
     Tensor values = Last.of(record);
     // .untilBelow(RealScalar.of(1e-10));
     System.out.println(values);
-    Put.of(new File(Settings.home(), "ex403_values"), values);
-    Put.of(new File(Settings.home(), "ex403_record"), record);
+    Put.of(UserHome.file("ex403_values"), values);
+    Put.of(UserHome.file("ex403_record"), record);
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
     greedyPolicy.print(gambler.states());
     // System.out.println(greedyPolicy.policy(RealScalar.of(49), RealScalar.of(1)));
     Tensor greedy = greedyPolicy.flatten(gambler.states());
-    Put.of(new File(Settings.home(), "ex403_greedy"), greedy);
+    Put.of(UserHome.file("ex403_greedy"), greedy);
   }
 }

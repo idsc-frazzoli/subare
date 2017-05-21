@@ -12,10 +12,10 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** */
-class VI_CliffWalk {
+class VI_Cliffwalk {
   public static void main(String[] args) {
-    CliffWalk cliffWalk = new CliffWalk();
-    ValueIteration vi = new ValueIteration(cliffWalk, RealScalar.ONE);
+    Cliffwalk cliffwalk = new Cliffwalk(12, 4);
+    ValueIteration vi = new ValueIteration(cliffwalk, RealScalar.ONE);
     vi.untilBelow(DecimalScalar.of(.0001));
     // GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(cliffWalk, values);
     // greedyPolicy.print(cliffWalk.states());
@@ -24,8 +24,8 @@ class VI_CliffWalk {
     // Tensor state = statesIndex.get(stateI);
     // System.out.println(state + " " + values.get(stateI).map(ROUND));
     // }
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(cliffWalk, vi.vs());
-    EpisodeInterface mce = cliffWalk.kickoff(policyInterface);
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(cliffwalk, vi.vs());
+    EpisodeInterface mce = cliffwalk.kickoff(policyInterface);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();
