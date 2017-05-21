@@ -8,14 +8,13 @@ import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Put;
 import ch.ethz.idsc.tensor.sca.Round;
 
 class FVPE_Gambler {
   public static void main(String[] args) throws IOException {
-    Gambler gambler = new Gambler(100, RationalScalar.of(40, 100));
+    Gambler gambler = Gambler.createDefault();
     PolicyInterface policyInterface = GamblerHelper.getOptimalPolicy(gambler);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gambler, policyInterface, //

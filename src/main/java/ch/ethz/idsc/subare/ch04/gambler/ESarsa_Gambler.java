@@ -12,7 +12,6 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -24,7 +23,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 /** Expected Sarsa applied to gambler */
 class ESarsa_Gambler {
   public static void main(String[] args) throws Exception {
-    Gambler gambler = new Gambler(100, RationalScalar.of(4, 10));
+    Gambler gambler = Gambler.createDefault();
     int EPISODES = 300;
     Tensor epsilon = Subdivide.of(.9, .01, EPISODES);
     PolicyInterface policy = new EquiprobablePolicy(gambler);

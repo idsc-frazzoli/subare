@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.tensor.DoubleScalar;
+import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -33,6 +34,10 @@ class Gambler implements StandardModel, //
   final Scalar TERMINAL_W;
   final Scalar P_win;
   Random random = new Random();
+
+  public static Gambler createDefault() {
+    return new Gambler(100, RationalScalar.of(4, 10));
+  }
 
   /** @param max stake
    * @param P_win probabilty of winning a coin toss */

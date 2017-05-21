@@ -46,6 +46,23 @@ Expected reward of two adversarial Upper-Confidence-Bound agents depending on th
 
 ![gambler_act](https://cloud.githubusercontent.com/assets/4012178/25566785/092e2a2e-2de1-11e7-85d8-89782c9357ab.png)
 
+Exact function q(s,a)
+
+![gambler_qsa_avi](https://cloud.githubusercontent.com/assets/4012178/26282929/2edff964-3e1c-11e7-996a-4450070df589.png)
+
+Monte Carlo q(s,a)
+
+![gambler_qsa_mces](https://cloud.githubusercontent.com/assets/4012178/26282931/40fd07cc-3e1c-11e7-9831-ccb707a44a96.gif)
+
+ESarsa q(s,a)
+
+![gambler_qsa_esarsa](https://cloud.githubusercontent.com/assets/4012178/26282932/4c85ec12-3e1c-11e7-8bd5-1fe4f2ea2e7e.gif)
+
+QLearning q(s,a)
+
+![gambler_qsa_qlearn](https://cloud.githubusercontent.com/assets/4012178/26282933/5721d5d2-3e1c-11e7-9a59-183f0ad350e7.gif)
+
+
 ### Racetrack
 
 ![track2](https://cloud.githubusercontent.com/assets/4012178/25793771/55d5754c-33ce-11e7-8079-48e47c1f2a6d.gif)

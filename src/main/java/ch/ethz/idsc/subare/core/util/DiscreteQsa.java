@@ -67,7 +67,7 @@ public class DiscreteQsa implements QsaInterface {
       System.out.println(key + " " + value.map(ROUND));
     }
   }
-  
+
   public Tensor values() {
     return values.unmodifiable();
   }

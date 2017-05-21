@@ -6,7 +6,6 @@ import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
@@ -14,7 +13,7 @@ import ch.ethz.idsc.tensor.io.Put;
 
 class MCES_Gambler {
   public static void main(String[] args) throws Exception {
-    Gambler gambler = new Gambler(100, RationalScalar.of(40, 100));
+    Gambler gambler = Gambler.createDefault();
     PolicyInterface policyInterface = GamblerHelper.getOptimalPolicy(gambler);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
         gambler, policyInterface, gambler, RealScalar.ONE, RealScalar.of(.1));

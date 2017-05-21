@@ -7,7 +7,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
@@ -15,7 +14,7 @@ import ch.ethz.idsc.tensor.io.Put;
 
 class QL_Gambler {
   public static void main(String[] args) throws Exception {
-    Gambler gambler = new Gambler(100, RationalScalar.of(4, 10));
+    Gambler gambler = Gambler.createDefault();
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     QLearning qLearning = new QLearning( //
         gambler, new EquiprobablePolicy(gambler), //

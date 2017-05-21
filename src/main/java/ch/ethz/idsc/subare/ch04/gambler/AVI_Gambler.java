@@ -5,7 +5,6 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.Put;
@@ -13,7 +12,7 @@ import ch.ethz.idsc.tensor.io.Put;
 /** action value iteration for gambler's dilemma */
 class AVI_Gambler {
   public static void main(String[] args) throws Exception {
-    Gambler gambler = new Gambler(200, RationalScalar.of(30, 100));
+    Gambler gambler = Gambler.createDefault();
     ActionValueIteration avi = new ActionValueIteration(gambler, gambler, RealScalar.ONE);
     avi.untilBelow(RealScalar.of(1e-3));
     Export.of(UserHome.file("gambler_qsa_avi.png"), GamblerHelper.render(gambler, avi.qsa()));
