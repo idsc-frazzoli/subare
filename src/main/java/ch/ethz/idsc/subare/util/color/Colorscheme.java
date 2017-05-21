@@ -22,7 +22,11 @@ public class Colorscheme {
     return of("classic");
   }
 
+  public static Interpolation parula() {
+    return of("parula");
+  }
+
   public static void main(String[] args) throws Exception {
-    // Export.of(UserHome.file("classic.csv"), classic());
+    // ---
   }
 }

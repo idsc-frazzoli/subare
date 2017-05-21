@@ -17,10 +17,11 @@ class MCES_Gambler {
     PolicyInterface policyInterface = GamblerHelper.getOptimalPolicy(gambler);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
         gambler, policyInterface, gambler, RealScalar.ONE, RealScalar.of(.1));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("gambler_qsa_mces.gif"), 100);
-    for (int index = 0; index < 100; ++index) {
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_mces.gif"), 100);
+    int EPISODES = 100;
+    for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
-      mces.simulate(250);
+      mces.simulate(300);
       gsw.append(ImageFormat.of(GamblerHelper.render(gambler, mces.qsa())));
     }
     gsw.close();

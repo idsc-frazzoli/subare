@@ -20,7 +20,7 @@ class QL_Gambler {
         gambler, new EquiprobablePolicy(gambler), //
         gambler, //
         qsa, RealScalar.ONE, RealScalar.of(.1)); // TODO ask jz
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("gambler_qsa_qlearn.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_qlearn.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);

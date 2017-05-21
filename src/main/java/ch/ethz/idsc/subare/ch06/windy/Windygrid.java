@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** produces results on p.83: */
-class WindyGrid extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+class Windygrid extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
   static final Tensor START = Tensors.vector(3, 0);
   static final Tensor GOAL = Tensors.vector(3, 7).unmodifiable();
   private static final Tensor WIND = Tensors.vector(0, 0, 0, 1, 1, 1, 2, 2, 1, 0).negate();
@@ -31,17 +31,17 @@ class WindyGrid extends DeterministicStandardModel implements MonteCarloInterfac
   private final Tensor states = Flatten.of(Array.of(Tensors::vector, 7, 10), 1).unmodifiable();
   private final StateActionMap stateActionMap;
 
-  public static WindyGrid createFour() {
+  public static Windygrid createFour() {
     Tensor actions = Tensors.matrix(new Number[][] { //
         { 0, -1 }, //
         { 0, +1 }, //
         { -1, 0 }, //
         { +1, 0 } //
     }).unmodifiable();
-    return new WindyGrid(actions);
+    return new Windygrid(actions);
   }
 
-  public static WindyGrid createKing() {
+  public static Windygrid createKing() {
     Tensor actions = Tensors.matrix(new Number[][] { //
         { 0, -1 }, //
         { 0, +1 }, //
@@ -53,10 +53,10 @@ class WindyGrid extends DeterministicStandardModel implements MonteCarloInterfac
         { -1, -1 }, //
         { -1, +1 } //
     }).unmodifiable();
-    return new WindyGrid(actions);
+    return new Windygrid(actions);
   }
 
-  private WindyGrid(Tensor actions) {
+  private Windygrid(Tensor actions) {
     stateActionMap = StateActionMap.build(this, actions, this);
   }
 
