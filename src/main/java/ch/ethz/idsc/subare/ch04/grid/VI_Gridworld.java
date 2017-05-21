@@ -31,13 +31,13 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 1} -2.0
  * {3, 2} -1.0
  * {3, 3} 0 */
-class VI_GridWorld {
+class VI_Gridworld {
   public static void main(String[] args) {
-    GridWorld gridWorld = new GridWorld();
-    ValueIteration vi = new ValueIteration(gridWorld, RealScalar.ONE);
+    Gridworld gridworld = new Gridworld();
+    ValueIteration vi = new ValueIteration(gridworld, RealScalar.ONE);
     vi.untilBelow(DecimalScalar.of(.0001));
     vi.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, vi.vs());
-    greedyPolicy.print(gridWorld.states());
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridworld, vi.vs());
+    greedyPolicy.print(gridworld.states());
   }
 }

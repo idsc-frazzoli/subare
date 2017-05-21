@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** produces results on p.83: */
-class GridWorld extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+class Gridworld extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
   private static final Clip CLIP = Clip.function(0, 3);
@@ -36,7 +36,7 @@ class GridWorld extends DeterministicStandardModel implements MonteCarloInterfac
   final Index statesIndex;
   // final StateActionMap stateActionMap;
 
-  public GridWorld() {
+  public Gridworld() {
     statesIndex = Index.build(states);
     // stateActionMap = StateActionMap.build(this, actions, this);
   }

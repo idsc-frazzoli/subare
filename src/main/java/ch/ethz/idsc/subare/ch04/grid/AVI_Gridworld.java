@@ -32,13 +32,13 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 1} -2.0
  * {3, 2} -1.0
  * {3, 3} 0 */
-class AVI_GridWorld {
+class AVI_Gridworld {
   public static void main(String[] args) {
-    GridWorld gridWorld = new GridWorld();
-    ActionValueIteration avi = new ActionValueIteration(gridWorld, gridWorld, RealScalar.ONE);
+    Gridworld gridworld = new Gridworld();
+    ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld, RealScalar.ONE);
     avi.untilBelow(DecimalScalar.of(.0001));
     avi.qsa().print(Round.toMultipleOf(DecimalScalar.of(.1)));
-    DiscreteVs dvs = DiscreteUtils.createVs(gridWorld, avi.qsa());
+    DiscreteVs dvs = DiscreteUtils.createVs(gridworld, avi.qsa());
     dvs.print();
   }
 }

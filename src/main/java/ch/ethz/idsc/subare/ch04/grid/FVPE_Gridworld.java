@@ -27,13 +27,13 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 1} -21.5
  * {3, 2} -13.1
  * {3, 3} 0 */
-class FVPE_GridWorld {
+class FVPE_Gridworld {
   public static void main(String[] args) {
-    GridWorld gridWorld = new GridWorld();
-    PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
+    Gridworld gridworld = new Gridworld();
+    PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        gridWorld, policyInterface, //
-        gridWorld, RealScalar.ONE);
+        gridworld, policyInterface, //
+        gridworld, RealScalar.ONE);
     DiscreteVs vs = fvpe.simulate(12300);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }
