@@ -1,3 +1,4 @@
+// code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
@@ -11,6 +12,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum GamblerHelper {
@@ -25,14 +27,17 @@ enum GamblerHelper {
 
   public static Tensor render(Gambler gambler, DiscreteQsa qsa) {
     Interpolation colorscheme = Colorscheme.classic();
-    final Tensor tensor = Array.zeros(101, 51, 4); // TODO lookup constants
-    final Scalar max = qsa.getMax();
+    final int length = gambler.states().length();
+    final int sizea = (length + 1) / 2;
+    final int offset = (length - 1) / 2;
+    final Tensor tensor = Array.zeros(length, sizea, 4);
+    DiscreteQsa scaled = qsa.create(Rescale.of(qsa.values()).flatten(0));
     for (Tensor state : gambler.states())
       for (Tensor action : gambler.actions(state)) {
-        Scalar sca = qsa.value(state, action);
+        Scalar sca = scaled.value(state, action);
         int s = state.Get().number().intValue();
-        int a = 50 - action.Get().number().intValue();
-        tensor.set(colorscheme.get(BASE.multiply(sca.divide(max))), s, a);
+        int a = offset - action.Get().number().intValue();
+        tensor.set(colorscheme.get(BASE.multiply(sca)), s, a);
       }
     return ImageResize.of(tensor, 4);
   }

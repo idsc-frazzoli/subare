@@ -17,7 +17,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 /** sarsa applied to cliff walk */
 class Sarsa_Cliffwalk {
   public static void main(String[] args) {
-    Cliffwalk cliffwalk = new Cliffwalk();
+    Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     PolicyInterface policy = new EquiprobablePolicy(cliffwalk);
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
     System.out.println(qsa.size());

@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.Tensor;
 /** */
 class VI_Cliffwalk {
   public static void main(String[] args) {
-    Cliffwalk cliffwalk = new Cliffwalk();
+    Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     ValueIteration vi = new ValueIteration(cliffwalk, RealScalar.ONE);
     vi.untilBelow(DecimalScalar.of(.0001));
     // GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(cliffWalk, values);

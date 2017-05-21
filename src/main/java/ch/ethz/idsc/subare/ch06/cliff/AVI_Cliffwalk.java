@@ -13,10 +13,10 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Export;
 
-/** */
+/** action value iteration for cliff walk */
 class AVI_Cliffwalk {
   public static void main(String[] args) throws IOException {
-    Cliffwalk cliffwalk = new Cliffwalk();
+    Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     ActionValueIteration avi = new ActionValueIteration(cliffwalk, cliffwalk, RealScalar.ONE);
     avi.untilBelow(DecimalScalar.of(.0001));
     DiscreteVs dvs = DiscreteUtils.createVs(cliffwalk, avi.qsa());

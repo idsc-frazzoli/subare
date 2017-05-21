@@ -34,9 +34,10 @@ class Gambler implements StandardModel, //
   final Scalar P_win;
   Random random = new Random();
 
-  /** @param P_win probabilty of winning a coin toss */
-  public Gambler(int length, Scalar P_win) {
-    states = Range.of(0, length + 1).unmodifiable();
+  /** @param max stake
+   * @param P_win probabilty of winning a coin toss */
+  public Gambler(int max, Scalar P_win) {
+    states = Range.of(0, max + 1).unmodifiable();
     TERMINAL_W = (Scalar) Last.of(states);
     this.P_win = P_win;
   }

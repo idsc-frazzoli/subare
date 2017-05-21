@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.io.Put;
 /** action value iteration for gambler's dilemma */
 class AVI_Gambler {
   public static void main(String[] args) throws Exception {
-    Gambler gambler = new Gambler(100, RationalScalar.of(40, 100));
+    Gambler gambler = new Gambler(200, RationalScalar.of(30, 100));
     ActionValueIteration avi = new ActionValueIteration(gambler, gambler, RealScalar.ONE);
     avi.untilBelow(RealScalar.of(1e-3));
     Export.of(UserHome.file("gambler_qsa_avi.png"), GamblerHelper.render(gambler, avi.qsa()));

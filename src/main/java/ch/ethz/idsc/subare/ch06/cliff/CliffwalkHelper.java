@@ -18,7 +18,7 @@ enum CliffwalkHelper {
 
   static Tensor render(Cliffwalk cliffwalk, DiscreteQsa qsa) {
     Interpolation colorscheme = Colorscheme.classic();
-    final Tensor tensor = Array.zeros(Cliffwalk.NX, Cliffwalk.NY * 4, 4);
+    final Tensor tensor = Array.zeros(cliffwalk.NX, cliffwalk.NY * 4, 4);
     Index indexActions = Index.build(cliffwalk.actions);
     DiscreteQsa scaled = qsa.create(Rescale.of(qsa.values()).flatten(0));
     for (Tensor state : cliffwalk.states())
@@ -27,8 +27,8 @@ enum CliffwalkHelper {
         int sx = state.Get(0).number().intValue();
         int sy = state.Get(1).number().intValue();
         int a = indexActions.of(action);
-        tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy + Cliffwalk.NY * a);
+        tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy + cliffwalk.NY * a);
       }
-    return ImageResize.of(tensor, 7);
+    return ImageResize.of(tensor, 10);
   }
 }
