@@ -1,11 +1,15 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.cliff;
 
+import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -15,6 +19,12 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum CliffwalkHelper {
   ;
+  static PolicyInterface getOptimalPolicy(Cliffwalk cliffwalk) {
+    ValueIteration vi = new ValueIteration(cliffwalk, RealScalar.ONE);
+    vi.untilBelow(RealScalar.of(1e-10));
+    return GreedyPolicy.bestEquiprobableGreedy(cliffwalk, vi.vs());
+  }
+
   private static final Tensor BASE = Tensors.vector(255);
 
   static Tensor render(Cliffwalk cliffwalk, DiscreteQsa qsa) {

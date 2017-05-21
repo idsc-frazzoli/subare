@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
+/** suggested base class for implementations of sarsa and expected sarsa */
 public abstract class AbstractSarsa extends AbstractTemporalDifference {
   final DiscreteModel discreteModel;
   final QsaInterface qsa;
@@ -28,7 +29,6 @@ public abstract class AbstractSarsa extends AbstractTemporalDifference {
 
   @Override
   public final void digest(StepInterface stepInterface) {
-    // ---
     Tensor state0 = stepInterface.prevState();
     Tensor action0 = stepInterface.action();
     Scalar reward = stepInterface.reward();
@@ -38,5 +38,7 @@ public abstract class AbstractSarsa extends AbstractTemporalDifference {
     qsa.assign(state0, action0, value0.add(delta));
   }
 
+  /** @param state1
+   * @return value of state1 */
   protected abstract Scalar evaluate(Tensor state1);
 }

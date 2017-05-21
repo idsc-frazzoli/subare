@@ -1,12 +1,13 @@
 // code by jph
 package ch.ethz.idsc.subare.util;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import ch.ethz.idsc.tensor.Tensor;
 
-public class Index {
+public class Index implements Serializable {
   public static Index build(Tensor tensor) {
     return new Index(tensor);
   }
@@ -35,7 +36,7 @@ public class Index {
 
   public int of(Tensor row) {
     if (!containsKey(row))
-      System.out.println("unknown key=" + row);
+      throw new RuntimeException("unknown key=" + row);
     return map.get(row);
   }
 
