@@ -25,9 +25,9 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {5, -1} 0.60
  * {5, 1} 1.00
  * {6, 0} 0 */
-class Sarsa_WindyGrid {
+class Sarsa_Windygrid {
   public static void main(String[] args) {
-    WindyGrid windyGrid = WindyGrid.createFour();
+    Windygrid windyGrid = Windygrid.createFour();
     PolicyInterface policy = new EquiprobablePolicy(windyGrid);
     DiscreteQsa qsa = DiscreteQsa.build(windyGrid);
     System.out.println(qsa.size());

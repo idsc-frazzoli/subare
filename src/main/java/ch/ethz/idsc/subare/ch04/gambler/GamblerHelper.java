@@ -39,6 +39,6 @@ enum GamblerHelper {
         int a = offset - action.Get().number().intValue();
         tensor.set(colorscheme.get(BASE.multiply(sca)), s, a);
       }
-    return ImageResize.of(tensor, 4);
+    return ImageResize.of(tensor, 3);
   }
 }

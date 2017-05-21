@@ -15,7 +15,7 @@ class AVI_Gambler {
     Gambler gambler = Gambler.createDefault();
     ActionValueIteration avi = new ActionValueIteration(gambler, gambler, RealScalar.ONE);
     avi.untilBelow(RealScalar.of(1e-3));
-    Export.of(UserHome.file("gambler_qsa_avi.png"), GamblerHelper.render(gambler, avi.qsa()));
+    Export.of(UserHome.file("Pictures/gambler_qsa_avi.png"), GamblerHelper.render(gambler, avi.qsa()));
     DiscreteVs dvs = DiscreteUtils.createVs(gambler, avi.qsa());
     // dvs.print();
     Put.of(UserHome.file("ex403_qsa_values"), dvs.values());

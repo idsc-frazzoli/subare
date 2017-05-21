@@ -11,8 +11,8 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** reproduces Figure 6.4 on p.139 */
-class VI_WindyGrid {
-  public VI_WindyGrid(WindyGrid windyGrid) {
+class VI_Windygrid {
+  public VI_Windygrid(Windygrid windyGrid) {
     ValueIteration vi = new ValueIteration(windyGrid, RealScalar.ONE);
     vi.untilBelow(DecimalScalar.of(.001));
     final Tensor values = vi.vs().values();
@@ -28,7 +28,7 @@ class VI_WindyGrid {
   }
 
   public static void main(String[] args) {
-    new VI_WindyGrid(WindyGrid.createFour()); // reaches in
-    new VI_WindyGrid(WindyGrid.createKing()); // reaches in 7
+    new VI_Windygrid(Windygrid.createFour()); // reaches in
+    new VI_Windygrid(Windygrid.createKing()); // reaches in 7
   }
 }

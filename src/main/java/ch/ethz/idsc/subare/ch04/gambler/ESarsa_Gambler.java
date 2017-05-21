@@ -24,19 +24,19 @@ import ch.ethz.idsc.tensor.sca.Round;
 class ESarsa_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
-    int EPISODES = 300;
+    int EPISODES = 100;
     Tensor epsilon = Subdivide.of(.9, .01, EPISODES);
     PolicyInterface policy = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("gambler_qsa_esarsa.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_esarsa.gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
       ExpectedSarsa expectedSarsa = new ExpectedSarsa( //
           gambler, policy, //
           gambler, //
           qsa, RealScalar.ONE, RealScalar.of(.2));
-      expectedSarsa.simulate(100);
+      expectedSarsa.simulate(300);
       policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       gsw.append(ImageFormat.of(GamblerHelper.render(gambler, qsa)));
     }
