@@ -41,16 +41,16 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {4, 2} 14.4
  * {4, 3} 13.0
  * {4, 4} 11.7 */
-class AVI_GridWorld {
+class AVI_Gridworld {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
 
   public static void main(String[] args) {
-    GridWorld gridWorld = new GridWorld();
-    ActionValueIteration avi = new ActionValueIteration(gridWorld, gridWorld, DoubleScalar.of(.9));
+    Gridworld gridworld = new Gridworld();
+    ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld, DoubleScalar.of(.9));
     avi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + avi.iterations());
     avi.qsa().print(ROUND);
-    DiscreteVs dvs = DiscreteUtils.createVs(gridWorld, avi.qsa());
+    DiscreteVs dvs = DiscreteUtils.createVs(gridworld, avi.qsa());
     dvs.print(ROUND);
   }
 }

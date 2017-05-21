@@ -18,7 +18,7 @@ class FVPE_Gambler {
     PolicyInterface policyInterface = GamblerHelper.getOptimalPolicy(gambler);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gambler, policyInterface, //
-        gambler, RealScalar.ONE);
+        gambler, RealScalar.ONE, null);
     DiscreteVs vs = fvpe.simulate(12030);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.001)));
     Put.of(UserHome.file("fvmc_gambler"), vs.values());

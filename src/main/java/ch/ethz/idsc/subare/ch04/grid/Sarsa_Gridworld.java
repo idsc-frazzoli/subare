@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.ch04.gambler;
+package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
@@ -20,26 +20,25 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** Sarsa applied to gambler */
-class Sarsa_Gambler {
+/** Sarsa applied to gridworld */
+class Sarsa_Gridworld {
   public static void main(String[] args) throws Exception {
-    Gambler gambler = Gambler.createDefault();
+    Gridworld gambler = new Gridworld();
     int EPISODES = 100;
     Tensor epsilon = Subdivide.of(.9, .01, EPISODES);
     PolicyInterface policy = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_sarsa.gif"), 100);
-    // new Sarsa(episodeSupplier, policyInterface, discreteModel, qsa, gamma, alpha)
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_sarsa.gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
       Sarsa expectedSarsa = new Sarsa( //
           gambler, policy, //
           gambler, //
           qsa, RealScalar.ONE, RealScalar.of(.2));
-      expectedSarsa.simulate(300);
+      expectedSarsa.simulate(10);
       policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
-      gsw.append(ImageFormat.of(GamblerHelper.render(gambler, qsa)));
+      gsw.append(ImageFormat.of(GridworldHelper.render(gambler, qsa)));
     }
     gsw.close();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

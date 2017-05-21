@@ -35,11 +35,11 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {4, 2} -1.2
  * {4, 3} -1.4
  * {4, 4} -2.0 */
-class IPE_GridWorld {
+class IPE_Gridworld {
   public static void main(String[] args) {
-    GridWorld gridWorld = new GridWorld();
+    Gridworld gridworld = new Gridworld();
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
-        gridWorld, new EquiprobablePolicy(gridWorld), DoubleScalar.of(.9));
+        gridworld, new EquiprobablePolicy(gridworld), DoubleScalar.of(.9));
     ipe.until(DecimalScalar.of(.0001));
     ipe.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }

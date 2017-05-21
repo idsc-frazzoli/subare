@@ -22,7 +22,7 @@ class FVPE_RandomWalk {
     PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gridWorld, policyInterface, //
-        gridWorld, RealScalar.ONE);
+        gridWorld, RealScalar.ONE, null);
     DiscreteVs vs = fvpe.simulate(123);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }

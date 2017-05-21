@@ -27,14 +27,16 @@ public class FirstVisitPolicyEvaluation {
   private final PolicyInterface policyInterface;
   private final Scalar gamma;
   private final EpisodeSupplier episodeSupplier;
+  final DiscreteVs vs;
 
   public FirstVisitPolicyEvaluation( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
-      DiscreteModel standardModel, Scalar gamma) {
+      DiscreteModel standardModel, Scalar gamma, DiscreteVs vs) {
     this.standardModel = standardModel;
     this.policyInterface = policyInterface;
     this.gamma = gamma;
     this.episodeSupplier = episodeSupplier;
+    this.vs = vs; // TODO write results directly in vs!
   }
 
   public DiscreteVs simulate(final int iterations) {

@@ -16,7 +16,7 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** continuous task */
-class GridWorld extends DeterministicStandardModel implements //
+class Gridworld extends DeterministicStandardModel implements //
     MonteCarloInterface, EpisodeSupplier {
   private static final Tensor WARP1_ANTE = Tensors.vector(0, 1); // A
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'

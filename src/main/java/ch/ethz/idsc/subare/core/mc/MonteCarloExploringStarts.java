@@ -20,7 +20,9 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Multinomial;
 
-/** see box on p.107 */
+/** TODO comment
+ * 
+ * see box on p.107 */
 public class MonteCarloExploringStarts {
   private final EpisodeSupplier episodeSupplier;
   private PolicyInterface policy; // <- changes over the course of the iterations
