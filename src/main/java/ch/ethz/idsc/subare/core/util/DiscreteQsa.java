@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.io.Serializable;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -15,7 +16,7 @@ import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Norm;
 
-public class DiscreteQsa implements QsaInterface {
+public class DiscreteQsa implements QsaInterface, Serializable {
   public static DiscreteQsa build(DiscreteModel discreteModel) {
     Tensor tensor = Tensors.empty();
     for (Tensor state : discreteModel.states())

@@ -3,6 +3,7 @@
 package ch.ethz.idsc.subare.ch06.windy;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -33,7 +34,7 @@ class Sarsa_Windygrid {
     System.out.println(qsa.size());
     for (int c = 0; c < 10; ++c) {
       System.out.println(c);
-      Sarsa sarsa = new Sarsa( //
+      Sarsa sarsa = new OriginalSarsa( //
           windyGrid, policy, //
           windyGrid, //
           qsa, RealScalar.of(.8), RealScalar.of(.1));

@@ -6,13 +6,19 @@ import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.UCBAgent;
+import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.UserHome;
+import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Join;
+import ch.ethz.idsc.tensor.alg.Rescale;
+import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.Put;
+import ch.ethz.idsc.tensor.opt.Interpolation;
 
 class UCBsExact extends AbstractExact {
   public UCBsExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
@@ -33,11 +39,16 @@ class UCBsExact extends AbstractExact {
     System.out.println(exact.getExpectedRewards());
   }
 
+  private static final Tensor BASE = Tensors.vector(255);
+
   public static void main(String[] args) throws IOException {
     Tensor init = Tensors.vector(i -> RationalScalar.of(40 + i, 80), 80);
+    Tensor expectedRewards = Array.zeros(init.length(), init.length());
+    int px = 0;
     Tensor res = Tensors.empty();
     for (Tensor c0 : init) {
       Tensor row = Tensors.empty();
+      int py = 0;
       for (Tensor c1 : init) {
         Supplier<Agent> sup1 = //
             () -> new UCBAgent(2, (Scalar) c0);
@@ -45,8 +56,17 @@ class UCBsExact extends AbstractExact {
             () -> new UCBAgent(2, (Scalar) c1);
         UCBsExact exact = new UCBsExact(sup1, sup2, 50);
         row.append(Join.of(Tensors.of(c0, c1), exact.getExpectedRewards()));
+        expectedRewards.set(exact.getExpectedRewards(), px, py);
+        ++py;
       }
       res.append(row);
+      ++px;
+    }
+    {
+      Tensor rescale = Rescale.of(expectedRewards.get(Tensor.ALL, Tensor.ALL, 0));
+      Interpolation colorscheme = Colorscheme.classic();
+      rescale = rescale.map(scalar -> colorscheme.get(BASE.multiply(scalar)));
+      Export.of(UserHome.file("Pictures/ucbs.png"), ImageResize.of(rescale, 2));
     }
     Put.of(UserHome.file("ucb"), res);
   }

@@ -25,9 +25,9 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 1} -19.68
  * {3, 2} -18.52
  * {3, 3} 0 */
-public class TTD0_GridWorld {
+public class TTD0_Gridworld {
   public static void main(String[] args) {
-    GridWorld gridWorld = new GridWorld();
+    Gridworld gridWorld = new Gridworld();
     PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
     DiscreteVs vs = DiscreteVs.build(gridWorld);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //

@@ -1,8 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.racetrack;
 
-import java.io.File;
-
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
@@ -17,21 +15,18 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.io.ExtractPrimitives;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
-import ch.ethz.idsc.tensor.io.Import;
 
 class VI_RaceTrack {
   public static void main(String[] args) throws Exception {
-    String trackName = "track2";
-    String path = "".getClass().getResource("/ch05/" + trackName + ".png").getPath();
-    Tensor image = Import.of(new File(path)).unmodifiable();
-    Racetrack racetrack = new Racetrack(image, 5);
+    final String trackName = "track2";
+    Racetrack racetrack = RacetrackHelper.create(trackName, 5);
     ValueIteration vi = new ValueIteration(racetrack, RealScalar.ONE);
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(racetrack, vi.vs());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file(trackName + ".gif"), 400);
     for (Tensor start : racetrack.statesStart) {
-      Tensor copy = image.copy();
+      Tensor image = racetrack.image();
       MonteCarloEpisode mce = new MonteCarloEpisode( //
           racetrack, policyInterface, start);
       while (mce.hasNext()) {
@@ -39,15 +34,15 @@ class VI_RaceTrack {
         {
           Tensor state = stepInterface.prevState();
           int[] index = ExtractPrimitives.toArrayInt(state);
-          copy.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
+          image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
         }
         {
           Tensor state = stepInterface.nextState();
           int[] index = ExtractPrimitives.toArrayInt(state);
-          copy.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
+          image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
         }
       }
-      gsw.append(ImageFormat.of(ImageResize.of(copy, 8)));
+      gsw.append(ImageFormat.of(ImageResize.of(image, 8)));
     }
     gsw.close();
     System.out.println("gif created");

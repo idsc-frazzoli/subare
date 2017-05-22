@@ -19,9 +19,9 @@ class AVI_Cliffwalk {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     ActionValueIteration avi = new ActionValueIteration(cliffwalk, cliffwalk, RealScalar.ONE);
     avi.untilBelow(DecimalScalar.of(.0001));
-    DiscreteVs dvs = DiscreteUtils.createVs(cliffwalk, avi.qsa());
-    Export.of(UserHome.file("cliffwalk_qsa_avi.png"), CliffwalkHelper.render(cliffwalk, avi.qsa()));
-    dvs.print();
+    Export.of(UserHome.file("Pictures/cliffwalk_qsa_avi.png"), CliffwalkHelper.render(cliffwalk, avi.qsa()));
+    DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, avi.qsa());
+    vs.print();
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(cliffwalk, avi.qsa());
     greedyPolicy.print(cliffwalk.states());
   }

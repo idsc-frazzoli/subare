@@ -17,6 +17,7 @@ import ch.ethz.idsc.tensor.red.Max;
  * box on p.140
  * 
  * see also Watkins 1989 */
+// TODO check convergence criteria
 public class QLearning extends AbstractTemporalDifference {
   private final StandardModel standardModel;
   private final QsaInterface qsa;
@@ -40,7 +41,6 @@ public class QLearning extends AbstractTemporalDifference {
     Tensor action0 = stepInterface.action();
     Scalar reward = stepInterface.reward();
     Tensor state1 = stepInterface.nextState();
-    // ---
     Scalar max = standardModel.actions(state1).flatten(0) //
         .map(action1 -> qsa.value(state1, action1)) //
         .reduce(Max::of).get();

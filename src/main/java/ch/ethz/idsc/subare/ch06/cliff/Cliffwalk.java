@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.sca.Clip;
 
 /** Example 6.6 cliff walking */
 class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
-  static final Scalar PRICE_CLIFF = RealScalar.of(-10);
+  static final Scalar PRICE_CLIFF = RealScalar.of(-20);
   static final Scalar PRICE_MOVE = RealScalar.ONE.negate();
   // ---
   final int NX;
@@ -72,8 +72,7 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
     if (isTerminal(stateS))
-      return ZeroScalar.get();
-    // return isTerminal(state) ? ZeroScalar.get() : RealScalar.ONE;
+      return isTerminal(state) ? ZeroScalar.get() : RealScalar.ONE;
     if (stateS.equals(START) && Scalars.lessThan( //
         RealScalar.ONE, Norm._1.of(state.subtract(stateS))))
       return PRICE_CLIFF; // walked off cliff

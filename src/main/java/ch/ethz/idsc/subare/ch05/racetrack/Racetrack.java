@@ -59,16 +59,17 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   private final StateActionMap stateActionMap;
   private final Interpolation interpolation;
   private final Map<Tensor, Boolean> collisions = new HashMap<>();
+  private final Tensor image;
 
-  public Racetrack(Tensor track, int maxSpeed) {
-    interpolation = NearestInterpolation.of(track.get(Tensor.ALL, Tensor.ALL, 2));
-    List<Integer> list = Dimensions.of(track);
+  public Racetrack(Tensor image, int maxSpeed) {
+    interpolation = NearestInterpolation.of(image.get(Tensor.ALL, Tensor.ALL, 2));
+    List<Integer> list = Dimensions.of(image);
     dimensions = Tensors.vector(list.subList(0, 2)).map(Decrement.ONE);
     clipPositionY = Clip.function(ZeroScalar.get(), dimensions.Get(1));
     clipSpeed = Clip.function(0, maxSpeed);
     for (int x = 0; x < list.get(0); ++x)
       for (int y = 0; y < list.get(1); ++y) {
-        final Tensor rgba = track.get(x, y).unmodifiable();
+        final Tensor rgba = image.get(x, y).unmodifiable();
         if (!rgba.equals(WHITE)) {
           final Tensor pstate = Tensors.vector(x, y);
           if (rgba.equals(BLACK))
@@ -99,6 +100,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     GlobalAssert.of(Dimensions.isArray(states));
     GlobalAssert.of(Dimensions.isArray(actions));
     stateActionMap = StateActionMap.build(this, actions, this);
+    this.image = image;
   }
 
   @Override
@@ -178,5 +180,9 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     if (isTerminal(start))
       throw new RuntimeException();
     return new MonteCarloEpisode(this, policyInterface, start);
+  }
+
+  public Tensor image() {
+    return image.copy();
   }
 }

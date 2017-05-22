@@ -20,25 +20,25 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** produces results on p.83: */
-class GridWorld extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+class Gridworld extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+  final int NX = 4;
+  final int NY = 4;
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
   private static final Clip CLIP = Clip.function(0, 3);
   Random random = new Random();
   // ---
-  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 4, 4), 1).unmodifiable();
-  private final Tensor actions = Tensors.matrix(new Number[][] { //
-      { 0, -1 }, //
-      { 0, +1 }, //
+  private final Tensor states = Flatten.of(Array.of(Tensors::vector, NX, NY), 1).unmodifiable();
+  final Tensor actions = Tensors.matrix(new Number[][] { //
       { -1, 0 }, //
-      { +1, 0 } //
+      { +1, 0 }, //
+      { 0, -1 }, //
+      { 0, +1 } //
   }).unmodifiable();
   final Index statesIndex;
-  // final StateActionMap stateActionMap;
 
-  public GridWorld() {
+  public Gridworld() {
     statesIndex = Index.build(states);
-    // stateActionMap = StateActionMap.build(this, actions, this);
   }
 
   @Override
@@ -48,7 +48,6 @@ class GridWorld extends DeterministicStandardModel implements MonteCarloInterfac
 
   @Override
   public Tensor actions(Tensor state) {
-    // return stateActionMap.actions(state);
     return actions;
   }
 

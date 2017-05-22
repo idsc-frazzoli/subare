@@ -24,6 +24,8 @@ List of algorithms:
 * *Sarsa*: An on-policy TD control algorithm (from p.138)
 * *Q-learning*: An off-policy TD control algorithm (from p.140)
 * Expected Sarsa (from p.142)
+* n-step Temporal Difference for estimating V(s) (from p.154)
+* n-step Sarsa for estimating Q(s,a) (from p.157)
 * Random-sample one-step tabular Q-planning (from p.169)
 
 
@@ -31,13 +33,13 @@ List of algorithms:
 
 ### Repeated Prisoner's dilemma
 
-Expected reward of two adversarial optimistic agents depending on their initial configuration:
+Exact expected reward of two adversarial optimistic agents depending on their initial configuration:
 
-![optimist](https://cloud.githubusercontent.com/assets/4012178/25737770/d2df9dee-3179-11e7-8fb4-0faf438cab33.png)
+![opts](https://cloud.githubusercontent.com/assets/4012178/26301502/b8663886-3ee1-11e7-8b27-41e0c5a65b79.png)
 
-Expected reward of two adversarial Upper-Confidence-Bound agents depending on their initial configuration:
+Exact expected reward of two adversarial Upper-Confidence-Bound agents depending on their initial configuration:
 
-![ucb](https://cloud.githubusercontent.com/assets/4012178/25737893/69aabeb6-317a-11e7-9b21-73f1298cdc3d.png)
+![ucbs](https://cloud.githubusercontent.com/assets/4012178/26301526/c738ad1c-3ee1-11e7-9438-e928fc349868.png)
 
 
 ### Gambler's problem

@@ -37,14 +37,14 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {4, 2} 14.4
  * {4, 3} 13.0
  * {4, 4} 11.7 */
-class VI_GridWorld {
+class VI_Gridworld {
   public static void main(String[] args) {
-    GridWorld gridWorld = new GridWorld();
-    ValueIteration vi = new ValueIteration(gridWorld, DoubleScalar.of(.9));
+    Gridworld gridworld = new Gridworld();
+    ValueIteration vi = new ValueIteration(gridworld, DoubleScalar.of(.9));
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
     vi.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridWorld, vi.vs());
-    greedyPolicy.print(gridWorld.states());
+    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridworld, vi.vs());
+    greedyPolicy.print(gridworld.states());
   }
 }

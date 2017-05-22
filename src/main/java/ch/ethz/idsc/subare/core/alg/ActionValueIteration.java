@@ -14,6 +14,8 @@ import ch.ethz.idsc.tensor.red.Max;
 
 /** action value iteration: "policy evaluation is stopped after just one sweep"
  * 
+ * Exercise 4.10 on p.91
+ * 
  * parallel implementation
  * initial values are set to zeros
  * Jacobi style, i.e. updates take effect only in the next iteration */
@@ -45,9 +47,13 @@ public class ActionValueIteration {
 
   public void untilBelow(Scalar threshold, int flips) {
     Scalar past = null;
+    final long tic = System.nanoTime();
     while (true) {
       step();
       final Scalar delta = qsa_new.distance(qsa_old);
+      final long toc = System.nanoTime();
+      if (3e9 < toc - tic)
+        System.out.println(past + " -> " + delta + " " + alternate);
       if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);
