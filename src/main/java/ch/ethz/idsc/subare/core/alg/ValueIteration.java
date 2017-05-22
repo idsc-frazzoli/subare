@@ -46,9 +46,13 @@ public class ValueIteration {
 
   public void untilBelow(Scalar threshold, int flips) {
     Scalar past = null;
+    final long tic = System.nanoTime();
     while (true) {
       step();
       final Scalar delta = vs_new.distance(vs_old);
+      final long toc = System.nanoTime();
+      if (3e9 < toc - tic)
+        System.out.println(past + " -> " + delta + " " + alternate);
       if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);

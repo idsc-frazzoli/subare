@@ -14,6 +14,8 @@ import ch.ethz.idsc.tensor.red.Max;
 
 /** action value iteration: "policy evaluation is stopped after just one sweep"
  * 
+ * Exercise 4.10 on p.91
+ * 
  * parallel implementation
  * initial values are set to zeros
  * Jacobi style, i.e. updates take effect only in the next iteration */

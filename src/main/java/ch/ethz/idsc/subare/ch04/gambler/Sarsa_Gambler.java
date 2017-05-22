@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
@@ -33,7 +34,7 @@ class Sarsa_Gambler {
     // new Sarsa(episodeSupplier, policyInterface, discreteModel, qsa, gamma, alpha)
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
-      Sarsa expectedSarsa = new Sarsa( //
+      Sarsa expectedSarsa = new OriginalSarsa( //
           gambler, policy, //
           gambler, //
           qsa, RealScalar.ONE, RealScalar.of(.2));

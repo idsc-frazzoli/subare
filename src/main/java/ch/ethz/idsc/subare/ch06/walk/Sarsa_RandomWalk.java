@@ -3,6 +3,7 @@
 package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -31,7 +32,7 @@ class Sarsa_RandomWalk {
     PolicyInterface policy = new EquiprobablePolicy(randomWalk);
     DiscreteQsa qsa = DiscreteQsa.build(randomWalk);
     for (int c = 0; c < 10; ++c) {
-      Sarsa sarsa = new Sarsa( //
+      Sarsa sarsa = new OriginalSarsa( //
           randomWalk, policy, //
           randomWalk, //
           qsa, RealScalar.ONE, RealScalar.of(.1));

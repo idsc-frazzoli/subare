@@ -5,6 +5,7 @@ package ch.ethz.idsc.subare.ch06.cliff;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -23,7 +24,7 @@ class Sarsa_Cliffwalk {
     System.out.println(qsa.size());
     for (int c = 0; c < 100; ++c) {
       System.out.println(c);
-      Sarsa sarsa = new Sarsa( //
+      Sarsa sarsa = new OriginalSarsa( //
           cliffwalk, policy, //
           cliffwalk, //
           qsa, RealScalar.ONE, RealScalar.of(.25));
