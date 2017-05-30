@@ -17,13 +17,13 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum GamblerHelper {
   ;
-  private static final Tensor BASE = Tensors.vector(255);
-
   public static PolicyInterface getOptimalPolicy(Gambler gambler) {
     ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
     vi.untilBelow(RealScalar.of(1e-10));
     return GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
   }
+
+  private static final Tensor BASE = Tensors.vector(255);
 
   public static Tensor render(Gambler gambler, DiscreteQsa qsa) {
     Interpolation colorscheme = Colorscheme.classic();

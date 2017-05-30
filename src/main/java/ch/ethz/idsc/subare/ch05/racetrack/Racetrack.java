@@ -39,11 +39,11 @@ import ch.ethz.idsc.tensor.sca.Decrement;
  * p' = p + v + a
  * v' = clip(v + a) */
 class Racetrack extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
-  public static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
-  public static final Tensor RED = Tensors.vector(255, 0, 0, 255);
-  public static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);
-  public static final Tensor BLACK = Tensors.vector(0, 0, 0, 255);
-  public static final Scalar MINUS_ONE = RealScalar.ONE.negate();
+  static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
+  static final Tensor RED = Tensors.vector(255, 0, 0, 255);
+  static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);
+  static final Tensor BLACK = Tensors.vector(0, 0, 0, 255);
+  static final Scalar MINUS_ONE = RealScalar.ONE.negate();
   // ---
   private final Clip clipPositionY;
   private final Clip clipSpeed;
