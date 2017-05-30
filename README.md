@@ -44,25 +44,41 @@ Exact expected reward of two adversarial Upper-Confidence-Bound agents depending
 
 ### Gambler's problem
 
+Value Iteration v(s)
+
 ![gambler_sv](https://cloud.githubusercontent.com/assets/4012178/25566784/05d63bf0-2de1-11e7-88e8-a2c485071c38.png)
 
-![gambler_act](https://cloud.githubusercontent.com/assets/4012178/25566785/092e2a2e-2de1-11e7-85d8-89782c9357ab.png)
+<table><tr><td>
+Action Value Iteration q(s,a)
 
-Exact function q(s,a)
+![gambler_avi_iteration](https://cloud.githubusercontent.com/assets/4012178/26570813/bd1e3586-4512-11e7-90ef-070043f3968b.gif)
 
-![gambler_qsa_avi](https://cloud.githubusercontent.com/assets/4012178/26284833/8e28ff88-3e44-11e7-8ec9-93a6dec6a033.png)
+<td>
+Optimal policy
+
+![gambler_avi_policy](https://cloud.githubusercontent.com/assets/4012178/26570788/9be7a47e-4512-11e7-87e4-00eb7f438e12.gif)
+
+</tr></table>
+
+<table><tr><td>
 
 Monte Carlo q(s,a)
 
 ![gambler_qsa_mces](https://cloud.githubusercontent.com/assets/4012178/26284839/a05e8808-3e44-11e7-80a8-3fe1f9d38246.gif)
 
+<td>
+
 ESarsa q(s,a)
 
 ![gambler_qsa_esarsa](https://cloud.githubusercontent.com/assets/4012178/26284843/aa6db530-3e44-11e7-8907-a856c22df3b8.gif)
 
+<td>
+
 QLearning q(s,a)
 
 ![gambler_qsa_qlearn](https://cloud.githubusercontent.com/assets/4012178/26284846/b4ebbdea-3e44-11e7-8ae6-7768ff96dd22.gif)
+
+</tr></table>
 
 
 ### Racetrack

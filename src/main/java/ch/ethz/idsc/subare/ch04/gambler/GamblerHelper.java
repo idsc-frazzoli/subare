@@ -41,4 +41,20 @@ enum GamblerHelper {
       }
     return ImageResize.of(tensor, 3);
   }
+
+  public static Tensor render(Gambler gambler, PolicyInterface policyInterface) {
+    Interpolation colorscheme = Colorscheme.classic();
+    final int length = gambler.states().length();
+    final int sizea = (length + 1) / 2;
+    final int offset = (length - 1) / 2;
+    final Tensor tensor = Array.zeros(length, sizea, 4);
+    for (Tensor state : gambler.states())
+      for (Tensor action : gambler.actions(state)) {
+        Scalar sca = policyInterface.policy(state, action);
+        int s = state.Get().number().intValue();
+        int a = offset - action.Get().number().intValue();
+        tensor.set(colorscheme.get(BASE.multiply(sca)), s, a);
+      }
+    return ImageResize.of(tensor, 3);
+  }
 }
