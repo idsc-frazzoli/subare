@@ -10,13 +10,13 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
-class VI_Wireloop {
-  static Scalar rep(Tensor sup) {
-    return sup.Get(0);
+class AVI_Wireloop {
+  static Scalar id_x(Tensor state) {
+    return state.Get(0);
   }
 
   public static void main(String[] args) throws Exception {
-    Wireloop wireloop = WireloopHelper.create("wire7", VI_Wireloop::rep);
+    Wireloop wireloop = WireloopHelper.create("wire7", AVI_Wireloop::id_x);
     System.out.println(Array.zeros(1, 2));
     ActionValueIteration avi = new ActionValueIteration(wireloop, wireloop, RealScalar.ONE);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/wireloop_avi_iteration.gif"), 250);
