@@ -17,7 +17,7 @@ class AVI_Racetrack {
   static void precompute() throws Exception {
     String trackName = "track2";
     Racetrack racetrack = RacetrackHelper.create(trackName, 5);
-    ActionValueIteration avi = new ActionValueIteration(racetrack, racetrack, RealScalar.of(1.));
+    ActionValueIteration avi = new ActionValueIteration(racetrack, racetrack);
     avi.untilBelow(RealScalar.of(1e-1), 0);
     Export.object(UserHome.file(FILENAME), avi.qsa());
   }

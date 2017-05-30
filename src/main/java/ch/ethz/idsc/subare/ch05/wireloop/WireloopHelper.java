@@ -7,7 +7,6 @@ import java.util.function.Function;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -30,21 +29,19 @@ enum WireloopHelper {
   public static Tensor render(Wireloop wireloop, DiscreteQsa qsa) {
     Interpolation colorscheme = Colorscheme.classic();
     Tensor tensor = wireloop.image();
-    // final int length = wireloop.states().length();
-    // final int sizea = (length + 1) / 2;
-    // final int offset = (length - 1) / 2;
-    // final Tensor tensor = Array.zeros(length, sizea, 4);
     DiscreteQsa scaled = qsa.create(Rescale.of(qsa.values()).flatten(0));
     for (Tensor state : wireloop.states()) {
-      Scalar max = RealScalar.of(-1e10);
-      for (Tensor action : wireloop.actions(state)) {
-        Scalar sca = scaled.value(state, action);
-        max = Max.of(max, sca);
-      }
       int x = state.Get(0).number().intValue();
       int y = state.Get(1).number().intValue();
+      Scalar max = wireloop.actions(state).flatten(0) //
+          .map(action -> scaled.value(state, action)) //
+          .reduce(Max::of).get();
       tensor.set(colorscheme.get(BASE.multiply(max)), x, y);
     }
     return ImageResize.of(tensor, 3);
+  }
+
+  static Scalar id_x(Tensor state) {
+    return state.Get(0);
   }
 }

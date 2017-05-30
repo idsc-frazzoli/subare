@@ -5,13 +5,12 @@ import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 class VI_RandomWalk {
   public static void main(String[] args) {
     RandomWalk randomWalk = new RandomWalk();
-    ValueIteration vi = new ValueIteration(randomWalk, RealScalar.ONE);
+    ValueIteration vi = new ValueIteration(randomWalk);
     vi.untilBelow(DecimalScalar.of(.0001));
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, vi.vs());
     greedyPolicy.print(randomWalk.states());

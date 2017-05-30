@@ -22,7 +22,7 @@ class IPE_RaceTrack {
     String path = "".getClass().getResource("/ch05/track0.png").getPath();
     Racetrack racetrack = new Racetrack(Import.of(new File(path)), 3);
     PolicyInterface policyInterface = new EquiprobablePolicy(racetrack);
-    IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(racetrack, policyInterface, RealScalar.of(.5));
+    IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(racetrack, policyInterface);
     ipe.until(RealScalar.of(.1));
     ipe.vs().print(ROUND);
   }

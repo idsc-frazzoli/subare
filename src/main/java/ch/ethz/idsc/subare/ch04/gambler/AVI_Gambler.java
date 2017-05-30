@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.io.Put;
 class AVI_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
-    ActionValueIteration avi = new ActionValueIteration(gambler, gambler, RealScalar.ONE);
+    ActionValueIteration avi = new ActionValueIteration(gambler, gambler);
     avi.untilBelow(RealScalar.of(1e-3));
     Export.of(UserHome.file("Pictures/gambler_qsa_avi.png"), GamblerHelper.render(gambler, avi.qsa()));
     DiscreteVs dvs = DiscreteUtils.createVs(gambler, avi.qsa());

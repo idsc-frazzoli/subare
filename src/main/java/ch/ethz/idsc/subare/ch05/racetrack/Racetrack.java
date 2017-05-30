@@ -185,4 +185,9 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   public Tensor image() {
     return image.copy();
   }
+
+  @Override
+  public Scalar gamma() {
+    return RealScalar.of(1.); // numerical one
+  }
 }

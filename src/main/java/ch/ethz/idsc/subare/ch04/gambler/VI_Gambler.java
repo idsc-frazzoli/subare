@@ -22,7 +22,7 @@ import ch.ethz.idsc.tensor.io.Put;
 class VI_Gambler {
   public static void main(String[] args) throws IOException {
     Gambler gambler = Gambler.createDefault();
-    ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
+    ValueIteration vi = new ValueIteration(gambler);
     vi.untilBelow(RealScalar.of(1e-10));
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
     Tensor values = vi.vs().values();

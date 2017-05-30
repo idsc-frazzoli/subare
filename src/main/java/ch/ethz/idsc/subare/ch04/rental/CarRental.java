@@ -56,4 +56,10 @@ class CarRental implements StandardModel, MoveInterface {
     // TODO Auto-generated method stub
     return null;
   }
+
+  @Override
+  public Scalar gamma() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

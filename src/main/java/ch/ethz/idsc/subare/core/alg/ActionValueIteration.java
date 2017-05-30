@@ -30,10 +30,10 @@ public class ActionValueIteration {
 
   /** @param standardModel
    * @param gamma discount */
-  public ActionValueIteration(StandardModel standardModel, ActionValueInterface actionValueInterface, Scalar gamma) {
+  public ActionValueIteration(StandardModel standardModel, ActionValueInterface actionValueInterface) {
     this.standardModel = standardModel;
     this.actionValueInterface = actionValueInterface;
-    this.gamma = gamma;
+    this.gamma = standardModel.gamma();
     qsa_new = DiscreteQsa.build(standardModel);
   }
 

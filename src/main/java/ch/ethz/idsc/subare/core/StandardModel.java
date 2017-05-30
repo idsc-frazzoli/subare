@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.core;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-public interface StandardModel extends DiscreteModel {
+public interface StandardModel extends DiscreteModel, DiscountInterface {
   /** @param state
    * @param action
    * @param gvalues

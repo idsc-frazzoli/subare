@@ -30,9 +30,9 @@ public class ValueIteration {
 
   /** @param standardModel
    * @param gamma discount */
-  public ValueIteration(StandardModel standardModel, Scalar gamma) {
+  public ValueIteration(StandardModel standardModel) {
     this.standardModel = standardModel;
-    this.gamma = gamma;
+    this.gamma = standardModel.gamma();
     vs_new = DiscreteVs.build(standardModel);
   }
 

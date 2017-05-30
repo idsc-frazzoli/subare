@@ -7,7 +7,6 @@ import java.util.function.Function;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -26,7 +25,7 @@ class IPE_RandomWalk {
   public static void main(String[] args) {
     RandomWalk randomWalk = new RandomWalk();
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
-        randomWalk, new EquiprobablePolicy(randomWalk), RealScalar.ONE);
+        randomWalk, new EquiprobablePolicy(randomWalk));
     ipe.until(DecimalScalar.of(.0001));
     ipe.vs().print(ROUND);
   }

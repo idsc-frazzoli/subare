@@ -6,7 +6,6 @@ import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Export;
 
 /** solving grid world
@@ -35,7 +34,7 @@ import ch.ethz.idsc.tensor.io.Export;
 class VI_Gridworld {
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
-    ValueIteration vi = new ValueIteration(gridworld, RealScalar.ONE);
+    ValueIteration vi = new ValueIteration(gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     vi.vs().print();
     GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridworld, vi.vs());

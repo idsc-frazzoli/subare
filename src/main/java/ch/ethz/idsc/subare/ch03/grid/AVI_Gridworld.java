@@ -8,7 +8,6 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -46,7 +45,7 @@ class AVI_Gridworld {
 
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
-    ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld, DoubleScalar.of(.9));
+    ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld);
     avi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + avi.iterations());
     avi.qsa().print(ROUND);

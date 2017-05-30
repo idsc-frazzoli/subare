@@ -1,0 +1,28 @@
+// code by jph
+package ch.ethz.idsc.subare.ch05.wireloop;
+
+import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.td.QLearning;
+import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.util.UserHome;
+import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.ImageFormat;
+
+class QL_Wireloop {
+  public static void main(String[] args) throws Exception {
+    String name = "wire5";
+    Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
+    PolicyInterface policyInterface = new EquiprobablePolicy(wireloop);
+    DiscreteQsa qsa = DiscreteQsa.build(wireloop);
+    QLearning qLearning = new QLearning(wireloop, policyInterface, wireloop, qsa, RealScalar.of(.2));
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "loop_ql.gif"), 250);
+    for (int count = 0; count < 50; ++count) {
+      System.out.println(count);
+      gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, qsa)));
+      qLearning.simulate(100);
+    }
+    gsw.close();
+  }
+}

@@ -18,7 +18,7 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 enum GamblerHelper {
   ;
   public static PolicyInterface getOptimalPolicy(Gambler gambler) {
-    ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
+    ValueIteration vi = new ValueIteration(gambler);
     vi.untilBelow(RealScalar.of(1e-10));
     return GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
   }

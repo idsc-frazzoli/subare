@@ -17,6 +17,7 @@ import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -25,7 +26,8 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
-class Wireloop implements StandardModel, MonteCarloInterface, EpisodeSupplier, ActionValueInterface {
+class Wireloop implements StandardModel, //
+    MonteCarloInterface, EpisodeSupplier, ActionValueInterface {
   static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);
   // ---
@@ -137,5 +139,10 @@ class Wireloop implements StandardModel, MonteCarloInterface, EpisodeSupplier, A
 
   public Tensor image() {
     return image.copy();
+  }
+
+  @Override
+  public Scalar gamma() {
+    return RealScalar.ONE;
   }
 }

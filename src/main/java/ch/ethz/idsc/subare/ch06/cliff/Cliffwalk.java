@@ -107,4 +107,9 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
   public boolean isTerminal(Tensor state) {
     return state.equals(GOAL);
   }
+
+  @Override
+  public Scalar gamma() {
+    return RealScalar.ONE;
+  }
 }

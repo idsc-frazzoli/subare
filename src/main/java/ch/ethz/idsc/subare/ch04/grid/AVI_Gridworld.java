@@ -7,7 +7,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Export;
 
 /** solving grid world
@@ -36,7 +35,7 @@ import ch.ethz.idsc.tensor.io.Export;
 class AVI_Gridworld {
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
-    ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld, RealScalar.ONE);
+    ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld);
     avi.untilBelow(DecimalScalar.of(.0001));
     avi.qsa().print();
     DiscreteVs dvs = DiscreteUtils.createVs(gridworld, avi.qsa());

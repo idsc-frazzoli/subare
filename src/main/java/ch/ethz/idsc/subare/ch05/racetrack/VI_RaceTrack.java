@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.io.ExtractPrimitives;
@@ -20,7 +19,7 @@ class VI_RaceTrack {
   public static void main(String[] args) throws Exception {
     final String trackName = "track2";
     Racetrack racetrack = RacetrackHelper.create(trackName, 5);
-    ValueIteration vi = new ValueIteration(racetrack, RealScalar.ONE);
+    ValueIteration vi = new ValueIteration(racetrack);
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(racetrack, vi.vs());

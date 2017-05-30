@@ -5,7 +5,6 @@ package ch.ethz.idsc.subare.ch03.grid;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** solving grid world
@@ -40,7 +39,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 class VI_Gridworld {
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
-    ValueIteration vi = new ValueIteration(gridworld, DoubleScalar.of(.9));
+    ValueIteration vi = new ValueIteration(gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
     vi.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));
