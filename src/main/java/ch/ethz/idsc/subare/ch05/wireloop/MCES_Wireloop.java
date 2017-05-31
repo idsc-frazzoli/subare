@@ -15,7 +15,7 @@ class MCES_Wireloop {
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
     PolicyInterface policyInterface = new EquiprobablePolicy(wireloop);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
-        wireloop, policyInterface, wireloop, RealScalar.ONE, RealScalar.of(.15));
+        wireloop, policyInterface, wireloop, RealScalar.of(.15));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_qsa_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {

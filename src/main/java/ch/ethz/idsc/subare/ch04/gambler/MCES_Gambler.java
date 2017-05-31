@@ -16,7 +16,7 @@ class MCES_Gambler {
     Gambler gambler = Gambler.createDefault();
     PolicyInterface policyInterface = GamblerHelper.getOptimalPolicy(gambler);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
-        gambler, policyInterface, gambler, RealScalar.ONE, RealScalar.of(.1));
+        gambler, policyInterface, gambler, RealScalar.of(.1));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {

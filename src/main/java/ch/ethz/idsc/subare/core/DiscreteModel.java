@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.core;
 
 import ch.ethz.idsc.tensor.Tensor;
 
-public interface DiscreteModel {
+public interface DiscreteModel extends DiscountInterface {
   /** @return all states */
   Tensor states();
 

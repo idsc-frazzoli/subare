@@ -13,7 +13,7 @@ class MCES_Cliffwalk {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     PolicyInterface policyInterface = CliffwalkHelper.getOptimalPolicy(cliffwalk);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
-        cliffwalk, policyInterface, cliffwalk, RealScalar.ONE, RealScalar.of(.1));
+        cliffwalk, policyInterface, cliffwalk, RealScalar.of(.1));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {

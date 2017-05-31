@@ -41,12 +41,12 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
    * @param epsilon */
   public MonteCarloExploringStarts( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
-      DiscreteModel discreteModel, Scalar gamma, Scalar epsilon) {
+      DiscreteModel discreteModel, Scalar epsilon) {
     // TODO check exploring starts
     this.episodeSupplier = episodeSupplier;
     this.policy = policyInterface;
     this.discreteModel = discreteModel;
-    this.gamma = gamma;
+    this.gamma = discreteModel.gamma();
     this.epsilon = epsilon;
     this.qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"
   }
