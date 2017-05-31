@@ -11,11 +11,12 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class MCES_Wireloop {
   public static void main(String[] args) throws Exception {
-    Wireloop wireloop = WireloopHelper.create("wire6", WireloopHelper::id_x);
+    String name = "wire6";
+    Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
     PolicyInterface policyInterface = new EquiprobablePolicy(wireloop);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
         wireloop, policyInterface, wireloop, RealScalar.ONE, RealScalar.of(.15));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/wireloop_qsa_mces.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_qsa_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);

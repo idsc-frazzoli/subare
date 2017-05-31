@@ -8,14 +8,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
+import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -24,10 +22,9 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
-import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
-class Wireloop implements StandardModel, //
-    MonteCarloInterface, EpisodeSupplier, ActionValueInterface {
+class Wireloop extends DeterministicStandardModel implements //
+    MonteCarloInterface, EpisodeSupplier {
   static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);
   // ---
@@ -97,11 +94,6 @@ class Wireloop implements StandardModel, //
   }
 
   @Override
-  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
-    throw new RuntimeException();
-  }
-
-  @Override
   public Tensor move(Tensor state, Tensor action) {
     return state.add(action);
   }
@@ -120,21 +112,6 @@ class Wireloop implements StandardModel, //
     Collections.shuffle(starts);
     Tensor start = starts.get(0);
     return new MonteCarloEpisode(this, policyInterface, start);
-  }
-
-  @Override
-  public Scalar expectedReward(Tensor state, Tensor action) {
-    return reward(state, action, move(state, action));
-  }
-
-  @Override
-  public Tensor transitions(Tensor state, Tensor action) {
-    return Tensors.of(move(state, action));
-  }
-
-  @Override
-  public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
-    return KroneckerDelta.of(move(state, action), next);
   }
 
   public Tensor image() {
