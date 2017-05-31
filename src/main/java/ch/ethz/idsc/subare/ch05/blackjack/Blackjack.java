@@ -7,8 +7,6 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -16,8 +14,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ZeroScalar;
 
-class Blackjack implements StandardModel, //
-    EpisodeSupplier, MonteCarloInterface {
+/** Example 5.1 p.101 */
+class Blackjack implements MonteCarloInterface, EpisodeSupplier {
   static final Tensor END_WIN = Tensors.vector(1);
   static final Tensor END_DRAW = Tensors.vector(0);
   static final Tensor END_LOSS = Tensors.vector(-1);
@@ -59,21 +57,22 @@ class Blackjack implements StandardModel, //
   }
 
   @Override
-  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
-    throw new RuntimeException();
-  }
-
-  @Override
   public Tensor move(Tensor state, Tensor action) {
     // player stays, the next state is terminal
     if (action.equals(ZeroScalar.get())) { // stay
-      // TODO DEALERS USABLE ACE
-      // TODO natural ACE+10-card
+      // TODO natural: ACE+10-card
       int dealer = state.Get(2).number().intValue();
+      boolean usableAce = dealer == 1;
+      if (usableAce)
+        dealer += 10;
       while (dealer < 17) {
         int index = random.nextInt(PlayingCard.values().length);
         PlayingCard playingCard = PlayingCard.values()[index];
         dealer += playingCard.value;
+        if (21 < dealer && usableAce) {
+          dealer -= 10;
+          usableAce = false;
+        }
       }
       if (dealer <= 21) {
         int player = state.Get(1).number().intValue();

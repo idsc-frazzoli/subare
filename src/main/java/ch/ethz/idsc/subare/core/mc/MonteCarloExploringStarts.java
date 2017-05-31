@@ -27,7 +27,7 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * see box on p.107 */
 public class MonteCarloExploringStarts implements EpisodeDigest {
   private final EpisodeSupplier episodeSupplier;
-  private PolicyInterface policy; // <- changes over the course of the iterations
+  private PolicyInterface policyInterface; // <- changes over the course of the iterations
   private final DiscreteModel discreteModel;
   private final Scalar gamma;
   private Scalar epsilon; // probability of exploration
@@ -44,7 +44,7 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
       DiscreteModel discreteModel, Scalar epsilon) {
     // TODO check exploring starts
     this.episodeSupplier = episodeSupplier;
-    this.policy = policyInterface;
+    this.policyInterface = policyInterface;
     this.discreteModel = discreteModel;
     this.gamma = discreteModel.gamma();
     this.epsilon = epsilon;
@@ -65,7 +65,7 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
 
   public void step() {
     // policy has to satisfy exploring starts condition
-    EpisodeInterface episodeInterface = episodeSupplier.kickoff(policy);
+    EpisodeInterface episodeInterface = episodeSupplier.kickoff(policyInterface);
     digest(episodeInterface);
   }
 
@@ -109,7 +109,7 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
         Tensor action = key.get(1);
         qsa.assign(state, action, entry.getValue().get());
       }
-      policy = EGreedyPolicy.bestEquiprobable(discreteModel, qsa, epsilon);
+      policyInterface = EGreedyPolicy.bestEquiprobable(discreteModel, qsa, epsilon);
     }
   }
 }

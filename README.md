@@ -81,6 +81,12 @@ QLearning q(s,a)
 </tr></table>
 
 
+### Blackjack
+
+Monte Carlo Exploring Starts
+
+![blackjack_mces](https://cloud.githubusercontent.com/assets/4012178/26628094/fef76442-45fc-11e7-84fb-1d2f5e9cb695.gif)
+
 ### Racetrack
 
 ![track2](https://cloud.githubusercontent.com/assets/4012178/25793771/55d5754c-33ce-11e7-8079-48e47c1f2a6d.gif)
