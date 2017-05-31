@@ -21,15 +21,16 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Multinomial;
 
-/** TODO comment
+/** Monte Carlo exploring starts improves an initial policy
+ * based on average returns from complete episodes.
  * 
  * see box on p.107 */
 public class MonteCarloExploringStarts implements EpisodeDigest {
   private final EpisodeSupplier episodeSupplier;
-  private PolicyInterface policy; // <- changes over the course of the iterations
+  private PolicyInterface policyInterface; // <- changes over the course of the iterations
   private final DiscreteModel discreteModel;
   private final Scalar gamma;
-  private final Scalar epsilon;
+  private Scalar epsilon; // probability of exploration
   private final DiscreteQsa qsa;
   private final Map<Tensor, Average> map = new HashMap<>();
 
@@ -40,12 +41,12 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
    * @param epsilon */
   public MonteCarloExploringStarts( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
-      DiscreteModel discreteModel, Scalar gamma, Scalar epsilon) {
+      DiscreteModel discreteModel, Scalar epsilon) {
     // TODO check exploring starts
     this.episodeSupplier = episodeSupplier;
-    this.policy = policyInterface;
+    this.policyInterface = policyInterface;
     this.discreteModel = discreteModel;
-    this.gamma = gamma;
+    this.gamma = discreteModel.gamma();
     this.epsilon = epsilon;
     this.qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"
   }
@@ -58,9 +59,13 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
     }
   }
 
+  public void setExplorationProbability(Scalar epsilon) {
+    this.epsilon = epsilon;
+  }
+
   public void step() {
     // policy has to satisfy exploring starts condition
-    EpisodeInterface episodeInterface = episodeSupplier.kickoff(policy);
+    EpisodeInterface episodeInterface = episodeSupplier.kickoff(policyInterface);
     digest(episodeInterface);
   }
 
@@ -104,7 +109,7 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
         Tensor action = key.get(1);
         qsa.assign(state, action, entry.getValue().get());
       }
-      policy = EGreedyPolicy.bestEquiprobable(discreteModel, qsa, epsilon);
+      policyInterface = EGreedyPolicy.bestEquiprobable(discreteModel, qsa, epsilon);
     }
   }
 }

@@ -30,7 +30,7 @@ class QL_RandomWalk {
     QLearning qLearning = new QLearning( //
         randomWalk, new EquiprobablePolicy(randomWalk), //
         randomWalk, //
-        qsa, RealScalar.ONE, RealScalar.of(.1)); // TODO ask jz
+        qsa, RealScalar.of(.1)); // TODO ask jz
     qLearning.simulate(10000);
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }

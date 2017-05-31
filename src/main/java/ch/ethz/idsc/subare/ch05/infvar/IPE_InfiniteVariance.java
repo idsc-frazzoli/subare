@@ -14,7 +14,7 @@ class IPE_InfiniteVariance {
     StandardModel standardModel = new InfiniteVariance();
     PolicyInterface policyInterface = new ConstantPolicy(RationalScalar.of(9, 10));
     IterativePolicyEvaluation a = new IterativePolicyEvaluation( //
-        standardModel, policyInterface, RealScalar.ONE);
+        standardModel, policyInterface);
     a.until(RealScalar.of(.0001));
     System.out.println(a.iterations());
     a.vs().print(Round.toMultipleOf(DecimalScalar.of(.01)));

@@ -35,6 +35,8 @@ public abstract class DeterministicStandardModel implements StandardModel, //
 
   @Override
   public final Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
+    if (!move(state, action).equals(next))
+      throw new RuntimeException();
     return RealScalar.ONE; // deterministic transition
   }
 }

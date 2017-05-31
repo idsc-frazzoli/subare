@@ -35,10 +35,10 @@ public class IterativePolicyEvaluation {
    * @param policyInterface
    * @return */
   public IterativePolicyEvaluation( //
-      StandardModel standardModel, PolicyInterface policyInterface, Scalar gamma) {
+      StandardModel standardModel, PolicyInterface policyInterface) {
     this.standardModel = standardModel;
     this.policyInterface = policyInterface;
-    this.gamma = gamma;
+    this.gamma = standardModel.gamma();
     vs_new = DiscreteVs.build(standardModel);
   }
 

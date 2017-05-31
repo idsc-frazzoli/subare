@@ -57,4 +57,9 @@ class RandomWalk extends DeterministicStandardModel implements MonteCarloInterfa
   public boolean isTerminal(Tensor state) {
     return state.equals(TERMINATE1) || state.equals(TERMINATE2);
   }
+
+  @Override
+  public Scalar gamma() {
+    return RealScalar.ONE;
+  }
 }

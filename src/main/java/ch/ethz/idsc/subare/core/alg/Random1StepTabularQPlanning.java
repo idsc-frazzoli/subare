@@ -27,12 +27,12 @@ public class Random1StepTabularQPlanning {
 
   public Random1StepTabularQPlanning( //
       SampleModel sampleModel, StandardModel standardModel, //
-      QsaInterface qsa, Scalar gamma, Scalar alpha) {
+      QsaInterface qsa, Scalar alpha) {
     this.sampleModel = sampleModel;
     this.standardModel = standardModel;
     states = standardModel.states();
     this.qsa = qsa;
-    this.gamma = gamma;
+    this.gamma = standardModel.gamma();
     this.alpha = alpha;
   }
 

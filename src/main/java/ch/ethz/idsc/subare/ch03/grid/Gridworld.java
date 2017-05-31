@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -72,5 +73,10 @@ class Gridworld extends DeterministicStandardModel implements //
   @Override
   public boolean isTerminal(Tensor state) {
     throw new RuntimeException();
+  }
+
+  @Override
+  public Scalar gamma() {
+    return DoubleScalar.of(.9);
   }
 }

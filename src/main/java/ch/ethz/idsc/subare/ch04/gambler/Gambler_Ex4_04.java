@@ -7,7 +7,6 @@ import java.io.IOException;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Last;
@@ -22,7 +21,7 @@ import ch.ethz.idsc.tensor.io.Put;
 class Gambler_Ex4_04 {
   public static void main(String[] args) throws IOException {
     Gambler gambler = Gambler.createDefault();
-    ValueIteration vi = new ValueIteration(gambler, RealScalar.ONE);
+    ValueIteration vi = new ValueIteration(gambler);
     Tensor record = Tensors.empty();
     for (int iters = 0; iters < 20; ++iters) {
       vi.step();

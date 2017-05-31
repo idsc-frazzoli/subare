@@ -18,7 +18,7 @@ public class StateActionMap {
    * @param actions
    * @param moveInterface deterministic
    * @return */
-  public static StateActionMap build( //
+  public static StateActionMap build( // TODO algorithm is not generic and confusing
       DiscreteModel discreteModel, Tensor actions, MoveInterface moveInterface) {
     final Map<Tensor, Tensor> map = new HashMap<>();
     for (Tensor state : discreteModel.states()) {
@@ -36,6 +36,10 @@ public class StateActionMap {
     return new StateActionMap(map);
   }
 
+  public static StateActionMap empty() {
+    return new StateActionMap(new HashMap<>());
+  }
+
   private final Map<Tensor, Tensor> map;
 
   private StateActionMap(Map<Tensor, Tensor> map) {
@@ -44,5 +48,11 @@ public class StateActionMap {
 
   public Tensor actions(Tensor state) {
     return map.get(state);
+  }
+
+  public void put(Tensor state, Tensor actions) {
+    if (map.containsKey(state))
+      throw new RuntimeException();
+    map.put(state, actions);
   }
 }

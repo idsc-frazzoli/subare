@@ -27,11 +27,11 @@ public class QLearning extends AbstractTemporalDifference {
   public QLearning( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
       StandardModel standardModel, //
-      QsaInterface qsa, Scalar gamma, Scalar alpha) {
+      QsaInterface qsa, Scalar alpha) {
     super(episodeSupplier, policyInterface);
     this.standardModel = standardModel;
     this.qsa = qsa;
-    this.gamma = gamma;
+    this.gamma = standardModel.gamma();
     this.alpha = alpha;
   }
 

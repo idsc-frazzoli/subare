@@ -53,7 +53,7 @@ public class GreedyPolicy extends EGreedyPolicy {
     return new GreedyPolicy(map);
   }
 
-  GreedyPolicy(Map<Tensor, Index> map) {
+  private GreedyPolicy(Map<Tensor, Index> map) {
     super(map, ZeroScalar.get(), null);
   }
 }

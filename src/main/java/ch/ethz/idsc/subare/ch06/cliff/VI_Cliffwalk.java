@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.Export;
 
@@ -17,7 +16,7 @@ import ch.ethz.idsc.tensor.io.Export;
 class VI_Cliffwalk {
   public static void main(String[] args) throws Exception {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
-    ValueIteration vi = new ValueIteration(cliffwalk, RealScalar.ONE);
+    ValueIteration vi = new ValueIteration(cliffwalk);
     vi.untilBelow(DecimalScalar.of(.0001));
     Export.of(UserHome.file("Pictures/cliffwalk_qsa_vi.png"), CliffwalkHelper.render(cliffwalk, vi.vs()));
     // GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(cliffWalk, values);

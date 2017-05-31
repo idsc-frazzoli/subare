@@ -55,4 +55,9 @@ class InfiniteVariance extends DeterministicStandardModel implements MonteCarloI
   public boolean isTerminal(Tensor state) {
     return state.equals(RealScalar.ONE);
   }
+
+  @Override
+  public Scalar gamma() {
+    return RealScalar.ONE;
+  }
 }
