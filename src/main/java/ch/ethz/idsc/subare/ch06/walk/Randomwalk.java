@@ -1,12 +1,13 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.walk;
 
+import java.util.Random;
+
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
-import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -15,11 +16,13 @@ import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Range;
 
 /** Example 6.2: Random Walk, p.133 */
-class RandomWalk extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+class Randomwalk implements //
+    MonteCarloInterface, EpisodeSupplier {
   private static final Tensor TERMINATE1 = ZeroScalar.get(); // A
   private static final Tensor TERMINATE2 = RealScalar.of(6); // A'
   // ---
   private final Tensor states = Range.of(0, 7).unmodifiable();
+  Random random = new Random();
 
   @Override
   public Tensor states() {
@@ -28,9 +31,7 @@ class RandomWalk extends DeterministicStandardModel implements MonteCarloInterfa
 
   @Override
   public Tensor actions(Tensor state) {
-    if (isTerminal(state))
-      return Tensors.vector(0);
-    return Tensors.vector(-1, +1);
+    return Tensors.vector(0);
   }
 
   /**************************************************/
@@ -43,7 +44,9 @@ class RandomWalk extends DeterministicStandardModel implements MonteCarloInterfa
 
   @Override
   public Tensor move(Tensor state, Tensor action) {
-    return state.add(action);
+    if (isTerminal(state))
+      return state;
+    return random.nextBoolean() ? state.add(RealScalar.ONE) : state.subtract(RealScalar.ONE);
   }
 
   /**************************************************/

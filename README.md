@@ -1,4 +1,4 @@
-# subare
+# ch.ethz.idsc.subare
 
 Java 8 implementation of algorithms, examples, and exercises from the 2nd edition (2016 draft) of
 
