@@ -17,13 +17,13 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class VI_RaceTrack {
   public static void main(String[] args) throws Exception {
-    final String trackName = "track2";
-    Racetrack racetrack = RacetrackHelper.create(trackName, 5);
+    final String name = "track2";
+    Racetrack racetrack = RacetrackHelper.create(name, 5);
     ValueIteration vi = new ValueIteration(racetrack);
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(racetrack, vi.vs());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file(trackName + ".gif"), 400);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + ".gif"), 400);
     for (Tensor start : racetrack.statesStart) {
       Tensor image = racetrack.image();
       MonteCarloEpisode mce = new MonteCarloEpisode( //
@@ -41,7 +41,7 @@ class VI_RaceTrack {
           image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
         }
       }
-      gsw.append(ImageFormat.of(ImageResize.of(image, 8)));
+      gsw.append(ImageFormat.of(ImageResize.of(image, 6)));
     }
     gsw.close();
     System.out.println("gif created");

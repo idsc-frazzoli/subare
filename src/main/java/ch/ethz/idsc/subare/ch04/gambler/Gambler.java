@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.ActionValueInterface;
-import ch.ethz.idsc.subare.core.DiscountInterface;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -30,7 +29,7 @@ import ch.ethz.idsc.tensor.red.Min;
  * the action has to be non-zero unless the capital == 0
  * or the terminal cash has been reached */
 class Gambler implements StandardModel, //
-    MonteCarloInterface, EpisodeSupplier, ActionValueInterface, DiscountInterface {
+    MonteCarloInterface, EpisodeSupplier, ActionValueInterface {
   private final Tensor states;
   final Scalar TERMINAL_W;
   final Scalar P_win;
