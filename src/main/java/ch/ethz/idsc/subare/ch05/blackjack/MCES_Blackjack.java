@@ -17,8 +17,7 @@ class MCES_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     PolicyInterface policyInterface = new EquiprobablePolicy(blackjack);
-    MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
-        blackjack, policyInterface, blackjack, RealScalar.of(.2));
+    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack, policyInterface, blackjack);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/blackjack_mces.gif"), 250);
     int EPISODES = 40;
     for (int index = 0; index < EPISODES; ++index) {

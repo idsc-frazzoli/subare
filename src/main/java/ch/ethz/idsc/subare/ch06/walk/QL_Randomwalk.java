@@ -9,27 +9,23 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** determines q(s,a) function for equiprobable "random" policy
+/** determines state action value function q(s,a).
+ * initial policy is irrelevant because each state allows only one action.
  * 
  * {0, 0} 0
- * {1, -1} 0
- * {1, 1} 1.00
- * {2, -1} 1.00
- * {2, 1} 1.00
- * {3, -1} 1.00
- * {3, 1} 1.00
- * {4, -1} 1.00
- * {4, 1} 1.00
- * {5, -1} 1.00
- * {5, 1} 1.00
+ * {1, 0} 0.15
+ * {2, 0} 0.32
+ * {3, 0} 0.41
+ * {4, 0} 0.63
+ * {5, 0} 0.84
  * {6, 0} 0 */
-class QL_RandomWalk {
+class QL_Randomwalk {
   public static void main(String[] args) {
-    RandomWalk randomWalk = new RandomWalk();
-    DiscreteQsa qsa = DiscreteQsa.build(randomWalk);
+    Randomwalk randomwalk = new Randomwalk();
+    DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
     QLearning qLearning = new QLearning( //
-        randomWalk, new EquiprobablePolicy(randomWalk), //
-        randomWalk, //
+        randomwalk, new EquiprobablePolicy(randomwalk), //
+        randomwalk, //
         qsa, RealScalar.of(.1)); // TODO ask jz
     qLearning.simulate(10000);
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

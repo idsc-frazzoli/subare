@@ -22,8 +22,8 @@ public class OriginalSarsa extends Sarsa {
   public OriginalSarsa( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
       DiscreteModel discreteModel, //
-      QsaInterface qsa, Scalar gamma, Scalar alpha) {
-    super(episodeSupplier, policyInterface, discreteModel, qsa, gamma, alpha);
+      QsaInterface qsa, Scalar alpha) {
+    super(episodeSupplier, policyInterface, discreteModel, qsa, alpha);
     policyWrap = new PolicyWrap(policyInterface);
   }
 

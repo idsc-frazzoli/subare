@@ -12,17 +12,18 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class QL_Wireloop {
   public static void main(String[] args) throws Exception {
-    String name = "wire5";
+    String name = "wire4";
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
     PolicyInterface policyInterface = new EquiprobablePolicy(wireloop);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     QLearning qLearning = new QLearning(wireloop, policyInterface, wireloop, qsa, RealScalar.of(.2));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "loop_ql.gif"), 250);
-    for (int count = 0; count < 50; ++count) {
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_ql.gif"), 250);
+    for (int count = 0; count < 60; ++count) {
       System.out.println(count);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, qsa)));
-      qLearning.simulate(100);
+      qLearning.simulate(200);
     }
+    gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, qsa)));
     gsw.close();
   }
 }

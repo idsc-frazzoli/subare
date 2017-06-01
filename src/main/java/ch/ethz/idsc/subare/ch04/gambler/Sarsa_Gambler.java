@@ -34,11 +34,10 @@ class Sarsa_Gambler {
     // new Sarsa(episodeSupplier, policyInterface, discreteModel, qsa, gamma, alpha)
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
-      Sarsa expectedSarsa = new OriginalSarsa( //
-          gambler, policy, //
-          gambler, //
-          qsa, RealScalar.ONE, RealScalar.of(.2));
-      expectedSarsa.simulate(300);
+      Sarsa sarsa = new OriginalSarsa( //
+          gambler, policy, gambler, //
+          qsa, RealScalar.of(.2));
+      sarsa.simulate(300);
       policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       gsw.append(ImageFormat.of(GamblerHelper.render(gambler, qsa)));
     }

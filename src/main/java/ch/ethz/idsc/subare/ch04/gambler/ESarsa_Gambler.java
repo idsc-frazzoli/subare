@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.ExpectedSarsa;
+import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
@@ -12,7 +13,7 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -25,20 +26,21 @@ class ESarsa_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     int EPISODES = 100;
-    Tensor epsilon = Subdivide.of(.9, .01, EPISODES);
+    Tensor epsilon = Subdivide.of(.5, .01, EPISODES);
     PolicyInterface policy = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_esarsa.gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
-      System.out.println(index);
-      ExpectedSarsa expectedSarsa = new ExpectedSarsa( //
+      Scalar scalar = epsilon.Get(index);
+      System.out.println(index + " " + scalar);
+      Sarsa sarsa = new ExpectedSarsa( //
           gambler, policy, //
           gambler, //
-          qsa, RealScalar.ONE, RealScalar.of(.2));
-      expectedSarsa.simulate(300);
-      policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
-      gsw.append(ImageFormat.of(GamblerHelper.render(gambler, qsa)));
+          qsa, scalar);
+      sarsa.simulate(500);
+      policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, scalar);
+      gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa)));
     }
     gsw.close();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

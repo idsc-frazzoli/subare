@@ -12,20 +12,7 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** determines q(s,a) function for equiprobable "random" policy
- * 
- * {0, 0} 0
- * {1, -1} 0
- * {1, 1} 0.42
- * {2, -1} 0.25
- * {2, 1} 0.53
- * {3, -1} 0.35
- * {3, 1} 0.70
- * {4, -1} 0.55
- * {4, 1} 0.82
- * {5, -1} 0.60
- * {5, 1} 1.00
- * {6, 0} 0 */
+/** determines q(s,a) function for equiprobable "random" policy */
 class Sarsa_Windygrid {
   public static void main(String[] args) {
     Windygrid windyGrid = Windygrid.createFour();
@@ -35,9 +22,8 @@ class Sarsa_Windygrid {
     for (int c = 0; c < 10; ++c) {
       System.out.println(c);
       Sarsa sarsa = new OriginalSarsa( //
-          windyGrid, policy, //
-          windyGrid, //
-          qsa, RealScalar.of(.8), RealScalar.of(.1));
+          windyGrid, policy, windyGrid, //
+          qsa, RealScalar.of(.1));
       sarsa.simulate(5);
       policy = EGreedyPolicy.bestEquiprobable(windyGrid, qsa, RealScalar.of(.1));
       // policy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, qsa); //

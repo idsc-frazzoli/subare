@@ -12,22 +12,19 @@ import ch.ethz.idsc.tensor.io.Import;
 
 /** action value iteration for gambler's dilemma */
 class AVI_Racetrack {
-  public static final String FILENAME = "racetrack_avi_qsa.object";
-
-  static void precompute() throws Exception {
-    String trackName = "track2";
-    Racetrack racetrack = RacetrackHelper.create(trackName, 5);
+  static void precompute(String name) throws Exception {
+    Racetrack racetrack = RacetrackHelper.create(name, 5);
     ActionValueIteration avi = new ActionValueIteration(racetrack, racetrack);
-    avi.untilBelow(RealScalar.of(1e-1), 0);
-    Export.object(UserHome.file(FILENAME), avi.qsa());
+    avi.untilBelow(RealScalar.of(1e-1), 2);
+    Export.object(UserHome.file(name + ".object"), avi.qsa());
   }
 
   public static void main(String[] args) throws Exception {
-    // precompute();
-    DiscreteQsa qsa = Import.object(UserHome.file(FILENAME));
+    String name = "track2";
+    precompute(name);
+    DiscreteQsa qsa = Import.object(UserHome.file(name + ".object"));
     System.out.println(qsa.size());
-    String trackName = "track2";
-    Racetrack racetrack = RacetrackHelper.create(trackName, 5);
+    Racetrack racetrack = RacetrackHelper.create(name, 5);
     int c = 0;
     for (Tensor state : racetrack.states()) {
       for (Tensor action : racetrack.actions(state)) {

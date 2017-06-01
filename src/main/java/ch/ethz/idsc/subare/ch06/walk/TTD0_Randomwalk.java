@@ -1,7 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.walk;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
@@ -12,20 +11,18 @@ import ch.ethz.idsc.tensor.sca.Round;
 /** tabular temporal difference (0) to learn value of states
  * 
  * 0 0
- * 1 0.11
- * 2 0.36
- * 3 0.64
- * 4 0.79
+ * 1 0.10
+ * 2 0.27
+ * 3 0.47
+ * 4 0.67
  * 5 0.90
  * 6 0 */
-class TTD0_RandomWalk {
+class TTD0_Randomwalk {
   public static void main(String[] args) {
-    RandomWalk randomWalk = new RandomWalk();
-    DiscreteVs vs = DiscreteVs.build(randomWalk);
-    PolicyInterface policyInterface = new EquiprobablePolicy(randomWalk);
+    Randomwalk randomwalk = new Randomwalk();
+    DiscreteVs vs = DiscreteVs.build(randomwalk);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
-        randomWalk, policyInterface, //
-        vs, RealScalar.of(.1), RealScalar.ONE);
+        randomwalk, new EquiprobablePolicy(randomwalk), vs, randomwalk.gamma(), RealScalar.of(.1));
     ttd0.simulate(123);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }

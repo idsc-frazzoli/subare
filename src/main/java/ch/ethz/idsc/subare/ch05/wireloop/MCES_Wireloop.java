@@ -6,21 +6,23 @@ import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class MCES_Wireloop {
   public static void main(String[] args) throws Exception {
-    String name = "wire6";
+    String name = "wire4";
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
     PolicyInterface policyInterface = new EquiprobablePolicy(wireloop);
-    MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
-        wireloop, policyInterface, wireloop, RealScalar.of(.15));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_qsa_mces.gif"), 100);
+    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(wireloop, policyInterface, wireloop);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
-      System.out.println(index);
-      mces.simulate(20);
+      Scalar epsilon = RealScalar.of(.25 * (EPISODES - index) / EPISODES);
+      System.out.println(index + " " + epsilon);
+      mces.setExplorationProbability(epsilon);
+      mces.simulate(100);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, mces.qsa())));
     }
     gsw.close();

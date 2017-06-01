@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
+import java.util.List;
+
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -12,6 +14,8 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.alg.Dimensions;
+import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 
@@ -39,7 +43,7 @@ enum GamblerHelper {
         int a = offset - action.Get().number().intValue();
         tensor.set(colorscheme.get(BASE.multiply(sca)), s, a);
       }
-    return ImageResize.of(tensor, 3);
+    return ImageResize.of(tensor, 2);
   }
 
   public static Tensor render(Gambler gambler, PolicyInterface policyInterface) {
@@ -55,6 +59,15 @@ enum GamblerHelper {
         int a = offset - action.Get().number().intValue();
         tensor.set(colorscheme.get(BASE.multiply(sca)), s, a);
       }
-    return ImageResize.of(tensor, 3);
+    return ImageResize.of(tensor, 2);
+  }
+
+  public static Tensor joinAll(Gambler gambler, DiscreteQsa qsa) {
+    Tensor im1 = render(gambler, qsa);
+    PolicyInterface pi = GreedyPolicy.bestEquiprobableGreedy(gambler, qsa);
+    Tensor im2 = render(gambler, pi);
+    List<Integer> list = Dimensions.of(im1);
+    list.set(0, 6 * 2);
+    return Join.of(0, im1, Array.zeros(list), im2);
   }
 }
