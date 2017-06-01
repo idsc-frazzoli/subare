@@ -39,8 +39,7 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
    * @param discreteModel
    * @param epsilon probability of exploration */
   public MonteCarloExploringStarts( //
-      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
-      DiscreteModel discreteModel) {
+      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, DiscreteModel discreteModel) {
     // TODO check exploring starts
     this.episodeSupplier = episodeSupplier;
     this.policyInterface = policyInterface;

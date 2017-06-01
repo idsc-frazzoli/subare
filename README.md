@@ -38,17 +38,9 @@ Value Iteration v(s)
 
 ![gambler_sv](https://cloud.githubusercontent.com/assets/4012178/25566784/05d63bf0-2de1-11e7-88e8-a2c485071c38.png)
 
-<table><tr><td>
-Action Value Iteration q(s,a)
+Action Value Iteration and optimal policy
 
-![gambler_avi_iteration](https://cloud.githubusercontent.com/assets/4012178/26570813/bd1e3586-4512-11e7-90ef-070043f3968b.gif)
-
-<td>
-Optimal policy
-
-![gambler_avi_policy](https://cloud.githubusercontent.com/assets/4012178/26570788/9be7a47e-4512-11e7-87e4-00eb7f438e12.gif)
-
-</tr></table>
+![gambler_avi](https://cloud.githubusercontent.com/assets/4012178/26673482/5a11e616-46bd-11e7-8c52-376acac21fa8.gif)
 
 <table><tr><td>
 
