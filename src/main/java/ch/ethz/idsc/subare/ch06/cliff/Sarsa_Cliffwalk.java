@@ -25,9 +25,8 @@ class Sarsa_Cliffwalk {
     for (int c = 0; c < 100; ++c) {
       System.out.println(c);
       Sarsa sarsa = new OriginalSarsa( //
-          cliffwalk, policy, //
-          cliffwalk, //
-          qsa, RealScalar.ONE, RealScalar.of(.25));
+          cliffwalk, policy, cliffwalk, //
+          qsa, RealScalar.of(.25));
       sarsa.simulate(3);
       policy = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, RealScalar.of(.1));
       // policy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, qsa); //

@@ -19,11 +19,11 @@ public abstract class Sarsa extends AbstractTemporalDifference {
   public Sarsa( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
       DiscreteModel discreteModel, //
-      QsaInterface qsa, Scalar gamma, Scalar alpha) {
+      QsaInterface qsa, Scalar alpha) {
     super(episodeSupplier, policyInterface);
     this.discreteModel = discreteModel;
     this.qsa = qsa;
-    this.gamma = gamma;
+    this.gamma = discreteModel.gamma();
     this.alpha = alpha;
   }
 

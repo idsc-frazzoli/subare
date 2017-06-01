@@ -30,7 +30,7 @@ class ESarsa_Cliffwalk {
       ExpectedSarsa expectedSarsa = new ExpectedSarsa( //
           cliffwalk, policy, //
           cliffwalk, //
-          qsa, RealScalar.ONE, RealScalar.of(.25));
+          qsa, RealScalar.of(.25));
       expectedSarsa.simulate(3);
       policy = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, RealScalar.of(.1));
       if (c % 2 == 0)

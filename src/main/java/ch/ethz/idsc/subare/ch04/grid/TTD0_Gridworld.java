@@ -32,7 +32,7 @@ public class TTD0_Gridworld {
     DiscreteVs vs = DiscreteVs.build(gridWorld);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
         gridWorld, policyInterface, //
-        vs, RealScalar.ONE, RealScalar.of(.5));
+        vs, gridWorld.gamma(), RealScalar.of(.5));
     ttd0.simulate(50230);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }

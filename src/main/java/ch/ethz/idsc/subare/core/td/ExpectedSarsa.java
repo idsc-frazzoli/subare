@@ -22,8 +22,8 @@ public class ExpectedSarsa extends Sarsa {
   public ExpectedSarsa( //
       EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
       DiscreteModel discreteModel, //
-      QsaInterface qsa, Scalar gamma, Scalar alpha) {
-    super(episodeSupplier, policyInterface, discreteModel, qsa, gamma, alpha);
+      QsaInterface qsa, Scalar alpha) {
+    super(episodeSupplier, policyInterface, discreteModel, qsa, alpha);
   }
 
   @Override

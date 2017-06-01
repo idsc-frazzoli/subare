@@ -25,7 +25,7 @@ class TTD0_RandomWalk {
     PolicyInterface policyInterface = new EquiprobablePolicy(randomWalk);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
         randomWalk, policyInterface, //
-        vs, RealScalar.of(.1), RealScalar.ONE);
+        vs, randomWalk.gamma(), RealScalar.of(.1));
     ttd0.simulate(123);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }

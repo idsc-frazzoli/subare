@@ -33,9 +33,8 @@ class Sarsa_RandomWalk {
     DiscreteQsa qsa = DiscreteQsa.build(randomWalk);
     for (int c = 0; c < 10; ++c) {
       Sarsa sarsa = new OriginalSarsa( //
-          randomWalk, policy, //
-          randomWalk, //
-          qsa, RealScalar.ONE, RealScalar.of(.1));
+          randomWalk, policy, randomWalk, //
+          qsa, RealScalar.of(.1));
       sarsa.simulate(100);
       policy = EGreedyPolicy.bestEquiprobable(randomWalk, qsa, RealScalar.of(.01));
       // policy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, qsa); //

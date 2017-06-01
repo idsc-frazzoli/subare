@@ -35,7 +35,7 @@ class ESarsa_Gambler {
       ExpectedSarsa expectedSarsa = new ExpectedSarsa( //
           gambler, policy, //
           gambler, //
-          qsa, RealScalar.ONE, RealScalar.of(.2));
+          qsa, RealScalar.of(.2));
       expectedSarsa.simulate(300);
       policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       gsw.append(ImageFormat.of(GamblerHelper.render(gambler, qsa)));

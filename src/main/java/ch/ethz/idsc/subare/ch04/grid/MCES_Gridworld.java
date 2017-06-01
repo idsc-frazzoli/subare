@@ -13,12 +13,12 @@ class MCES_Gridworld {
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
-    MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
-        gridworld, policyInterface, gridworld, RealScalar.of(.1));
+    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gridworld, policyInterface, gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
+      mces.setExplorationProbability(RealScalar.of(.1));
       mces.simulate(1);
       gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, mces.qsa())));
     }
