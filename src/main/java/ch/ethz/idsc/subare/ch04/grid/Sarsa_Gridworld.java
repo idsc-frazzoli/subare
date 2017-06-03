@@ -25,28 +25,28 @@ import ch.ethz.idsc.tensor.sca.Round;
 /** Sarsa applied to gridworld */
 class Sarsa_Gridworld {
   public static void main(String[] args) throws Exception {
-    Gridworld gambler = new Gridworld();
+    Gridworld gridworld = new Gridworld();
     int EPISODES = 100;
     Tensor epsilon = Subdivide.of(.9, .01, EPISODES);
-    PolicyInterface policyInterface = new EquiprobablePolicy(gambler);
-    DiscreteQsa qsa = DiscreteQsa.build(gambler);
+    PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
+    DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_sarsa.gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
       Sarsa sarsa = new OriginalSarsa( //
-          gambler, qsa, RealScalar.of(.2), //
+          gridworld, qsa, RealScalar.of(.2), //
           policyInterface);
       // sarsa.simulate(10);// FIXME
-      policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
-      gsw.append(ImageFormat.of(GridworldHelper.render(gambler, qsa)));
+      policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(index));
+      gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, qsa)));
     }
     gsw.close();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
-    DiscreteVs vs = DiscreteUtils.createVs(gambler, qsa);
+    DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa);
     Put.of(UserHome.file("esarsa_gambler"), vs.values());
-    EpisodeInterface ei = EpisodeKickoff.create(gambler, policyInterface);
+    EpisodeInterface ei = EpisodeKickoff.single(gridworld, policyInterface);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();
       Tensor state = stepInterface.prevState();

@@ -1,8 +1,11 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.walk;
 
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -20,9 +23,11 @@ class FVPE_Randomwalk {
   public static void main(String[] args) {
     Randomwalk randomwalk = new Randomwalk();
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        // randomwalk, new EquiprobablePolicy(randomwalk), //
         randomwalk, RealScalar.ONE, null);
-    DiscreteVs vs = fvpe.getDiscreteVs(); // FIXME
+    PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
+    for (int count = 0; count < 100; ++count)
+      ExploringStartsBatch.apply(randomwalk, fvpe, policyInterface);
+    DiscreteVs vs = fvpe.vs();
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

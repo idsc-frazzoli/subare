@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -28,11 +29,12 @@ import ch.ethz.idsc.tensor.sca.Round;
 public class TTD0_Gridworld {
   public static void main(String[] args) {
     Gridworld gridWorld = new Gridworld();
-    PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
     DiscreteVs vs = DiscreteVs.build(gridWorld);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
         vs, gridWorld.gamma(), RealScalar.of(.5));
-    // ttd0.simulate(50230); // FIXME
+    PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
+    for (int count = 0; count < 100; ++count)
+      ExploringStartsBatch.apply(gridWorld, ttd0, policyInterface);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

@@ -16,19 +16,13 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * box on p. 157 */
 // TODO not tested yet
 public class NStepSarsa implements EpisodeDigest {
-  // private final EpisodeSupplier episodeSupplier;
-  // private final PolicyInterface policyInterface;
   private final QsaInterface qsa;
   private final Scalar gamma;
   private final Scalar alpha;
   private final int size;
 
   public NStepSarsa( //
-      // EpisodeSupplier episodeSupplier,
-      // PolicyInterface policyInterface, //
       QsaInterface qsa, Scalar gamma, Scalar alpha, int size) {
-    // this.episodeSupplier = episodeSupplier;
-    // this.policyInterface = policyInterface;
     this.qsa = qsa;
     this.gamma = gamma;
     this.alpha = alpha;

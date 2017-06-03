@@ -36,7 +36,7 @@ class Sarsa_Cliffwalk {
     }
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
-    EpisodeInterface ei = EpisodeKickoff.create(cliffwalk, policyInterface);
+    EpisodeInterface ei = EpisodeKickoff.single(cliffwalk, policyInterface);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();
       Tensor state = stepInterface.prevState();

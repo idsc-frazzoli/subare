@@ -26,12 +26,11 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * see box on p.107 */
 public class MonteCarloExploringStarts implements EpisodeDigest {
   private final DiscreteModel discreteModel;
-  // FIXME
-  private PolicyInterface policyInterface; // <- TODO check ? changes over the course of the iterations
+  private PolicyInterface policyInterface; // <- FIXME check ? changes over the course of the iterations
   private final Scalar gamma;
-  private Scalar epsilon; // probability of exploration
   private final DiscreteQsa qsa;
   private final Map<Tensor, Average> map = new HashMap<>();
+  private Scalar epsilon; // probability of exploration
 
   /** @param episodeSupplier
    * @param policyInterface
@@ -47,16 +46,6 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
 
   public void setExplorationProbability(Scalar epsilon) {
     this.epsilon = epsilon;
-  }
-
-  public void step(EpisodeInterface episodeInterface) {
-    // policy has to satisfy exploring starts condition
-    // EpisodeInterface episodeInterface = episodeSupplier.kickoff(policyInterface);
-    digest(episodeInterface);
-  }
-
-  public DiscreteQsa qsa() {
-    return qsa;
   }
 
   @Override
@@ -78,6 +67,7 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
     for (Entry<Tensor, Integer> entry : first.entrySet()) {
       Tensor key = entry.getKey();
       int fromIndex = entry.getValue();
+      // TODO speedup by checking if gamma == 1
       gains.put(key, Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma));
     }
     // TODO more efficient update of average
@@ -97,5 +87,9 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
       }
       policyInterface = EGreedyPolicy.bestEquiprobable(discreteModel, qsa, epsilon);
     }
+  }
+
+  public DiscreteQsa qsa() {
+    return qsa;
   }
 }

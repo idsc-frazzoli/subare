@@ -42,7 +42,7 @@ class ESarsa_Cliffwalk {
     gsw.close();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
-    EpisodeInterface mce = EpisodeKickoff.create(cliffwalk, policyInterface);
+    EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policyInterface);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

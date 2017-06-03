@@ -31,6 +31,7 @@ List of algorithms:
 
 ## Examples from the book
 
+### 4.2: Jack's car rental
 
 ### 4.4: Gambler's problem
 

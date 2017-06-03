@@ -6,6 +6,7 @@ import java.io.IOException;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -15,11 +16,12 @@ import ch.ethz.idsc.tensor.sca.Round;
 class FVPE_Gambler {
   public static void main(String[] args) throws IOException {
     Gambler gambler = Gambler.createDefault();
-    PolicyInterface policyInterface = GamblerHelper.getOptimalPolicy(gambler);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        // gambler, policyInterface, //
         gambler, RealScalar.ONE, null);
-    DiscreteVs vs = fvpe.getDiscreteVs(); // FIXME simulate
+    // TODO uses optimal policy!
+    PolicyInterface policyInterface = GamblerHelper.getOptimalPolicy(gambler);
+    ExploringStartsBatch.apply(gambler, fvpe, policyInterface);
+    DiscreteVs vs = fvpe.vs();
     vs.print(Round.toMultipleOf(DecimalScalar.of(.001)));
     Put.of(UserHome.file("fvmc_gambler"), vs.values());
   }

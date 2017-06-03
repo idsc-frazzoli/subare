@@ -23,32 +23,15 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
 /** see box on p.100 */
 public class FirstVisitPolicyEvaluation implements EpisodeDigest {
   private final DiscreteModel standardModel;
-  // private final PolicyInterface policyInterface;
   private final Scalar gamma;
   final DiscreteVs vs;
   final Map<Tensor, Average> map = new HashMap<>(); // TODO no good!
 
   public FirstVisitPolicyEvaluation( //
-      // PolicyInterface policyInterface, //
       DiscreteModel standardModel, Scalar gamma, DiscreteVs vs) {
     this.standardModel = standardModel;
-    // this.policyInterface = policyInterface;
     this.gamma = gamma;
     this.vs = vs; // TODO write results directly in vs!
-  }
-
-  public DiscreteVs getDiscreteVs() {
-    // int iteration = 0;
-    // while (iteration < iterations) {
-    // step();
-    // ++iteration;
-    // }
-    Tensor states = standardModel.states();
-    Index index = Index.build(states);
-    Tensor values = Array.zeros(index.size());
-    for (Entry<Tensor, Average> entry : map.entrySet())
-      values.set(entry.getValue().get(), index.of(entry.getKey()));
-    return new DiscreteVs(index, values);
   }
 
   @Override
@@ -79,5 +62,14 @@ public class FirstVisitPolicyEvaluation implements EpisodeDigest {
         map.put(stateP, new Average());
       map.get(stateP).track(gains.get(stateP));
     }
+  }
+
+  public DiscreteVs vs() {
+    Tensor states = standardModel.states();
+    Index index = Index.build(states);
+    Tensor values = Array.zeros(index.size());
+    for (Entry<Tensor, Average> entry : map.entrySet())
+      values.set(entry.getValue().get(), index.of(entry.getKey()));
+    return new DiscreteVs(index, values);
   }
 }

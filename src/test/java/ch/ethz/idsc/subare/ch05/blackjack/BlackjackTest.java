@@ -31,7 +31,7 @@ public class BlackjackTest extends TestCase {
     PolicyInterface pi = new EquiprobablePolicy(blackjack);
     Tensor tally = Tensors.empty();
     for (int EPISODES = 0; EPISODES < 10000; ++EPISODES) {
-      EpisodeInterface ei = EpisodeKickoff.create(blackjack, pi);
+      EpisodeInterface ei = EpisodeKickoff.single(blackjack, pi);
       int count = 0;
       while (ei.hasNext()) {
         ei.step();

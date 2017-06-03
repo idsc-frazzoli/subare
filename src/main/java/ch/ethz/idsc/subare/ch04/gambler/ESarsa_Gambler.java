@@ -48,7 +48,7 @@ class ESarsa_Gambler {
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gambler, qsa);
     Put.of(UserHome.file("esarsa_gambler"), vs.values());
-    EpisodeInterface mce = EpisodeKickoff.create(gambler, policyInterface);
+    EpisodeInterface mce = EpisodeKickoff.single(gambler, policyInterface);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();
