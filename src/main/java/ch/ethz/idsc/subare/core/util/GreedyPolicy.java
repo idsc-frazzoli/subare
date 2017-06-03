@@ -10,8 +10,8 @@ import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Extract;
 
 public class GreedyPolicy extends EGreedyPolicy {
@@ -54,6 +54,6 @@ public class GreedyPolicy extends EGreedyPolicy {
   }
 
   private GreedyPolicy(Map<Tensor, Index> map) {
-    super(map, ZeroScalar.get(), null);
+    super(map, RealScalar.ZERO, null);
   }
 }

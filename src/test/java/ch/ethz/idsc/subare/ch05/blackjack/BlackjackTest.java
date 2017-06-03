@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.red.Tally;
 import junit.framework.TestCase;
 
@@ -21,7 +20,7 @@ public class BlackjackTest extends TestCase {
       // System.out.println(next);
     }
     {
-      Tensor next = blackjack.move(Tensors.vector(0, 21, 7), ZeroScalar.get());
+      Tensor next = blackjack.move(Tensors.vector(0, 21, 7), RealScalar.ZERO);
       // System.out.println(next);
     }
   }

@@ -12,7 +12,6 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 
 class InfiniteVariance extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
@@ -30,14 +29,14 @@ class InfiniteVariance extends DeterministicStandardModel implements MonteCarloI
 
   @Override
   public Tensor actions(Tensor state) {
-    return isTerminal(state) ? Tensors.of(ZeroScalar.get()) : actions;
+    return isTerminal(state) ? Tensors.of(RealScalar.ZERO) : actions;
   }
 
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    return state.equals(ZeroScalar.get()) && action.equals(RealScalar.ONE) ? //
-        RealScalar.ONE : ZeroScalar.get();
+    return state.equals(RealScalar.ZERO) && action.equals(RealScalar.ONE) ? //
+        RealScalar.ONE : RealScalar.ZERO;
   }
 
   @Override
@@ -48,7 +47,7 @@ class InfiniteVariance extends DeterministicStandardModel implements MonteCarloI
   /**************************************************/
   @Override
   public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    return new MonteCarloEpisode(this, policyInterface, ZeroScalar.get());
+    return new MonteCarloEpisode(this, policyInterface, RealScalar.ZERO);
   }
 
   @Override

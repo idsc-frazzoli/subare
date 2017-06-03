@@ -10,9 +10,9 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 
 /** Example 5.1 p.101 */
 class Blackjack implements MonteCarloInterface, EpisodeSupplier {
@@ -59,7 +59,7 @@ class Blackjack implements MonteCarloInterface, EpisodeSupplier {
   @Override
   public Tensor move(Tensor state, Tensor action) {
     // player stays, the next state is terminal
-    if (action.equals(ZeroScalar.get())) { // stay
+    if (Scalars.isZero((Scalar) action)) { // stay
       // TODO natural: ACE+10-card
       int dealer = state.Get(2).number().intValue();
       boolean usableAce = dealer == 1;
@@ -98,7 +98,7 @@ class Blackjack implements MonteCarloInterface, EpisodeSupplier {
       return END_LOSS;
     player -= 10;
     Tensor next = state.copy();
-    next.set(ZeroScalar.get(), 0);
+    next.set(RealScalar.ZERO, 0);
     next.set(RealScalar.of(player), 1);
     return next;
   }
@@ -107,7 +107,7 @@ class Blackjack implements MonteCarloInterface, EpisodeSupplier {
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (!isTerminal(state) && isTerminal(next))
       return next.Get(0);
-    return ZeroScalar.get();
+    return RealScalar.ZERO;
   }
 
   @Override

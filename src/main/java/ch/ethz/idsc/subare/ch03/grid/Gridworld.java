@@ -11,7 +11,6 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -52,7 +51,7 @@ class Gridworld extends DeterministicStandardModel implements //
     // check if action would take agent off the board
     Tensor effective = state.add(action);
     return effective.map(CLIP).equals(effective) ? //
-        ZeroScalar.get() : RealScalar.ONE.negate();
+        RealScalar.ZERO : RealScalar.ONE.negate();
   }
 
   @Override

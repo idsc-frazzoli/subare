@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.util.GlobalAssert;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Mean;
 
@@ -26,8 +26,8 @@ class AllPairs {
         }
         GlobalAssert.of(table.length() == runs);
         Tensor mean = Mean.of(table);
-        GlobalAssert.of(matrix.Get(i1, i2).equals(ZeroScalar.get()));
-        GlobalAssert.of(matrix.Get(i2, i1).equals(ZeroScalar.get()));
+        GlobalAssert.of(Scalars.isZero(matrix.Get(i1, i2)));
+        GlobalAssert.of(Scalars.isZero(matrix.Get(i2, i1)));
         matrix.set(mean.Get(0), i1, i2);
         matrix.set(mean.Get(1), i2, i1);
       }

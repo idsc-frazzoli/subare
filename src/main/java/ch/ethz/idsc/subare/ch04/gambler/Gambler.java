@@ -18,7 +18,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
@@ -55,7 +54,7 @@ class Gambler implements StandardModel, //
   @Override
   public Tensor actions(Tensor state) {
     if (isTerminal(state))
-      return Tensors.of(ZeroScalar.get());
+      return Tensors.of(RealScalar.ZERO);
     // here we deviate from the book and the code by STZ:
     // we require that the bet=action is non-zero,
     // if the state is non-terminal, 0 < cash < 100.
@@ -113,17 +112,17 @@ class Gambler implements StandardModel, //
 
   @Override
   public boolean isTerminal(Tensor state) {
-    return state.equals(ZeroScalar.get()) || state.equals(TERMINAL_W);
+    return state.equals(RealScalar.ZERO) || state.equals(TERMINAL_W);
   }
 
   /**************************************************/
   @Override
   public Scalar expectedReward(Tensor state, Tensor action) {
     if (isTerminal(state))
-      return ZeroScalar.get();
+      return RealScalar.ZERO;
     if (state.add(action).equals(TERMINAL_W))
       return P_win; // P_win * 1
-    return ZeroScalar.get();
+    return RealScalar.ZERO;
   }
 
   @Override

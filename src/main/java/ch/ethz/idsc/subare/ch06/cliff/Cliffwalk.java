@@ -12,7 +12,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.red.Norm;
@@ -72,7 +71,7 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
     if (isTerminal(stateS))
-      return isTerminal(state) ? ZeroScalar.get() : RealScalar.ONE;
+      return isTerminal(state) ? RealScalar.ZERO : RealScalar.ONE;
     if (stateS.equals(START) && Scalars.lessThan( //
         RealScalar.ONE, Norm._1.of(state.subtract(stateS))))
       return PRICE_CLIFF; // walked off cliff
@@ -94,7 +93,7 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
   boolean isCliff(Tensor coord) {
     Scalar x = coord.Get(0);
     return coord.get(1).equals(RealScalar.of(MY)) && //
-        Scalars.lessThan(ZeroScalar.get(), x) && Scalars.lessThan(x, RealScalar.of(MX));
+        Scalars.lessThan(RealScalar.ZERO, x) && Scalars.lessThan(x, RealScalar.of(MX));
   }
 
   /**************************************************/

@@ -14,7 +14,6 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -55,9 +54,9 @@ class Gridworld extends DeterministicStandardModel implements MonteCarloInterfac
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
     if (state.equals(TERMINATE1))
-      return ZeroScalar.get();
+      return RealScalar.ZERO;
     if (state.equals(TERMINATE2))
-      return ZeroScalar.get();
+      return RealScalar.ZERO;
     return RealScalar.ONE.negate();
   }
 

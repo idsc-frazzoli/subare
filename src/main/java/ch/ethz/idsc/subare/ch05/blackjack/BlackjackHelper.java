@@ -10,10 +10,10 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
@@ -49,7 +49,7 @@ enum BlackjackHelper {
     for (Tensor state : blackjack.states())
       if (state.length() == 3) {
         {
-          Tensor action = ZeroScalar.get();
+          Tensor action = RealScalar.ZERO;
           Scalar sca = policyInterface.policy(state, action);
           int useAce = state.Get(0).number().intValue();
           int player = state.Get(1).number().intValue() - 12;

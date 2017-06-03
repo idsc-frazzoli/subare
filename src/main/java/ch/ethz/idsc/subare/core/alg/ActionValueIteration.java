@@ -9,7 +9,6 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.red.Max;
 
 /** action value iteration: "policy evaluation is stopped after just one sweep"
@@ -79,8 +78,8 @@ public class ActionValueIteration {
   // helper function
   private Scalar jacobiMax(Tensor state, Tensor action) {
     Scalar ersa = actionValueInterface.expectedReward(state, action);
-    Scalar eqsa = ZeroScalar.get();
-    Scalar norm = ZeroScalar.get();
+    Scalar eqsa = RealScalar.ZERO;
+    Scalar norm = RealScalar.ZERO;
     for (Tensor next : actionValueInterface.transitions(state, action)) {
       Scalar prob = actionValueInterface.transitionProbability(state, action, next);
       Scalar max = standardModel.actions(next).flatten(0) //

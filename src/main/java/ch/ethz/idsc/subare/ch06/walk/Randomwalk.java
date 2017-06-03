@@ -12,13 +12,12 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Range;
 
 /** Example 6.2: Random Walk, p.133 */
 class Randomwalk implements //
     MonteCarloInterface, EpisodeSupplier {
-  private static final Tensor TERMINATE1 = ZeroScalar.get(); // A
+  private static final Tensor TERMINATE1 = RealScalar.ZERO; // A
   private static final Tensor TERMINATE2 = RealScalar.of(6); // A'
   // ---
   private final Tensor states = Range.of(0, 7).unmodifiable();
@@ -39,7 +38,7 @@ class Randomwalk implements //
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
     if (!isTerminal(state) && stateS.equals(TERMINATE2))
       return RealScalar.ONE;
-    return ZeroScalar.get();
+    return RealScalar.ZERO;
   }
 
   @Override

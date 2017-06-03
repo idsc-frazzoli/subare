@@ -10,7 +10,6 @@ import ch.ethz.idsc.subare.ch02.OptimistAgent;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.ZeroScalar;
 
 class Judger {
   final Network network;
@@ -30,7 +29,7 @@ class Judger {
     // network computes costs
     for (Agent agent : list) {
       int k = agent.getActionReminder();
-      Scalar total = ZeroScalar.get();
+      Scalar total = RealScalar.ZERO;
       for (int s : network.streetsFromAction(k))
         total = total.add(cost.Get(s));
       agent.feedback(k, total);

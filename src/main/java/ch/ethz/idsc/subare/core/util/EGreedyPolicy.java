@@ -14,7 +14,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Extract;
 
 /** p.33 */
@@ -52,7 +51,7 @@ public class EGreedyPolicy extends AbstractPolicy {
     Index index = map.get(state);
     final int optimalCount = index.size();
     if (sizes == null) // greedy
-      return index.containsKey(action) ? RationalScalar.of(1, optimalCount) : ZeroScalar.get();
+      return index.containsKey(action) ? RationalScalar.of(1, optimalCount) : RealScalar.ZERO;
     // ---
     final int nonOptimalCount = sizes.get(state) - optimalCount;
     if (nonOptimalCount == 0) // no non-optimal action exists

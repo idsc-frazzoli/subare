@@ -7,10 +7,10 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.io.Import;
 import ch.ethz.idsc.tensor.opt.Interpolation;
@@ -28,7 +28,7 @@ enum RacetrackHelper {
 
   static Tensor render(Racetrack racetrack, DiscreteQsa qsa, Tensor speed, Tensor action) {
     Interpolation colorscheme = Colorscheme.classic();
-    Tensor image = racetrack.image().multiply(ZeroScalar.get());
+    Tensor image = racetrack.image().multiply(RealScalar.ZERO);
     DiscreteQsa scaled = qsa.create(Rescale.of(qsa.values()).flatten(0));
     for (Tensor state : racetrack.states())
       if (state.extract(2, 4).equals(speed)) {
