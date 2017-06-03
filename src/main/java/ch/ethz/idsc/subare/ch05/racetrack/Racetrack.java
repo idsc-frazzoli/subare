@@ -6,11 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.subare.util.GlobalAssert;
@@ -38,7 +34,7 @@ import ch.ethz.idsc.tensor.sca.Decrement;
  * so we make a compromise by using the following integration procedure
  * p' = p + v + a
  * v' = clip(v + a) */
-class Racetrack extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+class Racetrack extends DeterministicStandardModel implements MonteCarloInterface {
   static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   static final Tensor RED = Tensors.vector(255, 0, 0, 255);
   static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);
@@ -129,6 +125,12 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   }
 
   @Override
+  public Scalar gamma() {
+    return RealScalar.of(1.); // numerical one
+  }
+
+  /**************************************************/
+  @Override
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
@@ -169,25 +171,19 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     return statesStartIndex.containsKey(state);
   }
 
+  /**************************************************/
+  @Override
+  public Tensor startStates() {
+    return statesStart;
+  }
+
   @Override
   public boolean isTerminal(Tensor state) {
     return statesTerminalIndex.containsKey(state);
   }
 
-  @Override
-  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    Tensor start = statesStart.get(random.nextInt(statesStart.length()));
-    if (isTerminal(start))
-      throw new RuntimeException();
-    return new MonteCarloEpisode(this, policyInterface, start);
-  }
-
+  /**************************************************/
   public Tensor image() {
     return image.copy();
-  }
-
-  @Override
-  public Scalar gamma() {
-    return RealScalar.of(1.); // numerical one
   }
 }

@@ -24,9 +24,9 @@ class Sarsa_Randomwalk {
   public static void main(String[] args) {
     Randomwalk randomwalk = new Randomwalk();
     DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
-    Sarsa sarsa = new OriginalSarsa(randomwalk, new EquiprobablePolicy(randomwalk), randomwalk, //
+    Sarsa sarsa = new OriginalSarsa(randomwalk, new EquiprobablePolicy(randomwalk), //
         qsa, RealScalar.of(.1));
-    sarsa.simulate(100);
+    // sarsa.simulate(100); // FIXME
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

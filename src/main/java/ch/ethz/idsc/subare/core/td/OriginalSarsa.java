@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
@@ -20,10 +19,10 @@ public class OriginalSarsa extends Sarsa {
   final PolicyWrap policyWrap;
 
   public OriginalSarsa( //
-      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
       DiscreteModel discreteModel, //
+      PolicyInterface policyInterface, //
       QsaInterface qsa, Scalar alpha) {
-    super(episodeSupplier, policyInterface, discreteModel, qsa, alpha);
+    super(discreteModel, qsa, alpha);
     policyWrap = new PolicyWrap(policyInterface);
   }
 

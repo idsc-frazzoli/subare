@@ -32,9 +32,9 @@ class FVPE_Gridworld {
     Gridworld gridworld = new Gridworld();
     PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        gridworld, policyInterface, //
+        // gridworld, policyInterface, //
         gridworld, RealScalar.ONE, null);
-    DiscreteVs vs = fvpe.simulate(12300);
+    DiscreteVs vs = fvpe.getDiscreteVs(); // FIXME simulate
     vs.print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }
 }

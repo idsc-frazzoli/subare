@@ -3,11 +3,7 @@ package ch.ethz.idsc.subare.ch06.windy;
 
 import java.util.Random;
 
-import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -19,7 +15,7 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** produces results on p.83: */
-class Windygrid extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+class Windygrid extends DeterministicStandardModel implements MonteCarloInterface {
   static final Tensor START = Tensors.vector(3, 0);
   static final Tensor GOAL = Tensors.vector(3, 7).unmodifiable();
   private static final Tensor WIND = Tensors.vector(0, 0, 0, 1, 1, 1, 2, 2, 1, 0).negate();
@@ -69,6 +65,11 @@ class Windygrid extends DeterministicStandardModel implements MonteCarloInterfac
     return stateActionMap.actions(state);
   }
 
+  @Override
+  public Scalar gamma() {
+    return RealScalar.ONE;
+  }
+
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
@@ -94,17 +95,12 @@ class Windygrid extends DeterministicStandardModel implements MonteCarloInterfac
 
   /**************************************************/
   @Override
-  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    return new MonteCarloEpisode(this, policyInterface, START);
+  public Tensor startStates() {
+    return Tensors.of(START);
   }
 
   @Override
   public boolean isTerminal(Tensor state) {
     return state.equals(GOAL);
-  }
-
-  @Override
-  public Scalar gamma() {
-    return RealScalar.ONE;
   }
 }

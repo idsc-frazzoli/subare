@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.ExploringStartBatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -15,13 +16,13 @@ class MCES_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     PolicyInterface policyInterface = GamblerHelper.getOptimalPolicy(gambler);
-    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gambler, policyInterface, gambler);
+    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gambler, policyInterface);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_mces.gif"), 100);
-    int EPISODES = 100;
+    int EPISODES = 10;
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
       mces.setExplorationProbability(RealScalar.of(.1));
-      mces.simulate(1000);
+      ExploringStartBatch.apply(gambler, mces, policyInterface);
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, mces.qsa())));
     }
     gsw.close();

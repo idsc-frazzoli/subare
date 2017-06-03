@@ -3,11 +3,7 @@ package ch.ethz.idsc.subare.ch05.blackjack;
 
 import java.util.Random;
 
-import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -15,7 +11,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 /** Example 5.1 p.101 */
-class Blackjack implements MonteCarloInterface, EpisodeSupplier {
+class Blackjack implements MonteCarloInterface {
   static final Tensor END_WIN = Tensors.vector(1);
   static final Tensor END_DRAW = Tensors.vector(0);
   static final Tensor END_LOSS = Tensors.vector(-1);
@@ -56,6 +52,7 @@ class Blackjack implements MonteCarloInterface, EpisodeSupplier {
     return RealScalar.ONE;
   }
 
+  /**************************************************/
   @Override
   public Tensor move(Tensor state, Tensor action) {
     // player stays, the next state is terminal
@@ -110,16 +107,14 @@ class Blackjack implements MonteCarloInterface, EpisodeSupplier {
     return RealScalar.ZERO;
   }
 
+  /**************************************************/
   @Override
-  public boolean isTerminal(Tensor state) {
-    return state.length() == 1;
+  public Tensor startStates() {
+    return states.extract(0, states.length() - 3);
   }
 
   @Override
-  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    Tensor start = states.get(random.nextInt(states.length() - 3));
-    if (isTerminal(start))
-      throw new RuntimeException();
-    return new MonteCarloEpisode(this, policyInterface, start);
+  public boolean isTerminal(Tensor state) {
+    return state.length() == 1;
   }
 }

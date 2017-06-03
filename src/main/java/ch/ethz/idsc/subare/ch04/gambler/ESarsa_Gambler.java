@@ -10,6 +10,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -27,7 +28,7 @@ class ESarsa_Gambler {
     Gambler gambler = Gambler.createDefault();
     int EPISODES = 100;
     Tensor epsilon = Subdivide.of(.5, .01, EPISODES);
-    PolicyInterface policy = new EquiprobablePolicy(gambler);
+    PolicyInterface policyInterface = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_esarsa.gif"), 100);
@@ -35,11 +36,10 @@ class ESarsa_Gambler {
       Scalar scalar = epsilon.Get(index);
       System.out.println(index + " " + scalar);
       Sarsa sarsa = new ExpectedSarsa( //
-          gambler, policy, //
-          gambler, //
+          gambler, policyInterface, //
           qsa, scalar);
-      sarsa.simulate(500);
-      policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, scalar);
+      // sarsa.simulate(500); // FIXME simulate
+      policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, scalar);
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa)));
     }
     gsw.close();
@@ -47,7 +47,7 @@ class ESarsa_Gambler {
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gambler, qsa);
     Put.of(UserHome.file("esarsa_gambler"), vs.values());
-    EpisodeInterface mce = gambler.kickoff(policy);
+    EpisodeInterface mce = EpisodeKickoff.create(gambler, policyInterface);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

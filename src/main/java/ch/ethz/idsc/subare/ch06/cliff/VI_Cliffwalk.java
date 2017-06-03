@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
+import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -27,7 +28,7 @@ class VI_Cliffwalk {
     // System.out.println(state + " " + values.get(stateI).map(ROUND));
     // }
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(cliffwalk, vi.vs());
-    EpisodeInterface mce = cliffwalk.kickoff(policyInterface);
+    EpisodeInterface mce = EpisodeKickoff.create(cliffwalk, policyInterface);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

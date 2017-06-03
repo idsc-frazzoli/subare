@@ -11,8 +11,8 @@ class FVPE_InfiniteVariance {
     InfiniteVariance infiniteVariance = new InfiniteVariance();
     PolicyInterface policyInterface = new ConstantPolicy(RationalScalar.of(5, 10));
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        infiniteVariance, policyInterface, //
-        infiniteVariance, RealScalar.ONE, null);
-    System.out.println(fvpe.simulate(123).values());
+        // infiniteVariance, policyInterface, //
+        infiniteVariance, RealScalar.ONE, null); // FIXME simulate
+    System.out.println(fvpe.getDiscreteVs().values());
   }
 }

@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 
-public abstract class AbstractExact {
+abstract class AbstractExact {
   final Supplier<Agent> sup1;
   final Supplier<Agent> sup2;
   final int epochs;

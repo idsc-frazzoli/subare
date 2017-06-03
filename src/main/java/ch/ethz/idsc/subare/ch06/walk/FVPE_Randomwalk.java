@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -21,9 +20,9 @@ class FVPE_Randomwalk {
   public static void main(String[] args) {
     Randomwalk randomwalk = new Randomwalk();
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        randomwalk, new EquiprobablePolicy(randomwalk), //
+        // randomwalk, new EquiprobablePolicy(randomwalk), //
         randomwalk, RealScalar.ONE, null);
-    DiscreteVs vs = fvpe.simulate(1023);
+    DiscreteVs vs = fvpe.getDiscreteVs(); // FIXME
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

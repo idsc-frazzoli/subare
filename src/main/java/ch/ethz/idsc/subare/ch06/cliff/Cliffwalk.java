@@ -1,11 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.cliff;
 
-import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -18,7 +14,7 @@ import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** Example 6.6 cliff walking */
-class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterface {
   static final Scalar PRICE_CLIFF = RealScalar.of(-20);
   static final Scalar PRICE_MOVE = RealScalar.ONE.negate();
   // ---
@@ -67,6 +63,11 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
     return actions;
   }
 
+  @Override
+  public Scalar gamma() {
+    return RealScalar.ONE;
+  }
+
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
@@ -98,17 +99,12 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
 
   /**************************************************/
   @Override
-  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    return new MonteCarloEpisode(this, policyInterface, START);
+  public Tensor startStates() {
+    return Tensors.of(START);
   }
 
   @Override
   public boolean isTerminal(Tensor state) {
     return state.equals(GOAL);
-  }
-
-  @Override
-  public Scalar gamma() {
-    return RealScalar.ONE;
   }
 }

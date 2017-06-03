@@ -5,7 +5,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import junit.framework.TestCase;
 
-public class WindyGridTest extends TestCase {
+public class WindygridTest extends TestCase {
   public void testWindy() {
     Windygrid windyGrid = Windygrid.createFour();
     Tensor state = Tensors.vector(6, 0);

@@ -4,13 +4,9 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.ActionValueInterface;
-import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
-import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -28,7 +24,7 @@ import ch.ethz.idsc.tensor.red.Min;
  * the action has to be non-zero unless the capital == 0
  * or the terminal cash has been reached */
 class Gambler implements StandardModel, //
-    MonteCarloInterface, EpisodeSupplier, ActionValueInterface {
+    MonteCarloInterface, ActionValueInterface {
   private final Tensor states;
   final Scalar TERMINAL_W;
   final Scalar P_win;
@@ -88,6 +84,11 @@ class Gambler implements StandardModel, //
     return probs.dot(values).Get();
   }
 
+  @Override
+  public Scalar gamma() {
+    return RealScalar.ONE;
+  }
+
   /**************************************************/
   @Override
   public Tensor move(Tensor state, Tensor action) {
@@ -103,11 +104,8 @@ class Gambler implements StandardModel, //
 
   /**************************************************/
   @Override
-  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    Tensor start = states.get(random.nextInt(states.length() - 2) + 1);
-    if (isTerminal(start))
-      throw new RuntimeException();
-    return new MonteCarloEpisode(this, policyInterface, start);
+  public Tensor startStates() {
+    return states.extract(1, states.length() - 1);
   }
 
   @Override
@@ -143,10 +141,5 @@ class Gambler implements StandardModel, //
     if (state.subtract(action).equals(next))
       return RealScalar.ONE.subtract(P_win);
     throw new RuntimeException();
-  }
-
-  @Override
-  public Scalar gamma() {
-    return RealScalar.ONE;
   }
 }

@@ -21,9 +21,9 @@ class FVPE_RaceTrack {
     // Tensor actions = racetrack.actions(Tensors.vector(8, 4, 0, 1));
     PolicyInterface policyInterface = new EquiprobablePolicy(racetrack);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        racetrack, policyInterface, //
+        // racetrack, policyInterface, //
         racetrack, RealScalar.ONE, null);
-    DiscreteVs vs = fvpe.simulate(1200);
+    DiscreteVs vs = fvpe.getDiscreteVs(); // FIXME
     vs.print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }
 }

@@ -25,8 +25,8 @@ class Sarsa_Wireloop {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_qsa_esarsa.gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index + " " + epsilon.Get(index));
-      Sarsa sarsa = new ExpectedSarsa(wireloop, policy, wireloop, qsa, epsilon.Get(index));
-      sarsa.simulate(500);
+      Sarsa sarsa = new ExpectedSarsa(wireloop, policy, qsa, epsilon.Get(index));
+      // sarsa.simulate(500); // FIXME
       policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, qsa)));
     }

@@ -25,8 +25,8 @@ class QL_Gambler {
       System.out.println(index + " " + scalar);
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, scalar);
       QLearning qLearning = new QLearning( //
-          gambler, policyInterface, gambler, qsa, scalar);
-      qLearning.simulate(5000);
+          gambler, qsa, scalar);
+      // qLearning.simulate(5000); // FIXME
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa)));
     }
     gsw.close();

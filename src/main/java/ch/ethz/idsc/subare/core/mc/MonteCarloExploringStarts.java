@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -26,9 +25,9 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * 
  * see box on p.107 */
 public class MonteCarloExploringStarts implements EpisodeDigest {
-  private final EpisodeSupplier episodeSupplier;
-  private PolicyInterface policyInterface; // <- changes over the course of the iterations
   private final DiscreteModel discreteModel;
+  // FIXME
+  private PolicyInterface policyInterface; // <- TODO check ? changes over the course of the iterations
   private final Scalar gamma;
   private Scalar epsilon; // probability of exploration
   private final DiscreteQsa qsa;
@@ -39,30 +38,20 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
    * @param discreteModel
    * @param epsilon probability of exploration */
   public MonteCarloExploringStarts( //
-      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, DiscreteModel discreteModel) {
-    // TODO check exploring starts
-    this.episodeSupplier = episodeSupplier;
-    this.policyInterface = policyInterface;
+      DiscreteModel discreteModel, PolicyInterface policyInterface) {
     this.discreteModel = discreteModel;
+    this.policyInterface = policyInterface;
     this.gamma = discreteModel.gamma();
     this.qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"
-  }
-
-  public void simulate(final int iterations) {
-    int iteration = 0;
-    while (iteration < iterations) {
-      step();
-      ++iteration;
-    }
   }
 
   public void setExplorationProbability(Scalar epsilon) {
     this.epsilon = epsilon;
   }
 
-  public void step() {
+  public void step(EpisodeInterface episodeInterface) {
     // policy has to satisfy exploring starts condition
-    EpisodeInterface episodeInterface = episodeSupplier.kickoff(policyInterface);
+    // EpisodeInterface episodeInterface = episodeSupplier.kickoff(policyInterface);
     digest(episodeInterface);
   }
 

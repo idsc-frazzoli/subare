@@ -10,6 +10,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -25,9 +26,9 @@ import ch.ethz.idsc.tensor.sca.Round;
 class Sarsa_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
-    int EPISODES = 100;
+    int EPISODES = 10;
     Tensor epsilon = Subdivide.of(.9, .01, EPISODES);
-    PolicyInterface policy = new EquiprobablePolicy(gambler);
+    PolicyInterface policyInterface = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_sarsa.gif"), 100);
@@ -35,10 +36,10 @@ class Sarsa_Gambler {
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
       Sarsa sarsa = new OriginalSarsa( //
-          gambler, policy, gambler, //
+          gambler, policyInterface, //
           qsa, RealScalar.of(.2));
-      sarsa.simulate(300);
-      policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
+      // sarsa.simulate(300); // FIXME
+      policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       gsw.append(ImageFormat.of(GamblerHelper.render(gambler, qsa)));
     }
     gsw.close();
@@ -46,7 +47,7 @@ class Sarsa_Gambler {
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gambler, qsa);
     Put.of(UserHome.file("esarsa_gambler"), vs.values());
-    EpisodeInterface mce = gambler.kickoff(policy);
+    EpisodeInterface mce = EpisodeKickoff.create(gambler, policyInterface);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

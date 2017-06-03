@@ -2,9 +2,8 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
-import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -18,7 +17,7 @@ import ch.ethz.idsc.tensor.red.Max;
  * 
  * see also Watkins 1989 */
 // TODO check convergence criteria
-public class QLearning extends AbstractTemporalDifference {
+public class QLearning implements StepDigest {
   private final DiscreteModel discreteModel;
   private final QsaInterface qsa;
   private final Scalar gamma;
@@ -30,9 +29,8 @@ public class QLearning extends AbstractTemporalDifference {
    * @param qsa
    * @param alpha update rate */
   public QLearning( //
-      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
-      DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
-    super(episodeSupplier, policyInterface);
+      DiscreteModel discreteModel, //
+      QsaInterface qsa, Scalar alpha) {
     this.discreteModel = discreteModel;
     this.qsa = qsa;
     this.gamma = discreteModel.gamma();

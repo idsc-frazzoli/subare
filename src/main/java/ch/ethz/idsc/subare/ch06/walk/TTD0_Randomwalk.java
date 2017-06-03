@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -22,8 +21,8 @@ class TTD0_Randomwalk {
     Randomwalk randomwalk = new Randomwalk();
     DiscreteVs vs = DiscreteVs.build(randomwalk);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
-        randomwalk, new EquiprobablePolicy(randomwalk), vs, randomwalk.gamma(), RealScalar.of(.1));
-    ttd0.simulate(123);
+        vs, randomwalk.gamma(), RealScalar.of(.1));
+    // ttd0.simulate(123); // FIXME
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

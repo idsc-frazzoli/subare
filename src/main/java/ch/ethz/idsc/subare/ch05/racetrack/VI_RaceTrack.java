@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.racetrack;
 
+import java.util.LinkedList;
+
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
@@ -27,7 +29,7 @@ class VI_RaceTrack {
     for (Tensor start : racetrack.statesStart) {
       Tensor image = racetrack.image();
       MonteCarloEpisode mce = new MonteCarloEpisode( //
-          racetrack, policyInterface, start);
+          racetrack, policyInterface, start, new LinkedList<>());
       while (mce.hasNext()) {
         StepInterface stepInterface = mce.step();
         {

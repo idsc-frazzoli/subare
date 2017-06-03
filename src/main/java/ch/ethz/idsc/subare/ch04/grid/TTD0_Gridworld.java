@@ -31,9 +31,8 @@ public class TTD0_Gridworld {
     PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
     DiscreteVs vs = DiscreteVs.build(gridWorld);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
-        gridWorld, policyInterface, //
         vs, gridWorld.gamma(), RealScalar.of(.5));
-    ttd0.simulate(50230);
+    // ttd0.simulate(50230); // FIXME
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

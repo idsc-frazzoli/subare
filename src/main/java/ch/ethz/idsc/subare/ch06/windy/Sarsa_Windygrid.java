@@ -22,9 +22,8 @@ class Sarsa_Windygrid {
     for (int c = 0; c < 10; ++c) {
       System.out.println(c);
       Sarsa sarsa = new OriginalSarsa( //
-          windyGrid, policy, windyGrid, //
-          qsa, RealScalar.of(.1));
-      sarsa.simulate(5);
+          windyGrid, policy, qsa, RealScalar.of(.1));
+      // sarsa.simulate(5); // FIXME
       policy = EGreedyPolicy.bestEquiprobable(windyGrid, qsa, RealScalar.of(.1));
       // policy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, qsa); //
     }
