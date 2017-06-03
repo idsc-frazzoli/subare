@@ -55,7 +55,7 @@ enum CarRentalHelper {
     PolicyInterface pi = GreedyPolicy.bestEquiprobableGreedy(gambler, vs);
     Tensor im2 = render(gambler, pi);
     List<Integer> list = Dimensions.of(im1);
-    list.set(0, 6 * 2);
+    list.set(0, 4 * 2);
     return Join.of(0, im1, Array.zeros(list), im2);
   }
 }

@@ -9,6 +9,9 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
+/** Example 5.5: Infinite Variance
+ * 
+ * p.114 */
 class InfiniteVariance extends DeterministicStandardModel implements MonteCarloInterface {
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   final Tensor actions = Tensors.vector(0, 1).unmodifiable(); // increment

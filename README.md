@@ -24,14 +24,18 @@ List of algorithms:
 * *Sarsa*: An on-policy TD control algorithm (from p.138)
 * *Q-learning*: An off-policy TD control algorithm (from p.140)
 * Expected Sarsa (from p.142)
+* Double Q-Learning (from p.145)
 * n-step Temporal Difference for estimating V(s) (from p.154)
 * n-step Sarsa for estimating Q(s,a) (from p.157)
 * Random-sample one-step tabular Q-planning (from p.169)
 
-
 ## Examples from the book
 
 ### 4.2: Jack's car rental
+
+Value Iteration v(s)
+
+![gambler_avi](https://cloud.githubusercontent.com/assets/4012178/26673482/5a11e616-46bd-11e7-8c52-376acac21fa8.gif)
 
 ### 4.4: Gambler's problem
 
@@ -122,6 +126,7 @@ track 2
 
 </tr></table>
 
+---
 
 ## Additional Examples
 
@@ -134,4 +139,9 @@ Exact expected reward of two adversarial optimistic agents depending on their in
 Exact expected reward of two adversarial Upper-Confidence-Bound agents depending on their initial configuration:
 
 ![ucbs](https://cloud.githubusercontent.com/assets/4012178/26301526/c738ad1c-3ee1-11e7-9438-e928fc349868.png)
+
+## Dependencies
+
+`subare` only depends on the library `ch.ethz.idsc.subare`
+
 
