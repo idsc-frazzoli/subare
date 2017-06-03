@@ -18,10 +18,13 @@ import ch.ethz.idsc.tensor.Tensor;
 public class OriginalSarsa extends Sarsa {
   final PolicyWrap policyWrap;
 
+  /** @param discreteModel
+   * @param qsa
+   * @param alpha
+   * @param policyInterface */
   public OriginalSarsa( //
-      DiscreteModel discreteModel, //
-      PolicyInterface policyInterface, //
-      QsaInterface qsa, Scalar alpha) {
+      DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha, //
+      PolicyInterface policyInterface) {
     super(discreteModel, qsa, alpha);
     policyWrap = new PolicyWrap(policyInterface);
   }

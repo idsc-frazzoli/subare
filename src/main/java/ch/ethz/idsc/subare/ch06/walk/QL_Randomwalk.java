@@ -4,6 +4,8 @@ package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -22,9 +24,9 @@ class QL_Randomwalk {
   public static void main(String[] args) {
     Randomwalk randomwalk = new Randomwalk();
     DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
-    QLearning qLearning = new QLearning( //
-        randomwalk, qsa, RealScalar.of(.1)); // TODO ask jz
-    // qLearning.simulate(10000); // FIXME
+    QLearning qLearning = new QLearning(randomwalk, qsa, RealScalar.of(.1));
+    for (int count = 0; count < 10000; ++count)
+      ExploringStartsBatch.apply(randomwalk, qLearning, new EquiprobablePolicy(randomwalk));
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

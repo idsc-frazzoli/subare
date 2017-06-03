@@ -35,8 +35,8 @@ class Sarsa_Gridworld {
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
       Sarsa sarsa = new OriginalSarsa( //
-          gambler, policyInterface, //
-          qsa, RealScalar.of(.2));
+          gambler, qsa, RealScalar.of(.2), //
+          policyInterface);
       // sarsa.simulate(10);// FIXME
       policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       gsw.append(ImageFormat.of(GridworldHelper.render(gambler, qsa)));

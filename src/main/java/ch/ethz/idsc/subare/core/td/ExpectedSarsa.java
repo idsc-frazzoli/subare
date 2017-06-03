@@ -11,19 +11,16 @@ import ch.ethz.idsc.tensor.Tensor;
  * 
  * eq (6.9) on p.142 */
 public class ExpectedSarsa extends Sarsa {
-  final PolicyInterface policyInterface;
+  private final PolicyInterface policyInterface;
 
-  /** @param episodeSupplier
-   * @param policyInterface
-   * @param discreteModel
+  /** @param discreteModel
    * @param qsa
-   * @param gamma
    * @param alpha if all state transtions are deterministic and all randomness comes
-   * from the policy then alpha can be set to 1 */
+   * from the policy then alpha can be set to 1
+   * @param policyInterface */
   public ExpectedSarsa( //
-      DiscreteModel discreteModel, //
-      PolicyInterface policyInterface, //
-      QsaInterface qsa, Scalar alpha) {
+      DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha, //
+      PolicyInterface policyInterface) {
     super(discreteModel, qsa, alpha);
     this.policyInterface = policyInterface;
   }

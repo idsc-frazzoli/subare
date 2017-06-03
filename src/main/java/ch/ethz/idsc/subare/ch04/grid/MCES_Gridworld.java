@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch04.grid;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -21,7 +21,7 @@ class MCES_Gridworld {
       System.out.println(index);
       mces.setExplorationProbability(RealScalar.of(.1));
       // mces.simulate(1);
-      ExploringStartBatch.apply(gridworld, mces, policyInterface);
+      ExploringStartsBatch.apply(gridworld, mces, policyInterface);
       gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, mces.qsa())));
     }
     gsw.close();

@@ -39,6 +39,12 @@ class Gridworld extends DeterministicStandardModel implements MonteCarloInterfac
   }
 
   @Override
+  public Scalar gamma() {
+    return DoubleScalar.of(.9);
+  }
+
+  /**************************************************/
+  @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (state.equals(WARP1_ANTE))
       return RealScalar.of(10);
@@ -59,19 +65,14 @@ class Gridworld extends DeterministicStandardModel implements MonteCarloInterfac
     return state.add(action).map(CLIP);
   }
 
+  /**************************************************/
   @Override
   public Tensor startStates() {
-    // TODO mc if?
-    throw new RuntimeException();
+    return states;
   }
 
   @Override
   public boolean isTerminal(Tensor state) {
-    throw new RuntimeException();
-  }
-
-  @Override
-  public Scalar gamma() {
-    return DoubleScalar.of(.9);
+    return false;
   }
 }

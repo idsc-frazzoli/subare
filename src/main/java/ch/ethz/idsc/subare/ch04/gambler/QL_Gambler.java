@@ -7,6 +7,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -23,10 +24,9 @@ class QL_Gambler {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar scalar = RealScalar.of(.01 + .3 * (EPISODES - index) / EPISODES);
       System.out.println(index + " " + scalar);
+      QLearning qLearning = new QLearning(gambler, qsa, scalar);
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, scalar);
-      QLearning qLearning = new QLearning( //
-          gambler, qsa, scalar);
-      // qLearning.simulate(5000); // FIXME
+      ExploringStartsBatch.apply(gambler, qLearning, policyInterface);
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa)));
     }
     gsw.close();

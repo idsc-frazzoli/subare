@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -26,9 +27,10 @@ class Sarsa_Cliffwalk {
     for (int c = 0; c < 100; ++c) {
       System.out.println(c);
       Sarsa sarsa = new OriginalSarsa( //
-          cliffwalk, policyInterface, //
-          qsa, RealScalar.of(.25));
-      // sarsa.simulate(3); // FIXME
+          cliffwalk, qsa, RealScalar.of(.25), //
+          policyInterface);
+      for (int count = 0; count < 10; ++count)
+        ExploringStartsBatch.apply(cliffwalk, sarsa, policyInterface);
       policyInterface = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, RealScalar.of(.1));
       // policy = GreedyPolicy.bestEquiprobableGreedy(randomWalk, qsa); //
     }

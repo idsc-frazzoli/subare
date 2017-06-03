@@ -11,18 +11,28 @@ import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.tensor.Tensor;
 
-public class ExploringStartBatch {
+public class ExploringStartsBatch {
   public static void apply(MonteCarloInterface monteCarloInterface, EpisodeDigest episodeDigest, PolicyInterface policyInterface) {
-    ExploringStartBatch exploringStartBatch = new ExploringStartBatch(monteCarloInterface);
+    ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     while (exploringStartBatch.hasNext())
       episodeDigest.digest(exploringStartBatch.nextEpisode(policyInterface));
   }
 
-  public static ExploringStartBatch create(MonteCarloInterface monteCarloInterface) {
-    return new ExploringStartBatch(monteCarloInterface);
+  public static void apply(MonteCarloInterface monteCarloInterface, StepDigest stepDigest, PolicyInterface policyInterface) {
+    ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
+    while (exploringStartBatch.hasNext()) {
+      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
+      while (episodeInterface.hasNext())
+        stepDigest.digest(episodeInterface.step());
+    }
+  }
+
+  public static ExploringStartsBatch create(MonteCarloInterface monteCarloInterface) {
+    return new ExploringStartsBatch(monteCarloInterface);
   }
 
   private final MonteCarloInterface monteCarloInterface;
@@ -30,7 +40,7 @@ public class ExploringStartBatch {
   private int index = 0;
   private int actionIndex = 0;
 
-  private ExploringStartBatch(MonteCarloInterface monteCarloInterface) {
+  private ExploringStartsBatch(MonteCarloInterface monteCarloInterface) {
     this.monteCarloInterface = monteCarloInterface;
     list = monteCarloInterface.startStates().flatten(0).collect(Collectors.toList());
     Collections.shuffle(list);

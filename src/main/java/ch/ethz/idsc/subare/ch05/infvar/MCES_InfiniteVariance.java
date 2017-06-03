@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.RealScalar;
 
 class MCES_InfiniteVariance {
@@ -15,7 +15,7 @@ class MCES_InfiniteVariance {
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(infiniteVariance, policyInterface);
     mces.setExplorationProbability(RealScalar.of(.5));
     // mces.simulate(1);
-    ExploringStartBatch.apply(infiniteVariance, mces, policyInterface);
+    ExploringStartsBatch.apply(infiniteVariance, mces, policyInterface);
     DiscreteQsa discreteQsa = mces.qsa();
     discreteQsa.print();
   }

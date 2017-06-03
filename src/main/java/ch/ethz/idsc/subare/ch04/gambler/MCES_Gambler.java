@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.ExploringStartBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -22,7 +22,7 @@ class MCES_Gambler {
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
       mces.setExplorationProbability(RealScalar.of(.1));
-      ExploringStartBatch.apply(gambler, mces, policyInterface);
+      ExploringStartsBatch.apply(gambler, mces, policyInterface);
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, mces.qsa())));
     }
     gsw.close();

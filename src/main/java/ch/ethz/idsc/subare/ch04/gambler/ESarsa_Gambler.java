@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -26,7 +27,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 class ESarsa_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
-    int EPISODES = 100;
+    int EPISODES = 10;
     Tensor epsilon = Subdivide.of(.5, .01, EPISODES);
     PolicyInterface policyInterface = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
@@ -36,9 +37,9 @@ class ESarsa_Gambler {
       Scalar scalar = epsilon.Get(index);
       System.out.println(index + " " + scalar);
       Sarsa sarsa = new ExpectedSarsa( //
-          gambler, policyInterface, //
-          qsa, scalar);
-      // sarsa.simulate(500); // FIXME simulate
+          gambler, qsa, scalar, //
+          policyInterface);
+      ExploringStartsBatch.apply(gambler, sarsa, policyInterface);
       policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, scalar);
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa)));
     }

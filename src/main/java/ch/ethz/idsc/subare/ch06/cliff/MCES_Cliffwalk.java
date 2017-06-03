@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch06.cliff;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
-import ch.ethz.idsc.subare.core.util.ExploringStartBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -19,7 +19,7 @@ class MCES_Cliffwalk {
     for (int index = 0; index < EPISODES; ++index) {
       mces.setExplorationProbability(RealScalar.of(.1)); // <- change over time
       System.out.println(index);
-      ExploringStartBatch.apply(cliffwalk, mces, policyInterface);
+      ExploringStartsBatch.apply(cliffwalk, mces, policyInterface);
       gsw.append(ImageFormat.of(CliffwalkHelper.render(cliffwalk, mces.qsa())));
     }
     gsw.close();

@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch05.wireloop;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -24,7 +24,7 @@ class MCES_Wireloop {
       System.out.println(index + " " + epsilon);
       mces.setExplorationProbability(epsilon);
       // mces.simulate(100);
-      ExploringStartBatch.apply(wireloop, mces, policyInterface);
+      ExploringStartsBatch.apply(wireloop, mces, policyInterface);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, mces.qsa())));
     }
     gsw.close();
