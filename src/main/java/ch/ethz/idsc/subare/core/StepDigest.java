@@ -1,7 +1,10 @@
 // code by jph
 package ch.ethz.idsc.subare.core;
 
-public interface StepDigest { // can also be called temporal difference
-  // TODO comment
+/** interface is implemented by temporal difference algorithms */
+public interface StepDigest {
+  /** update value estimation based on single step of episode
+   * 
+   * @param stepInterface */
   void digest(StepInterface stepInterface);
 }

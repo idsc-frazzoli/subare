@@ -85,9 +85,16 @@ public class DiscreteQsa implements QsaInterface, Serializable {
     return index.size();
   }
 
+  public boolean isCompatible(QsaInterface qsa) {
+    DiscreteQsa dqsa = (DiscreteQsa) qsa;
+    return index.keys().equals(dqsa.index.keys());
+  }
+
   @Override
-  public Scalar distance(QsaInterface vs) {
-    return Norm._1.of(values.subtract(((DiscreteQsa) vs).values));
+  public Scalar distance(QsaInterface qsa) {
+    if (!isCompatible(qsa))
+      throw new RuntimeException();
+    return Norm._1.of(values.subtract(((DiscreteQsa) qsa).values));
   }
 
   public Tensor keys() {

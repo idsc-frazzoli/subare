@@ -1,11 +1,13 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
+import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
+import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -15,6 +17,12 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum GridworldHelper {
   ;
+  static DiscreteQsa getOptimalQsa(Gridworld gridworld) {
+    ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld);
+    avi.untilBelow(DecimalScalar.of(.0001));
+    return avi.qsa();
+  }
+
   private static final Tensor BASE = Tensors.vector(255);
 
   static Tensor render(Gridworld gridworld, DiscreteVs vs) {

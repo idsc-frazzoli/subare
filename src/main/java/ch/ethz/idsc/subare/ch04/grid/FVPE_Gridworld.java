@@ -7,7 +7,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** example
@@ -32,7 +31,7 @@ class FVPE_Gridworld {
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        gridworld, RealScalar.ONE, null);
+        gridworld, null);
     PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
     ExploringStartsBatch.apply(gridworld, fvpe, policyInterface);
     DiscreteVs vs = fvpe.vs();

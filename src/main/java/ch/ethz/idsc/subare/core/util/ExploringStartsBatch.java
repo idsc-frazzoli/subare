@@ -22,13 +22,16 @@ public class ExploringStartsBatch {
       episodeDigest.digest(exploringStartBatch.nextEpisode(policyInterface));
   }
 
-  public static void apply(MonteCarloInterface monteCarloInterface, StepDigest stepDigest, PolicyInterface policyInterface) {
+  public static int apply(MonteCarloInterface monteCarloInterface, StepDigest stepDigest, PolicyInterface policyInterface) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
+    int episodes = 0;
     while (exploringStartBatch.hasNext()) {
       EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
       while (episodeInterface.hasNext())
         stepDigest.digest(episodeInterface.step());
+      ++episodes;
     }
+    return episodes;
   }
 
   public static ExploringStartsBatch create(MonteCarloInterface monteCarloInterface) {
@@ -52,17 +55,16 @@ public class ExploringStartsBatch {
 
   public EpisodeInterface nextEpisode(PolicyInterface policyInterface) {
     Tensor start = list.get(index);
-    if (monteCarloInterface.isTerminal(start)) // check
+    if (monteCarloInterface.isTerminal(start)) // consistency check
       throw new RuntimeException();
     Tensor actions = monteCarloInterface.actions(start);
-    Tensor action = actions.get(actionIndex);
+    Queue<Tensor> queue = new LinkedList<>();
+    queue.add(actions.get(actionIndex));
     ++actionIndex;
     if (actionIndex == actions.length()) {
       ++index;
       actionIndex = 0;
     }
-    Queue<Tensor> queue = new LinkedList<>();
-    queue.add(action);
     return new MonteCarloEpisode(monteCarloInterface, policyInterface, start, queue);
   }
 }

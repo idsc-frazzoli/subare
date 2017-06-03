@@ -18,8 +18,7 @@ public abstract class Sarsa implements StepDigest {
   /** @param discreteModel
    * @param qsa
    * @param alpha */
-  public Sarsa( //
-      DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
+  public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
     this.discreteModel = discreteModel;
     this.qsa = qsa;
     this.gamma = discreteModel.gamma();

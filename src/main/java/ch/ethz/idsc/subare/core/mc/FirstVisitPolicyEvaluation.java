@@ -22,15 +22,14 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** see box on p.100 */
 public class FirstVisitPolicyEvaluation implements EpisodeDigest {
-  private final DiscreteModel standardModel;
+  private final DiscreteModel discreteModel;
   private final Scalar gamma;
   final DiscreteVs vs;
   final Map<Tensor, Average> map = new HashMap<>(); // TODO no good!
 
-  public FirstVisitPolicyEvaluation( //
-      DiscreteModel standardModel, Scalar gamma, DiscreteVs vs) {
-    this.standardModel = standardModel;
-    this.gamma = gamma;
+  public FirstVisitPolicyEvaluation(DiscreteModel discreteModel, DiscreteVs vs) {
+    this.discreteModel = discreteModel;
+    this.gamma = discreteModel.gamma();
     this.vs = vs; // TODO write results directly in vs!
   }
 
@@ -65,7 +64,7 @@ public class FirstVisitPolicyEvaluation implements EpisodeDigest {
   }
 
   public DiscreteVs vs() {
-    Tensor states = standardModel.states();
+    Tensor states = discreteModel.states();
     Index index = Index.build(states);
     Tensor values = Array.zeros(index.size());
     for (Entry<Tensor, Average> entry : map.entrySet())

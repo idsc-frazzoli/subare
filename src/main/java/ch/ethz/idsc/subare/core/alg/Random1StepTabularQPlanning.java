@@ -3,10 +3,11 @@ package ch.ethz.idsc.subare.core.alg;
 
 import java.util.Random;
 
+import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.SampleModel;
-import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.td.QLearning;
+import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
@@ -17,32 +18,33 @@ import ch.ethz.idsc.tensor.red.Max;
  * 
  * algorithm performs poorly when rewards are unevenly distributed */
 public class Random1StepTabularQPlanning {
-  final StandardModel standardModel;
-  final SampleModel sampleModel;
-  Random random = new Random();
-  final Tensor states;
-  final QsaInterface qsa;
-  final Scalar gamma;
-  Scalar alpha;
+  private final DiscreteModel discreteModel;
+  private final SampleModel sampleModel;
+  private final Random random = new Random();
+  private final DiscreteQsa qsa;
+  private final Scalar gamma;
+  private Scalar alpha = null;
 
   public Random1StepTabularQPlanning( //
-      SampleModel sampleModel, StandardModel standardModel, //
-      QsaInterface qsa, Scalar alpha) {
+      DiscreteModel discreteModel, SampleModel sampleModel, QsaInterface qsa) {
+    this.discreteModel = discreteModel;
     this.sampleModel = sampleModel;
-    this.standardModel = standardModel;
-    states = standardModel.states();
-    this.qsa = qsa;
-    this.gamma = standardModel.gamma();
+    this.qsa = (DiscreteQsa) qsa;
+    this.gamma = discreteModel.gamma();
+  }
+
+  public void setUpdateFactor(Scalar alpha) {
     this.alpha = alpha;
   }
 
   public void step() {
-    Tensor state0 = states.get(random.nextInt(states.length()));
-    Tensor actions = standardModel.actions(state0);
-    Tensor action0 = actions.get(random.nextInt(actions.length()));
+    Tensor keys = qsa.keys();
+    Tensor key = keys.get(random.nextInt(keys.length()));
+    Tensor state0 = key.get(0); // TODO bypass if state0 is terminal?
+    Tensor action0 = key.get(1);
     Tensor state1 = sampleModel.move(state0, action0);
     Scalar reward = sampleModel.reward(state0, action0, state1);
-    Scalar max = standardModel.actions(state1).flatten(0) //
+    Scalar max = discreteModel.actions(state1).flatten(0) //
         .map(action1 -> qsa.value(state1, action1)) //
         .reduce(Max::of).get();
     Scalar value0 = qsa.value(state0, action0);
