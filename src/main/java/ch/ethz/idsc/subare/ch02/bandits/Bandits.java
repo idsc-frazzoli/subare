@@ -7,9 +7,9 @@ import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Sort;
 import ch.ethz.idsc.tensor.red.Mean;
 import ch.ethz.idsc.tensor.red.Variance;
@@ -33,15 +33,13 @@ class Bandits {
     Scalar mean = (Scalar) Mean.of(data);
     Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
     prep = temp.multiply(Sqrt.function.apply((Scalar) Variance.ofVector(temp)).invert());
+    GlobalAssert.of(Scalars.isZero((Scalar) Chop.of(Mean.of(prep))));
     GlobalAssert.of( //
-        Chop.of(Mean.of(prep)).equals(ZeroScalar.get()));
-    GlobalAssert.of( //
-        Chop.of(Variance.ofVector(prep).subtract(RealScalar.of(1))) //
-            .equals(ZeroScalar.get()));
+        Scalars.isZero((Scalar) Chop.of(Variance.ofVector(prep).subtract(RealScalar.of(1)))));
   }
 
-  Scalar min = ZeroScalar.get();
-  Scalar max = ZeroScalar.get();
+  Scalar min = RealScalar.ZERO;
+  Scalar max = RealScalar.ZERO;
 
   void pullAll() {
     states = prep.add(createGaussian(prep.length()));

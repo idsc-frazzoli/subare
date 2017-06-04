@@ -5,11 +5,12 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** example
+/** Example 4.1, p.82
+ * Figure 4.1, p.83
  * 
  * {0, 0} 0
  * {0, 1} -18.3
@@ -30,11 +31,11 @@ import ch.ethz.idsc.tensor.sca.Round;
 class FVPE_Gridworld {
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
-    PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        gridworld, policyInterface, //
-        gridworld, RealScalar.ONE, null);
-    DiscreteVs vs = fvpe.simulate(12300);
+        gridworld, null);
+    PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
+    ExploringStartsBatch.apply(gridworld, fvpe, policyInterface);
+    DiscreteVs vs = fvpe.vs();
     vs.print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }
 }

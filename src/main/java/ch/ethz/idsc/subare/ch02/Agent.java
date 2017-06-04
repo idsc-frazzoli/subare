@@ -11,12 +11,11 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 
 public abstract class Agent {
   protected static final Random random = new Random();
   // ---
-  private Scalar total = ZeroScalar.get();
+  private Scalar total = RealScalar.ZERO;
   private Integer count = 0;
   private int count_copy;
   private int randomizedDecisionCount = 0;

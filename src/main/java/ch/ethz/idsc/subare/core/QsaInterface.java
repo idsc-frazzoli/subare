@@ -17,8 +17,4 @@ public interface QsaInterface {
 
   /** @return */
   QsaInterface copy();
-
-  /** @param vs
-   * @return */
-  Scalar distance(QsaInterface vs);
 }

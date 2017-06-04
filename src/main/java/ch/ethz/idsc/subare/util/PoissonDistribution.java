@@ -20,13 +20,17 @@ public class PoissonDistribution {
     return MEMO.get(lambda);
   }
 
-  final Scalar lambda;
+  private final Scalar lambda;
   private final Tensor values = Tensors.empty();
 
   private PoissonDistribution(Scalar lambda) {
     this.lambda = lambda;
     values.append(Exp.of(lambda.negate()));
     apply(PRECOMPUTE_LENGTH);
+  }
+
+  public Scalar lambda() {
+    return lambda;
   }
 
   public Scalar apply(int n) {

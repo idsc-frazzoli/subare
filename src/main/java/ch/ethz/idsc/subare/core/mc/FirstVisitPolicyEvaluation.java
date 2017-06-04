@@ -10,8 +10,6 @@ import java.util.Map.Entry;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
-import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.Average;
@@ -24,40 +22,15 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** see box on p.100 */
 public class FirstVisitPolicyEvaluation implements EpisodeDigest {
-  private final DiscreteModel standardModel;
-  private final PolicyInterface policyInterface;
+  private final DiscreteModel discreteModel;
   private final Scalar gamma;
-  private final EpisodeSupplier episodeSupplier;
   final DiscreteVs vs;
   final Map<Tensor, Average> map = new HashMap<>(); // TODO no good!
 
-  public FirstVisitPolicyEvaluation( //
-      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
-      DiscreteModel standardModel, Scalar gamma, DiscreteVs vs) {
-    this.standardModel = standardModel;
-    this.policyInterface = policyInterface;
-    this.gamma = gamma;
-    this.episodeSupplier = episodeSupplier;
+  public FirstVisitPolicyEvaluation(DiscreteModel discreteModel, DiscreteVs vs) {
+    this.discreteModel = discreteModel;
+    this.gamma = discreteModel.gamma();
     this.vs = vs; // TODO write results directly in vs!
-  }
-
-  public DiscreteVs simulate(final int iterations) {
-    int iteration = 0;
-    while (iteration < iterations) {
-      step();
-      ++iteration;
-    }
-    Tensor states = standardModel.states();
-    Index index = Index.build(states);
-    Tensor values = Array.zeros(index.size());
-    for (Entry<Tensor, Average> entry : map.entrySet())
-      values.set(entry.getValue().get(), index.of(entry.getKey()));
-    return new DiscreteVs(index, values);
-  }
-
-  public void step() {
-    EpisodeInterface episodeInterface = episodeSupplier.kickoff(policyInterface);
-    digest(episodeInterface);
   }
 
   @Override
@@ -88,5 +61,14 @@ public class FirstVisitPolicyEvaluation implements EpisodeDigest {
         map.put(stateP, new Average());
       map.get(stateP).track(gains.get(stateP));
     }
+  }
+
+  public DiscreteVs vs() {
+    Tensor states = discreteModel.states();
+    Index index = Index.build(states);
+    Tensor values = Array.zeros(index.size());
+    for (Entry<Tensor, Average> entry : map.entrySet())
+      values.set(entry.getValue().get(), index.of(entry.getKey()));
+    return new DiscreteVs(index, values);
   }
 }

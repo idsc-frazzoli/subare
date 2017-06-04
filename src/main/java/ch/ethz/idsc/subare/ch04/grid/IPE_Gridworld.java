@@ -9,7 +9,8 @@ import ch.ethz.idsc.tensor.sca.Round;
 
 /** determines value function for equiprobable "random" policy
  * 
- * produces results on p.83:
+ * Example 4.1, p.82
+ * Figure 4.1, p.83
  * 
  * {0, 0} 0
  * {0, 1} -14.0

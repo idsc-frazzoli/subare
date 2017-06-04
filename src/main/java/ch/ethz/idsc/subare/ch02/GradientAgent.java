@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.ch02;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.opt.SoftmaxLayer;
 import ch.ethz.idsc.tensor.sca.Chop;
@@ -33,7 +32,7 @@ public class GradientAgent extends Agent {
         a = k;
     }
     Scalar zer = Chop.function.apply(RealScalar.of(1 - sum));
-    if (!zer.equals(ZeroScalar.get()))
+    if (!zer.equals(RealScalar.ZERO))
       throw new RuntimeException();
     return a;
   }

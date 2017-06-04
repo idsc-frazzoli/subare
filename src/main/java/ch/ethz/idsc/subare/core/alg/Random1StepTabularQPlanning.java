@@ -1,48 +1,60 @@
 // code by jph
 package ch.ethz.idsc.subare.core.alg;
 
-import java.util.Random;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.SampleModel;
-import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.td.QLearning;
+import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
 
-/** update similar to {@link QLearning} except does not use episodes
+/** similar to {@link QLearning} except does not use episodes but single steps
+ * 
+ * similar to {@link ActionValueIteration} but with gauss-seidel updates
+ * therefore not parallel()
  * 
  * see box on p.169
  * 
  * algorithm performs poorly when rewards are unevenly distributed */
 public class Random1StepTabularQPlanning {
-  final StandardModel standardModel;
-  final SampleModel sampleModel;
-  Random random = new Random();
-  final Tensor states;
-  final QsaInterface qsa;
-  final Scalar gamma;
-  Scalar alpha;
+  private final DiscreteModel discreteModel;
+  private final SampleModel sampleModel;
+  private final DiscreteQsa qsa;
+  private final Scalar gamma;
+  private Scalar alpha = null;
 
   public Random1StepTabularQPlanning( //
-      SampleModel sampleModel, StandardModel standardModel, //
-      QsaInterface qsa, Scalar alpha) {
+      DiscreteModel discreteModel, SampleModel sampleModel, QsaInterface qsa) {
+    this.discreteModel = discreteModel;
     this.sampleModel = sampleModel;
-    this.standardModel = standardModel;
-    states = standardModel.states();
-    this.qsa = qsa;
-    this.gamma = standardModel.gamma();
+    this.qsa = (DiscreteQsa) qsa;
+    this.gamma = discreteModel.gamma();
+  }
+
+  public void setUpdateFactor(Scalar alpha) {
     this.alpha = alpha;
   }
 
-  public void step() {
-    Tensor state0 = states.get(random.nextInt(states.length()));
-    Tensor actions = standardModel.actions(state0);
-    Tensor action0 = actions.get(random.nextInt(actions.length()));
+  public void batch() {
+    Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
+    List<Tensor> list = index.keys().flatten(0).collect(Collectors.toList());
+    Collections.shuffle(list);
+    for (Tensor key : list)
+      step(key.get(0), key.get(1));
+  }
+
+  public void step(Tensor state0, Tensor action0) {
     Tensor state1 = sampleModel.move(state0, action0);
     Scalar reward = sampleModel.reward(state0, action0, state1);
-    Scalar max = standardModel.actions(state1).flatten(0) //
+    Scalar max = discreteModel.actions(state1).flatten(0) //
         .map(action1 -> qsa.value(state1, action1)) //
         .reduce(Max::of).get();
     Scalar value0 = qsa.value(state0, action0);

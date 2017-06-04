@@ -2,14 +2,14 @@
 package ch.ethz.idsc.subare.core.alg;
 
 import ch.ethz.idsc.subare.core.ActionValueInterface;
+import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.red.Max;
 
 /** action value iteration: "policy evaluation is stopped after just one sweep"
@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.red.Max;
  * initial values are set to zeros
  * Jacobi style, i.e. updates take effect only in the next iteration */
 public class ActionValueIteration {
-  private final StandardModel standardModel;
+  private final DiscreteModel discreteModel;
   private final ActionValueInterface actionValueInterface;
   private final Scalar gamma;
   private DiscreteQsa qsa_new;
@@ -28,13 +28,13 @@ public class ActionValueIteration {
   private int iterations = 0;
   private int alternate = 0;
 
-  /** @param standardModel
-   * @param gamma discount */
-  public ActionValueIteration(StandardModel standardModel, ActionValueInterface actionValueInterface) {
-    this.standardModel = standardModel;
+  /** @param discreteModel
+   * @param actionValueInterface */
+  public ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface) {
+    this.discreteModel = discreteModel;
     this.actionValueInterface = actionValueInterface;
-    this.gamma = standardModel.gamma();
-    qsa_new = DiscreteQsa.build(standardModel);
+    this.gamma = discreteModel.gamma();
+    qsa_new = DiscreteQsa.build(discreteModel);
   }
 
   /** perform iteration until values don't change more than threshold
@@ -50,7 +50,7 @@ public class ActionValueIteration {
     final long tic = System.nanoTime();
     while (true) {
       step();
-      final Scalar delta = qsa_new.distance(qsa_old);
+      final Scalar delta = DiscreteQsas.distance(qsa_new, (DiscreteQsa) qsa_old);
       final long toc = System.nanoTime();
       if (3e9 < toc - tic)
         System.out.println(past + " -> " + delta + " " + alternate);
@@ -79,11 +79,11 @@ public class ActionValueIteration {
   // helper function
   private Scalar jacobiMax(Tensor state, Tensor action) {
     Scalar ersa = actionValueInterface.expectedReward(state, action);
-    Scalar eqsa = ZeroScalar.get();
-    Scalar norm = ZeroScalar.get();
+    Scalar eqsa = RealScalar.ZERO;
+    Scalar norm = RealScalar.ZERO;
     for (Tensor next : actionValueInterface.transitions(state, action)) {
       Scalar prob = actionValueInterface.transitionProbability(state, action, next);
-      Scalar max = standardModel.actions(next).flatten(0) //
+      Scalar max = discreteModel.actions(next).flatten(0) //
           .map(actionN -> qsa_new.value(next, actionN)) //
           .reduce(Max::of).get();
       eqsa = eqsa.add(prob.multiply(max));

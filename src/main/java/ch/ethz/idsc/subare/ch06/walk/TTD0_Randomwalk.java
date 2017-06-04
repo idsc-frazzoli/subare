@@ -1,9 +1,11 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.walk;
 
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -22,8 +24,10 @@ class TTD0_Randomwalk {
     Randomwalk randomwalk = new Randomwalk();
     DiscreteVs vs = DiscreteVs.build(randomwalk);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
-        randomwalk, new EquiprobablePolicy(randomwalk), vs, randomwalk.gamma(), RealScalar.of(.1));
-    ttd0.simulate(123);
+        vs, randomwalk.gamma(), RealScalar.of(.1));
+    PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
+    for (int count = 0; count < 1000; ++count)
+      ExploringStartsBatch.apply(randomwalk, ttd0, policyInterface);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

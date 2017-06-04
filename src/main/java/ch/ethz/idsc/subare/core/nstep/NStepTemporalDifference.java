@@ -3,9 +3,8 @@ package ch.ethz.idsc.subare.core.nstep;
 
 import java.util.LinkedList;
 
+import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
-import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.tensor.Scalar;
@@ -16,27 +15,22 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * 
  * box on p. 154 */
 // TODO not tested yet
-public class NStepTemporalDifference {
-  private final EpisodeSupplier episodeSupplier;
-  private final PolicyInterface policyInterface;
+public class NStepTemporalDifference implements EpisodeDigest {
   private final VsInterface vs;
   private final Scalar gamma;
   private final Scalar alpha;
   private final int size;
 
   public NStepTemporalDifference( //
-      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
       VsInterface vs, Scalar gamma, Scalar alpha, int size) {
-    this.episodeSupplier = episodeSupplier;
-    this.policyInterface = policyInterface;
     this.vs = vs;
     this.gamma = gamma;
     this.alpha = alpha;
     this.size = size;
   }
 
-  public void simulate() {
-    EpisodeInterface episodeInterface = episodeSupplier.kickoff(policyInterface);
+  @Override
+  public void digest(EpisodeInterface episodeInterface) {
     LinkedList<StepInterface> list = new LinkedList<>();
     while (episodeInterface.hasNext()) {
       StepInterface stepInterface = episodeInterface.step();

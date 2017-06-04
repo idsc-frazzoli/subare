@@ -4,8 +4,8 @@ package ch.ethz.idsc.subare.ch02;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Log;
@@ -34,7 +34,7 @@ public class UCBAgent extends FairMaxAgent {
     for (int a = 0; a < Qt.length(); ++a) {
       final Scalar bias;
       Scalar Nta = Na.Get(a);
-      if (Nta.equals(ZeroScalar.get()))
+      if (Scalars.isZero(Nta))
         // if an action hasn't been taken yet, bias towards this action is infinite
         bias = RealScalar.POSITIVE_INFINITY;
       else {

@@ -1,24 +1,19 @@
 // code by jph
 package ch.ethz.idsc.subare.ch03.grid;
 
-import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** continuous task */
-class Gridworld extends DeterministicStandardModel implements //
-    MonteCarloInterface, EpisodeSupplier {
+class Gridworld extends DeterministicStandardModel implements MonteCarloInterface {
   private static final Tensor WARP1_ANTE = Tensors.vector(0, 1); // A
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'
   private static final Tensor WARP2_ANTE = Tensors.vector(0, 3); // B
@@ -44,6 +39,12 @@ class Gridworld extends DeterministicStandardModel implements //
   }
 
   @Override
+  public Scalar gamma() {
+    return DoubleScalar.of(.9);
+  }
+
+  /**************************************************/
+  @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (state.equals(WARP1_ANTE))
       return RealScalar.of(10);
@@ -52,7 +53,7 @@ class Gridworld extends DeterministicStandardModel implements //
     // check if action would take agent off the board
     Tensor effective = state.add(action);
     return effective.map(CLIP).equals(effective) ? //
-        ZeroScalar.get() : RealScalar.ONE.negate();
+        RealScalar.ZERO : RealScalar.ONE.negate();
   }
 
   @Override
@@ -64,19 +65,14 @@ class Gridworld extends DeterministicStandardModel implements //
     return state.add(action).map(CLIP);
   }
 
+  /**************************************************/
   @Override
-  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    throw new RuntimeException();
-    // return new MonteCarloEpisode(this, policyInterface, state);
+  public Tensor startStates() {
+    return states;
   }
 
   @Override
   public boolean isTerminal(Tensor state) {
-    throw new RuntimeException();
-  }
-
-  @Override
-  public Scalar gamma() {
-    return DoubleScalar.of(.9);
+    return false;
   }
 }

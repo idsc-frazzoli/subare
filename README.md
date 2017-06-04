@@ -20,17 +20,63 @@ List of algorithms:
 * *Action-Value Iteration* to determine Q*(s,a) (parallel)
 * First Visit Policy Evaluation (from p.100)
 * Monte Carlo Exploring Starts (from p.107)
+* Contant-alpha Monte Carlo (from p.127)
 * Tabular Temporal Difference (from p.128)
 * *Sarsa*: An on-policy TD control algorithm (from p.138)
 * *Q-learning*: An off-policy TD control algorithm (from p.140)
 * Expected Sarsa (from p.142)
+* Double Q-Learning (from p.145)
 * n-step Temporal Difference for estimating V(s) (from p.154)
 * n-step Sarsa for estimating Q(s,a) (from p.157)
 * Random-sample one-step tabular Q-planning (from p.169)
 
-
 ## Examples from the book
 
+### 4.1 Gridworld
+
+Action Value Iteration q(s,a)
+
+![gridworld_qsa_avi](https://cloud.githubusercontent.com/assets/4012178/26762465/36ac9224-4943-11e7-8fcb-d543d1766aa9.gif)
+
+<table><tr>
+
+<td>
+
+TabularQPlan
+
+![gridworld_qsa_rstqp](https://cloud.githubusercontent.com/assets/4012178/26762466/36ae79a4-4943-11e7-9516-cdf8ca9d9c4f.gif)
+
+<td>
+
+Q-Learning
+
+![gridworld_qsa_qlearning](https://cloud.githubusercontent.com/assets/4012178/26762470/36af4302-4943-11e7-8891-6fdaf95b912b.gif)
+
+<td>
+
+E-Sarsa
+
+![gridworld_qsa_expected](https://cloud.githubusercontent.com/assets/4012178/26762468/36aedaac-4943-11e7-998d-df150fe0eca6.gif)
+
+<td>
+
+Sarsa
+
+![gridworld_qsa_original](https://cloud.githubusercontent.com/assets/4012178/26762467/36ae8656-4943-11e7-8d9e-e17819c1e54b.gif)
+
+<td>
+
+Monte Carlo
+
+![gridworld_qsa_mces](https://cloud.githubusercontent.com/assets/4012178/26762469/36af0784-4943-11e7-91ce-89f86afff7a2.gif)
+
+</tr></table>
+
+### 4.2: Jack's car rental
+
+Value Iteration v(s)
+
+![carrental_vi_true](https://cloud.githubusercontent.com/assets/4012178/26762456/0d5439fe-4943-11e7-91a2-d0663484690c.gif)
 
 ### 4.4: Gambler's problem
 
@@ -75,31 +121,37 @@ Monte Carlo Exploring Starts
 
 AV-Iteration
 
-![wire4_avi_iteration](https://cloud.githubusercontent.com/assets/4012178/26669492/63ce19ea-46ae-11e7-806c-849eba3da453.gif)
+![wire5_avi](https://cloud.githubusercontent.com/assets/4012178/26762420/588aeef0-4942-11e7-97bc-6b25ce4a20d9.gif)
+
+<td>
+
+TabularQPlan
+
+![wire5_qsa_rstqp](https://cloud.githubusercontent.com/assets/4012178/26762437/cf460cbe-4942-11e7-8d5a-74af0157935d.gif)
 
 <td>
 
 Q-Learning
 
-![wire4_ql](https://cloud.githubusercontent.com/assets/4012178/26669495/661de338-46ae-11e7-99b3-cc69d7d853a7.gif)
-
-<td>
-
-Monte Carlo
-
-![wire4_qsa_mces](https://cloud.githubusercontent.com/assets/4012178/26669499/698b4da8-46ae-11e7-9a8e-5ec837a2304a.gif)
+![wire5_qsa_qlearning](https://cloud.githubusercontent.com/assets/4012178/26762426/8aad7696-4942-11e7-89a6-d8279361c3eb.gif)
 
 <td>
 
 E-Sarsa
 
-![wire4_qsa_esarsa](https://cloud.githubusercontent.com/assets/4012178/26669504/6bf3bb20-46ae-11e7-9464-6dfb029a82db.gif)
+![wire5_qsa_expected](https://cloud.githubusercontent.com/assets/4012178/26762428/a330a17a-4942-11e7-9b8d-4d2bd5ab957a.gif)
 
 <td>
 
 Sarsa
 
-![wire4_qsa_sarsa](https://cloud.githubusercontent.com/assets/4012178/26669505/6c18cdca-46ae-11e7-9b39-4086e6e1b25a.gif)
+![wire5_qsa_original](https://cloud.githubusercontent.com/assets/4012178/26762745/a247351c-4947-11e7-81b4-a5e810dd8661.gif)
+
+<td>
+
+Monte Carlo
+
+![wire5_mces](https://cloud.githubusercontent.com/assets/4012178/26762436/bda3717c-4942-11e7-8339-b58b480cf69f.gif)
 
 </tr></table>
 
@@ -121,6 +173,7 @@ track 2
 
 </tr></table>
 
+---
 
 ## Additional Examples
 
@@ -134,3 +187,6 @@ Exact expected reward of two adversarial Upper-Confidence-Bound agents depending
 
 ![ucbs](https://cloud.githubusercontent.com/assets/4012178/26301526/c738ad1c-3ee1-11e7-9438-e928fc349868.png)
 
+## Dependencies
+
+`subare` requires the library `ch.ethz.idsc.tensor`

@@ -6,20 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
@@ -38,7 +34,7 @@ import ch.ethz.idsc.tensor.sca.Decrement;
  * so we make a compromise by using the following integration procedure
  * p' = p + v + a
  * v' = clip(v + a) */
-class Racetrack extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+class Racetrack extends DeterministicStandardModel implements MonteCarloInterface {
   static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   static final Tensor RED = Tensors.vector(255, 0, 0, 255);
   static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);
@@ -65,7 +61,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     interpolation = NearestInterpolation.of(image.get(Tensor.ALL, Tensor.ALL, 2));
     List<Integer> list = Dimensions.of(image);
     dimensions = Tensors.vector(list.subList(0, 2)).map(Decrement.ONE);
-    clipPositionY = Clip.function(ZeroScalar.get(), dimensions.Get(1));
+    clipPositionY = Clip.function(RealScalar.ZERO, dimensions.Get(1));
     clipSpeed = Clip.function(0, maxSpeed);
     for (int x = 0; x < list.get(0); ++x)
       for (int y = 0; y < list.get(1); ++y) {
@@ -129,6 +125,12 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   }
 
   @Override
+  public Scalar gamma() {
+    return RealScalar.of(1.); // numerical one
+  }
+
+  /**************************************************/
+  @Override
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
@@ -143,7 +145,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
           Scalar lambda = _lambda.Get();
           Scalar scalar = interpolation.Get( //
               pos0.multiply(lambda).add(pos1.multiply(RealScalar.ONE.subtract(lambda))));
-          value &= scalar.equals(ZeroScalar.get());
+          value &= Scalars.isZero(scalar);
         }
         collisions.put(key, value);
       }
@@ -158,7 +160,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     if (!isTerminal(state) && isTerminal(next))
       return RealScalar.ONE;
     if (isTerminal(next))
-      return ZeroScalar.get();
+      return RealScalar.ZERO;
     if (integrate(state, action).equals(next))
       return MINUS_ONE;
     // cost of collision, required for value iteration
@@ -169,25 +171,19 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     return statesStartIndex.containsKey(state);
   }
 
+  /**************************************************/
+  @Override
+  public Tensor startStates() {
+    return statesStart;
+  }
+
   @Override
   public boolean isTerminal(Tensor state) {
     return statesTerminalIndex.containsKey(state);
   }
 
-  @Override
-  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    Tensor start = statesStart.get(random.nextInt(statesStart.length()));
-    if (isTerminal(start))
-      throw new RuntimeException();
-    return new MonteCarloEpisode(this, policyInterface, start);
-  }
-
+  /**************************************************/
   public Tensor image() {
     return image.copy();
-  }
-
-  @Override
-  public Scalar gamma() {
-    return RealScalar.of(1.); // numerical one
   }
 }

@@ -1,8 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.tensor.Scalar;
@@ -14,15 +13,13 @@ import ch.ethz.idsc.tensor.Tensor;
  * V(S) = V(S) + alpha * [R + gamma * V(S') - V(S)]
  * 
  * see box on p.128 */
-public class TabularTemporalDifference0 extends AbstractTemporalDifference {
+public class TabularTemporalDifference0 implements StepDigest {
   private final VsInterface vs;
   private final Scalar gamma;
   private final Scalar alpha;
 
   public TabularTemporalDifference0( //
-      EpisodeSupplier episodeSupplier, PolicyInterface policyInterface, //
       VsInterface vs, Scalar gamma, Scalar alpha) {
-    super(episodeSupplier, policyInterface);
     this.vs = vs;
     this.gamma = gamma;
     this.alpha = alpha;

@@ -1,20 +1,18 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.infvar;
 
-import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.EpisodeSupplier;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.ZeroScalar;
 
-class InfiniteVariance extends DeterministicStandardModel implements MonteCarloInterface, EpisodeSupplier {
+/** Example 5.5: Infinite Variance
+ * 
+ * p.114 */
+class InfiniteVariance extends DeterministicStandardModel implements MonteCarloInterface {
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   final Tensor actions = Tensors.vector(0, 1).unmodifiable(); // increment
   final Index statesIndex;
@@ -30,14 +28,14 @@ class InfiniteVariance extends DeterministicStandardModel implements MonteCarloI
 
   @Override
   public Tensor actions(Tensor state) {
-    return isTerminal(state) ? Tensors.of(ZeroScalar.get()) : actions;
+    return isTerminal(state) ? Tensors.of(RealScalar.ZERO) : actions;
   }
 
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    return state.equals(ZeroScalar.get()) && action.equals(RealScalar.ONE) ? //
-        RealScalar.ONE : ZeroScalar.get();
+    return state.equals(RealScalar.ZERO) && action.equals(RealScalar.ONE) ? //
+        RealScalar.ONE : RealScalar.ZERO;
   }
 
   @Override
@@ -47,8 +45,8 @@ class InfiniteVariance extends DeterministicStandardModel implements MonteCarloI
 
   /**************************************************/
   @Override
-  public EpisodeInterface kickoff(PolicyInterface policyInterface) {
-    return new MonteCarloEpisode(this, policyInterface, ZeroScalar.get());
+  public Tensor startStates() {
+    return Tensors.vector(0);
   }
 
   @Override
@@ -56,6 +54,7 @@ class InfiniteVariance extends DeterministicStandardModel implements MonteCarloI
     return state.equals(RealScalar.ONE);
   }
 
+  /**************************************************/
   @Override
   public Scalar gamma() {
     return RealScalar.ONE;

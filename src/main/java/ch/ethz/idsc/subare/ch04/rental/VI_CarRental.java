@@ -1,0 +1,26 @@
+// code by jph
+package ch.ethz.idsc.subare.ch04.rental;
+
+import ch.ethz.idsc.subare.core.alg.ValueIteration;
+import ch.ethz.idsc.subare.util.UserHome;
+import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.ImageFormat;
+
+/** Example 4.2: Jack's Car Rental
+ * Figure 4.2
+ * 
+ * p.87-88 */
+class VI_CarRental {
+  public static void main(String[] args) throws Exception {
+    CarRental carRental = new CarRental(true);
+    ValueIteration vi = new ValueIteration(carRental);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/carrental_vi.gif"), 250);
+    for (int count = 0; count <= 25; ++count) {
+      System.out.println(count);
+      gsw.append(ImageFormat.of(CarRentalHelper.joinAll(carRental, vi.vs())));
+      vi.step();
+    }
+    gsw.append(ImageFormat.of(CarRentalHelper.joinAll(carRental, vi.vs())));
+    gsw.close();
+  }
+}

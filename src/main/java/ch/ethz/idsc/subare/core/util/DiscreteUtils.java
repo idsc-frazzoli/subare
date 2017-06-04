@@ -3,11 +3,23 @@ package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.red.Max;
 
 public enum DiscreteUtils {
   ;
+  /** @param discreteModel
+   * @return index for state-action */
+  public static Index build(DiscreteModel discreteModel, Tensor states) {
+    Tensor tensor = Tensors.empty();
+    for (Tensor state : states)
+      for (Tensor action : discreteModel.actions(state))
+        tensor.append(Tensors.of(state, action));
+    return Index.build(tensor);
+  }
+
   // ---
   /** compute state value function v(s) based on given action-value function q(s,a)
    * 
