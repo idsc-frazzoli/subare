@@ -16,7 +16,10 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
 
-/** update similar to {@link QLearning} except does not use episodes
+/** similar to {@link QLearning} except does not use episodes but single steps
+ * 
+ * similar to {@link ActionValueIteration} but with gauss-seidel updates
+ * therefore not parallel()
  * 
  * see box on p.169
  * 

@@ -55,6 +55,8 @@ class Blackjack implements MonteCarloInterface {
   /**************************************************/
   @Override
   public Tensor move(Tensor state, Tensor action) {
+    if (isTerminal(state))
+      return state;
     // player stays, the next state is terminal
     if (Scalars.isZero((Scalar) action)) { // stay
       // TODO natural: ACE+10-card

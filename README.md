@@ -20,6 +20,7 @@ List of algorithms:
 * *Action-Value Iteration* to determine Q*(s,a) (parallel)
 * First Visit Policy Evaluation (from p.100)
 * Monte Carlo Exploring Starts (from p.107)
+* Contant-alpha Monte Carlo (from p.127)
 * Tabular Temporal Difference (from p.128)
 * *Sarsa*: An on-policy TD control algorithm (from p.138)
 * *Q-learning*: An off-policy TD control algorithm (from p.140)

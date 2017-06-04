@@ -14,8 +14,8 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
-import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -37,21 +37,18 @@ class SD_Gridworld {
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     int EPISODES = 20;
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // only used in egreedy
-    PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_" + type + ".gif"), 200);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(ROUND) + " " + error.map(ROUND));
+      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(index));
       StepDigest stepDigest = type.supply(gridworld, qsa, RealScalar.of(.2), policyInterface);
       if (type.equals(StepDigestType.qlearning)) {
         ExploringStartsBatch.apply(gridworld, stepDigest, policyInterface);
-        policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(index));
       } else {
         ExploringStartsBatch.apply(gridworld, stepDigest, policyInterface);
         ExploringStartsBatch.apply(gridworld, stepDigest, policyInterface);
-        // policyInterface = GreedyPolicy.bestEquiprobableGreedy(gridworld, qsa);
-        policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(index));
       }
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
     }
@@ -60,6 +57,7 @@ class SD_Gridworld {
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa);
     Put.of(UserHome.file("gridworld_" + type), vs.values());
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, qsa);
     EpisodeInterface ei = EpisodeKickoff.single(gridworld, policyInterface);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();
@@ -69,8 +67,8 @@ class SD_Gridworld {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(StepDigestType.original);
+    // handle(StepDigestType.original);
     handle(StepDigestType.expected);
-    handle(StepDigestType.qlearning);
+    // handle(StepDigestType.qlearning);
   }
 }

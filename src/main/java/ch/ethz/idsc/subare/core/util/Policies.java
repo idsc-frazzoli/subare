@@ -16,4 +16,5 @@ public enum Policies {
     EGreedyPolicy eGreedyPolicy = (EGreedyPolicy) policyInterface;
     return eGreedyPolicy.flatten(states);
   }
+  // TODO implement equals check
 }

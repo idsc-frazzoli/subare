@@ -4,11 +4,13 @@ package ch.ethz.idsc.subare.ch05.wireloop;
 import java.io.File;
 import java.util.function.Function;
 
+import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
+import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -23,6 +25,12 @@ enum WireloopHelper {
     String path = "".getClass().getResource("/ch05/" + trackName + ".png").getPath();
     Tensor image = Import.of(new File(path)).unmodifiable();
     return new Wireloop(image, function);
+  }
+
+  static DiscreteQsa getOptimalQsa(Wireloop wireloop) {
+    ActionValueIteration avi = new ActionValueIteration(wireloop, wireloop);
+    avi.untilBelow(DecimalScalar.of(.0001));
+    return avi.qsa();
   }
 
   private static final Tensor BASE = Tensors.vector(255);

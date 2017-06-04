@@ -30,10 +30,7 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
   private final DiscreteQsa qsa;
   private final Map<Tensor, Average> map = new HashMap<>();
 
-  /** @param episodeSupplier
-   * @param policyInterface
-   * @param discreteModel
-   * @param epsilon probability of exploration */
+  /** @param discreteModel */
   public MonteCarloExploringStarts(DiscreteModel discreteModel) {
     this.gamma = discreteModel.gamma();
     this.qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"

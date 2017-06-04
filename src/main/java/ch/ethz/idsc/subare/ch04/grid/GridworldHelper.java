@@ -23,8 +23,6 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum GridworldHelper {
   ;
-  private static final int MAGNIFY = 7;
-
   static DiscreteQsa getOptimalQsa(Gridworld gridworld) {
     ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld);
     avi.untilBelow(DecimalScalar.of(.0001));
@@ -32,6 +30,7 @@ enum GridworldHelper {
   }
 
   private static final Tensor BASE = Tensors.vector(255);
+  private static final int MAGNIFY = 7;
 
   static Tensor render(Gridworld gridworld, DiscreteVs vs) {
     Interpolation colorscheme = Colorscheme.classic();
