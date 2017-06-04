@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
+import ch.ethz.idsc.subare.core.EpisodeQsaEstimator;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.util.Average;
@@ -25,7 +25,7 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * based on average returns from complete episodes.
  * 
  * see box on p.107 */
-public class MonteCarloExploringStarts implements EpisodeDigest {
+public class MonteCarloExploringStarts implements EpisodeQsaEstimator {
   private final Scalar gamma;
   private final DiscreteQsa qsa;
   private final Map<Tensor, Average> map = new HashMap<>();
@@ -91,6 +91,7 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
     }
   }
 
+  @Override
   public DiscreteQsa qsa() {
     return qsa;
   }

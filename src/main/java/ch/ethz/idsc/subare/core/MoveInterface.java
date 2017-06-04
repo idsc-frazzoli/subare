@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.core;
 import ch.ethz.idsc.tensor.Tensor;
 
 public interface MoveInterface {
-  /** result is not necessarily deterministic
+  /** the move function is not necessarily deterministic
    * 
    * @param state
    * @param action

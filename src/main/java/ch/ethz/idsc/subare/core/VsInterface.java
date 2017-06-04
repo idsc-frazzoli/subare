@@ -9,7 +9,9 @@ public interface VsInterface {
    * @return value of state */
   Scalar value(Tensor state);
 
-  /** @param state
+  /** map state to value
+   * 
+   * @param state
    * @param value */
   void assign(Tensor state, Scalar value);
 
@@ -19,8 +21,4 @@ public interface VsInterface {
   /** @param gamma
    * @return */
   VsInterface discounted(Scalar gamma);
-
-  /** @param vs
-   * @return */
-  Scalar distance(VsInterface vs);
 }

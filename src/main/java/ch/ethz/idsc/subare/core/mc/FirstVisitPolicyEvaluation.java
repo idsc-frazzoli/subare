@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
+import ch.ethz.idsc.subare.core.EpisodeVsEstimator;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.Average;
@@ -21,7 +21,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** see box on p.100 */
-public class FirstVisitPolicyEvaluation implements EpisodeDigest {
+public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
   private final DiscreteModel discreteModel;
   private final Scalar gamma;
   final DiscreteVs vs;
@@ -63,6 +63,7 @@ public class FirstVisitPolicyEvaluation implements EpisodeDigest {
     }
   }
 
+  @Override
   public DiscreteVs vs() {
     Tensor states = discreteModel.states();
     Index index = Index.build(states);

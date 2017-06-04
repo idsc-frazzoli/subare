@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.DiscreteVss;
 import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.tensor.Scalar;
@@ -20,7 +21,7 @@ class FVPE_Gambler {
     for (int count = 0; count < 100; ++count) {
       ExploringStartsBatch.apply(gambler, fvpe, policyInterface);
       DiscreteVs vs = fvpe.vs();
-      Scalar diff = vs.distance(ref);
+      Scalar diff = DiscreteVss.distance(vs, ref);
       System.out.println(count + " " + N.of(diff));
     }
   }

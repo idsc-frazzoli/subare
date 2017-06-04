@@ -7,7 +7,7 @@ import ch.ethz.idsc.tensor.Tensor;
 public interface StandardModel extends DiscreteModel {
   /** @param state
    * @param action
-   * @param gvalues
+   * @param gvalues discounted by gamma
    * @return expected value of state-action pair */
   Scalar qsa(Tensor state, Tensor action, VsInterface gvalues);
 }
