@@ -22,6 +22,7 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum BlackjackHelper {
   ;
+  private static final int MAGNIFY = 5;
   private static final Tensor BASE = Tensors.vector(255);
 
   public static Tensor render(Blackjack blackjack, DiscreteQsa qsa) {
@@ -40,7 +41,7 @@ enum BlackjackHelper {
         Scalar max = scaled.value(state); //
         tensor.set(colorscheme.get(BASE.multiply(max)), dealer + 12 * useAce, 9 - player);
       }
-    return ImageResize.of(tensor, 6);
+    return ImageResize.of(tensor, MAGNIFY);
   }
 
   public static Tensor render(Blackjack blackjack, PolicyInterface policyInterface) {
@@ -57,7 +58,7 @@ enum BlackjackHelper {
           tensor.set(colorscheme.get(BASE.multiply(sca)), dealer + 12 * useAce, 9 - player);
         }
       }
-    return ImageResize.of(tensor, 6);
+    return ImageResize.of(tensor, MAGNIFY);
   }
 
   public static Tensor joinAll(Blackjack blackjack, DiscreteQsa qsa) {
@@ -65,7 +66,7 @@ enum BlackjackHelper {
     PolicyInterface pi = GreedyPolicy.bestEquiprobable(blackjack, qsa);
     Tensor im2 = render(blackjack, pi);
     List<Integer> list = Dimensions.of(im1);
-    list.set(1, 6 * 2);
+    list.set(1, MAGNIFY * 2);
     return Join.of(1, im1, Array.zeros(list), im2);
   }
 }

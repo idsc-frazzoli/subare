@@ -3,8 +3,8 @@
 package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.td.OriginalSarsa;
-import ch.ethz.idsc.subare.core.td.Sarsa;
+import ch.ethz.idsc.subare.core.StepDigest;
+import ch.ethz.idsc.subare.core.td.StepDigestType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
@@ -22,15 +22,20 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {4, 0} 0.59
  * {5, 0} 0.79
  * {6, 0} 0 */
-class Sarsa_Randomwalk {
-  public static void main(String[] args) {
+class SD_Randomwalk {
+  static void handle(StepDigestType type) {
+    System.out.println(type);
     Randomwalk randomwalk = new Randomwalk();
     DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
-    Sarsa sarsa = new OriginalSarsa(randomwalk, qsa, RealScalar.of(.1), //
-        new EquiprobablePolicy(randomwalk));
     PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
+    StepDigest stepDigest = type.supply(randomwalk, qsa, RealScalar.of(.1), policyInterface);
     for (int count = 0; count < 1000; ++count)
-      ExploringStartsBatch.apply(randomwalk, sarsa, policyInterface);
+      ExploringStartsBatch.apply(randomwalk, stepDigest, policyInterface);
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
+  }
+
+  public static void main(String[] args) {
+    for (StepDigestType type : StepDigestType.values())
+      handle(type);
   }
 }

@@ -19,6 +19,9 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum CliffwalkHelper {
   ;
+  // ---
+  private static final int MAGNIFY = 8;
+
   static PolicyInterface getOptimalPolicy(Cliffwalk cliffwalk) {
     ValueIteration vi = new ValueIteration(cliffwalk);
     vi.untilBelow(RealScalar.of(1e-10));
@@ -37,7 +40,7 @@ enum CliffwalkHelper {
       int sy = state.Get(1).number().intValue();
       tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy);
     }
-    return ImageResize.of(tensor, 10);
+    return ImageResize.of(tensor, MAGNIFY);
   }
 
   static Tensor render(Cliffwalk cliffwalk, DiscreteQsa qsa) {
@@ -53,6 +56,6 @@ enum CliffwalkHelper {
         int a = indexActions.of(action);
         tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy + cliffwalk.NY * a);
       }
-    return ImageResize.of(tensor, 10);
+    return ImageResize.of(tensor, MAGNIFY);
   }
 }
