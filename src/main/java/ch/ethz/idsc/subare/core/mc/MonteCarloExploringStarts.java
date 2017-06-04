@@ -10,15 +10,15 @@ import java.util.Map.Entry;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.Average;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.alg.Accumulate;
+import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** Monte Carlo exploring starts improves an initial policy
@@ -26,7 +26,6 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * 
  * see box on p.107 */
 public class MonteCarloExploringStarts implements EpisodeDigest {
-  private final DiscreteModel discreteModel;
   private final Scalar gamma;
   private final DiscreteQsa qsa;
   private final Map<Tensor, Average> map = new HashMap<>();
@@ -36,7 +35,6 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
    * @param discreteModel
    * @param epsilon probability of exploration */
   public MonteCarloExploringStarts(DiscreteModel discreteModel) {
-    this.discreteModel = discreteModel;
     this.gamma = discreteModel.gamma();
     this.qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"
   }
@@ -44,7 +42,6 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
   @Override
   public void digest(EpisodeInterface episodeInterface) {
     Map<Tensor, Integer> first = new HashMap<>();
-    Map<Tensor, Scalar> gains = new HashMap<>();
     Tensor rewards = Tensors.empty();
     List<StepInterface> trajectory = new ArrayList<>();
     while (episodeInterface.hasNext()) {
@@ -54,14 +51,28 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
         first.put(key, trajectory.size());
       rewards.append(stepInterface.reward());
       trajectory.add(stepInterface);
-      // System.out.println(state+" "+stepInterface.action());
     }
-    // System.out.println("reached final");
-    for (Entry<Tensor, Integer> entry : first.entrySet()) {
-      Tensor key = entry.getKey();
-      int fromIndex = entry.getValue();
-      // TODO speedup by checking if gamma == 1
-      gains.put(key, Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma));
+    Map<Tensor, Scalar> gains = new HashMap<>();
+    if (gamma.equals(RealScalar.ONE)) {
+      Tensor accumulate = Accumulate.of(rewards);
+      for (Entry<Tensor, Integer> entry : first.entrySet()) {
+        Tensor key = entry.getKey();
+        Scalar alt = (Scalar) Last.of(accumulate);
+        final int fromIndex = entry.getValue();
+        if (0 < fromIndex)
+          alt = alt.subtract(accumulate.Get(fromIndex - 1));
+        // Scalar gain = Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma);
+        // if (!gain.equals(alt))
+        // throw TensorRuntimeException.of(gain, alt);
+        gains.put(key, alt);
+      }
+    } else {
+      for (Entry<Tensor, Integer> entry : first.entrySet()) {
+        Tensor key = entry.getKey();
+        final int fromIndex = entry.getValue();
+        Scalar gain = Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma);
+        gains.put(key, gain);
+      }
     }
     // TODO more efficient update of average
     // compute average(Returns(s,a))
@@ -81,14 +92,6 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
         qsa.assign(state, action, value);
       }
     }
-  }
-
-  public PolicyInterface getGreedyPolicy() {
-    return GreedyPolicy.bestEquiprobable(discreteModel, qsa);
-  }
-
-  public PolicyInterface getEGreedyPolicy(Scalar epsilon) {
-    return EGreedyPolicy.bestEquiprobable(discreteModel, qsa, epsilon);
   }
 
   public DiscreteQsa qsa() {

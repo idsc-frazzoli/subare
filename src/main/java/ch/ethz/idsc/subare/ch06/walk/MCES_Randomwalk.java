@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch06.walk;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
+import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -20,13 +20,13 @@ import ch.ethz.idsc.tensor.sca.Round;
 class MCES_Randomwalk {
   public static void main(String[] args) throws Exception {
     Randomwalk randomwalk = new Randomwalk();
-    PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(randomwalk);
-    // mces.setExplorationProbability();
     int EPISODES = 1000;
-    for (int count = 0; count < EPISODES; ++count)
+    for (int count = 0; count < EPISODES; ++count) {
       // TODO confirm that this reduces to equiprobable policy
-      ExploringStartsBatch.apply(randomwalk, mces, mces.getEGreedyPolicy(RealScalar.of(.1)));
+      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(randomwalk, mces.qsa(), RealScalar.of(.1));
+      ExploringStartsBatch.apply(randomwalk, mces, policyInterface);
+    }
     DiscreteQsa qsa = mces.qsa();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }

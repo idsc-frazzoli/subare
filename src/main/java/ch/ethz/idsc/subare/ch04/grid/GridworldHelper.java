@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -62,7 +63,7 @@ enum GridworldHelper {
 
   public static Tensor joinAll(Gridworld gridworld, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor im1 = render(gridworld, DiscreteQsas.rescaled(qsa));
-    Tensor im2 = render(gridworld, DiscreteQsas.logisticDifference(qsa, ref));
+    Tensor im2 = render(gridworld, DiscreteQsas.logisticDifference(qsa, ref, RealScalar.of(1)));
     List<Integer> list = Dimensions.of(im1);
     list.set(1, MAGNIFY);
     return Join.of(1, im1, Array.zeros(list), im2);

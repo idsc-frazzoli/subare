@@ -17,10 +17,14 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
 
 public class ExploringStartsBatch {
-  public static void apply(MonteCarloInterface monteCarloInterface, EpisodeDigest episodeDigest, PolicyInterface policyInterface) {
+  public static int apply(MonteCarloInterface monteCarloInterface, EpisodeDigest episodeDigest, PolicyInterface policyInterface) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
-    while (exploringStartBatch.hasNext())
+    int episodes = 0;
+    while (exploringStartBatch.hasNext()) {
       episodeDigest.digest(exploringStartBatch.nextEpisode(policyInterface));
+      ++episodes;
+    }
+    return episodes;
   }
 
   public static int apply(MonteCarloInterface monteCarloInterface, StepDigest stepDigest, PolicyInterface policyInterface) {

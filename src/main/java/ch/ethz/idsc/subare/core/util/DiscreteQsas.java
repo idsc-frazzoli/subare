@@ -18,8 +18,8 @@ public enum DiscreteQsas {
     return Norm._1.of(_difference(qsa1, qsa2));
   }
 
-  public static DiscreteQsa logisticDifference(DiscreteQsa qsa1, DiscreteQsa qsa2) {
-    return qsa1.create(LogisticSigmoid.of(_difference(qsa1, qsa2)).flatten(0));
+  public static DiscreteQsa logisticDifference(DiscreteQsa qsa1, DiscreteQsa qsa2, Scalar factor) {
+    return qsa1.create(LogisticSigmoid.of(_difference(qsa1, qsa2).multiply(factor)).flatten(0));
   }
 
   private static boolean _isCompatible(DiscreteQsa qsa1, DiscreteQsa qsa2) {
