@@ -22,6 +22,8 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum GridworldHelper {
   ;
+  private static final int MAGNIFY = 7;
+
   static DiscreteQsa getOptimalQsa(Gridworld gridworld) {
     ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld);
     avi.untilBelow(DecimalScalar.of(.0001));
@@ -40,7 +42,7 @@ enum GridworldHelper {
       int sy = state.Get(1).number().intValue();
       tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy);
     }
-    return ImageResize.of(tensor, 10);
+    return ImageResize.of(tensor, MAGNIFY);
   }
 
   static Tensor render(Gridworld gridworld, DiscreteQsa scaled) {
@@ -55,14 +57,14 @@ enum GridworldHelper {
         int a = indexActions.of(action);
         tensor.set(colorscheme.get(BASE.multiply(sca)), sx + (gridworld.NX + 1) * a, sy);
       }
-    return ImageResize.of(tensor, 10);
+    return ImageResize.of(tensor, MAGNIFY);
   }
 
   public static Tensor joinAll(Gridworld gridworld, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor im1 = render(gridworld, DiscreteQsas.rescaled(qsa));
     Tensor im2 = render(gridworld, DiscreteQsas.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(im1);
-    list.set(1, 10 * 1);
+    list.set(1, MAGNIFY);
     return Join.of(1, im1, Array.zeros(list), im2);
   }
 }

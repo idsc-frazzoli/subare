@@ -25,10 +25,9 @@ public class DoubleQLearning implements StepDigest {
   private final Scalar alpha;
   private final Random random = new Random();
 
-  /** @param episodeSupplier
-   * @param policyInterface
-   * @param discreteModel
-   * @param qsa
+  /** @param discreteModel
+   * @param qsa1
+   * @param qsa2
    * @param alpha update rate */
   public DoubleQLearning( //
       DiscreteModel discreteModel, //

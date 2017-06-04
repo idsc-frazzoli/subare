@@ -23,13 +23,10 @@ public class QLearning implements StepDigest {
   private final Scalar gamma;
   private Scalar alpha;
 
-  /** @param episodeSupplier
-   * @param policyInterface
-   * @param discreteModel
+  /** @param discreteModel
    * @param qsa
    * @param alpha update rate */
-  public QLearning( //
-      DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
+  public QLearning(DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
     this.discreteModel = discreteModel;
     this.qsa = qsa;
     this.gamma = discreteModel.gamma();

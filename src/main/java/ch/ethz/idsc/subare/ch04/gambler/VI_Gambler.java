@@ -4,8 +4,10 @@ package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.io.IOException;
 
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -24,13 +26,13 @@ class VI_Gambler {
     Gambler gambler = Gambler.createDefault();
     ValueIteration vi = new ValueIteration(gambler);
     vi.untilBelow(RealScalar.of(1e-10));
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gambler, vi.vs());
     Tensor values = vi.vs().values();
     System.out.println(values);
     Put.of(UserHome.file("ex403_values"), values);
-    greedyPolicy.print(gambler.states());
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gambler, vi.vs());
+    Policies.print(policyInterface, gambler.states());
     // System.out.println(greedyPolicy.policy(RealScalar.of(49), RealScalar.of(1)));
-    Tensor greedy = greedyPolicy.flatten(gambler.states());
+    Tensor greedy = Policies.flatten(policyInterface, gambler.states());
     Put.of(UserHome.file("ex403_greedy"), greedy);
   }
 }

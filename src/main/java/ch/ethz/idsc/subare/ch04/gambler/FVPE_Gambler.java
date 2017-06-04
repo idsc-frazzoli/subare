@@ -14,7 +14,7 @@ class FVPE_Gambler {
   public static void main(String[] args) {
     final Gambler gambler = Gambler.createDefault();
     final DiscreteVs ref = GamblerHelper.getOptimalVs(gambler);
-    final PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(gambler, ref);
+    final PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gambler, ref);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gambler, null);
     for (int count = 0; count < 100; ++count) {

@@ -4,10 +4,12 @@ package ch.ethz.idsc.subare.ch06.cliff;
 
 import java.io.IOException;
 
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.io.Export;
@@ -21,7 +23,7 @@ class AVI_Cliffwalk {
     Export.of(UserHome.file("Pictures/cliffwalk_qsa_avi.png"), CliffwalkHelper.render(cliffwalk, avi.qsa()));
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, avi.qsa());
     vs.print();
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(cliffwalk, avi.qsa());
-    greedyPolicy.print(cliffwalk.states());
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(cliffwalk, avi.qsa());
+    Policies.print(policyInterface, cliffwalk.states());
   }
 }

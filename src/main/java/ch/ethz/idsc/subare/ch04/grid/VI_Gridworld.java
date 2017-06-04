@@ -2,8 +2,10 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.grid;
 
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.io.Export;
@@ -36,8 +38,8 @@ class VI_Gridworld {
     ValueIteration vi = new ValueIteration(gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     vi.vs().print();
-    GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(gridworld, vi.vs());
-    greedyPolicy.print(gridworld.states());
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
+    Policies.print(policyInterface, gridworld.states());
     Export.of(UserHome.file("Pictures/gridworld_vs_vi.png"), GridworldHelper.render(gridworld, vi.vs()));
   }
 }

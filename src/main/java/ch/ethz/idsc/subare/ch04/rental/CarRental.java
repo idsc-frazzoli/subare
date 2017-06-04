@@ -2,7 +2,6 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.rental;
 
-import ch.ethz.idsc.subare.core.MoveInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.PoissonDistribution;
@@ -25,7 +24,7 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * states: number of cars at the 2 stations in the evening
  * actions: number of cars moved between the 2 stations during the night
  * the action is encoded as a 2-vector {+n, -n} */
-class CarRental implements StandardModel, MoveInterface {
+class CarRental implements StandardModel {
   private static final int MAX_CARS = 20;
   private static final int MAX_MOVE_OF_CARS = 5;
   private static final int RENTAL_REQUEST_FIRST_LOC = 3;
@@ -65,9 +64,7 @@ class CarRental implements StandardModel, MoveInterface {
     return RealScalar.of(.9);
   }
 
-  /**************************************************/
-  @Override
-  public Tensor move(Tensor state, Tensor action) {
+  public Tensor night_move(Tensor state, Tensor action) {
     Tensor next = state.add(Tensors.of(action, action.negate()));
     if (Scalars.lessThan(next.Get(0), RealScalar.ZERO))
       throw new RuntimeException();
@@ -86,7 +83,7 @@ class CarRental implements StandardModel, MoveInterface {
         Scalar rentalRequest1LocS = RealScalar.of(rentalRequest1Loc);
         Scalar rentalRequest2LocS = RealScalar.of(rentalRequest2Loc);
         // moving cars
-        Tensor numOfCarsNext = move(state, action);
+        Tensor numOfCarsNext = night_move(state, action);
         // valid rental requests should be less equals actual # of cars
         Scalar realRental1Loc = Min.of(numOfCarsNext.Get(0), rentalRequest1LocS);
         Scalar realRental2Loc = Min.of(numOfCarsNext.Get(1), rentalRequest2LocS);

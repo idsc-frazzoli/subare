@@ -52,7 +52,7 @@ enum CarRentalHelper {
 
   public static Tensor joinAll(CarRental gambler, DiscreteVs vs) {
     Tensor im1 = render(gambler, vs);
-    PolicyInterface pi = GreedyPolicy.bestEquiprobableGreedy(gambler, vs);
+    PolicyInterface pi = GreedyPolicy.bestEquiprobable(gambler, vs);
     Tensor im2 = render(gambler, pi);
     List<Integer> list = Dimensions.of(im1);
     list.set(0, 4 * 2);

@@ -25,7 +25,7 @@ class RSTQP_Gridworld {
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         gridworld, gridworld, qsa);
     rstqp.setUpdateFactor(RealScalar.of(.25));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_rstqp.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_rstqp.gif"), 150);
     int EPISODES = 30;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = DiscreteQsas.distance(qsa, ref);

@@ -31,6 +31,10 @@ List of algorithms:
 
 ## Examples from the book
 
+### 4.1 Gridworld
+
+Action Value Iteration q(s,a)
+
 ### 4.2: Jack's car rental
 
 Value Iteration v(s)

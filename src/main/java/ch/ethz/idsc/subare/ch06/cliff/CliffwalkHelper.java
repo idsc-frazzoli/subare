@@ -22,7 +22,7 @@ enum CliffwalkHelper {
   static PolicyInterface getOptimalPolicy(Cliffwalk cliffwalk) {
     ValueIteration vi = new ValueIteration(cliffwalk);
     vi.untilBelow(RealScalar.of(1e-10));
-    return GreedyPolicy.bestEquiprobableGreedy(cliffwalk, vi.vs());
+    return GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
   }
 
   private static final Tensor BASE = Tensors.vector(255);

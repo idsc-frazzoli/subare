@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
@@ -14,7 +15,8 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Extract;
 
-public class GreedyPolicy extends EGreedyPolicy {
+public enum GreedyPolicy {
+  ;
   /** exact implementation of equiprobable greedy policy:
    * if two or more states s1,s2, ... have equal value
    * v(s1)==v(s2)
@@ -27,7 +29,7 @@ public class GreedyPolicy extends EGreedyPolicy {
    * @param standardModel
    * @param values of standardModel.states()
    * @return */
-  public static GreedyPolicy bestEquiprobableGreedy(StandardModel standardModel, VsInterface values) {
+  public static PolicyInterface bestEquiprobable(StandardModel standardModel, VsInterface values) {
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : standardModel.states()) {
       Tensor actions = standardModel.actions(state);
@@ -37,11 +39,11 @@ public class GreedyPolicy extends EGreedyPolicy {
       Tensor feasible = Extract.of(actions, fairArgMax.options());
       map.put(state, Index.build(feasible));
     }
-    return new GreedyPolicy(map);
+    return new EGreedyPolicy(map, RealScalar.ZERO, null);
   }
 
   // this simplicity may be the reason why q(s,a) is preferred over v(s)
-  public static GreedyPolicy bestEquiprobableGreedy(DiscreteModel discreteModel, QsaInterface qsa) {
+  public static PolicyInterface bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa) {
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : discreteModel.states()) {
       Tensor actions = discreteModel.actions(state);
@@ -50,10 +52,6 @@ public class GreedyPolicy extends EGreedyPolicy {
       Tensor feasible = Extract.of(actions, fairArgMax.options());
       map.put(state, Index.build(feasible));
     }
-    return new GreedyPolicy(map);
-  }
-
-  private GreedyPolicy(Map<Tensor, Index> map) {
-    super(map, RealScalar.ZERO, null);
+    return new EGreedyPolicy(map, RealScalar.ZERO, null);
   }
 }

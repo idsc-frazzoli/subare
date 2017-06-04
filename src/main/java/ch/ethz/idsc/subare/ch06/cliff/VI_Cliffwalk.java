@@ -27,7 +27,7 @@ class VI_Cliffwalk {
     // Tensor state = statesIndex.get(stateI);
     // System.out.println(state + " " + values.get(stateI).map(ROUND));
     // }
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobableGreedy(cliffwalk, vi.vs());
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
     EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policyInterface);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();

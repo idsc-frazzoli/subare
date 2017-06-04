@@ -84,7 +84,7 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
   }
 
   public PolicyInterface getGreedyPolicy() {
-    return GreedyPolicy.bestEquiprobableGreedy(discreteModel, qsa);
+    return GreedyPolicy.bestEquiprobable(discreteModel, qsa);
   }
 
   public PolicyInterface getEGreedyPolicy(Scalar epsilon) {
