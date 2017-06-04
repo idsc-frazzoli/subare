@@ -142,6 +142,4 @@ Exact expected reward of two adversarial Upper-Confidence-Bound agents depending
 
 ## Dependencies
 
-`subare` only depends on the library `ch.ethz.idsc.subare`
-
-
+`subare` requires the library `ch.ethz.idsc.tensor`

@@ -12,8 +12,7 @@ import ch.ethz.idsc.tensor.io.Export;
  * gives the value function for the optimal policy equivalent to
  * shortest path to terminal state
  *
- * produces results on p.71
- * chapter 4, example 1
+ * Example 4.1, p.82
  * 
  * {0, 0} 0
  * {0, 1} -1

@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-/** produces results on p.83: */
+/** Example 4.1, p.82 */
 class Gridworld extends DeterministicStandardModel implements MonteCarloInterface {
   final int NX = 4;
   final int NY = 4;
@@ -54,19 +54,15 @@ class Gridworld extends DeterministicStandardModel implements MonteCarloInterfac
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
-    if (state.equals(TERMINATE1))
-      return RealScalar.ZERO;
-    if (state.equals(TERMINATE2))
+    if (isTerminal(state))
       return RealScalar.ZERO;
     return RealScalar.ONE.negate();
   }
 
   @Override
   public Tensor move(Tensor state, Tensor action) {
-    if (state.equals(TERMINATE1))
-      return TERMINATE1;
-    if (state.equals(TERMINATE2))
-      return TERMINATE2;
+    if (isTerminal(state))
+      return state;
     return state.add(action).map(CLIP);
   }
 

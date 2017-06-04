@@ -14,6 +14,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.Average;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -26,26 +27,18 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * see box on p.107 */
 public class MonteCarloExploringStarts implements EpisodeDigest {
   private final DiscreteModel discreteModel;
-  private PolicyInterface policyInterface; // <- FIXME check ? changes over the course of the iterations
   private final Scalar gamma;
   private final DiscreteQsa qsa;
   private final Map<Tensor, Average> map = new HashMap<>();
-  private Scalar epsilon; // probability of exploration
 
   /** @param episodeSupplier
    * @param policyInterface
    * @param discreteModel
    * @param epsilon probability of exploration */
-  public MonteCarloExploringStarts( //
-      DiscreteModel discreteModel, PolicyInterface policyInterface) {
+  public MonteCarloExploringStarts(DiscreteModel discreteModel) {
     this.discreteModel = discreteModel;
-    this.policyInterface = policyInterface;
     this.gamma = discreteModel.gamma();
     this.qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"
-  }
-
-  public void setExplorationProbability(Scalar epsilon) {
-    this.epsilon = epsilon;
   }
 
   @Override
@@ -83,10 +76,19 @@ public class MonteCarloExploringStarts implements EpisodeDigest {
         Tensor key = entry.getKey();
         Tensor state = key.get(0);
         Tensor action = key.get(1);
-        qsa.assign(state, action, entry.getValue().get());
+        Scalar value = entry.getValue().get();
+        // System.out.println(value);
+        qsa.assign(state, action, value);
       }
-      policyInterface = EGreedyPolicy.bestEquiprobable(discreteModel, qsa, epsilon);
     }
+  }
+
+  public PolicyInterface getGreedyPolicy() {
+    return GreedyPolicy.bestEquiprobableGreedy(discreteModel, qsa);
+  }
+
+  public PolicyInterface getEGreedyPolicy(Scalar epsilon) {
+    return EGreedyPolicy.bestEquiprobable(discreteModel, qsa, epsilon);
   }
 
   public DiscreteQsa qsa() {

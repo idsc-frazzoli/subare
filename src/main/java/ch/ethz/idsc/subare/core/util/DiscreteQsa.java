@@ -14,19 +14,15 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
-import ch.ethz.idsc.tensor.red.Norm;
 
 public class DiscreteQsa implements QsaInterface, Serializable {
   public static DiscreteQsa build(DiscreteModel discreteModel) {
-    Tensor tensor = Tensors.empty();
-    for (Tensor state : discreteModel.states())
-      for (Tensor action : discreteModel.actions(state))
-        tensor.append(Tensors.of(state, action));
-    return new DiscreteQsa(Index.build(tensor), Array.zeros(tensor.length()));
+    Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
+    return new DiscreteQsa(index, Array.zeros(index.size()));
   }
 
-  private final Index index;
-  private final Tensor values;
+  final Index index;
+  final Tensor values;
 
   private DiscreteQsa(Index index, Tensor values) {
     if (index.size() != values.length())
@@ -83,18 +79,6 @@ public class DiscreteQsa implements QsaInterface, Serializable {
 
   public int size() {
     return index.size();
-  }
-
-  public boolean isCompatible(QsaInterface qsa) {
-    DiscreteQsa dqsa = (DiscreteQsa) qsa;
-    return index.keys().equals(dqsa.index.keys());
-  }
-
-  @Override
-  public Scalar distance(QsaInterface qsa) {
-    if (!isCompatible(qsa))
-      throw new RuntimeException();
-    return Norm._1.of(values.subtract(((DiscreteQsa) qsa).values));
   }
 
   public Tensor keys() {

@@ -10,7 +10,9 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** {0, 0} 0
+/** Example 4.1, p.82
+ * 
+ * {0, 0} 0
  * {0, 1} -9.00
  * {0, 2} -19.90
  * {0, 3} -20.52

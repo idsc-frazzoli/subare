@@ -9,12 +9,13 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -26,7 +27,7 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** Sarsa applied to gridworld */
+/** Example 4.1, p.82 */
 class Sarsa_Gridworld {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
 
@@ -34,21 +35,22 @@ class Sarsa_Gridworld {
     System.out.println(sarsaType);
     final Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    int EPISODES = 50;
-    Tensor epsilon = Subdivide.of(.1, .01, EPISODES);
+    int EPISODES = 10;
+    Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // only used in egreedy
     PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_" + sarsaType + ".gif"), 200);
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = qsa.distance(ref);
+      Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(ROUND) + " " + error.map(ROUND));
       Sarsa sarsa = sarsaType.supply( //
           gridworld, qsa, RealScalar.of(.2), //
           policyInterface);
       for (int count = 0; count < 10; ++count)
         ExploringStartsBatch.apply(gridworld, sarsa, policyInterface);
-      policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(index));
-      gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, qsa)));
+      // policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(index));
+      policyInterface = GreedyPolicy.bestEquiprobableGreedy(gridworld, qsa);
+      gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
     }
     gsw.close();
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

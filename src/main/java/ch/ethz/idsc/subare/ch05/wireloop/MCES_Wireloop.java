@@ -16,15 +16,15 @@ class MCES_Wireloop {
     String name = "wire4";
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
     PolicyInterface policyInterface = new EquiprobablePolicy(wireloop);
-    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(wireloop, policyInterface);
+    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(wireloop);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar epsilon = RealScalar.of(.25 * (EPISODES - index) / EPISODES);
       System.out.println(index + " " + epsilon);
-      mces.setExplorationProbability(epsilon);
+      // mces.setExplorationProbability(epsilon);
       // mces.simulate(100);
-      ExploringStartsBatch.apply(wireloop, mces, policyInterface);
+      ExploringStartsBatch.apply(wireloop, mces, mces.getEGreedyPolicy(epsilon));
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, mces.qsa())));
     }
     gsw.close();

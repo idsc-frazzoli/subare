@@ -1,13 +1,17 @@
 // code by jph
 package ch.ethz.idsc.subare.core.alg;
 
-import java.util.Random;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.SampleModel;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
@@ -20,7 +24,6 @@ import ch.ethz.idsc.tensor.red.Max;
 public class Random1StepTabularQPlanning {
   private final DiscreteModel discreteModel;
   private final SampleModel sampleModel;
-  private final Random random = new Random();
   private final DiscreteQsa qsa;
   private final Scalar gamma;
   private Scalar alpha = null;
@@ -37,11 +40,15 @@ public class Random1StepTabularQPlanning {
     this.alpha = alpha;
   }
 
-  public void step() {
-    Tensor keys = qsa.keys();
-    Tensor key = keys.get(random.nextInt(keys.length()));
-    Tensor state0 = key.get(0); // TODO bypass if state0 is terminal?
-    Tensor action0 = key.get(1);
+  public void batch() {
+    Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
+    List<Tensor> list = index.keys().flatten(0).collect(Collectors.toList());
+    Collections.shuffle(list);
+    for (Tensor key : list)
+      step(key.get(0), key.get(1));
+  }
+
+  public void step(Tensor state0, Tensor action0) {
     Tensor state1 = sampleModel.move(state0, action0);
     Scalar reward = sampleModel.reward(state0, action0, state1);
     Scalar max = discreteModel.actions(state1).flatten(0) //

@@ -13,13 +13,12 @@ class MCES_Cliffwalk {
   public static void main(String[] args) throws Exception {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     PolicyInterface policyInterface = CliffwalkHelper.getOptimalPolicy(cliffwalk);
-    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(cliffwalk, policyInterface);
+    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(cliffwalk);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
-      mces.setExplorationProbability(RealScalar.of(.1)); // <- change over time
       System.out.println(index);
-      ExploringStartsBatch.apply(cliffwalk, mces, policyInterface);
+      ExploringStartsBatch.apply(cliffwalk, mces, mces.getEGreedyPolicy(RealScalar.of(.1)));
       gsw.append(ImageFormat.of(CliffwalkHelper.render(cliffwalk, mces.qsa())));
     }
     gsw.close();

@@ -13,6 +13,7 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
+import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
 
 public class ExploringStartsBatch {
@@ -41,11 +42,11 @@ public class ExploringStartsBatch {
   private final MonteCarloInterface monteCarloInterface;
   private final List<Tensor> list;
   private int index = 0;
-  private int actionIndex = 0;
 
   private ExploringStartsBatch(MonteCarloInterface monteCarloInterface) {
     this.monteCarloInterface = monteCarloInterface;
-    list = monteCarloInterface.startStates().flatten(0).collect(Collectors.toList());
+    Index index = DiscreteUtils.build(monteCarloInterface, monteCarloInterface.startStates());
+    list = index.keys().flatten(0).collect(Collectors.toList());
     Collections.shuffle(list);
   }
 
@@ -54,17 +55,14 @@ public class ExploringStartsBatch {
   }
 
   public EpisodeInterface nextEpisode(PolicyInterface policyInterface) {
-    Tensor start = list.get(index);
+    Tensor key = list.get(index);
+    Tensor start = key.get(0);
     if (monteCarloInterface.isTerminal(start)) // consistency check
       throw new RuntimeException();
-    Tensor actions = monteCarloInterface.actions(start);
+    Tensor action = key.get(1);
     Queue<Tensor> queue = new LinkedList<>();
-    queue.add(actions.get(actionIndex));
-    ++actionIndex;
-    if (actionIndex == actions.length()) {
-      ++index;
-      actionIndex = 0;
-    }
+    queue.add(action);
+    ++index;
     return new MonteCarloEpisode(monteCarloInterface, policyInterface, start, queue);
   }
 }

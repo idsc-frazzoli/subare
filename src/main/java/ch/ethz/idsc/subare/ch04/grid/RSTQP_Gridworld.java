@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -13,6 +14,7 @@ import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
+/** Example 4.1, p.82 */
 class RSTQP_Gridworld {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
 
@@ -22,15 +24,14 @@ class RSTQP_Gridworld {
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         gridworld, gridworld, qsa);
-    rstqp.setUpdateFactor(RealScalar.of(.1));
+    rstqp.setUpdateFactor(RealScalar.of(.25));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_rstqp.gif"), 100);
-    int EPISODES = 60;
+    int EPISODES = 30;
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = qsa.distance(ref);
+      Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + error.map(ROUND));
-      for (int c1 = 0; c1 < 100; ++c1)
-        rstqp.step();
-      gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, qsa)));
+      rstqp.batch();
+      gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
     }
     gsw.close();
   }

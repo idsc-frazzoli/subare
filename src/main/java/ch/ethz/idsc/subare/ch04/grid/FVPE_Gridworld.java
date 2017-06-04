@@ -9,7 +9,8 @@ import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** example
+/** Example 4.1, p.82
+ * Figure 4.1, p.83
  * 
  * {0, 0} 0
  * {0, 1} -18.3

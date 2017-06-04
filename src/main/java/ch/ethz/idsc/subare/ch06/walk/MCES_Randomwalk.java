@@ -21,12 +21,12 @@ class MCES_Randomwalk {
   public static void main(String[] args) throws Exception {
     Randomwalk randomwalk = new Randomwalk();
     PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
-    MonteCarloExploringStarts mces = new MonteCarloExploringStarts( //
-        randomwalk, new EquiprobablePolicy(randomwalk));
-    mces.setExplorationProbability(RealScalar.of(.1));
+    MonteCarloExploringStarts mces = new MonteCarloExploringStarts(randomwalk);
+    // mces.setExplorationProbability();
     int EPISODES = 1000;
     for (int count = 0; count < EPISODES; ++count)
-      ExploringStartsBatch.apply(randomwalk, mces, policyInterface);
+      // TODO confirm that this reduces to equiprobable policy
+      ExploringStartsBatch.apply(randomwalk, mces, mces.getEGreedyPolicy(RealScalar.of(.1)));
     DiscreteQsa qsa = mces.qsa();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }

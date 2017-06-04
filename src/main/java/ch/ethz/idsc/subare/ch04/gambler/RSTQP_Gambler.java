@@ -20,8 +20,7 @@ class RSTQP_Gambler {
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index);
-      for (int c1 = 0; c1 < 100; ++c1)
-        rstqp.step();
+      rstqp.batch();
       gsw.append(ImageFormat.of(GamblerHelper.render(gambler, qsa)));
     }
     gsw.close();

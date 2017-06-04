@@ -3,18 +3,18 @@
 package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
+import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.io.Export;
+import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** solving grid world
  * gives the value function for the optimal policy equivalent to
  * shortest path to terminal state
- *
- * produces results on p.71
- * chapter 4, example 1
+ * 
+ * Example 4.1, p.82
  * 
  * {0, 0} 0
  * {0, 1} -1
@@ -36,10 +36,16 @@ class AVI_Gridworld {
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld);
-    avi.untilBelow(DecimalScalar.of(.0001));
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_avi.gif"), 250);
+    for (int count = 0; count < 10; ++count) {
+      gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, DiscreteQsas.rescaled(avi.qsa()))));
+      avi.step();
+    }
+    gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, DiscreteQsas.rescaled(avi.qsa()))));
+    gsw.close();
+    // ---
     avi.qsa().print();
     DiscreteVs dvs = DiscreteUtils.createVs(gridworld, avi.qsa());
     dvs.print();
-    Export.of(UserHome.file("Pictures/gridworld_qsa_avi.png"), GridworldHelper.render(gridworld, avi.qsa()));
   }
 }
