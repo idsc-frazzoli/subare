@@ -173,6 +173,26 @@ track 2
 
 </tr></table>
 
+### 6.6 Cliffwalk
+
+<table><tr><td>
+
+Action Value Iteration
+
+<td>
+
+Q-Learning
+
+<td>
+
+TabularQPlan
+
+<td>
+
+Expected Sarsa
+
+</tr></table>
+
 ---
 
 ## Additional Examples
