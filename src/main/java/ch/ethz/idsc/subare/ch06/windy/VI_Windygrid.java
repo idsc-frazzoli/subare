@@ -19,11 +19,10 @@ class VI_Windygrid {
     System.out.println("iterations=" + vi.iterations());
     System.out.println(values);
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(windygrid, vi.vs());
-    EpisodeInterface ei = EpisodeKickoff.single(windygrid, policyInterface);
-    while (ei.hasNext()) {
-      StepInterface stepInterface = ei.step();
-      Tensor state = stepInterface.prevState();
-      System.out.println(stepInterface.action() + " -> " + state);
+    EpisodeInterface episodeInterface = EpisodeKickoff.single(windygrid, policyInterface);
+    while (episodeInterface.hasNext()) {
+      StepInterface stepInterface = episodeInterface.step();
+      System.out.println(stepInterface.prevState() + " + " + stepInterface.action() + " -> " + stepInterface.nextState());
     }
   }
 
