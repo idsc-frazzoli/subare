@@ -44,8 +44,8 @@ class SD_Windygrid {
   }
 
   public static void main(String[] args) throws Exception {
-//    handle(StepDigestType.qlearning, 20);
-//    handle(StepDigestType.expected, 20);
+    // handle(StepDigestType.qlearning, 20);
+    // handle(StepDigestType.expected, 20);
     handle(StepDigestType.original, 20);
   }
 }

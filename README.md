@@ -175,6 +175,20 @@ track 2
 
 ### 6.5 Windygrid
 
+<table><tr><td>
+
+Action Value Iteration
+
+![windygrid_qsa_avi](https://cloud.githubusercontent.com/assets/4012178/26816031/ebeebff2-4a8f-11e7-8bce-2d1dfa29a5a7.gif)
+
+<td>
+
+TabularQPlan
+
+![windygrid_qsa_rstqp](https://cloud.githubusercontent.com/assets/4012178/26816030/ebee6f5c-4a8f-11e7-9416-37b2d30e178f.gif)
+
+</tr></table>
+
 
 ### 6.6 Cliffwalk
 
@@ -182,17 +196,25 @@ track 2
 
 Action Value Iteration
 
+![cliffwalk_qsa_avi](https://cloud.githubusercontent.com/assets/4012178/26815999/c1c86278-4a8f-11e7-834f-89a1b7df7001.gif)
+
 <td>
 
 Q-Learning
+
+![cliffwalk_qsa_qlearning](https://cloud.githubusercontent.com/assets/4012178/26815998/c1c60776-4a8f-11e7-9437-65f151f3deb0.gif)
 
 <td>
 
 TabularQPlan
 
+![cliffwalk_qsa_rstqp](https://cloud.githubusercontent.com/assets/4012178/26816000/c1c96880-4a8f-11e7-9f64-95768baebc10.gif)
+
 <td>
 
 Expected Sarsa
+
+![cliffwalk_qsa_expected](https://cloud.githubusercontent.com/assets/4012178/26816002/c1cd225e-4a8f-11e7-8285-3682e4ba9268.gif)
 
 </tr></table>
 
