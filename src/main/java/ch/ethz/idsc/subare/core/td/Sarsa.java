@@ -30,9 +30,12 @@ public abstract class Sarsa implements StepDigest {
     Tensor state0 = stepInterface.prevState();
     Tensor action0 = stepInterface.action();
     Scalar reward = stepInterface.reward();
+    Tensor state1 = stepInterface.nextState();
     Scalar value0 = qsa.value(state0, action0);
-    Scalar value1 = evaluate(stepInterface.nextState()); // <- call implementation
-    Scalar delta = reward.add(value1.multiply(gamma)).subtract(value0).multiply(alpha);
+    // ---
+    Scalar value1 = evaluate(state1); // <- call implementation
+    // ---
+    Scalar delta = reward.add(gamma.multiply(value1)).subtract(value0).multiply(alpha);
     qsa.assign(state0, action0, value0.add(delta));
   }
 

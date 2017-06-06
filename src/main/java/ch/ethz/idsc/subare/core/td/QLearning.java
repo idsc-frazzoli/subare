@@ -3,8 +3,6 @@ package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.core.StepDigest;
-import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
@@ -17,37 +15,19 @@ import ch.ethz.idsc.tensor.red.Max;
  * 
  * see also Watkins 1989 */
 // TODO check convergence criteria
-public class QLearning implements StepDigest {
-  private final DiscreteModel discreteModel;
-  private final QsaInterface qsa;
-  private final Scalar gamma;
-  private Scalar alpha;
-
+// learning rate should converge to zero, sum should go to infinity, sum of squares should be finite(?)
+public class QLearning extends Sarsa {
   /** @param discreteModel
    * @param qsa
-   * @param alpha update rate */
+   * @param alpha learning rate */
   public QLearning(DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
-    this.discreteModel = discreteModel;
-    this.qsa = qsa;
-    this.gamma = discreteModel.gamma();
-    this.alpha = alpha;
-  }
-
-  public void setUpdateFactor(Scalar alpha) {
-    this.alpha = alpha;
+    super(discreteModel, qsa, alpha);
   }
 
   @Override
-  public final void digest(StepInterface stepInterface) {
-    Tensor state0 = stepInterface.prevState();
-    Tensor action0 = stepInterface.action();
-    Scalar reward = stepInterface.reward();
-    Tensor state1 = stepInterface.nextState();
-    Scalar max = discreteModel.actions(state1).flatten(0) //
+  protected Scalar evaluate(Tensor state1) {
+    return discreteModel.actions(state1).flatten(0) //
         .map(action1 -> qsa.value(state1, action1)) //
         .reduce(Max::of).get();
-    Scalar value0 = qsa.value(state0, action0);
-    Scalar delta = reward.add(gamma.multiply(max)).subtract(value0).multiply(alpha);
-    qsa.assign(state0, action0, value0.add(delta));
   }
 }

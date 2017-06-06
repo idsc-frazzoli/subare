@@ -46,7 +46,7 @@ class QL_Gambler {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(ROUND) + " " + error.map(ROUND));
-      StepDigest stepDigest = new QLearning(gambler, qsa, Power.of(N.of(RationalScalar.of(1, 16*(index+1))),0.6));
+      StepDigest stepDigest = new QLearning(gambler, qsa, Power.of(N.of(RationalScalar.of(1, 16 * (index + 1))), 0.6));
       for (int count = 0; count < 1; ++count) {
         ExploringStartsBatch.apply(gambler, stepDigest, policyInterface);
         policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
@@ -65,8 +65,8 @@ class QL_Gambler {
   }
 
   public static void main(String[] args) throws Exception {
-    //handle(StepDigestType.original);
-    //handle(StepDigestType.expected);
+    // handle(StepDigestType.original);
+    // handle(StepDigestType.expected);
     handle();
     System.exit(0);
   }
