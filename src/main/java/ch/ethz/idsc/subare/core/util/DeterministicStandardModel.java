@@ -2,8 +2,7 @@
 package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.ActionValueInterface;
-import ch.ethz.idsc.subare.core.MoveInterface;
-import ch.ethz.idsc.subare.core.RewardInterface;
+import ch.ethz.idsc.subare.core.SampleModel;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -12,7 +11,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 public abstract class DeterministicStandardModel implements StandardModel, //
-    MoveInterface, RewardInterface, ActionValueInterface {
+    SampleModel, ActionValueInterface {
   @Override
   public final Scalar qsa(Tensor state, Tensor action, VsInterface vs) {
     // general term in bellman equation:

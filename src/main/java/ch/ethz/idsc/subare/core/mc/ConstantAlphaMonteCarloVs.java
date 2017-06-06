@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
+import ch.ethz.idsc.subare.core.EpisodeVsEstimator;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.Scalar;
@@ -17,16 +17,15 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
 /** simple every-visit Monte Carlo method suitable for nonstationary environments
  * 
  * (6.1) p.127 */
-// TODO test!
-public class ConstantAlphaMonteCarlo implements EpisodeDigest {
+public class ConstantAlphaMonteCarloVs implements EpisodeVsEstimator {
   private final Scalar gamma;
   private final DiscreteVs vs;
   private Scalar alpha = null;
 
   /** @param discreteModel */
-  public ConstantAlphaMonteCarlo(DiscreteModel discreteModel) {
-    this.gamma = discreteModel.gamma();
-    this.vs = DiscreteVs.build(discreteModel); // <- "arbitrary"
+  public ConstantAlphaMonteCarloVs(DiscreteModel discreteModel) {
+    gamma = discreteModel.gamma();
+    vs = DiscreteVs.build(discreteModel); // <- "arbitrary"
   }
 
   public void setAlpha(Scalar alpha) {
@@ -55,6 +54,7 @@ public class ConstantAlphaMonteCarlo implements EpisodeDigest {
     }
   }
 
+  @Override
   public DiscreteVs vs() {
     return vs;
   }

@@ -10,7 +10,6 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.red.Norm;
 
 public class DiscreteVs implements VsInterface {
   /** initializes all state value to zero
@@ -25,8 +24,8 @@ public class DiscreteVs implements VsInterface {
     return new DiscreteVs(Index.build(discreteModel.states()), values);
   }
 
-  private final Index index;
-  private final Tensor values;
+  /* package */ final Index index;
+  /* package */ final Tensor values;
 
   /** @param index
    * @param values */
@@ -78,10 +77,5 @@ public class DiscreteVs implements VsInterface {
       Scalar value = values.Get(index.of(key));
       System.out.println(key + " " + value.map(ROUND));
     }
-  }
-
-  @Override
-  public Scalar distance(VsInterface vs) {
-    return Norm._1.of(values.subtract(((DiscreteVs) vs).values));
   }
 }

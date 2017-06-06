@@ -1,6 +1,6 @@
 // code by jph
 // inspired by Shangtong Zhang
-package ch.ethz.idsc.subare.ch06.cliff;
+package ch.ethz.idsc.subare.ch06.windy;
 
 import java.util.function.Function;
 
@@ -21,27 +21,28 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** action value iteration for cliff walk */
-class AVI_Cliffwalk {
+class AVI_Windygrid {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.01));
 
   public static void main(String[] args) throws Exception {
-    Cliffwalk cliffwalk = new Cliffwalk(12, 4);
-    DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
-    Export.of(UserHome.file("Pictures/cliffwalk_qsa_avi.png"), //
-        CliffwalkHelper.render(cliffwalk, DiscreteQsas.rescaled(ref)));
-    ActionValueIteration avi = new ActionValueIteration(cliffwalk, cliffwalk);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_avi.gif"), 200);
+    Windygrid windygrid = Windygrid.createFour();
+    DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
+    Export.of(UserHome.file("Pictures/windygrid_qsa_avi.png"), //
+        WindygridHelper.render(windygrid, DiscreteQsas.rescaled(ref)));
+    ActionValueIteration avi = new ActionValueIteration(windygrid, windygrid);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/windygrid_qsa_avi.gif"), 250);
     for (int index = 0; index < 20; ++index) {
       Scalar error = DiscreteQsas.distance(avi.qsa(), ref);
       System.out.println(index + " " + error.map(ROUND));
-      gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, avi.qsa(), ref)));
+      gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, avi.qsa(), ref)));
       avi.step();
     }
-    gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, avi.qsa(), ref)));
+    gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, avi.qsa(), ref)));
     gsw.close();
-    DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
+    // TODO extract code below to other file
+    DiscreteVs vs = DiscreteUtils.createVs(windygrid, ref);
     vs.print();
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(cliffwalk, ref);
-    Policies.print(policyInterface, cliffwalk.states());
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(windygrid, ref);
+    Policies.print(policyInterface, windygrid.states());
   }
 }

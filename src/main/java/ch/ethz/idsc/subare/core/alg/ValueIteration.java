@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.alg;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.DiscreteVss;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -24,7 +25,7 @@ public class ValueIteration {
   private final StandardModel standardModel;
   private final Scalar gamma;
   private DiscreteVs vs_new;
-  private VsInterface vs_old;
+  private DiscreteVs vs_old;
   private int iterations = 0;
   private int alternate = 0;
 
@@ -49,7 +50,7 @@ public class ValueIteration {
     final long tic = System.nanoTime();
     while (true) {
       step();
-      final Scalar delta = vs_new.distance(vs_old);
+      final Scalar delta = DiscreteVss.distance(vs_new, vs_old);
       final long toc = System.nanoTime();
       if (3e9 < toc - tic)
         System.out.println(past + " -> " + delta + " " + alternate);
