@@ -46,7 +46,7 @@ public class DiscreteVs implements VsInterface {
     values.set(value, index.of(state));
   }
 
-  public DiscreteVs create(Stream<Tensor> stream) {
+  public DiscreteVs create(Stream<? extends Tensor> stream) {
     return new DiscreteVs(index, Tensor.of(stream));
   }
 
