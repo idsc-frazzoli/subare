@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.tensor.ExactNumberQ;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
@@ -17,12 +18,14 @@ public abstract class Sarsa implements StepDigest {
 
   /** @param discreteModel
    * @param qsa
-   * @param alpha */
+   * @param alpha learning rate */
   public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
     this.discreteModel = discreteModel;
     this.qsa = qsa;
     this.gamma = discreteModel.gamma();
     this.alpha = alpha;
+    if (ExactNumberQ.of(alpha)) // TODO printout only once
+      System.out.println("warning: symbolic values for alpha slow down the software");
   }
 
   @Override
@@ -35,6 +38,7 @@ public abstract class Sarsa implements StepDigest {
     // ---
     Scalar value1 = evaluate(state1); // <- call implementation
     // ---
+    // [reward value1] . [gamma^0 gamma^1]
     Scalar delta = reward.add(gamma.multiply(value1)).subtract(value0).multiply(alpha);
     qsa.assign(state0, action0, value0.add(delta));
   }

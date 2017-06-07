@@ -13,8 +13,8 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** the term "equiprobable" appears in Exercise 4.1 */
 public class EquiprobablePolicy implements PolicyInterface {
-  final DiscreteModel discreteModel;
-  final Map<Tensor, Scalar> map = new ConcurrentHashMap<>();
+  private final DiscreteModel discreteModel;
+  private final Map<Tensor, Scalar> map = new ConcurrentHashMap<>();
 
   public EquiprobablePolicy(DiscreteModel discreteModel) {
     this.discreteModel = discreteModel;

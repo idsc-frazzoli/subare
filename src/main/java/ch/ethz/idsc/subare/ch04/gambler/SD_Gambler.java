@@ -12,7 +12,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
-import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
@@ -35,24 +34,22 @@ class SD_Gambler {
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     int EPISODES = 30;
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES);
-    PolicyInterface policyInterface = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(ROUND) + " " + error.map(ROUND));
+      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       StepDigest stepDigest = type.supply(gambler, qsa, RealScalar.of(.1), policyInterface);
-      for (int count = 0; count < 3; ++count) {
+      for (int count = 0; count < 3; ++count)
         ExploringStartsBatch.apply(gambler, stepDigest, policyInterface);
-        policyInterface = GreedyPolicy.bestEquiprobable(gambler, qsa);
-        policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
-      }
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa, ref)));
     }
     gsw.close();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gambler, qsa);
     EpisodeInterface mce = EpisodeKickoff.single(gambler, policyInterface);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();

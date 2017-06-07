@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.ch04.rental;
 
 import java.util.List;
+import java.util.Random;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
@@ -39,7 +40,7 @@ enum CarRentalHelper {
   public static Tensor render(CarRental gambler, PolicyInterface policyInterface) {
     Interpolation colorscheme = Colorscheme.classic();
     final Tensor tensor = Array.zeros(21, 21, 4);
-    PolicyWrap policyWrap = new PolicyWrap(policyInterface);
+    PolicyWrap policyWrap = new PolicyWrap(policyInterface, new Random());
     for (Tensor state : gambler.states()) {
       Tensor action = policyWrap.next(state, gambler.actions(state));
       int x = state.Get(0).number().intValue();
