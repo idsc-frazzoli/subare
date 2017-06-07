@@ -1,13 +1,13 @@
-// code by jph
+// code by jz
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.QLearning;
+import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -45,7 +45,7 @@ class QL_Gambler {
       Scalar eps = epsilon.Get(index);
       eps = Power.of(eps, 2);
       System.out.println(index + " " + eps.map(ROUND) + " " + error.map(ROUND));
-      StepDigest stepDigest = new QLearning(gambler, qsa, Power.of(N.of(RationalScalar.of(1, 16*(index+1))),0.6));
+      Sarsa stepDigest = new QLearning(gambler, qsa, Power.of(N.of(RationalScalar.of(1, 16*(index+1))),0.6));
       for (int count = 0; count < 1; ++count) {
         ExploringStartsBatch.apply(gambler, stepDigest, policyInterface);
         policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);
@@ -64,8 +64,8 @@ class QL_Gambler {
   }
 
   public static void main(String[] args) throws Exception {
-    //handle(StepDigestType.original);
-    //handle(StepDigestType.expected);
+    // handle(StepDigestType.original);
+    // handle(StepDigestType.expected);
     handle();
     System.exit(0);
   }

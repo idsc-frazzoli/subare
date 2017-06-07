@@ -19,7 +19,7 @@ class MCES_Blackjack {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/blackjack_mces.gif"), 250);
-    int EPISODES = 40;
+    int EPISODES = 10; // 40
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     int episodes = 0;
     for (int index = 0; index < EPISODES; ++index) {

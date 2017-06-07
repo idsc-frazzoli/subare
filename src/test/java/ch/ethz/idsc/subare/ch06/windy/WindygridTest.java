@@ -17,12 +17,13 @@ public class WindygridTest extends TestCase {
   public void testRepmat() {
     // System.out.println("one right from goal");
     Windygrid windyGrid = Windygrid.createFour();
-    Tensor right = Tensors.vector(0, 1);
-    Tensor state = Windygrid.GOAL.add(right);
+    Tensor right = Tensors.vector(1, 0);
+    Tensor left = Tensors.vector(-1, 0);
+    Tensor up = Tensors.vector(0, 1);
+    Tensor state = Windygrid.GOAL.add(up);
     // System.out.println(state);
-    Tensor left = Tensors.vector(0, -1);
     Tensor dest = windyGrid.move(state, left);
-    assertEquals(dest, Tensors.vector(2, 7));
+    assertEquals(dest, Tensors.vector(6, 2));
     // System.out.println("left = " + dest);
     for (Tensor action : windyGrid.actions(state)) {
       // System.out.println();
