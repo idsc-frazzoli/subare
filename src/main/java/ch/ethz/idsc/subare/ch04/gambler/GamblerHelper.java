@@ -91,7 +91,7 @@ enum GamblerHelper {
     Tensor im1 = render(gambler, DiscreteQsas.rescaled(qsa));
     PolicyInterface pi = GreedyPolicy.bestEquiprobable(gambler, qsa);
     Tensor im2 = render(gambler, pi);
-    Tensor im3 = render(gambler, DiscreteQsas.logisticDifference(qsa, ref, RealScalar.of(3)));
+    Tensor im3 = render(gambler, DiscreteQsas.logisticDifference(qsa, ref, RealScalar.of(15)));
     List<Integer> list = Dimensions.of(im1);
     list.set(0, 3 * MAGNIFY);
     return Join.of(0, im1, Array.zeros(list), im2, Array.zeros(list), im3);
