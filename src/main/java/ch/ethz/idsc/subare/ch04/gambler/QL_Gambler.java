@@ -1,4 +1,4 @@
-// code by jph
+// code by jz
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.util.function.Function;
@@ -8,18 +8,15 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.QLearning;
-import ch.ethz.idsc.subare.core.td.StepDigestType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -46,7 +43,7 @@ class QL_Gambler {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(ROUND) + " " + error.map(ROUND));
-      StepDigest stepDigest = new QLearning(gambler, qsa, Power.of(N.of(RationalScalar.of(1, 16*(index+1))),0.6));
+      StepDigest stepDigest = new QLearning(gambler, qsa, Power.of(N.of(RationalScalar.of(1, 16 * (index + 1))), 0.6));
       for (int count = 0; count < 1; ++count) {
         ExploringStartsBatch.apply(gambler, stepDigest, policyInterface);
         policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
@@ -65,8 +62,8 @@ class QL_Gambler {
   }
 
   public static void main(String[] args) throws Exception {
-    //handle(StepDigestType.original);
-    //handle(StepDigestType.expected);
+    // handle(StepDigestType.original);
+    // handle(StepDigestType.expected);
     handle();
     System.exit(0);
   }

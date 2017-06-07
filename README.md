@@ -34,11 +34,13 @@ List of algorithms:
 
 ### 4.1 Gridworld
 
-Action Value Iteration q(s,a)
+<table><tr>
+
+<td valign="top">
+
+AV-Iteration q(s,a)
 
 ![gridworld_qsa_avi](https://cloud.githubusercontent.com/assets/4012178/26762465/36ac9224-4943-11e7-8fcb-d543d1766aa9.gif)
-
-<table><tr>
 
 <td>
 
@@ -48,13 +50,23 @@ TabularQPlan
 
 <td>
 
+Monte Carlo
+
+![gridworld_qsa_mces](https://cloud.githubusercontent.com/assets/4012178/26762469/36af0784-4943-11e7-91ce-89f86afff7a2.gif)
+
+<td>
+
+</tr><tr>
+
+<td>
+
 Q-Learning
 
 ![gridworld_qsa_qlearning](https://cloud.githubusercontent.com/assets/4012178/26762470/36af4302-4943-11e7-8891-6fdaf95b912b.gif)
 
 <td>
 
-E-Sarsa
+Expected-Sarsa
 
 ![gridworld_qsa_expected](https://cloud.githubusercontent.com/assets/4012178/26762468/36aedaac-4943-11e7-998d-df150fe0eca6.gif)
 
@@ -64,13 +76,28 @@ Sarsa
 
 ![gridworld_qsa_original](https://cloud.githubusercontent.com/assets/4012178/26762467/36ae8656-4943-11e7-8d9e-e17819c1e54b.gif)
 
+</tr><tr>
+
 <td>
 
-Monte Carlo
+3-step Q-Learning
 
-![gridworld_qsa_mces](https://cloud.githubusercontent.com/assets/4012178/26762469/36af0784-4943-11e7-91ce-89f86afff7a2.gif)
+![gridworld_qsa_qlearning3](https://user-images.githubusercontent.com/4012178/26866445-6aabcb88-4b61-11e7-8b04-b21613db2f65.gif)
+
+<td>
+
+3-step E-Sarsa
+
+![gridworld_qsa_expected3](https://user-images.githubusercontent.com/4012178/26866446-6ad0e1ca-4b61-11e7-897f-2831e755844b.gif)
+
+<td>
+
+3-step Sarsa
+
+![gridworld_qsa_original3](https://user-images.githubusercontent.com/4012178/26866447-6ad0ecec-4b61-11e7-88d2-bf6cba11c245.gif)
 
 </tr></table>
+
 
 ### 4.2: Jack's car rental
 

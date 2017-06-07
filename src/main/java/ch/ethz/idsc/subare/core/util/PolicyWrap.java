@@ -14,11 +14,12 @@ import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.sca.Chop;
 
 public class PolicyWrap {
-  private final Random random = new Random();
   private final PolicyInterface policyInterface;
+  private final Random random;
 
-  public PolicyWrap(PolicyInterface policyInterface) {
+  public PolicyWrap(PolicyInterface policyInterface, Random random) {
     this.policyInterface = policyInterface;
+    this.random = random;
   }
 
   public Tensor next(Tensor state, Tensor actions) {

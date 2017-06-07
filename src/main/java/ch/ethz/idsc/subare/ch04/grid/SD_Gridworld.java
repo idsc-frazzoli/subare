@@ -5,9 +5,9 @@ import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.td.StepDigestType;
+import ch.ethz.idsc.subare.core.td.Sarsa;
+import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
@@ -31,7 +31,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 class SD_Gridworld {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
 
-  static void handle(StepDigestType type) throws Exception {
+  static void handle(SarsaType type) throws Exception {
     System.out.println(type);
     final Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
@@ -43,12 +43,12 @@ class SD_Gridworld {
       Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(ROUND) + " " + error.map(ROUND));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(index));
-      StepDigest stepDigest = type.supply(gridworld, qsa, RealScalar.of(.2), policyInterface);
-      if (type.equals(StepDigestType.qlearning)) {
-        ExploringStartsBatch.apply(gridworld, stepDigest, policyInterface);
+      Sarsa sarsa = type.supply(gridworld, qsa, RealScalar.of(.2), policyInterface);
+      if (type.equals(SarsaType.qlearning)) {
+        ExploringStartsBatch.apply(gridworld, sarsa, policyInterface);
       } else {
-        ExploringStartsBatch.apply(gridworld, stepDigest, policyInterface);
-        ExploringStartsBatch.apply(gridworld, stepDigest, policyInterface);
+        ExploringStartsBatch.apply(gridworld, sarsa, policyInterface);
+        ExploringStartsBatch.apply(gridworld, sarsa, policyInterface);
       }
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
     }
@@ -67,8 +67,6 @@ class SD_Gridworld {
   }
 
   public static void main(String[] args) throws Exception {
-    // handle(StepDigestType.original);
-    handle(StepDigestType.expected);
-    // handle(StepDigestType.qlearning);
+    handle(SarsaType.expected);
   }
 }
