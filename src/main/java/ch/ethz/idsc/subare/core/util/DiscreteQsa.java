@@ -41,7 +41,7 @@ public class DiscreteQsa implements QsaInterface, Serializable {
     values.set(value, index.of(createKey(state, action)));
   }
 
-  public DiscreteQsa create(Stream<Tensor> stream) {
+  public DiscreteQsa create(Stream<? extends Tensor> stream) {
     return new DiscreteQsa(index, Tensor.of(stream));
   }
 
