@@ -10,13 +10,19 @@ import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/** Sarsa: An on-policy TD control algorithm
+/** the Sarsa algorithm was introduced by Rummery and Niranjan 1994
+ * 
+ * 1)
+ * Sarsa: An on-policy TD control algorithm
  * 
  * eq (6.7)
  * 
  * box on p.138
  * 
- * the Sarsa algorithm was introduced by Rummery and Niranjan 1994 */
+ * 2)
+ * n-step Sarsa for estimating Q(s,a)
+ * 
+ * box on p.157 */
 public class OriginalSarsa extends Sarsa {
   private final Random random = new Random();
   private final PolicyInterface policyInterface;

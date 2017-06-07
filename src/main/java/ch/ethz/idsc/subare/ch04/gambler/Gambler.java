@@ -1,4 +1,5 @@
 // code by jph
+// inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.util.Random;
@@ -47,6 +48,7 @@ class Gambler implements StandardModel, //
     return states;
   }
 
+  /** @return possible stakes */
   @Override
   public Tensor actions(Tensor state) {
     if (isTerminal(state))
@@ -61,25 +63,19 @@ class Gambler implements StandardModel, //
 
   @Override
   public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
-    // this ensures that staying in the terminal state does not increase the value to infinity
-    if (state.equals(TERMINAL_W))
-      return RealScalar.ONE;
+    if (isTerminal(state))
+      return gvalues.value(state);
     // ---
-    final Scalar stateS = state.Get();
+    final Scalar stateS = state.Get(); // current total available to gambler
     Tensor values = Tensors.empty();
     Tensor probs = Tensors.of(P_win, RealScalar.ONE.subtract(P_win));
-    // Shangtong Zhang uses
-    // headProb * stateValue[state + action] + (1 - headProb) * stateValue[state - action]
-    // which results in values in the interval [0,1]
     { // win
-      Scalar next = stateS.add(action);
+      Scalar next = stateS.add(action); // stake is added to current total
       values = values.append(gvalues.value(next));
-      // values = values.append(reward(next, null).add(gvalues.Get(statesIndex.of(next))));
     }
     { // lose
-      Scalar next = stateS.add(action.negate());
+      Scalar next = stateS.subtract(action); // stake is subtracted from current total
       values = values.append(gvalues.value(next));
-      // values = values.append(reward(next, null).add(gvalues.Get(statesIndex.of(next))));
     }
     return probs.dot(values).Get();
   }
@@ -99,7 +95,7 @@ class Gambler implements StandardModel, //
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    return KroneckerDelta.of(next, TERMINAL_W);
+    return isTerminal(state) ? RealScalar.ZERO : KroneckerDelta.of(next, TERMINAL_W);
   }
 
   /**************************************************/
@@ -118,9 +114,7 @@ class Gambler implements StandardModel, //
   public Scalar expectedReward(Tensor state, Tensor action) {
     if (isTerminal(state))
       return RealScalar.ZERO;
-    if (state.add(action).equals(TERMINAL_W))
-      return P_win; // P_win * 1
-    return RealScalar.ZERO;
+    return KroneckerDelta.of(state.add(action), TERMINAL_W).multiply(P_win); // P_win * 1, or 0
   }
 
   @Override
@@ -128,8 +122,8 @@ class Gambler implements StandardModel, //
     if (isTerminal(state))
       return Tensors.of(state); // next \in {state}
     return Tensors.of( //
-        state.add(action), // P_win
-        state.subtract(action)); // 1 - P_win
+        state.add(action), // with probability P_win
+        state.subtract(action)); // with probability 1 - P_win
   }
 
   @Override
