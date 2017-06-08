@@ -42,6 +42,7 @@ enum CliffwalkHelper {
   private static final Tensor BASE = Tensors.vector(255);
   private static final int MAGNIFY = 6;
 
+  // TODO introduce some spacing between actions
   static Tensor render(Cliffwalk cliffwalk, DiscreteVs vs) {
     Interpolation colorscheme = Colorscheme.classic();
     final Tensor tensor = Array.zeros(cliffwalk.NX, cliffwalk.NY, 4);

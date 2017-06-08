@@ -26,9 +26,9 @@ public class ExpectedSarsa extends Sarsa {
   }
 
   @Override
-  protected Scalar evaluate(Tensor state1) {
-    return discreteModel.actions(state1).flatten(0) //
-        .map(action1 -> policyInterface.policy(state1, action1).multiply(qsa.value(state1, action1))) //
+  protected Scalar evaluate(Tensor state) {
+    return discreteModel.actions(state).flatten(0) //
+        .map(action1 -> policyInterface.policy(state, action1).multiply(qsa.value(state, action1))) //
         .reduce(Scalar::add).get();
   }
 }

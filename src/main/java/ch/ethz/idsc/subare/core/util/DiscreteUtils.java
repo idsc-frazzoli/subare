@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -32,5 +33,16 @@ public enum DiscreteUtils {
             .map(state -> discreteModel.actions(state).flatten(0) //
                 .map(action -> qsa.value(state, action)) //
                 .reduce(Max::of).get()))); // <- assumes greedy policy
+  }
+
+  /** @param discreteModel
+   * @param qsa
+   * @param state
+   * @return action with max value, or random action among the actions with max value */
+  public static Tensor fairBestAction(DiscreteModel discreteModel, QsaInterface qsa, Tensor state) {
+    Tensor actions = discreteModel.actions(state);
+    Tensor qvalues = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
+    FairArgMax fairArgMax = FairArgMax.of(qvalues);
+    return actions.get(fairArgMax.nextRandomIndex());
   }
 }

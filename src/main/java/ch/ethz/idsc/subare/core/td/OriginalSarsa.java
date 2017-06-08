@@ -23,8 +23,9 @@ import ch.ethz.idsc.tensor.Tensor;
  * n-step Sarsa for estimating Q(s,a)
  * 
  * box on p.157 */
-public class OriginalSarsa extends Sarsa {
-  private final Random random = new Random();
+public class OriginalSarsa extends ActionSarsa {
+  private static final Random random = new Random();
+  // ---
   private final PolicyInterface policyInterface;
 
   /** @param discreteModel
@@ -39,9 +40,8 @@ public class OriginalSarsa extends Sarsa {
   }
 
   @Override
-  protected Scalar evaluate(Tensor state1) {
+  protected Tensor chooseAction(Tensor state) {
     PolicyWrap policyWrap = new PolicyWrap(policyInterface, random);
-    Tensor action1 = policyWrap.next(state1, discreteModel.actions(state1));
-    return qsa.value(state1, action1);
+    return policyWrap.next(state, discreteModel.actions(state));
   }
 }
