@@ -3,6 +3,6 @@ package ch.ethz.idsc.subare.core;
 
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 
-/* package */ interface DiscreteQsaSupplier {
+public interface DiscreteQsaSupplier {
   DiscreteQsa qsa();
 }

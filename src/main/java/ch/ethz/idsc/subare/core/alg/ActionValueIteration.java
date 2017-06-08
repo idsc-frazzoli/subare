@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.core.alg;
 
 import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
@@ -19,7 +20,7 @@ import ch.ethz.idsc.tensor.red.Max;
  * parallel implementation
  * initial values are set to zeros
  * Jacobi style, i.e. updates take effect only in the next iteration */
-public class ActionValueIteration {
+public class ActionValueIteration implements DiscreteQsaSupplier {
   private final DiscreteModel discreteModel;
   private final ActionValueInterface actionValueInterface;
   private final Scalar gamma;
@@ -30,6 +31,7 @@ public class ActionValueIteration {
 
   /** @param discreteModel
    * @param actionValueInterface */
+  // TODO the first parameter can go
   public ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface) {
     this.discreteModel = discreteModel;
     this.actionValueInterface = actionValueInterface;
@@ -52,7 +54,7 @@ public class ActionValueIteration {
       step();
       final Scalar delta = DiscreteQsas.distance(qsa_new, (DiscreteQsa) qsa_old);
       final long toc = System.nanoTime();
-      if (3e9 < toc - tic)
+      if (3e9 < toc - tic) // print info if iteration takes longer than 3 seconds
         System.out.println(past + " -> " + delta + " " + alternate);
       if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {
@@ -94,6 +96,7 @@ public class ActionValueIteration {
     return ersa.add(gamma.multiply(eqsa));
   }
 
+  @Override
   public DiscreteQsa qsa() {
     return qsa_new;
   }

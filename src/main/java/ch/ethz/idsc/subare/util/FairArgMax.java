@@ -33,6 +33,10 @@ public class FairArgMax {
   }
 
   public int nextRandomIndex() {
+    return nextRandomIndex(random);
+  }
+
+  public int nextRandomIndex(Random random) {
     return list.get(random.nextInt(list.size()));
   }
 
@@ -42,10 +46,6 @@ public class FairArgMax {
 
   public int getOptionCount() {
     return list.size();
-  }
-
-  public int first() {
-    return list.get(0);
   }
 
   public List<Integer> options() {

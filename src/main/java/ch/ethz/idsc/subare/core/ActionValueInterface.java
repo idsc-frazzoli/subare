@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.core;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-public interface ActionValueInterface {
+public interface ActionValueInterface extends DiscreteModel {
   /** @param state
    * @param action
    * @return expected reward when action is taken in state */

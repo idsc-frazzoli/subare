@@ -27,9 +27,9 @@ List of algorithms:
 * *Sarsa*: An on-policy TD control algorithm (from p.138)
 * *Q-learning*: An off-policy TD control algorithm (from p.140)
 * Expected Sarsa (from p.142)
-* Double Q-Learning (from p.145)
+* Double Sarsa, Double Expected Sarsa, Double Q-Learning (from p.145)
 * n-step Temporal Difference for estimating V(s) (from p.154)
-* n-step Sarsa for estimating Q(s,a) (from p.157)
+* n-step Sarsa, n-step Expected Sarsa, n-step Q-Learning (from p.157)
 * Random-sample one-step tabular Q-planning (from p.169)
 
 ## Examples from the book

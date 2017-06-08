@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.alg;
 
+import ch.ethz.idsc.subare.core.DiscreteVsSupplier;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
@@ -21,7 +22,7 @@ import ch.ethz.idsc.tensor.red.Max;
  * parallel implementation
  * initial values are set to zeros
  * Jacobi style, i.e. updates take effect only in the next iteration */
-public class ValueIteration {
+public class ValueIteration implements DiscreteVsSupplier {
   private final StandardModel standardModel;
   private final Scalar gamma;
   private DiscreteVs vs_new;
@@ -84,6 +85,7 @@ public class ValueIteration {
         .reduce(Max::of).get();
   }
 
+  @Override
   public DiscreteVs vs() {
     return vs_new;
   }
