@@ -20,16 +20,18 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
 
 public class ExploringStartsBatch {
-  public static int apply(MonteCarloInterface monteCarloInterface, EpisodeDigest episodeDigest, PolicyInterface policyInterface) {
+  public static int apply(MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, EpisodeDigest episodeDigest) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;
     while (exploringStartBatch.hasNext()) {
-      episodeDigest.digest(exploringStartBatch.nextEpisode(policyInterface));
+      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
+      episodeDigest.digest(episodeInterface);
       ++episodes;
     }
     return episodes;
   }
 
+  // TODO ordering of arguments not intuitive
   public static int apply(MonteCarloInterface monteCarloInterface, StepDigest stepDigest, PolicyInterface policyInterface) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;
@@ -42,6 +44,7 @@ public class ExploringStartsBatch {
     return episodes;
   }
 
+  // TODO ordering of arguments not intuitive
   public static int apply(MonteCarloInterface monteCarloInterface, DequeDigest stepDigest, int size, PolicyInterface policyInterface) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;

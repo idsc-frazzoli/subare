@@ -43,10 +43,10 @@ public final class MonteCarloEpisode implements EpisodeInterface {
     } else {
       action = openingActions.poll();
     }
-    final Tensor stateS = monteCarloInterface.move(state, action);
-    final Scalar reward = monteCarloInterface.reward(state, action, stateS);
-    state = stateS;
-    return new StepAdapter(prev, action, reward, stateS);
+    final Tensor next = monteCarloInterface.move(state, action);
+    final Scalar reward = monteCarloInterface.reward(state, action, next);
+    state = next;
+    return new StepAdapter(prev, action, reward, next);
   }
 
   @Override

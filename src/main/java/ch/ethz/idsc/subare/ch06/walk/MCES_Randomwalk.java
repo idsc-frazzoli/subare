@@ -31,7 +31,7 @@ class MCES_Randomwalk {
         if (!equals)
           throw new RuntimeException();
       }
-      ExploringStartsBatch.apply(randomwalk, mces, policyInterface);
+      ExploringStartsBatch.apply(randomwalk, policyInterface, mces);
     }
     DiscreteQsa qsa = mces.qsa();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

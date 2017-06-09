@@ -35,8 +35,8 @@ class Randomwalk implements MonteCarloInterface {
 
   /**************************************************/
   @Override
-  public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
-    if (!isTerminal(state) && stateS.equals(TERMINATE2))
+  public Scalar reward(Tensor state, Tensor action, Tensor next) {
+    if (!isTerminal(state) && next.equals(TERMINATE2))
       return RealScalar.ONE;
     return RealScalar.ZERO;
   }

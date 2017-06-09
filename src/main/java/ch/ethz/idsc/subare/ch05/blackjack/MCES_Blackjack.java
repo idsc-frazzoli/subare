@@ -27,7 +27,7 @@ class MCES_Blackjack {
       for (int count = 0; count < EPISODES; ++count) {
         PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(blackjack, mces.qsa(), epsilon.Get(index));
         episodes += //
-            ExploringStartsBatch.apply(blackjack, mces, policyInterface);
+            ExploringStartsBatch.apply(blackjack, policyInterface, mces);
       }
       gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, mces.qsa())));
       System.out.println(episodes);

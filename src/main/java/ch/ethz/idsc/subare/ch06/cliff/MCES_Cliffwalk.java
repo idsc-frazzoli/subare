@@ -33,7 +33,7 @@ class MCES_Cliffwalk {
       for (int count = 0; count < 10; ++count) {
         PolicyInterface policyInterface = //
             EGreedyPolicy.bestEquiprobable(cliffwalk, mces.qsa(), RealScalar.of(.1));
-        ExploringStartsBatch.apply(cliffwalk, mces, policyInterface);
+        ExploringStartsBatch.apply(cliffwalk, policyInterface, mces);
       }
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, mces.qsa(), ref)));
     }

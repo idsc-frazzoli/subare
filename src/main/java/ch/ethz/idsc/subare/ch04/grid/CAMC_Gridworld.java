@@ -39,7 +39,7 @@ class CAMC_Gridworld {
         PolicyInterface policyInterface = //
             new EquiprobablePolicy(gridworld);
         // EGreedyPolicy.bestEquiprobable(gridworld, camc.vs(), epsilon.Get(index));
-        ExploringStartsBatch.apply(gridworld, camc, policyInterface);
+        ExploringStartsBatch.apply(gridworld, policyInterface, camc);
       }
       gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, camc.vs())));
     }

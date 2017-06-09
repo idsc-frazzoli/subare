@@ -25,7 +25,7 @@ class FVPE_Randomwalk {
         randomwalk, null);
     PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
     for (int count = 0; count < 100; ++count)
-      ExploringStartsBatch.apply(randomwalk, fvpe, policyInterface);
+      ExploringStartsBatch.apply(randomwalk, policyInterface, fvpe);
     DiscreteVs vs = fvpe.vs();
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }

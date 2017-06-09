@@ -34,7 +34,7 @@ class MCES_Wireloop {
       System.out.println(index + " " + epsilon.Get(index).map(ROUND) + " " + error.map(ROUND));
       for (int count = 0; count < 4; ++count) {
         PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(wireloop, mces.qsa(), epsilon.Get(index));
-        ExploringStartsBatch.apply(wireloop, mces, policyInterface);
+        ExploringStartsBatch.apply(wireloop, policyInterface, mces);
       }
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, mces.qsa())));
     }

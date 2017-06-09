@@ -45,7 +45,7 @@ class QL_Gambler {
       Scalar eps = epsilon.Get(index);
       eps = Power.of(eps, 2);
       System.out.println(index + " " + eps.map(ROUND) + " " + error.map(ROUND));
-      Sarsa stepDigest = new QLearning(gambler, qsa, Power.of(N.of(RationalScalar.of(1, 16*(index+1))),0.6));
+      Sarsa stepDigest = new QLearning(gambler, qsa, Power.of(N.of(RationalScalar.of(1, 16 * (index + 1))), 0.6));
       for (int count = 0; count < 1; ++count) {
         ExploringStartsBatch.apply(gambler, stepDigest, policyInterface);
         policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);

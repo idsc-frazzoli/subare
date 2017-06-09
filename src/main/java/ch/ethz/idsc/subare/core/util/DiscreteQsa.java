@@ -21,6 +21,13 @@ public class DiscreteQsa implements QsaInterface, Serializable {
     return new DiscreteQsa(index, Array.zeros(index.size()));
   }
 
+  /** @param state
+   * @param action
+   * @return */
+  public static Tensor createKey(Tensor state, Tensor action) {
+    return Tensors.of(state, action);
+  }
+
   final Index index;
   final Tensor values;
 
@@ -43,10 +50,6 @@ public class DiscreteQsa implements QsaInterface, Serializable {
 
   public DiscreteQsa create(Stream<? extends Tensor> stream) {
     return new DiscreteQsa(index, Tensor.of(stream));
-  }
-
-  public static Tensor createKey(Tensor state, Tensor action) {
-    return Tensors.of(state, action);
   }
 
   public void print() {

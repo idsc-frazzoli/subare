@@ -13,7 +13,7 @@ class FVPE_InfiniteVariance {
         infiniteVariance, null);
     PolicyInterface policyInterface = new ConstantPolicy(RationalScalar.of(5, 10));
     for (int count = 0; count < 100; ++count)
-      ExploringStartsBatch.apply(infiniteVariance, fvpe, policyInterface);
+      ExploringStartsBatch.apply(infiniteVariance, policyInterface, fvpe);
     System.out.println(fvpe.vs().values());
   }
 }

@@ -70,11 +70,11 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
 
   /**************************************************/
   @Override
-  public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
-    if (isTerminal(stateS))
+  public Scalar reward(Tensor state, Tensor action, Tensor next) {
+    if (isTerminal(next))
       return isTerminal(state) ? RealScalar.ZERO : RealScalar.ONE;
-    if (stateS.equals(START) && Scalars.lessThan( //
-        RealScalar.ONE, Norm._1.of(state.subtract(stateS))))
+    if (next.equals(START) && Scalars.lessThan( //
+        RealScalar.ONE, Norm._1.of(state.subtract(next))))
       return PRICE_CLIFF; // walked off cliff
     return PRICE_MOVE; // -1 until goal is reached
   }

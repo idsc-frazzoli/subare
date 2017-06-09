@@ -22,7 +22,7 @@ class FVPE_RaceTrack {
         racetrack, null);
     PolicyInterface policyInterface = new EquiprobablePolicy(racetrack);
     for (int count = 0; count < 10; ++count)
-      ExploringStartsBatch.apply(racetrack, fvpe, policyInterface);
+      ExploringStartsBatch.apply(racetrack, policyInterface, fvpe);
     DiscreteVs vs = fvpe.vs();
     vs.print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }

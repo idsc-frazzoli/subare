@@ -34,7 +34,7 @@ class MCES_Gambler {
       for (int count = 0; count < 2; ++count) {
         PolicyInterface policyInterface = //
             EGreedyPolicy.bestEquiprobable(gambler, mces.qsa(), RealScalar.of(.1));
-        ExploringStartsBatch.apply(gambler, mces, policyInterface);
+        ExploringStartsBatch.apply(gambler, policyInterface, mces);
       }
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, mces.qsa(), ref)));
     }

@@ -19,7 +19,7 @@ class FVPE_Gambler {
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gambler, null);
     for (int count = 0; count < 100; ++count) {
-      ExploringStartsBatch.apply(gambler, fvpe, policyInterface);
+      ExploringStartsBatch.apply(gambler, policyInterface, fvpe);
       DiscreteVs vs = fvpe.vs();
       Scalar diff = DiscreteVss.distance(vs, ref);
       System.out.println(count + " " + N.of(diff));

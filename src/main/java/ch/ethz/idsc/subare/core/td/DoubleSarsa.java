@@ -72,6 +72,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // ---
+    // TODO notation "stateP" is old...
     Tensor stateP = deque.getLast().nextState(); // S'
     Sarsa sarsa = type.supply(discreteModel, Qsa1, alpha, policyInterface);
     // TODO implementation is fine for QLearning and original sarsa but NOT for esarsa!

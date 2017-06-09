@@ -10,17 +10,18 @@ public class StepAdapter implements StepInterface {
   private final Tensor prev;
   private final Tensor action;
   private final Scalar reward;
-  private final Tensor stateS;
+  private final Tensor next;
 
-  public StepAdapter(Tensor prev, Tensor action, Scalar reward, Tensor stateS) {
+  public StepAdapter(Tensor prev, Tensor action, Scalar reward, Tensor next) {
     this.prev = prev;
     this.action = action;
     this.reward = reward;
-    this.stateS = stateS;
+    this.next = next;
   }
 
   @Override
   public Tensor prevState() {
+    // TODO ensure that these are not modified, ... are unmodifiable...
     return prev;
   }
 
@@ -36,6 +37,6 @@ public class StepAdapter implements StepInterface {
 
   @Override
   public Tensor nextState() {
-    return stateS;
+    return next;
   }
 }
