@@ -31,7 +31,6 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
 
   /** @param discreteModel
    * @param actionValueInterface */
-  // TODO the first parameter can go
   public ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface) {
     this.discreteModel = discreteModel;
     this.actionValueInterface = actionValueInterface;
@@ -82,7 +81,7 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
   private Scalar jacobiMax(Tensor state, Tensor action) {
     Scalar ersa = actionValueInterface.expectedReward(state, action);
     Scalar eqsa = RealScalar.ZERO;
-    Scalar norm = RealScalar.ZERO;
+    Scalar norm = RealScalar.ZERO; // tests if probabilities add up to 1
     for (Tensor next : actionValueInterface.transitions(state, action)) {
       Scalar prob = actionValueInterface.transitionProbability(state, action, next);
       Scalar max = discreteModel.actions(next).flatten(0) //

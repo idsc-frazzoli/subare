@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -30,7 +30,7 @@ class SD_Randomwalk {
     PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
     Sarsa sarsa = type.supply(randomwalk, qsa, RealScalar.of(.1), policyInterface);
     for (int count = 0; count < 1000; ++count)
-      ExploringStartsBatch.apply(randomwalk, sarsa, 4, policyInterface);
+      ExploringStarts.batch(randomwalk, policyInterface, 4, sarsa); // sarsa, 4
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 

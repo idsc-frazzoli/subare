@@ -33,4 +33,9 @@ public enum Policies {
       }
     return true;
   }
+
+  public static Scalar difference(DiscreteModel discreteModel, PolicyInterface pi1, PolicyInterface pi2) {
+    // TODO implement norm of difference between 2 policies! what is the definition?
+    return null;
+  }
 }

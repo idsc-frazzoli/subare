@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -34,7 +34,7 @@ class MCES_Gridworld {
       System.out.println(index + " " + error.map(ROUND));
       for (int count = 0; count < 20; ++count) {
         PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, mces.qsa(), epsilon.Get(index));
-        ExploringStartsBatch.apply(gridworld, policyInterface, mces);
+        ExploringStarts.batch(gridworld, policyInterface, mces);
       }
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, mces.qsa(), ref)));
     }

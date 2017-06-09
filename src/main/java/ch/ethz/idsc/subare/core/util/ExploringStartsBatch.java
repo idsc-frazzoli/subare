@@ -2,36 +2,23 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.util.Collections;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
-import ch.ethz.idsc.subare.core.DequeDigest;
-import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
-import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
 
+// TODO make this package visibility
 public class ExploringStartsBatch {
-  public static int apply(MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, EpisodeDigest episodeDigest) {
-    ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
-    int episodes = 0;
-    while (exploringStartBatch.hasNext()) {
-      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
-      episodeDigest.digest(episodeInterface);
-      ++episodes;
-    }
-    return episodes;
-  }
-
-  // TODO ordering of arguments not intuitive
+  // TODO ordering of arguments not intuitive, use function in ExploringStarts
+  @Deprecated
   public static int apply(MonteCarloInterface monteCarloInterface, StepDigest stepDigest, PolicyInterface policyInterface) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;
@@ -44,39 +31,11 @@ public class ExploringStartsBatch {
     return episodes;
   }
 
-  // TODO ordering of arguments not intuitive
-  public static int apply(MonteCarloInterface monteCarloInterface, DequeDigest stepDigest, int size, PolicyInterface policyInterface) {
-    ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
-    int episodes = 0;
-    while (exploringStartBatch.hasNext()) {
-      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
-      Deque<StepInterface> queue = new LinkedList<>();
-      while (episodeInterface.hasNext()) {
-        queue.add(episodeInterface.step());
-        if (queue.size() == size) {
-          stepDigest.digest(queue);
-          queue.poll();
-        }
-      }
-      while (!queue.isEmpty()) {
-        stepDigest.digest(queue);
-        queue.poll();
-      }
-      ++episodes;
-    }
-    return episodes;
-  }
-
-  // BlockDigest
-  public static ExploringStartsBatch create(MonteCarloInterface monteCarloInterface) {
-    return new ExploringStartsBatch(monteCarloInterface);
-  }
-
   private final MonteCarloInterface monteCarloInterface;
   private final List<Tensor> list;
   private int index = 0;
 
-  private ExploringStartsBatch(MonteCarloInterface monteCarloInterface) {
+  /* package */ ExploringStartsBatch(MonteCarloInterface monteCarloInterface) {
     this.monteCarloInterface = monteCarloInterface;
     Index index = DiscreteUtils.build(monteCarloInterface, monteCarloInterface.startStates());
     list = index.keys().flatten(0).collect(Collectors.toList());

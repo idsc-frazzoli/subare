@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch05.blackjack;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -27,7 +27,7 @@ class MCES_Blackjack {
       for (int count = 0; count < EPISODES; ++count) {
         PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(blackjack, mces.qsa(), epsilon.Get(index));
         episodes += //
-            ExploringStartsBatch.apply(blackjack, policyInterface, mces);
+            ExploringStarts.batch(blackjack, policyInterface, mces);
       }
       gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, mces.qsa())));
       System.out.println(episodes);

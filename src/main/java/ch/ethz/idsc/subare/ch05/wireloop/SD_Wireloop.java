@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -35,7 +35,7 @@ class SD_Wireloop {
       System.out.println(index + " " + epsilon.Get(index).map(ROUND));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
       Sarsa sarsa = type.supply(wireloop, qsa, RealScalar.of(.1), policyInterface);
-      ExploringStartsBatch.apply(wireloop, sarsa, n, policyInterface);
+      ExploringStarts.batch(wireloop, policyInterface, n, sarsa);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, qsa)));
     }
     gsw.close();

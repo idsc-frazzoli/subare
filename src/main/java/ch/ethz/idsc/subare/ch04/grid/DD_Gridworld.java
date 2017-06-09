@@ -10,7 +10,7 @@ import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -40,7 +40,7 @@ class DD_Gridworld {
       System.out.println(index + " " + explore.map(ROUND) + " " + error.map(ROUND));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
       DequeDigest dequeDigest = new OriginalSarsa(gridworld, qsa, alpha, policyInterface);
-      ExploringStartsBatch.apply(gridworld, dequeDigest, 4, policyInterface);
+      ExploringStarts.batch(gridworld, policyInterface, 4, dequeDigest);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
     }
     gsw.close();

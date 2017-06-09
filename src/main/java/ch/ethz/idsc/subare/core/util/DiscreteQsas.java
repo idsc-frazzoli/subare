@@ -22,10 +22,12 @@ public enum DiscreteQsas {
     return qsa1.create(LogisticSigmoid.of(_difference(qsa1, qsa2).multiply(factor)).flatten(0));
   }
 
+  // helper function
   private static boolean _isCompatible(DiscreteQsa qsa1, DiscreteQsa qsa2) {
     return qsa1.index.keys().equals(qsa2.index.keys());
   }
 
+  // helper function
   private static Tensor _difference(DiscreteQsa qsa1, DiscreteQsa qsa2) {
     if (!_isCompatible(qsa1, qsa2))
       throw new RuntimeException();

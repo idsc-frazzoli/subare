@@ -6,6 +6,8 @@ import java.util.Map;
 
 import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.EpisodeDigest;
+import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;
@@ -20,8 +22,7 @@ import ch.ethz.idsc.tensor.Tensor;
  * the three (estimated) functions constitute {@link ActionValueInterface}
  * 
  * (s,a,r,s') originate from episodes, or single step trials */
-// TODO name of class ?
-public class ActionValueStatistics implements StepDigest, ActionValueInterface {
+public class ActionValueStatistics implements StepDigest, EpisodeDigest, ActionValueInterface {
   private final Map<Tensor, TransitionTracker> transitionTrackers = new HashMap<>();
 
   @Override
@@ -32,6 +33,12 @@ public class ActionValueStatistics implements StepDigest, ActionValueInterface {
     if (!transitionTrackers.containsKey(key))
       transitionTrackers.put(key, new TransitionTracker());
     transitionTrackers.get(key).digest(stepInterface);
+  }
+
+  @Override
+  public void digest(EpisodeInterface episodeInterface) {
+    while (episodeInterface.hasNext())
+      digest(episodeInterface.step());
   }
 
   /** @return true, if all states from model have been digested at least once

@@ -6,7 +6,7 @@ import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -31,7 +31,7 @@ class MCES_Randomwalk {
         if (!equals)
           throw new RuntimeException();
       }
-      ExploringStartsBatch.apply(randomwalk, policyInterface, mces);
+      ExploringStarts.batch(randomwalk, policyInterface, mces);
     }
     DiscreteQsa qsa = mces.qsa();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
