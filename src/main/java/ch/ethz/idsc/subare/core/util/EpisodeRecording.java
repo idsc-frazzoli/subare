@@ -8,6 +8,7 @@ import java.util.List;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 
+/** class steps through a given episode and stores the steps for one or multiple replays */
 public class EpisodeRecording {
   private final List<StepInterface> list = new LinkedList<>();
 

@@ -16,7 +16,6 @@ import ch.ethz.idsc.subare.core.StepInterface;
 
 public enum ExploringStarts {
   ;
-  @Deprecated
   public static int batch(MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, //
       EpisodeDigest episodeDigest) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
