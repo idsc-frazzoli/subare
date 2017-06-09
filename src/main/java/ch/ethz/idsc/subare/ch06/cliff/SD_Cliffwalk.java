@@ -13,7 +13,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -41,7 +41,7 @@ class SD_Cliffwalk {
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, RealScalar.of(.1));
       Sarsa sarsa = type.supply(cliffwalk, qsa, RealScalar.of(.25), policyInterface);
       for (int count = 0; count < 10; ++count)
-        ExploringStartsBatch.apply(cliffwalk, sarsa, policyInterface);
+        ExploringStarts.batch(cliffwalk, policyInterface, sarsa);
       if (index % 2 == 0)
         gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, qsa, ref)));
     }
@@ -59,7 +59,7 @@ class SD_Cliffwalk {
 
   public static void main(String[] args) throws Exception {
     // handle(SarsaType.original, 10);
-    handle(SarsaType.expected, 200);
+    // handle(SarsaType.expected, 200);
     handle(SarsaType.qlearning, 10);
   }
 }

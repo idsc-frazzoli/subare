@@ -14,7 +14,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -45,10 +45,10 @@ class SD_Gridworld {
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(index));
       Sarsa sarsa = type.supply(gridworld, qsa, RealScalar.of(.2), policyInterface);
       if (type.equals(SarsaType.qlearning)) {
-        ExploringStartsBatch.apply(gridworld, sarsa, policyInterface);
+        ExploringStarts.batch(gridworld, policyInterface, sarsa);
       } else {
-        ExploringStartsBatch.apply(gridworld, sarsa, policyInterface);
-        ExploringStartsBatch.apply(gridworld, sarsa, policyInterface);
+        ExploringStarts.batch(gridworld, policyInterface, sarsa);
+        ExploringStarts.batch(gridworld, policyInterface, sarsa);
       }
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
     }

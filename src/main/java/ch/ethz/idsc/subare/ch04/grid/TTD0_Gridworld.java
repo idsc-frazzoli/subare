@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -36,7 +36,7 @@ public class TTD0_Gridworld {
         vs, gridWorld.gamma(), RealScalar.of(.5));
     PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
     for (int count = 0; count < 100; ++count)
-      ExploringStartsBatch.apply(gridWorld, ttd0, policyInterface);
+      ExploringStarts.batch(gridWorld, policyInterface, ttd0);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

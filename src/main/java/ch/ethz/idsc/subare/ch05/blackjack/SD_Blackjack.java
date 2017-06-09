@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -34,7 +34,7 @@ public class SD_Blackjack {
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(blackjack, qsa, epsilon.Get(index));
       Sarsa sarsa = type.supply(blackjack, qsa, RealScalar.of(.2), policyInterface);
       for (int count = 0; count < 10; ++count)
-        ExploringStartsBatch.apply(blackjack, sarsa, policyInterface);
+        ExploringStarts.batch(blackjack, policyInterface, sarsa);
       gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, qsa)));
     }
     gsw.close();

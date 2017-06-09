@@ -42,7 +42,6 @@ enum CliffwalkHelper {
   private static final Tensor BASE = Tensors.vector(255);
   private static final int MAGNIFY = 6;
 
-  // TODO introduce some spacing between actions
   static Tensor render(Cliffwalk cliffwalk, DiscreteVs vs) {
     Interpolation colorscheme = Colorscheme.classic();
     final Tensor tensor = Array.zeros(cliffwalk.NX, cliffwalk.NY, 4);
@@ -58,7 +57,7 @@ enum CliffwalkHelper {
 
   static Tensor render(Cliffwalk cliffwalk, DiscreteQsa scaled) {
     Interpolation colorscheme = Colorscheme.classic();
-    final Tensor tensor = Array.zeros(cliffwalk.NX, cliffwalk.NY * 4, 4);
+    final Tensor tensor = Array.zeros(cliffwalk.NX, (cliffwalk.NY + 1) * 4 - 1, 4);
     Index indexActions = Index.build(cliffwalk.actions);
     for (Tensor state : cliffwalk.states())
       for (Tensor action : cliffwalk.actions(state)) {
@@ -66,12 +65,12 @@ enum CliffwalkHelper {
         int sx = state.Get(0).number().intValue();
         int sy = state.Get(1).number().intValue();
         int a = indexActions.of(action);
-        tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy + cliffwalk.NY * a);
+        tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy + (cliffwalk.NY + 1) * a);
       }
     return ImageResize.of(tensor, MAGNIFY);
   }
 
-  public static Tensor joinAll(Cliffwalk gambler, DiscreteQsa qsa, DiscreteQsa ref) {
+  static Tensor joinAll(Cliffwalk gambler, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor im1 = render(gambler, DiscreteQsas.rescaled(qsa));
     Tensor im2 = render(gambler, DiscreteQsas.logisticDifference(qsa, ref, RealScalar.ONE));
     List<Integer> list = Dimensions.of(im1);
