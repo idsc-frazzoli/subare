@@ -40,7 +40,7 @@ public class OriginalSarsa extends ActionSarsa {
   }
 
   @Override
-  protected Tensor chooseAction(Tensor state) {
+  Tensor selectAction(Tensor state) {
     PolicyWrap policyWrap = new PolicyWrap(policyInterface, random);
     return policyWrap.next(state, discreteModel.actions(state));
   }

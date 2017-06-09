@@ -10,6 +10,7 @@ import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.TerminalInterface;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -31,6 +32,12 @@ public class ActionValueStatistics implements StepDigest, EpisodeDigest, ActionV
 
   public ActionValueStatistics(DiscreteModel discreteModel) {
     this.discreteModel = discreteModel;
+    if (discreteModel instanceof TerminalInterface) {
+      TerminalInterface terminalInterface = (TerminalInterface) discreteModel;
+      for (Tensor state : discreteModel.states())
+        if (terminalInterface.isTerminal(state))
+          digestTerminal(state);
+    }
   }
 
   @Override
@@ -52,6 +59,7 @@ public class ActionValueStatistics implements StepDigest, EpisodeDigest, ActionV
     }
     if (stepInterface == null)
       throw new RuntimeException(); // episode start should not be terminal
+    // TODO this line is optional if the constructor does the job...
     digestTerminal(stepInterface.nextState()); // terminal state
   }
 
@@ -65,6 +73,7 @@ public class ActionValueStatistics implements StepDigest, EpisodeDigest, ActionV
       // terminal state should only allow 1 action
       throw TensorRuntimeException.of(state, actions);
     Tensor action = actions.get(0);
+    // TODO can test via reward interface if model also returns reward == 0
     Scalar reward = RealScalar.ZERO;
     digest(new StepAdapter(state, action, reward, state));
   }

@@ -72,19 +72,28 @@ public class DoubleSarsa extends DequeDigestAdapter {
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // ---
-    // TODO notation "stateP" is old...
-    Tensor stateP = deque.getLast().nextState(); // S'
-    Sarsa sarsa = type.supply(discreteModel, Qsa1, alpha, policyInterface);
-    // TODO implementation is fine for QLearning and original sarsa but NOT for esarsa!
-    Tensor actionP = sarsa.evaluate(stateP); // FIXME this is now REALLY WRONG action != value
-    rewards.append(Qsa2.value(stateP, actionP));
+    Tensor stateP = deque.getLast().nextState(); // S' == "state prime"
+    switch (type) {
+    case original:
+    case qlearning: {
+      // TODO for original sarsa, the policyInterface is probably wrong!
+      ActionSarsa actionSarsa = (ActionSarsa) type.supply(discreteModel, Qsa1, alpha, policyInterface);
+      Tensor action = actionSarsa.selectAction(stateP); // use Qsa1 to select action
+      rewards.append(Qsa2.value(stateP, action)); // use Qsa2 to evaluate state-action pair
+      break;
+    }
+    case expected:
+      // TODO figure out formula for double expected sarsa
+    default:
+      throw new RuntimeException();
+    }
     // ---
+    // the code below is identical to Sarsa
     StepInterface first = deque.getFirst();
-    Tensor state0 = first.prevState();
+    Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
-    // ---
     Scalar value0 = Qsa1.value(state0, action0);
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
-    Qsa2.assign(state0, action0, value0.add(delta));
+    Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
   }
 }

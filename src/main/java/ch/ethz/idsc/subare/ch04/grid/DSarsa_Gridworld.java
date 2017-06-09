@@ -3,10 +3,11 @@ package ch.ethz.idsc.subare.ch04.grid;
 
 import java.util.function.Function;
 
+import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.td.Sarsa;
+import ch.ethz.idsc.subare.core.td.DoubleSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
@@ -18,7 +19,6 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -27,37 +27,37 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** Example 4.1, p.82 */
-class SD_Gridworld {
+/** Double Sarsa for gridworld */
+class DSarsa_Gridworld {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
 
-  static void handle(SarsaType type) throws Exception {
-    System.out.println(type);
-    final Gridworld gridworld = new Gridworld();
+  static void handle(SarsaType type, int n) throws Exception {
+    System.out.println("double " + type);
+    Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    int EPISODES = 20;
-    Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // only used in egreedy
-    DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_" + type + ".gif"), 200);
+    int EPISODES = 40;
+    Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
+    Tensor learning = Subdivide.of(.3, .01, EPISODES);
+    DiscreteQsa qsa1 = DiscreteQsa.build(gridworld);
+    DiscreteQsa qsa2 = DiscreteQsa.build(gridworld);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_double_" + type + "" + n + ".gif"), 150);
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = DiscreteQsas.distance(qsa, ref);
-      System.out.println(index + " " + epsilon.Get(index).map(ROUND) + " " + error.map(ROUND));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(index));
-      Sarsa sarsa = type.supply(gridworld, qsa, RealScalar.of(.2), policyInterface);
-      if (type.equals(SarsaType.qlearning)) {
-        ExploringStarts.batch(gridworld, policyInterface, sarsa);
-      } else {
-        ExploringStarts.batch(gridworld, policyInterface, sarsa);
-        ExploringStarts.batch(gridworld, policyInterface, sarsa);
-      }
-      gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
+      Scalar explore = epsilon.Get(index);
+      Scalar alpha = learning.Get(index);
+      Scalar error = DiscreteQsas.distance(qsa1, ref);
+      System.out.println(index + " " + explore.map(ROUND) + " " + error.map(ROUND));
+      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable( //
+          gridworld, DiscreteQsas.average(qsa1, qsa2), explore);
+      DequeDigest dequeDigest = new DoubleSarsa(type, gridworld, qsa1, qsa2, alpha, policyInterface);
+      ExploringStarts.batch(gridworld, policyInterface, n, dequeDigest);
+      gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa1, ref)));
     }
     gsw.close();
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
-    DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa);
+    DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa1);
     Put.of(UserHome.file("gridworld_" + type), vs.values());
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, qsa);
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, qsa1);
     EpisodeInterface ei = EpisodeKickoff.single(gridworld, policyInterface);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();
@@ -67,6 +67,8 @@ class SD_Gridworld {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.expected);
+    handle(SarsaType.original, 3);
+    // handle(SarsaType.expected, 3);
+    // handle(SarsaType.qlearning, 2);
   }
 }
