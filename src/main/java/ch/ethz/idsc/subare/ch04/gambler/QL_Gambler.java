@@ -13,17 +13,14 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
-import ch.ethz.idsc.tensor.sca.N;
-import ch.ethz.idsc.tensor.sca.Power;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** Sarsa applied to gambler */
@@ -35,19 +32,22 @@ class QL_Gambler {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     int EPISODES = 100;
-    Tensor epsilon = Subdivide.of(.4, .1, EPISODES);
+    Tensor epsilon = Subdivide.of(.2, .001, EPISODES);
     PolicyInterface policyInterface = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_ql.gif"), 100);
+    LearningRateScheduler lr_scheduler = new LearningRateScheduler(0.6, 16, 0.1, 0.1);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = DiscreteQsas.distance(qsa, ref);
-      Scalar eps = epsilon.Get(index);
-      eps = Power.of(eps, 2);
+      lr_scheduler.notifyError(error);
+      Scalar alpha = lr_scheduler.getRate(); // lr_scheduler.getRate(index);
+      Scalar eps = lr_scheduler.getEpsilon(); // epsilon.Get(index);
+      // eps = Power.of(eps, 2);
       System.out.println(index + " " + eps.map(ROUND) + " " + error.map(ROUND));
-      Sarsa stepDigest = new QLearning(gambler, qsa, Power.of(N.of(RationalScalar.of(1, 16 * (index + 1))), 0.6));
+      Sarsa stepDigest = new QLearning(gambler, qsa, alpha);
       for (int count = 0; count < 1; ++count) {
-        ExploringStartsBatch.apply(gambler, stepDigest, policyInterface);
+        ExploringStarts.batch(gambler, policyInterface, 1, stepDigest);
         policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);
       }
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa, ref)));
