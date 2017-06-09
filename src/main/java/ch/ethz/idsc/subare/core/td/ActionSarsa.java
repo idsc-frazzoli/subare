@@ -15,14 +15,10 @@ abstract class ActionSarsa extends Sarsa {
    * 
    * @param state
    * @return action from state using policy derived from Q */
-  protected abstract Tensor chooseAction(Tensor state);
+  abstract Tensor selectAction(Tensor state);
 
   @Override
   protected final Scalar evaluate(Tensor state) {
-    // TODO remove commented old code from qlearning
-    // return discreteModel.actions(state).flatten(0) //
-    // .map(action1 -> qsa.value(state, action1)) //
-    // .reduce(Max::of).get();
-    return qsa.value(state, chooseAction(state));
+    return qsa.value(state, selectAction(state));
   }
 }

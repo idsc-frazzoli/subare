@@ -74,8 +74,8 @@ class Windygrid extends DeterministicStandardModel implements MonteCarloInterfac
 
   /**************************************************/
   @Override
-  public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
-    if (isTerminal(stateS))
+  public Scalar reward(Tensor state, Tensor action, Tensor next) {
+    if (isTerminal(next))
       return RealScalar.ZERO;
     return NEGATIVE_ONE; // -1 until goal is reached
   }

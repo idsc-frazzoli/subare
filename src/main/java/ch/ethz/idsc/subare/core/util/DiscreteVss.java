@@ -12,10 +12,12 @@ public enum DiscreteVss {
     return Norm._1.of(_difference(qsa1, qsa2));
   }
 
+  // helper function
   private static boolean _isCompatible(DiscreteVs qsa1, DiscreteVs qsa2) {
     return qsa1.index.keys().equals(qsa2.index.keys());
   }
 
+  // helper function
   private static Tensor _difference(DiscreteVs qsa1, DiscreteVs qsa2) {
     if (!_isCompatible(qsa1, qsa2))
       throw new RuntimeException();

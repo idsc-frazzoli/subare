@@ -25,6 +25,7 @@ class Blackjack implements MonteCarloInterface {
   private final Tensor states = Tensors.empty();
   private final Tensor startStates;
   private final Tensor actions = Tensors.vector(0, 1); // stay, hit
+  private final Tensor actionsTerminal = Tensors.vector(0);
 
   public Blackjack() {
     for (int ace = 0; ace < 2; ++ace)
@@ -45,7 +46,7 @@ class Blackjack implements MonteCarloInterface {
 
   @Override
   public Tensor actions(Tensor state) {
-    return actions;
+    return isTerminal(state) ? actionsTerminal : actions;
   }
 
   @Override

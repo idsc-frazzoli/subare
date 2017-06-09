@@ -12,7 +12,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -43,7 +43,7 @@ class SD_Gambler {
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       Sarsa sarsa = type.supply(gambler, qsa, RealScalar.of(.1), policyInterface);
       for (int count = 0; count < 3; ++count)
-        ExploringStartsBatch.apply(gambler, sarsa, n, policyInterface);
+        ExploringStarts.batch(gambler, policyInterface, n, sarsa);
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa, ref)));
     }
     gsw.close();

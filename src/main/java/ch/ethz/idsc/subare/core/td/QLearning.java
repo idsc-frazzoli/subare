@@ -25,7 +25,7 @@ public class QLearning extends ActionSarsa {
   }
 
   @Override
-  protected Tensor chooseAction(Tensor state) {
+  Tensor selectAction(Tensor state) {
     return DiscreteUtils.fairBestAction(discreteModel, qsa, state); // ArgMax_a Q(S,a)
   }
 }

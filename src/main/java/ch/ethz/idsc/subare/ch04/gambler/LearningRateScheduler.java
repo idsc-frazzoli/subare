@@ -21,14 +21,14 @@ public class LearningRateScheduler {
   public LearningRateScheduler(double exponent, double factor, double alpha, double epsilon) {
     this.exponent = exponent;
     this.factor = factor;
-    this.alpha = alpha; 
+    this.alpha = alpha;
     this.epsilon = epsilon;
   }
 
   Scalar getRate(int index) {
     return Power.of(N.of(DoubleScalar.of(1 / (factor * (index + 1)))), this.exponent);
   }
-  
+
   Scalar getRate() {
     return RealScalar.of(alpha);
   }

@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -27,7 +27,7 @@ class TTD0_Randomwalk {
         vs, randomwalk.gamma(), RealScalar.of(.1));
     PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
     for (int count = 0; count < 1000; ++count)
-      ExploringStartsBatch.apply(randomwalk, ttd0, policyInterface);
+      ExploringStarts.batch(randomwalk, policyInterface, ttd0);
     vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
   }
 }

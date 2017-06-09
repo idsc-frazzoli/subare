@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsBatch;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -34,7 +34,7 @@ class FVPE_Gridworld {
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gridworld, null);
     PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
-    ExploringStartsBatch.apply(gridworld, fvpe, policyInterface);
+    ExploringStarts.batch(gridworld, policyInterface, fvpe);
     DiscreteVs vs = fvpe.vs();
     vs.print(Round.toMultipleOf(DecimalScalar.of(.1)));
   }

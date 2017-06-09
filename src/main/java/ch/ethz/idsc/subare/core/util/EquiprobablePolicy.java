@@ -20,6 +20,7 @@ public class EquiprobablePolicy implements PolicyInterface {
     this.discreteModel = discreteModel;
   }
 
+  // TODO concurrent hash map may be unnecessary if policy would be synchronized -> test!
   @Override
   public Scalar policy(Tensor state, Tensor action) {
     if (!map.containsKey(state)) {
