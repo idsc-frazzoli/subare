@@ -11,9 +11,10 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
-/** finding optimal policy to stay or hit
+/** Example 5.3 p.108: Solving Blackjack
+ * Figure 5.3 p.108
  * 
- * Figure 5.3 p.108 */
+ * finding optimal policy to stay or hit */
 class MCES_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();

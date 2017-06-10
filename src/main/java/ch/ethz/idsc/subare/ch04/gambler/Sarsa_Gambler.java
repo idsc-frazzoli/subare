@@ -25,7 +25,7 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** Sarsa applied to gambler */
-class SD_Gambler {
+class Sarsa_Gambler {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
 
   static void handle(SarsaType type, int n) throws Exception {

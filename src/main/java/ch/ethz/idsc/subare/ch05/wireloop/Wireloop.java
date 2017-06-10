@@ -16,6 +16,13 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 
+/** Example 5.2 p.103: Soap Bubble
+ * a classical Dirichlet problem
+ * 
+ * References:
+ * Kakutani (1945)
+ * Hersh, and Griego (1969)
+ * Doyle, and Snell (1984) */
 class Wireloop extends DeterministicStandardModel implements MonteCarloInterface {
   static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);

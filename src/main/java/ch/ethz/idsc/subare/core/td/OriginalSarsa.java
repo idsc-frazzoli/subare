@@ -10,7 +10,8 @@ import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/** the Sarsa algorithm was introduced by Rummery and Niranjan 1994
+/** the Sarsa algorithm was introduced by Rummery and Niranjan (1994) as
+ * "Modified Connectionist Q-learning"
  * 
  * 1)
  * Sarsa: An on-policy TD control algorithm

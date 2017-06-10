@@ -24,7 +24,8 @@ public final class MonteCarloEpisode implements EpisodeInterface {
 
   /** @param monteCarloInterface
    * @param policyInterface
-   * @param state start of episode */
+   * @param state start of episode
+   * @param openingActions */
   public MonteCarloEpisode(MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, //
       Tensor state, Queue<Tensor> openingActions) {
     this.monteCarloInterface = monteCarloInterface;

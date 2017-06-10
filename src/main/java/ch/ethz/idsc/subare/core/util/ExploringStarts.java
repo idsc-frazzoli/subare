@@ -16,6 +16,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 
 public enum ExploringStarts {
   ;
+  // ---
   public static int batch(MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, //
       EpisodeDigest episodeDigest) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
@@ -36,7 +37,8 @@ public enum ExploringStarts {
     while (exploringStartBatch.hasNext()) {
       EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
       EpisodeRecording episodeRecording = new EpisodeRecording(episodeInterface);
-      list.forEach(_episodeDigest -> _episodeDigest.digest(episodeRecording.replay())); // parallel
+      list.stream().parallel() //
+          .forEach(_episodeDigest -> _episodeDigest.digest(episodeRecording.replay()));
       ++episodes;
     }
     return episodes;
@@ -52,7 +54,8 @@ public enum ExploringStarts {
       EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
       while (episodeInterface.hasNext()) {
         StepInterface stepInterface = episodeInterface.step();
-        list.forEach(_stepDigest -> _stepDigest.digest(stepInterface)); // can be done in parallel!
+        list.stream().parallel() //
+            .forEach(_stepDigest -> _stepDigest.digest(stepInterface));
       }
       ++episodes;
     }
@@ -68,14 +71,17 @@ public enum ExploringStarts {
       EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
       Deque<StepInterface> deque = new LinkedList<>();
       while (episodeInterface.hasNext()) {
-        deque.add(episodeInterface.step());
+        final StepInterface stepInterface = episodeInterface.step();
+        deque.add(stepInterface);
         if (deque.size() == size) {
-          list.forEach(_dequeDigest -> _dequeDigest.digest(deque)); // TODO parallel?
+          list.stream().parallel() //
+              .forEach(_dequeDigest -> _dequeDigest.digest(deque));
           deque.poll();
         }
       }
       while (!deque.isEmpty()) {
-        list.forEach(_dequeDigest -> _dequeDigest.digest(deque)); // TODO parallel?
+        list.stream().parallel() //
+            .forEach(_dequeDigest -> _dequeDigest.digest(deque));
         deque.poll();
       }
       ++episodes;

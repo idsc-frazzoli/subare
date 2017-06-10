@@ -23,7 +23,9 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * 
  * states: number of cars at the 2 stations in the evening
  * actions: number of cars moved between the 2 stations during the night
- * the action is encoded as a 2-vector {+n, -n} */
+ * the action is encoded as a 2-vector {+n, -n}
+ * 
+ * [no further references are provided in the book] */
 class CarRental implements StandardModel {
   private static final int MAX_CARS = 20;
   private static final int MAX_MOVE_OF_CARS = 5;

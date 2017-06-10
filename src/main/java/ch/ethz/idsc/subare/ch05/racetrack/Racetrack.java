@@ -25,15 +25,18 @@ import ch.ethz.idsc.tensor.opt.NearestInterpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Decrement;
 
-/** Exercise 5.8: Racetrack (programming), p. 119
- * 
+/** Exercise 5.8 p.119: Racetrack (programming)
  * Figure 5.6
  * 
  * the book states that the velocity components should be non-negative
  * the track layout however encourages nudging in the negative direction
  * so we make a compromise by using the following integration procedure
  * p' = p + v + a
- * v' = clip(v + a) */
+ * v' = clip(v + a)
+ * 
+ * References:
+ * Barto, Bradtke, and Singh (1995)
+ * Gardner (1973) */
 class Racetrack extends DeterministicStandardModel implements MonteCarloInterface {
   static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   static final Tensor RED = Tensors.vector(255, 0, 0, 255);

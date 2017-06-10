@@ -8,6 +8,7 @@ import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.sca.LogisticSigmoid;
 
+// TODO due to the similarities in DiscreteVss -> define interface for "discrete value holdings"
 public enum DiscreteQsas {
   ;
   private static final Scalar HALF = RationalScalar.of(1, 2);

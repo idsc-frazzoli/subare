@@ -12,7 +12,9 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-/** continuous task */
+/** Example 3.8 p.64: Gridworld
+ * 
+ * continuous task */
 class Gridworld extends DeterministicStandardModel implements MonteCarloInterface {
   private static final Tensor WARP1_ANTE = Tensors.vector(0, 1); // A
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'
