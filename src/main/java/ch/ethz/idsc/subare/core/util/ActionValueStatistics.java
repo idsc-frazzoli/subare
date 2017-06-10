@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
+import ch.ethz.idsc.subare.core.RewardInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.TerminalInterface;
@@ -59,22 +60,26 @@ public class ActionValueStatistics implements StepDigest, EpisodeDigest, ActionV
     }
     if (stepInterface == null)
       throw new RuntimeException(); // episode start should not be terminal
-    // TODO this line is optional if the constructor does the job...
-    digestTerminal(stepInterface.nextState()); // terminal state
+    // digestTerminal(stepInterface.nextState()); // terminal state, already handled in constructor
   }
 
   /**************************************************/
   /** build a step interface for the transition from the terminal state into the terminal state
    * 
    * @param state */
-  public void digestTerminal(Tensor state) {
-    Tensor actions = discreteModel.actions(state);
+  public void digestTerminal(final Tensor state) {
+    final Tensor actions = discreteModel.actions(state);
     if (actions.length() != 1)
       // terminal state should only allow 1 action
       throw TensorRuntimeException.of(state, actions);
-    Tensor action = actions.get(0);
-    // TODO can test via reward interface if model also returns reward == 0
-    Scalar reward = RealScalar.ZERO;
+    final Tensor action = actions.get(0);
+    final Scalar reward = RealScalar.ZERO;
+    if (discreteModel instanceof RewardInterface) {
+      RewardInterface rewardInterface = (RewardInterface) discreteModel;
+      Scalar compare = rewardInterface.reward(state, action, state);
+      if (!compare.equals(reward))
+        throw TensorRuntimeException.of(state, compare, reward);
+    }
     digest(new StepAdapter(state, action, reward, state));
   }
 

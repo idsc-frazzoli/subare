@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.core;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/* package */ interface RewardInterface {
+public interface RewardInterface {
   /** the reward function is not necessarily deterministic
    * 
    * @param state

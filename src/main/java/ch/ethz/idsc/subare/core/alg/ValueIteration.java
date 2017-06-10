@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.alg;
 import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteVsSupplier;
+import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.ActionValueAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
@@ -33,13 +34,9 @@ public class ValueIteration implements DiscreteVsSupplier {
   private int iterations = 0;
   private int alternate = 0;
 
-  /** @param discreteModel */
-  @Deprecated
-  public ValueIteration(DiscreteModel discreteModel) {
-    this.discreteModel = discreteModel;
-    this.gamma = discreteModel.gamma();
-    vs_new = DiscreteVs.build(discreteModel);
-    actionValueAdapter = null; // FIXME
+  /** @param standardModel */
+  public ValueIteration(StandardModel standardModel) {
+    this(standardModel, standardModel);
   }
 
   /** @param standardModel */

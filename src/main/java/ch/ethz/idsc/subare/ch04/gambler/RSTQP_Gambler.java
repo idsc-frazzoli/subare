@@ -3,7 +3,9 @@ package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.util.function.Function;
 
+import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
+import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
@@ -11,6 +13,7 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -24,15 +27,23 @@ class RSTQP_Gambler {
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(gambler, qsa);
-    rstqp.setLearningRate(RealScalar.of(.1));
+    ActionValueStatistics avs = new ActionValueStatistics(gambler);
+    rstqp.setLearningRate(RealScalar.of(.3)); // TODO learning rate is wrong
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_rstqp.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(ROUND));
-      TabularSteps.batch(gambler, gambler, rstqp);
+      TabularSteps.batch(gambler, gambler, rstqp, avs);
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa, ref)));
     }
     gsw.close();
+    // ---
+    ActionValueIteration avi = new ActionValueIteration(gambler, avs);
+    avi.setNumericPrecision();
+    avi.untilBelow(RealScalar.of(.0001));
+    Scalar error = TensorValuesUtils.distance(ref, avi.qsa());
+    System.out.println(error);
+    Export.of(UserHome.file("Pictures/gambler_avs.png"), GamblerHelper.joinAll(gambler, avi.qsa(), ref));
   }
 }

@@ -13,6 +13,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
+import ch.ethz.idsc.tensor.sca.N;
 
 /** action value iteration: "policy evaluation is stopped after just one sweep"
  * 
@@ -24,7 +25,7 @@ import ch.ethz.idsc.tensor.red.Max;
 public class ActionValueIteration implements DiscreteQsaSupplier {
   private final DiscreteModel discreteModel;
   private final ActionValueInterface actionValueInterface;
-  private final Scalar gamma;
+  private Scalar gamma;
   private DiscreteQsa qsa_new;
   private QsaInterface qsa_old;
   private int iterations = 0;
@@ -45,6 +46,10 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
     // ---
     qsa_new.keys().flatten(0).parallel() //
         .forEach(pair -> _isConsistent(pair.get(0), pair.get(1)));
+  }
+
+  public void setNumericPrecision() {
+    gamma = N.of(gamma);
   }
 
   // test that probabilities add up to 1
