@@ -4,10 +4,8 @@ package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.util.Random;
 
-import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.core.VsInterface;
+import ch.ethz.idsc.subare.core.util.NonDeterministicStandardModel;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -26,8 +24,7 @@ import ch.ethz.idsc.tensor.red.Min;
  * or the terminal cash has been reached
  * 
  * [no further references are provided in the book] */
-class Gambler implements StandardModel, //
-    MonteCarloInterface, ActionValueInterface {
+class Gambler extends NonDeterministicStandardModel implements MonteCarloInterface {
   private final Tensor states;
   final Scalar TERMINAL_W;
   final Scalar P_win;
@@ -68,35 +65,16 @@ class Gambler implements StandardModel, //
     return RealScalar.ONE;
   }
 
-  @Override
-  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
-    if (isTerminal(state))
-      return gvalues.value(state);
-    // ---
-    final Scalar stateS = state.Get(); // current total available to gambler
-    Tensor values = Tensors.empty();
-    Tensor probs = Tensors.of(P_win, RealScalar.ONE.subtract(P_win));
-    { // win
-      Scalar next = stateS.add(action); // stake is added to current total
-      values = values.append(gvalues.value(next));
-    }
-    { // lose
-      Scalar next = stateS.subtract(action); // stake is subtracted from current total
-      values = values.append(gvalues.value(next));
-    }
-    return probs.dot(values).Get();
-  }
-
   /**************************************************/
   @Override
-  public Tensor move(Tensor state, Tensor action) {
+  public Tensor move(Tensor state, Tensor action) { // non-deterministic
     if (Scalars.lessThan(DoubleScalar.of(random.nextDouble()), P_win))
       return state.add(action);
     return state.subtract(action);
   }
 
   @Override
-  public Scalar reward(Tensor state, Tensor action, Tensor next) {
+  public Scalar reward(Tensor state, Tensor action, Tensor next) { // deterministic
     return isTerminal(state) ? RealScalar.ZERO : KroneckerDelta.of(next, TERMINAL_W);
   }
 
