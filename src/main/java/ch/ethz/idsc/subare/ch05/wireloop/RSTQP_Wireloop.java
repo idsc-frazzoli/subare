@@ -25,7 +25,7 @@ class RSTQP_Wireloop {
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         wireloop, wireloop, qsa);
-    rstqp.setUpdateFactor(RealScalar.ONE);
+    rstqp.setLearningRate(RealScalar.ONE);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_qsa_rstqp.gif"), 250);
     int EPISODES = 20;
     for (int index = 0; index < EPISODES; ++index) {

@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.io.Import;
 class AVI_Racetrack {
   static void precompute(String name) throws Exception {
     Racetrack racetrack = RacetrackHelper.create(name, 5);
-    ActionValueIteration avi = new ActionValueIteration(racetrack, racetrack);
+    ActionValueIteration avi = new ActionValueIteration(racetrack);
     avi.untilBelow(RealScalar.of(1e-1), 2);
     Export.object(UserHome.file(name + ".object"), avi.qsa());
   }

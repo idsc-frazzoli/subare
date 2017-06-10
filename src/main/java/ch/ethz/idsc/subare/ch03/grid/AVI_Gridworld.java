@@ -45,7 +45,7 @@ class AVI_Gridworld {
 
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
-    ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld);
+    ActionValueIteration avi = new ActionValueIteration(gridworld);
     avi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + avi.iterations());
     avi.qsa().print(ROUND);

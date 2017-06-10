@@ -30,11 +30,12 @@ public enum GreedyPolicy {
    * @param values of standardModel.states()
    * @return */
   public static PolicyInterface bestEquiprobable(StandardModel standardModel, VsInterface values) {
+    ActionValueAdapter ava = new ActionValueAdapter(standardModel);
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : standardModel.states()) {
       Tensor actions = standardModel.actions(state);
       Tensor va = Tensor.of(actions.flatten(0) //
-          .map(action -> standardModel.qsa(state, action, values)));
+          .map(action -> ava.qsa(state, action, values)));
       FairArgMax fairArgMax = FairArgMax.of(va);
       Tensor feasible = Extract.of(actions, fairArgMax.options());
       map.put(state, Index.build(feasible));

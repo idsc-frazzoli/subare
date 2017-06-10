@@ -2,6 +2,7 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.rental;
 
+import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.PoissonDistribution;
@@ -26,7 +27,7 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * the action is encoded as a 2-vector {+n, -n}
  * 
  * [no further references are provided in the book] */
-class CarRental implements StandardModel {
+class CarRental implements StandardModel, ActionValueInterface {
   private static final int MAX_CARS = 20;
   private static final int MAX_MOVE_OF_CARS = 5;
   private static final int RENTAL_REQUEST_FIRST_LOC = 3;
@@ -76,7 +77,8 @@ class CarRental implements StandardModel {
   }
 
   /**************************************************/
-  @Override
+  // @Override
+  // FIXME
   public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
     Scalar returns = MOVE_CAR_COST.multiply(((Scalar) action).abs());
     // go through all possible rental requests
@@ -119,5 +121,23 @@ class CarRental implements StandardModel {
       }
     }
     return returns;
+  }
+
+  @Override
+  public Scalar expectedReward(Tensor state, Tensor action) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Tensor transitions(Tensor state, Tensor action) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

@@ -20,7 +20,7 @@ class AVI_Gambler2 {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    ActionValueIteration avi = new ActionValueIteration(gambler, gambler);
+    ActionValueIteration avi = new ActionValueIteration(gambler);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_avi.gif"), 500);
     for (int index = 0; index < 13; ++index) {
       Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);

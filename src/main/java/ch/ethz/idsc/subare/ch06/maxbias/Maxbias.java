@@ -5,13 +5,12 @@ import java.util.Random;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.core.VsInterface;
-import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
 /** Example 6.7 p.143: Maximization bias
  * 
@@ -49,17 +48,17 @@ class Maxbias implements MonteCarloInterface, StandardModel {
     return RealScalar.ONE;
   }
 
-  @Override
-  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
-    Tensor next = move(state, action); // deterministic
-    if (next.equals(STATE_B))
-      return gvalues.value(STATE_B); // TODO check
-    if (state.equals(STATE_B))
-      return DoubleScalar.of(MEAN);
-    // TODO <- zero?
-    return gvalues.value(state);
-  }
-
+  // @Override
+  // @Deprecated
+  // public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
+  // Tensor next = move(state, action); // deterministic
+  // if (next.equals(STATE_B))
+  // return gvalues.value(STATE_B); // TODO check
+  // if (state.equals(STATE_B))
+  // return DoubleScalar.of(MEAN);
+  // // TODO <- zero?
+  // return gvalues.value(state);
+  // }
   /**************************************************/
   @Override
   public Tensor move(Tensor state, Tensor action) {
@@ -73,7 +72,7 @@ class Maxbias implements MonteCarloInterface, StandardModel {
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (state.equals(STATE_B))
-      return RealScalar.of(random.nextGaussian() - MEAN);
+      return RealScalar.of(MEAN + random.nextGaussian());
     return RealScalar.ZERO;
   }
 
@@ -87,5 +86,23 @@ class Maxbias implements MonteCarloInterface, StandardModel {
   @Override
   public Tensor startStates() {
     return Tensors.of(STATE_A);
+  }
+
+  /**************************************************/
+  @Override
+  public Scalar expectedReward(Tensor state, Tensor action) {
+    if (state.equals(STATE_B))
+      return RealScalar.of(MEAN);
+    return RealScalar.ZERO;
+  }
+
+  @Override
+  public Tensor transitions(Tensor state, Tensor action) {
+    return Tensors.of(move(state, action));
+  }
+
+  @Override
+  public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
+    return KroneckerDelta.of(move(state, action), next);
   }
 }

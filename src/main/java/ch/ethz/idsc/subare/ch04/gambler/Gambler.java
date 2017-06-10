@@ -5,7 +5,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.util.NonDeterministicStandardModel;
+import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -24,7 +24,7 @@ import ch.ethz.idsc.tensor.red.Min;
  * or the terminal cash has been reached
  * 
  * [no further references are provided in the book] */
-class Gambler extends NonDeterministicStandardModel implements MonteCarloInterface {
+class Gambler implements StandardModel, MonteCarloInterface {
   private final Tensor states;
   final Scalar TERMINAL_W;
   final Scalar P_win;

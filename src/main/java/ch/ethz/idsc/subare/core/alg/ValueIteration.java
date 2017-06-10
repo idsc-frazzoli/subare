@@ -1,9 +1,11 @@
 // code by jph
 package ch.ethz.idsc.subare.core.alg;
 
+import ch.ethz.idsc.subare.core.ActionValueInterface;
+import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteVsSupplier;
-import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
+import ch.ethz.idsc.subare.core.util.ActionValueAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
@@ -23,19 +25,29 @@ import ch.ethz.idsc.tensor.red.Max;
  * initial values are set to zeros
  * Jacobi style, i.e. updates take effect only in the next iteration */
 public class ValueIteration implements DiscreteVsSupplier {
-  private final StandardModel standardModel;
+  private final DiscreteModel discreteModel;
+  private final ActionValueAdapter actionValueAdapter;
   private final Scalar gamma;
   private DiscreteVs vs_new;
   private DiscreteVs vs_old;
   private int iterations = 0;
   private int alternate = 0;
 
-  /** @param standardModel
-   * @param gamma discount */
-  public ValueIteration(StandardModel standardModel) {
-    this.standardModel = standardModel;
-    this.gamma = standardModel.gamma();
-    vs_new = DiscreteVs.build(standardModel);
+  /** @param discreteModel */
+  @Deprecated
+  public ValueIteration(DiscreteModel discreteModel) {
+    this.discreteModel = discreteModel;
+    this.gamma = discreteModel.gamma();
+    vs_new = DiscreteVs.build(discreteModel);
+    actionValueAdapter = null; // FIXME
+  }
+
+  /** @param standardModel */
+  public ValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface) {
+    this.discreteModel = discreteModel;
+    actionValueAdapter = new ActionValueAdapter(actionValueInterface);
+    this.gamma = discreteModel.gamma();
+    vs_new = DiscreteVs.build(discreteModel);
   }
 
   /** perform iteration until values don't change more than threshold
@@ -78,10 +90,9 @@ public class ValueIteration implements DiscreteVsSupplier {
     ++iterations;
   }
 
-  // helper function
   private Scalar jacobiMax(Tensor state, VsInterface gvalues) {
-    return standardModel.actions(state).flatten(0) //
-        .map(action -> standardModel.qsa(state, action, gvalues)) //
+    return discreteModel.actions(state).flatten(0) //
+        .map(action -> actionValueAdapter.qsa(state, action, gvalues)) //
         .reduce(Max::of).get();
   }
 

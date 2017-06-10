@@ -10,7 +10,7 @@ class AVI_Wireloop {
   public static void main(String[] args) throws Exception {
     String name = "wire5";
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
-    ActionValueIteration avi = new ActionValueIteration(wireloop, wireloop);
+    ActionValueIteration avi = new ActionValueIteration(wireloop);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_avi.gif"), 250);
     for (int count = 0; count < 44; ++count) {
       System.out.println(count);

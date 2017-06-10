@@ -23,7 +23,7 @@ enum WindygridHelper {
   ;
   // ---
   static DiscreteQsa getOptimalQsa(Windygrid windygrid) {
-    ActionValueIteration avi = new ActionValueIteration(windygrid, windygrid);
+    ActionValueIteration avi = new ActionValueIteration(windygrid);
     avi.untilBelow(DecimalScalar.of(.0001));
     return avi.qsa();
   }

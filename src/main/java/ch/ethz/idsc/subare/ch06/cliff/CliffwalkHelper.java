@@ -28,13 +28,13 @@ enum CliffwalkHelper {
   ;
   // ---
   static DiscreteQsa getOptimalQsa(Cliffwalk cliffwalk) {
-    ActionValueIteration avi = new ActionValueIteration(cliffwalk, cliffwalk);
+    ActionValueIteration avi = new ActionValueIteration(cliffwalk);
     avi.untilBelow(DecimalScalar.of(.0001));
     return avi.qsa();
   }
 
   static PolicyInterface getOptimalPolicy(Cliffwalk cliffwalk) {
-    ValueIteration vi = new ValueIteration(cliffwalk);
+    ValueIteration vi = new ValueIteration(cliffwalk, cliffwalk);
     vi.untilBelow(RealScalar.of(1e-10));
     return GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
   }

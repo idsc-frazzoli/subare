@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -28,6 +29,11 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
   private QsaInterface qsa_old;
   private int iterations = 0;
   private int alternate = 0;
+
+  /** @param standardModel */
+  public ActionValueIteration(StandardModel standardModel) {
+    this(standardModel, standardModel);
+  }
 
   /** @param discreteModel
    * @param actionValueInterface */

@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.io.Put;
 class Gambler_Ex4_04 {
   public static void main(String[] args) throws IOException {
     Gambler gambler = Gambler.createDefault();
-    ValueIteration vi = new ValueIteration(gambler);
+    ValueIteration vi = new ValueIteration(gambler, gambler);
     Tensor record = Tensors.empty();
     for (int iters = 0; iters < 20; ++iters) {
       vi.step();

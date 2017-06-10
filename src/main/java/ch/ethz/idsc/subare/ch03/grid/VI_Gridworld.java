@@ -41,7 +41,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 class VI_Gridworld {
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
-    ValueIteration vi = new ValueIteration(gridworld);
+    ValueIteration vi = new ValueIteration(gridworld, gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
     vi.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));

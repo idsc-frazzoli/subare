@@ -24,7 +24,7 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 enum GridworldHelper {
   ;
   static DiscreteQsa getOptimalQsa(Gridworld gridworld) {
-    ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld);
+    ActionValueIteration avi = new ActionValueIteration(gridworld);
     avi.untilBelow(DecimalScalar.of(.0001));
     return avi.qsa();
   }

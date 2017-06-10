@@ -28,7 +28,7 @@ enum WireloopHelper {
   }
 
   static DiscreteQsa getOptimalQsa(Wireloop wireloop) {
-    ActionValueIteration avi = new ActionValueIteration(wireloop, wireloop);
+    ActionValueIteration avi = new ActionValueIteration(wireloop);
     avi.untilBelow(DecimalScalar.of(.0001));
     return avi.qsa();
   }

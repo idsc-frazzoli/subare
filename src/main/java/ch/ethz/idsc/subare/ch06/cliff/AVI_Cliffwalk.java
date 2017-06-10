@@ -29,7 +29,7 @@ class AVI_Cliffwalk {
     DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     Export.of(UserHome.file("Pictures/cliffwalk_qsa_avi.png"), //
         CliffwalkHelper.render(cliffwalk, TensorValuesUtils.rescaled(ref)));
-    ActionValueIteration avi = new ActionValueIteration(cliffwalk, cliffwalk);
+    ActionValueIteration avi = new ActionValueIteration(cliffwalk);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_avi.gif"), 200);
     for (int index = 0; index < 20; ++index) {
       Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);

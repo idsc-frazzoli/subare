@@ -24,7 +24,7 @@ class RSTQP_Gridworld {
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         gridworld, gridworld, qsa);
-    rstqp.setUpdateFactor(RealScalar.of(.25));
+    rstqp.setLearningRate(RealScalar.of(.25));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_rstqp.gif"), 150);
     int EPISODES = 30;
     for (int index = 0; index < EPISODES; ++index) {

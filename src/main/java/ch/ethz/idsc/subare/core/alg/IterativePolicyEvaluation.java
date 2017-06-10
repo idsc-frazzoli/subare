@@ -5,6 +5,7 @@ package ch.ethz.idsc.subare.core.alg;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
+import ch.ethz.idsc.subare.core.util.ActionValueAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.Scalar;
@@ -81,9 +82,10 @@ public class IterativePolicyEvaluation {
 
   // helper function
   private Scalar jacobiAdd(Tensor state, VsInterface gvalues) {
+    ActionValueAdapter ava = new ActionValueAdapter(standardModel);
     return standardModel.actions(state).flatten(0) //
         .map(action -> policyInterface.policy(state, action).multiply( //
-            standardModel.qsa(state, action, gvalues))) //
+            ava.qsa(state, action, gvalues))) //
         .reduce(Scalar::add).get();
   }
 

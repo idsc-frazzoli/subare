@@ -23,7 +23,7 @@ class RSTQP_Blackjack {
     Tensor epsilon = Subdivide.of(.9, .05, EPISODES);
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index + " " + epsilon.Get(index));
-      rstqp.setUpdateFactor(epsilon.Get(index));
+      rstqp.setLearningRate(epsilon.Get(index));
       for (int count = 0; count < 100; ++count)
         rstqp.batch();
       gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, qsa)));

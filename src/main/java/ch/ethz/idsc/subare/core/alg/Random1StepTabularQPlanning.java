@@ -8,9 +8,12 @@ import java.util.stream.Collectors;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.SampleModel;
+import ch.ethz.idsc.subare.core.StepDigest;
+import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.StepAdapter;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -24,7 +27,7 @@ import ch.ethz.idsc.tensor.red.Max;
  * see box on p.169
  * 
  * algorithm performs poorly when rewards are unevenly distributed */
-public class Random1StepTabularQPlanning {
+public class Random1StepTabularQPlanning implements StepDigest {
   private final DiscreteModel discreteModel;
   private final SampleModel sampleModel;
   private final DiscreteQsa qsa;
@@ -39,7 +42,8 @@ public class Random1StepTabularQPlanning {
     this.gamma = discreteModel.gamma();
   }
 
-  public void setUpdateFactor(Scalar alpha) {
+  /** @param alpha should decrease over time */
+  public void setLearningRate(Scalar alpha) {
     this.alpha = alpha;
   }
 
@@ -51,15 +55,24 @@ public class Random1StepTabularQPlanning {
       step(key.get(0), key.get(1));
   }
 
-  public void step(Tensor state0, Tensor action0) {
-    Tensor state1 = sampleModel.move(state0, action0);
-    Scalar reward = sampleModel.reward(state0, action0, state1);
+  public void step(Tensor state, Tensor action) {
+    Tensor next = sampleModel.move(state, action);
+    Scalar reward = sampleModel.reward(state, action, next);
+    digest(new StepAdapter(state, action, reward, next));
+  }
+
+  @Override
+  public void digest(StepInterface stepInterface) {
+    Tensor state0 = stepInterface.prevState();
+    Tensor action = stepInterface.action();
+    Scalar reward = stepInterface.reward();
+    Tensor state1 = stepInterface.nextState();
+    // ---
     Scalar max = discreteModel.actions(state1).flatten(0) //
         .map(action1 -> qsa.value(state1, action1)) //
         .reduce(Max::of).get();
-    Scalar value0 = qsa.value(state0, action0);
-    // TODO alpha should decrease over time
+    Scalar value0 = qsa.value(state0, action);
     Scalar delta = reward.add(gamma.multiply(max)).subtract(value0).multiply(alpha);
-    qsa.assign(state0, action0, value0.add(delta));
+    qsa.assign(state0, action, value0.add(delta));
   }
 }

@@ -24,7 +24,7 @@ class RSTQP_Windygrid {
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         windygrid, windygrid, qsa);
-    rstqp.setUpdateFactor(RealScalar.of(1));
+    rstqp.setLearningRate(RealScalar.of(1));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/windygrid_qsa_rstqp.gif"), 250);
     int EPISODES = 20;
     for (int index = 0; index < EPISODES; ++index) {

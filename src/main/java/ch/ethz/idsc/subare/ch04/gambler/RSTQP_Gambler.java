@@ -24,7 +24,7 @@ class RSTQP_Gambler {
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         gambler, gambler, qsa);
-    rstqp.setUpdateFactor(RealScalar.of(.1));
+    rstqp.setLearningRate(RealScalar.of(.1));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_rstqp.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {

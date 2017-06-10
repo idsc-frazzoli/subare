@@ -26,7 +26,7 @@ class VI_Gambler {
   public static void main(String[] args) {
     Gambler gambler = Gambler.createDefault();
     DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    ValueIteration vi = new ValueIteration(gambler);
+    ValueIteration vi = new ValueIteration(gambler, gambler);
     vi.untilBelow(RealScalar.of(1e-20));
     final DiscreteVs vs = vi.vs();
     final DiscreteVs vr = DiscreteUtils.createVs(gambler, ref);

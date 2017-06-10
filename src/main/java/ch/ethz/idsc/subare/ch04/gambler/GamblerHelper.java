@@ -27,19 +27,19 @@ enum GamblerHelper {
   private static final int MAGNIFY = 2;
 
   static DiscreteQsa getOptimalQsa(Gambler gambler) {
-    ActionValueIteration avi = new ActionValueIteration(gambler, gambler);
+    ActionValueIteration avi = new ActionValueIteration(gambler);
     avi.untilBelow(DecimalScalar.of(.0001));
     return avi.qsa();
   }
 
   public static DiscreteVs getOptimalVs(Gambler gambler) {
-    ValueIteration vi = new ValueIteration(gambler);
+    ValueIteration vi = new ValueIteration(gambler, gambler);
     vi.untilBelow(RealScalar.of(1e-10));
     return vi.vs();
   }
 
   public static PolicyInterface getOptimalPolicy(Gambler gambler) {
-    ValueIteration vi = new ValueIteration(gambler);
+    ValueIteration vi = new ValueIteration(gambler, gambler);
     vi.untilBelow(RealScalar.of(1e-10));
     return GreedyPolicy.bestEquiprobable(gambler, vi.vs());
   }
