@@ -4,6 +4,9 @@ package ch.ethz.idsc.subare.ch06.maxbias;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.VsInterface;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -13,7 +16,7 @@ import ch.ethz.idsc.tensor.alg.Range;
 /** Example 6.7 p.143: Maximization bias
  * 
  * Credit: Hado van Hasselt (2010, 2011) */
-class Maxbias implements MonteCarloInterface {
+class Maxbias implements MonteCarloInterface, StandardModel {
   static final double MEAN = -0.1;
   static final Scalar STATE_A = RealScalar.of(2);
   static final Scalar STATE_B = RealScalar.of(1);
@@ -44,6 +47,17 @@ class Maxbias implements MonteCarloInterface {
   @Override
   public Scalar gamma() {
     return RealScalar.ONE;
+  }
+
+  @Override
+  public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
+    Tensor next = move(state, action); // deterministic
+    if (next.equals(STATE_B))
+      return gvalues.value(STATE_B); // TODO check
+    if (state.equals(STATE_B))
+      return DoubleScalar.of(MEAN);
+    // TODO <- zero?
+    return gvalues.value(state);
   }
 
   /**************************************************/

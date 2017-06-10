@@ -10,6 +10,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
+/** applicable for models that have deterministic move and reward */
 public abstract class DeterministicStandardModel implements StandardModel, //
     SampleModel, ActionValueInterface {
   @Override

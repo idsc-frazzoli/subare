@@ -1,3 +1,4 @@
+// code by jph
 package ch.ethz.idsc.subare.ch05.blackjack;
 
 import java.util.function.Function;
@@ -18,7 +19,7 @@ import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
-public class SD_Blackjack {
+public class Sarsa_Blackjack {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.01));
 
   static void handle(SarsaType type) throws Exception {

@@ -64,6 +64,11 @@ class Gambler implements StandardModel, //
   }
 
   @Override
+  public Scalar gamma() {
+    return RealScalar.ONE;
+  }
+
+  @Override
   public Scalar qsa(Tensor state, Tensor action, VsInterface gvalues) {
     if (isTerminal(state))
       return gvalues.value(state);
@@ -80,11 +85,6 @@ class Gambler implements StandardModel, //
       values = values.append(gvalues.value(next));
     }
     return probs.dot(values).Get();
-  }
-
-  @Override
-  public Scalar gamma() {
-    return RealScalar.ONE;
   }
 
   /**************************************************/

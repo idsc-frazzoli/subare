@@ -36,6 +36,18 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
     this.actionValueInterface = actionValueInterface;
     this.gamma = discreteModel.gamma();
     qsa_new = DiscreteQsa.build(discreteModel);
+    // ---
+    qsa_new.keys().flatten(0).parallel() //
+        .forEach(pair -> _isConsistent(pair.get(0), pair.get(1)));
+  }
+
+  // test that probabilities add up to 1
+  private void _isConsistent(Tensor state, Tensor action) {
+    Scalar norm = actionValueInterface.transitions(state, action).flatten(0) //
+        .map(next -> actionValueInterface.transitionProbability(state, action, next)) //
+        .reduce(Scalar::add).get();
+    if (!norm.equals(RealScalar.ONE))
+      throw new RuntimeException(); // probabilities have to sum up to 1
   }
 
   /** perform iteration until values don't change more than threshold
@@ -81,17 +93,13 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
   private Scalar jacobiMax(Tensor state, Tensor action) {
     Scalar ersa = actionValueInterface.expectedReward(state, action);
     Scalar eqsa = RealScalar.ZERO;
-    Scalar norm = RealScalar.ZERO; // tests if probabilities add up to 1
     for (Tensor next : actionValueInterface.transitions(state, action)) {
       Scalar prob = actionValueInterface.transitionProbability(state, action, next);
       Scalar max = discreteModel.actions(next).flatten(0) //
           .map(actionN -> qsa_new.value(next, actionN)) //
           .reduce(Max::of).get();
       eqsa = eqsa.add(prob.multiply(max));
-      norm = norm.add(prob);
     }
-    if (!norm.equals(RealScalar.ONE))
-      throw new RuntimeException(); // probabilities have to sum up to 1
     return ersa.add(gamma.multiply(eqsa));
   }
 

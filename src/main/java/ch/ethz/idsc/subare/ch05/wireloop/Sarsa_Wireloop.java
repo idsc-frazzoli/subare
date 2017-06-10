@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
-class SD_Wireloop {
+class Sarsa_Wireloop {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.01));
 
   static void handle(SarsaType type, int n) throws Exception {

@@ -22,7 +22,7 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {4, 0} 0.59
  * {5, 0} 0.79
  * {6, 0} 0 */
-class SD_Randomwalk {
+class Sarsa_Randomwalk {
   static void handle(SarsaType type) {
     System.out.println(type);
     Randomwalk randomwalk = new Randomwalk();

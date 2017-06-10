@@ -66,7 +66,7 @@ class CarRental implements StandardModel {
     return RealScalar.of(.9);
   }
 
-  public Tensor night_move(Tensor state, Tensor action) {
+  Tensor night_move(Tensor state, Tensor action) {
     Tensor next = state.add(Tensors.of(action, action.negate()));
     if (Scalars.lessThan(next.Get(0), RealScalar.ZERO))
       throw new RuntimeException();

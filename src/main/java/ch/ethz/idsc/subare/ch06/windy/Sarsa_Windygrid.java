@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** determines q(s,a) function for equiprobable "random" policy */
-class SD_Windygrid {
+class Sarsa_Windygrid {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.01));
 
   static void handle(SarsaType type, int total) throws Exception {

@@ -25,7 +25,7 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** StepDigest qsa methods applied to cliff walk */
-class SD_Cliffwalk {
+class Sarsa_Cliffwalk {
   static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.01));
 
   static void handle(SarsaType type, int total) throws Exception {
