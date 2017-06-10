@@ -37,7 +37,7 @@ class QL_Gambler {
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_ql.gif"), 100);
-    LearningRateScheduler lr_scheduler = new LearningRateScheduler(0.6, 16, 0.1, 0.1);
+    LearningRateDeque lr_scheduler = new LearningRateDeque(0.1, 0.1);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       lr_scheduler.notifyError(error);

@@ -44,21 +44,11 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
     this.gamma = discreteModel.gamma();
     qsa_new = DiscreteQsa.build(discreteModel);
     // ---
-    qsa_new.keys().flatten(0).parallel() //
-        .forEach(pair -> _isConsistent(pair.get(0), pair.get(1)));
+    StaticHelper.assertConsistent(qsa_new.keys(), actionValueInterface);
   }
 
   public void setNumericPrecision() {
     gamma = N.of(gamma);
-  }
-
-  // test that probabilities add up to 1
-  private void _isConsistent(Tensor state, Tensor action) {
-    Scalar norm = actionValueInterface.transitions(state, action).flatten(0) //
-        .map(next -> actionValueInterface.transitionProbability(state, action, next)) //
-        .reduce(Scalar::add).get();
-    if (!norm.equals(RealScalar.ONE))
-      throw new RuntimeException(); // probabilities have to sum up to 1
   }
 
   /** perform iteration until values don't change more than threshold

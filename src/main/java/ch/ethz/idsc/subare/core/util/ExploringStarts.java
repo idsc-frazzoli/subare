@@ -44,7 +44,6 @@ public enum ExploringStarts {
     return episodes;
   }
 
-  // TODO not used yet
   public static int batch(MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, //
       StepDigest... stepDigest) {
     List<StepDigest> list = Arrays.asList(stepDigest);

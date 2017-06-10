@@ -13,6 +13,7 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -32,9 +33,11 @@ class Sarsa_Gambler {
     System.out.println(type);
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    int EPISODES = 30;
+    int EPISODES = 10;
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
+    // TODO visualize
+    StateActionCounter sac = new StateActionCounter(gambler);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_" + type + "" + n + ".gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
@@ -43,7 +46,7 @@ class Sarsa_Gambler {
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       Sarsa sarsa = type.supply(gambler, qsa, RealScalar.of(.1), policyInterface);
       for (int count = 0; count < 3; ++count)
-        ExploringStarts.batch(gambler, policyInterface, n, sarsa);
+        ExploringStarts.batch(gambler, policyInterface, n, sarsa, sac);
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa, ref)));
     }
     gsw.close();
