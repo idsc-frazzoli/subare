@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -22,16 +23,14 @@ class RSTQP_Gambler {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
-        gambler, gambler, qsa);
+    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(gambler, qsa);
     rstqp.setLearningRate(RealScalar.of(.1));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_rstqp.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(ROUND));
-      rstqp.batch();
-      rstqp.batch();
+      TabularSteps.batch(gambler, gambler, rstqp);
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa, ref)));
     }
     gsw.close();

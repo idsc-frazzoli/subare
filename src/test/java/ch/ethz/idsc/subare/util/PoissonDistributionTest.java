@@ -28,7 +28,7 @@ public class PoissonDistributionTest extends TestCase {
   }
 
   public void testPrecompute() {
-    PoissonDistribution poissonDistribution = PoissonDistribution.of(RealScalar.of(3));
+    PoissonDistribution poissonDistribution = PoissonDistribution.of(RealScalar.of(31.1232));
     assertEquals(poissonDistribution.values().length(), PoissonDistribution.PRECOMPUTE_LENGTH);
   }
 

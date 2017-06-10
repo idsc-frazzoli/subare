@@ -2,6 +2,7 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.rental;
 
+import ch.ethz.idsc.subare.core.SampleModel;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.PoissonDistribution;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -25,7 +26,7 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * the action is encoded as a 2-vector {+n, -n}
  * 
  * [no further references are provided in the book] */
-class CarRental implements StandardModel {
+class CarRental implements StandardModel, SampleModel {
   private static final int MAX_MOVE_OF_CARS = 5;
   private static final int RENTAL_REQUEST_FIRST_LOC = 3;
   private static final int RENTAL_REQUEST_SECOND_LOC = 4;
@@ -71,6 +72,19 @@ class CarRental implements StandardModel {
     if (Scalars.lessThan(next.Get(1), RealScalar.ZERO))
       throw new RuntimeException();
     return next;
+  }
+
+  /**************************************************/
+  @Override
+  public Tensor move(Tensor state, Tensor action) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Scalar reward(Tensor state, Tensor action, Tensor next) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**************************************************/
