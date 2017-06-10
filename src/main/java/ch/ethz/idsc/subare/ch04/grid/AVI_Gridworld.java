@@ -3,9 +3,9 @@
 package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
@@ -38,10 +38,10 @@ class AVI_Gridworld {
     ActionValueIteration avi = new ActionValueIteration(gridworld, gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_avi.gif"), 250);
     for (int count = 0; count < 7; ++count) {
-      gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, DiscreteQsas.rescaled(avi.qsa()))));
+      gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, TensorValuesUtils.rescaled(avi.qsa()))));
       avi.step();
     }
-    gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, DiscreteQsas.rescaled(avi.qsa()))));
+    gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, TensorValuesUtils.rescaled(avi.qsa()))));
     gsw.close();
     // ---
     avi.qsa().print();

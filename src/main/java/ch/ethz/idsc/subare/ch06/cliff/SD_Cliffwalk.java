@@ -10,11 +10,11 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -36,7 +36,7 @@ class SD_Cliffwalk {
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < total; ++index) {
-      Scalar error = DiscreteQsas.distance(qsa, ref);
+      Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(ROUND));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, RealScalar.of(.1));
       Sarsa sarsa = type.supply(cliffwalk, qsa, RealScalar.of(.25), policyInterface);

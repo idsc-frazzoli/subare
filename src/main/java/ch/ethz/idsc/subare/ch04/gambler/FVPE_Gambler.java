@@ -4,9 +4,9 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.DiscreteVss;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.N;
 
@@ -21,7 +21,7 @@ class FVPE_Gambler {
     for (int count = 0; count < 100; ++count) {
       ExploringStarts.batch(gambler, policyInterface, fvpe);
       DiscreteVs vs = fvpe.vs();
-      Scalar diff = DiscreteVss.distance(vs, ref);
+      Scalar diff = TensorValuesUtils.distance(vs, ref);
       System.out.println(count + " " + N.of(diff));
     }
   }

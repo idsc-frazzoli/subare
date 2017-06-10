@@ -9,11 +9,11 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -39,7 +39,7 @@ class QL_Gambler {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_ql.gif"), 100);
     LearningRateScheduler lr_scheduler = new LearningRateScheduler(0.6, 16, 0.1, 0.1);
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = DiscreteQsas.distance(qsa, ref);
+      Scalar error = TensorValuesUtils.distance(qsa, ref);
       lr_scheduler.notifyError(error);
       Scalar alpha = lr_scheduler.getRate(); // lr_scheduler.getRate(index);
       Scalar eps = lr_scheduler.getEpsilon(); // epsilon.Get(index);

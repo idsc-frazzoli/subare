@@ -6,9 +6,9 @@ import java.util.function.Function;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -28,7 +28,7 @@ class MCES_Cliffwalk {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = DiscreteQsas.distance(mces.qsa(), ref);
+      Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
       System.out.println(index + " " + error.map(ROUND));
       for (int count = 0; count < 10; ++count) {
         PolicyInterface policyInterface = //

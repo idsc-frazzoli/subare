@@ -6,7 +6,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.DiscreteVss;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
@@ -55,7 +55,7 @@ public class IterativePolicyEvaluation {
     final long tic = System.nanoTime();
     while (true) {
       step();
-      Scalar delta = DiscreteVss.distance(vs_new, vs_old);
+      Scalar delta = TensorValuesUtils.distance(vs_new, vs_old);
       final long toc = System.nanoTime();
       if (3e9 < toc - tic)
         System.out.println(past + " -> " + delta + " " + alternate);

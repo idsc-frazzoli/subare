@@ -5,8 +5,8 @@ import java.util.List;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
@@ -61,8 +61,8 @@ enum GridworldHelper {
   }
 
   public static Tensor joinAll(Gridworld gridworld, DiscreteQsa qsa, DiscreteQsa ref) {
-    Tensor im1 = render(gridworld, DiscreteQsas.rescaled(qsa));
-    Tensor im2 = render(gridworld, DiscreteQsas.logisticDifference(qsa, ref, RealScalar.of(1)));
+    Tensor im1 = render(gridworld, TensorValuesUtils.rescaled(qsa));
+    Tensor im2 = render(gridworld, TensorValuesUtils.logisticDifference(qsa, ref, RealScalar.of(1)));
     List<Integer> list = Dimensions.of(im1);
     list.set(1, MAGNIFY);
     return Join.of(1, im1, Array.zeros(list), im2);

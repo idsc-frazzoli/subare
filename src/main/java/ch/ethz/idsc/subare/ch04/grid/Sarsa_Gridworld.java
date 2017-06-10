@@ -10,13 +10,13 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -45,7 +45,7 @@ class Sarsa_Gridworld {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar alpha = learning.Get(index);
-      Scalar error = DiscreteQsas.distance(qsa, ref);
+      Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + explore.map(ROUND) + " " + error.map(ROUND));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
       DequeDigest dequeDigest = new OriginalSarsa(gridworld, qsa, alpha, policyInterface);

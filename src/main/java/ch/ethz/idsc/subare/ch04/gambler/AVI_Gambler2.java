@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -23,7 +23,7 @@ class AVI_Gambler2 {
     ActionValueIteration avi = new ActionValueIteration(gambler, gambler);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_avi.gif"), 500);
     for (int index = 0; index < 13; ++index) {
-      Scalar error = DiscreteQsas.distance(avi.qsa(), ref);
+      Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);
       System.out.println(index + " " + error.map(ROUND));
       gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, avi.qsa(), ref)));
       avi.step();

@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -28,7 +28,7 @@ class RSTQP_Cliffwalk {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_rstqp.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = DiscreteQsas.distance(qsa, ref);
+      Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(ROUND));
       rstqp.batch();
       rstqp.batch();

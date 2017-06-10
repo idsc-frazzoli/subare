@@ -6,9 +6,9 @@ import java.util.function.Function;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -30,7 +30,7 @@ class MCES_Gridworld {
     final int EPISODES = 50;
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = DiscreteQsas.distance(mces.qsa(), ref);
+      Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
       System.out.println(index + " " + error.map(ROUND));
       for (int count = 0; count < 20; ++count) {
         PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, mces.qsa(), epsilon.Get(index));

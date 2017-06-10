@@ -5,7 +5,7 @@ import java.util.List;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
@@ -47,8 +47,8 @@ enum WindygridHelper {
   }
 
   public static Tensor joinAll(Windygrid gambler, DiscreteQsa qsa, DiscreteQsa ref) {
-    Tensor im1 = render(gambler, DiscreteQsas.rescaled(qsa));
-    Tensor im2 = render(gambler, DiscreteQsas.logisticDifference(qsa, ref, RealScalar.ONE));
+    Tensor im1 = render(gambler, TensorValuesUtils.rescaled(qsa));
+    Tensor im2 = render(gambler, TensorValuesUtils.logisticDifference(qsa, ref, RealScalar.ONE));
     List<Integer> list = Dimensions.of(im1);
     list.set(0, 2 * MAGNIFY);
     return Join.of(0, im1, Array.zeros(list), im2);

@@ -10,13 +10,13 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -44,10 +44,10 @@ class DSarsa_Gridworld {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar alpha = learning.Get(index);
-      Scalar error = DiscreteQsas.distance(qsa1, ref);
+      Scalar error = TensorValuesUtils.distance(qsa1, ref);
       System.out.println(index + " " + explore.map(ROUND) + " " + error.map(ROUND));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable( //
-          gridworld, DiscreteQsas.average(qsa1, qsa2), explore);
+          gridworld, TensorValuesUtils.average(qsa1, qsa2), explore);
       DequeDigest dequeDigest = new DoubleSarsa(type, gridworld, qsa1, qsa2, alpha, policyInterface);
       ExploringStarts.batch(gridworld, policyInterface, n, dequeDigest);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa1, ref)));

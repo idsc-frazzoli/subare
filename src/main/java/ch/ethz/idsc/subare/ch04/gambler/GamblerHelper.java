@@ -7,9 +7,9 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -79,7 +79,7 @@ enum GamblerHelper {
   }
 
   public static Tensor joinAll(Gambler gambler, DiscreteQsa qsa) {
-    Tensor im1 = render(gambler, DiscreteQsas.rescaled(qsa));
+    Tensor im1 = render(gambler, TensorValuesUtils.rescaled(qsa));
     PolicyInterface pi = GreedyPolicy.bestEquiprobable(gambler, qsa);
     Tensor im2 = render(gambler, pi);
     List<Integer> list = Dimensions.of(im1);
@@ -88,10 +88,10 @@ enum GamblerHelper {
   }
 
   public static Tensor joinAll(Gambler gambler, DiscreteQsa qsa, DiscreteQsa ref) {
-    Tensor im1 = render(gambler, DiscreteQsas.rescaled(qsa));
+    Tensor im1 = render(gambler, TensorValuesUtils.rescaled(qsa));
     PolicyInterface pi = GreedyPolicy.bestEquiprobable(gambler, qsa);
     Tensor im2 = render(gambler, pi);
-    Tensor im3 = render(gambler, DiscreteQsas.logisticDifference(qsa, ref, RealScalar.of(15)));
+    Tensor im3 = render(gambler, TensorValuesUtils.logisticDifference(qsa, ref, RealScalar.of(15)));
     List<Integer> list = Dimensions.of(im1);
     list.set(0, 3 * MAGNIFY);
     return Join.of(0, im1, Array.zeros(list), im2, Array.zeros(list), im3);
