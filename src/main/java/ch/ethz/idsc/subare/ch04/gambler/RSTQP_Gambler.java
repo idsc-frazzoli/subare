@@ -40,7 +40,7 @@ class RSTQP_Gambler {
     gsw.close();
     // ---
     ActionValueIteration avi = new ActionValueIteration(gambler, avs);
-    avi.setNumericPrecision();
+    avi.setMachinePrecision();
     avi.untilBelow(RealScalar.of(.0001));
     Scalar error = TensorValuesUtils.distance(ref, avi.qsa());
     System.out.println(error);

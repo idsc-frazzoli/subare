@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch04.rental;
 
 import ch.ethz.idsc.subare.core.SampleModel;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.util.DiscreteDistributions;
 import ch.ethz.idsc.subare.util.PoissonDistribution;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -13,6 +14,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Clip;
 
@@ -77,14 +79,28 @@ class CarRental implements StandardModel, SampleModel {
   /**************************************************/
   @Override
   public Tensor move(Tensor state, Tensor action) {
-    // TODO Auto-generated method stub
-    return null;
+    Tensor morning = night_move(state, action);
+    Scalar n1_in = DiscreteDistributions.nextSample(p1_in);
+    Scalar n1out = DiscreteDistributions.nextSample(p1out);
+    Scalar n2_in = DiscreteDistributions.nextSample(p2_in);
+    Scalar n2out = DiscreteDistributions.nextSample(p2out);
+    morning.set(cars -> cars.add(n1_in.subtract(n1out)), 0);
+    morning.set(cars -> cars.add(n2_in.subtract(n2out)), 1);
+    return morning.map(CLIP);
   }
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    // TODO Auto-generated method stub
-    return null;
+    Scalar sum = action.Get().abs().multiply(MOVE_CAR_COST);
+    // TODO why doesn't next appear in function and morning is not used?
+    Tensor morning = night_move(state, action);
+    Scalar n1out = DiscreteDistributions.nextSample(p1out);
+    Scalar n2out = DiscreteDistributions.nextSample(p2out);
+    n1out = Min.of(n1out, morning.Get(0)); // TODO does not account for returned vehicles?
+    n2out = Min.of(n2out, morning.Get(1));
+    System.out.println(n1out.add(n2out));
+    Scalar rented = n1out.add(n2out);
+    return sum.add(rented.multiply(RENTAL_CREDIT));
   }
 
   /**************************************************/
@@ -99,10 +115,9 @@ class CarRental implements StandardModel, SampleModel {
   static final int LOOK = 5;
 
   Scalar expectedReward(Tensor state, Tensor action, Tensor next) {
-    Scalar Action = (Scalar) action;
-    Scalar sum = Action.abs().multiply(MOVE_CAR_COST);
-    Tensor numOfCarsNext = night_move(state, action);
-    Tensor delta = next.subtract(numOfCarsNext); // cars that have to be pop-up and disappear through the random process
+    Scalar sum = action.Get().abs().multiply(MOVE_CAR_COST);
+    Tensor morning = night_move(state, action);
+    Tensor delta = next.subtract(morning); // cars that have to be pop-up and disappear through the random process
     // Scalar prob = RealScalar.ZERO;
     final int d0 = (int) delta.Get(0).number();
     final int d1 = (int) delta.Get(1).number();
@@ -120,10 +135,10 @@ class CarRental implements StandardModel, SampleModel {
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
         Scalar prob = Total.prod(Tensors.of( //
-            p1_in.apply(returns0), // returns (added)
-            p1out.apply(request0), // rental requests (subtracted)
-            p2_in.apply(returns1), // returns (added)
-            p2out.apply(request1) // rental requests (subtracted)
+            p1_in.probabilityEquals(returns0), // returns (added)
+            p1out.probabilityEquals(request0), // rental requests (subtracted)
+            p2_in.probabilityEquals(returns1), // returns (added)
+            p2out.probabilityEquals(request1) // rental requests (subtracted)
         )).Get();
         sum = sum.add(prob.multiply(RealScalar.of(request0 + request1).multiply(RENTAL_CREDIT)));
       }
@@ -138,8 +153,8 @@ class CarRental implements StandardModel, SampleModel {
 
   @Override
   public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
-    Tensor numOfCarsNext = night_move(state, action);
-    Tensor delta = next.subtract(numOfCarsNext); // cars that have to be pop-up and disappear through the random process
+    Tensor morning = night_move(state, action);
+    Tensor delta = next.subtract(morning); // cars that have to be pop-up and disappear through the random process
     Scalar prob = RealScalar.ZERO;
     final int d0 = (int) delta.Get(0).number();
     final int d1 = (int) delta.Get(1).number();
@@ -157,10 +172,10 @@ class CarRental implements StandardModel, SampleModel {
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
         prob = prob.add(Total.prod(Tensors.of( //
-            p1_in.apply(returns0), // returns (added)
-            p1out.apply(request0), // rental requests (subtracted)
-            p2_in.apply(returns1), // returns (added)
-            p2out.apply(request1) // rental requests (subtracted)
+            p1_in.probabilityEquals(returns0), // returns (added)
+            p1out.probabilityEquals(request0), // rental requests (subtracted)
+            p2_in.probabilityEquals(returns1), // returns (added)
+            p2out.probabilityEquals(request1) // rental requests (subtracted)
         )));
       }
     }

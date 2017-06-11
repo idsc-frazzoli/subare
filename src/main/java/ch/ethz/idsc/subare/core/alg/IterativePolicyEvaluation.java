@@ -18,6 +18,7 @@ import ch.ethz.idsc.tensor.Tensor;
 // v_*(s) == max_a Sum_{s',r} p(s',r | s,a) * (r + gamma * v_*(s'))
 public class IterativePolicyEvaluation {
   private final StandardModel standardModel;
+  private final ActionValueAdapter actionValueAdapter;
   private final PolicyInterface policyInterface;
   private final Scalar gamma;
   private DiscreteVs vs_new;
@@ -39,6 +40,7 @@ public class IterativePolicyEvaluation {
   public IterativePolicyEvaluation( //
       StandardModel standardModel, PolicyInterface policyInterface) {
     this.standardModel = standardModel;
+    actionValueAdapter = new ActionValueAdapter(standardModel);
     this.policyInterface = policyInterface;
     this.gamma = standardModel.gamma();
     vs_new = DiscreteVs.build(standardModel);
@@ -82,10 +84,9 @@ public class IterativePolicyEvaluation {
 
   // helper function
   private Scalar jacobiAdd(Tensor state, VsInterface gvalues) {
-    ActionValueAdapter ava = new ActionValueAdapter(standardModel);
     return standardModel.actions(state).flatten(0) //
         .map(action -> policyInterface.policy(state, action).multiply( //
-            ava.qsa(state, action, gvalues))) //
+            actionValueAdapter.qsa(state, action, gvalues))) //
         .reduce(Scalar::add).get();
   }
 

@@ -47,7 +47,8 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
     StaticHelper.assertConsistent(qsa_new.keys(), actionValueInterface);
   }
 
-  public void setNumericPrecision() {
+  /** state-action values are stored in numeric precision */
+  public void setMachinePrecision() {
     gamma = N.of(gamma);
   }
 

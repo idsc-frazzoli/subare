@@ -1,6 +1,9 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.rental;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -67,5 +70,25 @@ public class CarRentalTest extends TestCase {
     Tensor next = Tensors.vector(6, 6);
     Scalar reward = carRental.expectedReward(state, action, next);
     // System.out.println("reward=" + reward);
+  }
+
+  public void testMove() {
+    CarRental carRental = new CarRental(20);
+    Set<Tensor> set = new HashSet<>();
+    for (int c = 0; c < 100; ++c) {
+      Tensor state = Tensors.vector(10, 10);
+      Tensor action = RealScalar.of(2);
+      Tensor next = carRental.move(state, action);
+      set.add(next);
+    }
+    assertTrue(30 < set.size());
+  }
+
+  public void testReward() {
+    CarRental carRental = new CarRental(20);
+    Tensor state = Tensors.vector(10, 10);
+    Tensor action = RealScalar.of(2);
+    Scalar rew = carRental.reward(state, action, null);
+    System.out.println("reward = " + rew);
   }
 }
