@@ -40,6 +40,6 @@ class VI_Gridworld {
     vi.vs().print();
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
     Policies.print(policyInterface, gridworld.states());
-    Export.of(UserHome.file("Pictures/gridworld_vs_vi.png"), GridworldHelper.render(gridworld, vi.vs()));
+    Export.of(UserHome.Pictures("gridworld_vs_vi.png"), GridworldHelper.render(gridworld, vi.vs()));
   }
 }

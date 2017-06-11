@@ -31,7 +31,7 @@ class Sarsa_Cliffwalk {
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
     System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_" + type + ".gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < total; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(Digits._1));

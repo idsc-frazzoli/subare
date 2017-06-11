@@ -22,7 +22,7 @@ class AVS_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/blackjack_avs.gif"), 250);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_avs.gif"), 250);
     int EPISODES = 3; // 40
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     int episodes = 0;

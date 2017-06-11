@@ -22,7 +22,7 @@ public class Sarsa_Blackjack {
     int EPISODES = 40;
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // only used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/blackjack_qsa_" + type + ".gif"), 200);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_qsa_" + type + ".gif"), 200);
     for (int index = 0; index < EPISODES; ++index) {
       // Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(Digits._2));

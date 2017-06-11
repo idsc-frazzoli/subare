@@ -32,7 +32,7 @@ class QL_Gambler {
     PolicyInterface policyInterface = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_ql.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_ql.gif"), 100);
     LearningRateDeque lr_scheduler = new LearningRateDeque(0.1, 0.1);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);

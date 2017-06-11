@@ -20,7 +20,7 @@ class RSTQP_Windygrid {
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(windygrid, qsa);
     rstqp.setLearningRate(RealScalar.of(1));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/windygrid_qsa_rstqp.gif"), 250);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_rstqp.gif"), 250);
     int EPISODES = 20;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);

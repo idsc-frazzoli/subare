@@ -15,7 +15,7 @@ class IPE_Wireloop {
     PolicyInterface policyInterface = new EquiprobablePolicy(wireloop);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         wireloop, policyInterface);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_ipe_iteration.gif"), 200);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_ipe_iteration.gif"), 200);
     for (int count = 0; count < 20; ++count) {
       System.out.println(count);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ipe.vs())));

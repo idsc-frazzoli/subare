@@ -24,7 +24,7 @@ class Sarsa_Windygrid {
     final DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/windygrid_qsa_" + type + ".gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < total; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(Digits._1));

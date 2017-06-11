@@ -25,7 +25,7 @@ class VI_RaceTrack {
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(racetrack, vi.vs());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + ".gif"), 400);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + ".gif"), 400);
     for (Tensor start : racetrack.statesStart) {
       Tensor image = racetrack.image();
       MonteCarloEpisode mce = new MonteCarloEpisode( //

@@ -36,7 +36,7 @@ class Sarsa_Gridworld {
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
     Tensor learning = Subdivide.of(.3, .01, EPISODES);
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_" + type + "" + n + ".gif"), 150);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + type + "" + n + ".gif"), 150);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar alpha = learning.Get(index);

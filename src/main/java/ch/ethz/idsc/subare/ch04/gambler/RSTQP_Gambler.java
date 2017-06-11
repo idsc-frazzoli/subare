@@ -24,7 +24,7 @@ class RSTQP_Gambler {
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(gambler, qsa);
     ActionValueStatistics avs = new ActionValueStatistics(gambler);
     rstqp.setLearningRate(RealScalar.of(.3)); // TODO learning rate is wrong
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_rstqp.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_rstqp.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
@@ -39,6 +39,6 @@ class RSTQP_Gambler {
     avi.untilBelow(RealScalar.of(.0001));
     Scalar error = TensorValuesUtils.distance(ref, avi.qsa());
     System.out.println(error);
-    Export.of(UserHome.file("Pictures/gambler_avs.png"), GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref));
+    Export.of(UserHome.Pictures("gambler_avs.png"), GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref));
   }
 }

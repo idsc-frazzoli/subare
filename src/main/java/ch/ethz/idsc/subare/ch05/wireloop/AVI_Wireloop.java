@@ -11,7 +11,7 @@ class AVI_Wireloop {
     String name = "wire5";
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
     ActionValueIteration avi = new ActionValueIteration(wireloop);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_avi.gif"), 250);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_avi.gif"), 250);
     for (int count = 0; count < 44; ++count) {
       System.out.println(count);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, avi.qsa())));

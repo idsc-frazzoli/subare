@@ -21,7 +21,7 @@ class MCES_Wireloop {
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
     final DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(wireloop);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_mces.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_mces.gif"), 100);
     int EPISODES = 40;
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     for (int index = 0; index < EPISODES; ++index) {

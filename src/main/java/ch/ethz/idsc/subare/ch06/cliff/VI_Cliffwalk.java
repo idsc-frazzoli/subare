@@ -29,7 +29,7 @@ class VI_Cliffwalk {
     DiscreteVs vr = DiscreteUtils.createVs(cliffwalk, ref);
     Scalar error = TensorValuesUtils.distance(vs, vr);
     System.out.println("error=" + error);
-    Export.of(UserHome.file("Pictures/cliffwalk_qsa_vi.png"), CliffwalkHelper.render(cliffwalk, vi.vs()));
+    Export.of(UserHome.Pictures("cliffwalk_qsa_vi.png"), CliffwalkHelper.render(cliffwalk, vi.vs()));
     // GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(cliffWalk, values);
     // greedyPolicy.print(cliffWalk.states());
     // Index statesIndex = Index.build(cliffWalk.states());

@@ -36,7 +36,7 @@ class Sarsa_Gambler {
     // TODO TOP visualize
     StateActionCounter sac = new StateActionCounter(gambler);
     System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_" + type + "" + n + ".gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_" + type + "" + n + ".gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(Digits._1) + " " + error.map(Digits._1));

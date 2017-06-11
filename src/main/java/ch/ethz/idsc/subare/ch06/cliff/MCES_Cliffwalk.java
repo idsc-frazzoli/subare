@@ -21,7 +21,7 @@ class MCES_Cliffwalk {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(cliffwalk);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_mces.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);

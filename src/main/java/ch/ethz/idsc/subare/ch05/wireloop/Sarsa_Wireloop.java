@@ -24,7 +24,7 @@ class Sarsa_Wireloop {
     Tensor epsilon = Subdivide.of(.2, .01, EPISODES);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/" + name + "_qsa_" + type + ".gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index + " " + epsilon.Get(index).map(Digits._2));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));

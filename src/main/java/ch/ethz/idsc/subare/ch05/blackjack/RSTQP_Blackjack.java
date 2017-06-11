@@ -18,7 +18,7 @@ class RSTQP_Blackjack {
     Blackjack blackjack = new Blackjack();
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(blackjack, qsa);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/blackjack_rstqp.gif"), 250);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_rstqp.gif"), 250);
     int EPISODES = 60;
     Tensor epsilon = Subdivide.of(.9, .05, EPISODES);
     for (int index = 0; index < EPISODES; ++index) {
