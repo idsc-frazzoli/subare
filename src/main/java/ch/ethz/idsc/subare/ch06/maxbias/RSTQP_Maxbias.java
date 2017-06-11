@@ -24,6 +24,7 @@ class RSTQP_Maxbias {
       Scalar error = TensorValuesUtils.distance(ref, qsa);
       System.out.println("r1s error=" + error);
     }
+    System.out.println("---");
     ActionValueIteration avi = new ActionValueIteration(maxbias, avs);
     avi.untilBelow(RealScalar.of(.0001));
     avi.qsa().print();

@@ -2,19 +2,17 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.gambler;
 
-import java.util.Random;
-
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
+import ch.ethz.idsc.tensor.pdf.PDF;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 import ch.ethz.idsc.tensor.red.Min;
 
@@ -27,8 +25,8 @@ import ch.ethz.idsc.tensor.red.Min;
 class Gambler implements StandardModel, MonteCarloInterface {
   private final Tensor states;
   final Scalar TERMINAL_W;
-  final Scalar P_win;
-  Random random = new Random();
+  private final Scalar P_win;
+  private final PDF pdf;
 
   public static Gambler createDefault() {
     return new Gambler(100, RationalScalar.of(4, 10));
@@ -40,6 +38,7 @@ class Gambler implements StandardModel, MonteCarloInterface {
     states = Range.of(0, max + 1).unmodifiable();
     TERMINAL_W = (Scalar) Last.of(states);
     this.P_win = P_win;
+    pdf = PDF.of(BernoulliDistribution.of(P_win));
   }
 
   @Override
@@ -68,7 +67,7 @@ class Gambler implements StandardModel, MonteCarloInterface {
   /**************************************************/
   @Override
   public Tensor move(Tensor state, Tensor action) { // non-deterministic
-    if (Scalars.lessThan(DoubleScalar.of(random.nextDouble()), P_win))
+    if (pdf.nextSample().equals(RealScalar.ONE)) // win
       return state.add(action);
     return state.subtract(action);
   }

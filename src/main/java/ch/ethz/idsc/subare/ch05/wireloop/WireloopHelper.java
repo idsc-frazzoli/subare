@@ -26,7 +26,7 @@ enum WireloopHelper {
   }
 
   static DiscreteQsa getOptimalQsa(Wireloop wireloop) {
-    return ActionValueIterations.getOptimal(wireloop, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(wireloop, DecimalScalar.of(.0001));
   }
 
   public static Tensor render(Wireloop wireloop, DiscreteQsa qsa) {

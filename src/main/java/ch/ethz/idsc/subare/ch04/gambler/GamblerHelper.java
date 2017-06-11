@@ -19,11 +19,11 @@ enum GamblerHelper {
   private static final int MAGNIFY = 2;
 
   static DiscreteQsa getOptimalQsa(Gambler gambler) {
-    return ActionValueIterations.getOptimal(gambler, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(gambler, DecimalScalar.of(.0001));
   }
 
   public static DiscreteVs getOptimalVs(Gambler gambler) {
-    return ValueIterations.getOptimal(gambler, RealScalar.of(1e-10));
+    return ValueIterations.solve(gambler, RealScalar.of(1e-10));
   }
 
   public static PolicyInterface getOptimalPolicy(Gambler gambler) {

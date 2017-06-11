@@ -6,9 +6,8 @@ import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** tabular temporal difference (0) to learn value of states
  * 
@@ -28,6 +27,6 @@ class TTD0_Randomwalk {
     PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policyInterface, ttd0);
-    vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
+    vs.print(Digits._2);
   }
 }

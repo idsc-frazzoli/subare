@@ -19,7 +19,7 @@ enum GridworldHelper {
   ;
   // ---
   static DiscreteQsa getOptimalQsa(Gridworld gridworld) {
-    return ActionValueIterations.getOptimal(gridworld, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(gridworld, DecimalScalar.of(.0001));
   }
 
   private static final Tensor BASE = Tensors.vector(255);

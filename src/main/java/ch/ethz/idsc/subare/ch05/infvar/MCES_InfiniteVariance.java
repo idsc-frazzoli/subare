@@ -12,8 +12,9 @@ class MCES_InfiniteVariance {
     InfiniteVariance infiniteVariance = new InfiniteVariance();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(infiniteVariance);
     PolicyInterface policyInterface = new EquiprobablePolicy(infiniteVariance);
-    ExploringStarts.batch(infiniteVariance, policyInterface, mces);
-    DiscreteQsa discreteQsa = mces.qsa();
-    discreteQsa.print();
+    for (int c = 0; c < 100; ++c)
+      ExploringStarts.batch(infiniteVariance, policyInterface, mces);
+    DiscreteQsa qsa = mces.qsa();
+    qsa.print();
   }
 }

@@ -2,14 +2,11 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch03.grid;
 
-import java.util.function.Function;
-
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** solving grid world using action value iteration
  * 
@@ -41,15 +38,13 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {4, 3} 13.0
  * {4, 4} 11.7 */
 class AVI_Gridworld {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
-
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
     ActionValueIteration avi = new ActionValueIteration(gridworld);
     avi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + avi.iterations());
-    avi.qsa().print(ROUND);
+    avi.qsa().print(Digits._1);
     DiscreteVs dvs = DiscreteUtils.createVs(gridworld, avi.qsa());
-    dvs.print(ROUND);
+    dvs.print(Digits._1);
   }
 }

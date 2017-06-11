@@ -9,6 +9,6 @@ public enum MaxbiasHelper {
   ;
   // ---
   static DiscreteQsa getOptimalQsa(Maxbias maxbias) {
-    return ActionValueIterations.getOptimal(maxbias, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(maxbias, DecimalScalar.of(.0001));
   }
 }

@@ -6,9 +6,8 @@ import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** Example 4.1, p.82
  * 
@@ -35,8 +34,8 @@ public class TTD0_Gridworld {
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
         vs, gridWorld.gamma(), RealScalar.of(.5));
     PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
-    for (int count = 0; count < 100; ++count)
+    for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(gridWorld, policyInterface, ttd0);
-    vs.print(Round.toMultipleOf(DecimalScalar.of(.01)));
+    vs.print(Digits._2);
   }
 }

@@ -8,7 +8,7 @@ import ch.ethz.idsc.tensor.Scalar;
 public enum ValueIterations {
   ;
   // ---
-  public static DiscreteVs getOptimal(StandardModel standardModel, Scalar threshold) {
+  public static DiscreteVs solve(StandardModel standardModel, Scalar threshold) {
     ValueIteration valueIteration = new ValueIteration(standardModel);
     valueIteration.untilBelow(threshold);
     return valueIteration.vs();

@@ -28,7 +28,7 @@ enum CliffwalkHelper {
   ;
   // ---
   static DiscreteQsa getOptimalQsa(Cliffwalk cliffwalk) {
-    return ActionValueIterations.getOptimal(cliffwalk, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(cliffwalk, DecimalScalar.of(.0001));
   }
 
   static PolicyInterface getOptimalPolicy(Cliffwalk cliffwalk) {
@@ -64,7 +64,6 @@ enum CliffwalkHelper {
     Tensor image2 = StateActionRasters.render(cliffwalkRaster, TensorValuesUtils.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 2);
-    System.out.println(list);
     return ImageResize.of(Join.of(0, image1, Array.zeros(list), image2), MAGNIFY);
   }
 }

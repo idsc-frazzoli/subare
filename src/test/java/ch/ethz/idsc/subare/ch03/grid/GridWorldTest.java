@@ -29,7 +29,7 @@ public class GridWorldTest extends TestCase {
 
   public void testR1STQL() {
     Gridworld gridworld = new Gridworld();
-    DiscreteQsa ref = ActionValueIterations.getOptimal(gridworld, DecimalScalar.of(0.0001));
+    DiscreteQsa ref = ActionValueIterations.solve(gridworld, DecimalScalar.of(0.0001));
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(gridworld, qsa);
     rstqp.setLearningRate(RealScalar.of(1.));

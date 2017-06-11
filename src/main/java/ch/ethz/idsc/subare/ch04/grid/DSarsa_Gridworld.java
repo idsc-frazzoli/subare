@@ -1,8 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
-import java.util.function.Function;
-
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
@@ -17,20 +15,17 @@ import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** Double Sarsa for gridworld */
 class DSarsa_Gridworld {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
-
   static void handle(SarsaType type, int n) throws Exception {
     System.out.println("double " + type);
     Gridworld gridworld = new Gridworld();
@@ -45,7 +40,7 @@ class DSarsa_Gridworld {
       Scalar explore = epsilon.Get(index);
       Scalar alpha = learning.Get(index);
       Scalar error = TensorValuesUtils.distance(qsa1, ref);
-      System.out.println(index + " " + explore.map(ROUND) + " " + error.map(ROUND));
+      System.out.println(index + " " + explore.map(Digits._1) + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable( //
           gridworld, TensorValuesUtils.average(qsa1, qsa2), explore);
       DequeDigest dequeDigest = new DoubleSarsa(type, gridworld, qsa1, qsa2, alpha, policyInterface);

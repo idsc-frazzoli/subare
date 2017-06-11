@@ -19,7 +19,7 @@ enum WindygridHelper {
   ;
   // ---
   static DiscreteQsa getOptimalQsa(Windygrid windygrid) {
-    return ActionValueIterations.getOptimal(windygrid, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(windygrid, DecimalScalar.of(.0001));
   }
 
   private static final int MAGNIFY = 6;

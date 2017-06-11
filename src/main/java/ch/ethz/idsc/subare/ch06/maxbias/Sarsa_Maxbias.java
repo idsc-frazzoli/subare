@@ -1,8 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.maxbias;
 
-import java.util.function.Function;
-
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -11,16 +9,12 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.sca.Round;
 
 class Sarsa_Maxbias {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.001));
-
   static void handle(SarsaType type, int n) throws Exception {
     System.out.println(type);
     Maxbias maxbias = new Maxbias(3);
@@ -40,7 +34,8 @@ class Sarsa_Maxbias {
       }
     }
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa);
-    vs.print(ROUND);
+    vs.print(Digits._3);
+    System.out.println("---");
   }
 
   public static void main(String[] args) throws Exception {
