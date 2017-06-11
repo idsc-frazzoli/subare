@@ -25,10 +25,10 @@ class AVI_Gambler2 {
     for (int index = 0; index < 13; ++index) {
       Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);
       System.out.println(index + " " + error.map(ROUND));
-      gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, avi.qsa(), ref)));
+      gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref)));
       avi.step();
     }
-    gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, avi.qsa(), ref)));
+    gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref)));
     gsw.close();
   }
 }

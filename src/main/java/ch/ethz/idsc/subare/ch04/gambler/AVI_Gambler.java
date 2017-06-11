@@ -13,8 +13,8 @@ class AVI_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    Export.of(UserHome.file("Pictures/gambler_qsa_avi.png"), GamblerHelper.joinAll(gambler, ref, ref));
-    Export.of(UserHome.file("Pictures/gambler_qsa_avi2.png"), GamblerHelper.joinAll(gambler, ref));
+    Export.of(UserHome.file("Pictures/gambler_qsa_avi.png"), GamblerHelper.qsaPolicyRef(gambler, ref, ref));
+    Export.of(UserHome.file("Pictures/gambler_qsa_avi2.png"), GamblerHelper.qsaPolicy(gambler, ref));
     DiscreteVs dvs = DiscreteUtils.createVs(gambler, ref);
     Put.of(UserHome.file("ex403_qsa_values"), dvs.values());
     System.out.println("done.");

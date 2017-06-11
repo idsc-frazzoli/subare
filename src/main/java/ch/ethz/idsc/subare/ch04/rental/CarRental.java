@@ -4,8 +4,6 @@ package ch.ethz.idsc.subare.ch04.rental;
 
 import ch.ethz.idsc.subare.core.SampleModel;
 import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.util.DiscreteDistributions;
-import ch.ethz.idsc.subare.util.PoissonDistribution;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -14,6 +12,8 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.num.PDF;
+import ch.ethz.idsc.tensor.num.PoissonDistribution;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -38,10 +38,10 @@ class CarRental implements StandardModel, SampleModel {
   private static final Scalar MOVE_CAR_COST = RealScalar.of(-2);
   // ---
   private final Tensor states;
-  private final PoissonDistribution p1out = PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_FIRST_LOC));
-  private final PoissonDistribution p1_in = PoissonDistribution.of(RealScalar.of(RETURN_FIRST_LOC));
-  private final PoissonDistribution p2out = PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_SECOND_LOC));
-  private final PoissonDistribution p2_in = PoissonDistribution.of(RealScalar.of(RETURN_SECOND_LOC));
+  private final PDF p1out = PDF.of(PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_FIRST_LOC)));
+  private final PDF p1_in = PDF.of(PoissonDistribution.of(RealScalar.of(RETURN_FIRST_LOC)));
+  private final PDF p2out = PDF.of(PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_SECOND_LOC)));
+  private final PDF p2_in = PDF.of(PoissonDistribution.of(RealScalar.of(RETURN_SECOND_LOC)));
   // ---
   private final Clip CLIP;
 
@@ -80,10 +80,10 @@ class CarRental implements StandardModel, SampleModel {
   @Override
   public Tensor move(Tensor state, Tensor action) {
     Tensor morning = night_move(state, action);
-    Scalar n1_in = DiscreteDistributions.nextSample(p1_in);
-    Scalar n1out = DiscreteDistributions.nextSample(p1out);
-    Scalar n2_in = DiscreteDistributions.nextSample(p2_in);
-    Scalar n2out = DiscreteDistributions.nextSample(p2out);
+    Scalar n1_in = p1_in.nextSample();
+    Scalar n1out = p1out.nextSample();
+    Scalar n2_in = p2_in.nextSample();
+    Scalar n2out = p2out.nextSample();
     return effective(morning, n1_in, n1out, n2_in, n2out);
   }
 
@@ -110,10 +110,10 @@ class CarRental implements StandardModel, SampleModel {
         System.out.println("warning: give up");
         return sum;
       }
-      n1_in = DiscreteDistributions.nextSample(p1_in);
-      n1out = DiscreteDistributions.nextSample(p1out);
-      n2_in = DiscreteDistributions.nextSample(p2_in);
-      n2out = DiscreteDistributions.nextSample(p2out);
+      n1_in = p1_in.nextSample();
+      n1out = p1out.nextSample();
+      n2_in = p2_in.nextSample();
+      n2out = p2out.nextSample();
       status = effective(morning, n1_in, n1out, n2_in, n2out).equals(next);
       ++attempts;
     }
@@ -156,10 +156,10 @@ class CarRental implements StandardModel, SampleModel {
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
         Scalar prob = Total.prod(Tensors.of( //
-            p1_in.probabilityEquals(returns0), // returns (added)
-            p1out.probabilityEquals(request0), // rental requests (subtracted)
-            p2_in.probabilityEquals(returns1), // returns (added)
-            p2out.probabilityEquals(request1) // rental requests (subtracted)
+            p1_in.p_equals(RealScalar.of(returns0)), // returns (added)
+            p1out.p_equals(RealScalar.of(request0)), // rental requests (subtracted)
+            p2_in.p_equals(RealScalar.of(returns1)), // returns (added)
+            p2out.p_equals(RealScalar.of(request1)) // rental requests (subtracted)
         )).Get();
         sum = sum.add(prob.multiply(RealScalar.of(request0 + request1).multiply(RENTAL_CREDIT)));
       }
@@ -193,10 +193,10 @@ class CarRental implements StandardModel, SampleModel {
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
         prob = prob.add(Total.prod(Tensors.of( //
-            p1_in.probabilityEquals(returns0), // returns (added)
-            p1out.probabilityEquals(request0), // rental requests (subtracted)
-            p2_in.probabilityEquals(returns1), // returns (added)
-            p2out.probabilityEquals(request1) // rental requests (subtracted)
+            p1_in.p_equals(RealScalar.of(returns0)), // returns (added)
+            p1out.p_equals(RealScalar.of(request0)), // rental requests (subtracted)
+            p2_in.p_equals(RealScalar.of(returns1)), // returns (added)
+            p2out.p_equals(RealScalar.of(request1)) // rental requests (subtracted)
         )));
       }
     }

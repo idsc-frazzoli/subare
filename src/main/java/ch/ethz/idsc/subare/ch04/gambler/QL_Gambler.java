@@ -50,7 +50,7 @@ class QL_Gambler {
         ExploringStarts.batch(gambler, policyInterface, 1, stepDigest);
         policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);
       }
-      gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa, ref)));
+      gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
     }
     gsw.close();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

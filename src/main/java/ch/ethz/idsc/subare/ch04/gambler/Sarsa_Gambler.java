@@ -47,7 +47,7 @@ class Sarsa_Gambler {
       Sarsa sarsa = type.supply(gambler, qsa, RealScalar.of(.1), policyInterface);
       for (int count = 0; count < 3; ++count)
         ExploringStarts.batch(gambler, policyInterface, n, sarsa, sac);
-      gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa, ref)));
+      gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
     }
     gsw.close();
     qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

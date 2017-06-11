@@ -36,7 +36,7 @@ class MCES_Gambler {
             EGreedyPolicy.bestEquiprobable(gambler, mces.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(gambler, policyInterface, mces);
       }
-      gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, mces.qsa(), ref)));
+      gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, mces.qsa(), ref)));
     }
     gsw.close();
     DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, mces.qsa());

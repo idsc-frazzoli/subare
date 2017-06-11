@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch05.wireloop;
 import java.io.File;
 import java.util.function.Function;
 
-import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
+import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
@@ -26,9 +26,7 @@ enum WireloopHelper {
   }
 
   static DiscreteQsa getOptimalQsa(Wireloop wireloop) {
-    ActionValueIteration avi = new ActionValueIteration(wireloop);
-    avi.untilBelow(DecimalScalar.of(.0001));
-    return avi.qsa();
+    return ActionValueIterations.getOptimal(wireloop, DecimalScalar.of(.0001));
   }
 
   public static Tensor render(Wireloop wireloop, DiscreteQsa qsa) {

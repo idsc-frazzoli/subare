@@ -35,7 +35,7 @@ class RSTQP_Gambler {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(ROUND));
       TabularSteps.batch(gambler, gambler, rstqp, avs);
-      gsw.append(ImageFormat.of(GamblerHelper.joinAll(gambler, qsa, ref)));
+      gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
     }
     gsw.close();
     // ---
@@ -44,6 +44,6 @@ class RSTQP_Gambler {
     avi.untilBelow(RealScalar.of(.0001));
     Scalar error = TensorValuesUtils.distance(ref, avi.qsa());
     System.out.println(error);
-    Export.of(UserHome.file("Pictures/gambler_avs.png"), GamblerHelper.joinAll(gambler, avi.qsa(), ref));
+    Export.of(UserHome.file("Pictures/gambler_avs.png"), GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref));
   }
 }

@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.Scalar;
 class RSTQP_Maxbias {
   public static void main(String[] args) {
     Maxbias maxbias = new Maxbias(3);
-    DiscreteQsa ref = MaxbiasHelper.exactQsa(maxbias);
+    DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias);
     DiscreteQsa qsa = DiscreteQsa.build(maxbias);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(maxbias, qsa);
     rstqp.setLearningRate(RealScalar.of(1.));

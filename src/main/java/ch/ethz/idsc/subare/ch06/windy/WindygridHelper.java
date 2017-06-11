@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch06.windy;
 
 import java.util.List;
 
-import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
+import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.StateActionRasters;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
@@ -19,9 +19,7 @@ enum WindygridHelper {
   ;
   // ---
   static DiscreteQsa getOptimalQsa(Windygrid windygrid) {
-    ActionValueIteration avi = new ActionValueIteration(windygrid);
-    avi.untilBelow(DecimalScalar.of(.0001));
-    return avi.qsa();
+    return ActionValueIterations.getOptimal(windygrid, DecimalScalar.of(.0001));
   }
 
   private static final int MAGNIFY = 6;

@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
-import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
+import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.StateActionRasters;
@@ -17,10 +17,9 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum GridworldHelper {
   ;
+  // ---
   static DiscreteQsa getOptimalQsa(Gridworld gridworld) {
-    ActionValueIteration avi = new ActionValueIteration(gridworld);
-    avi.untilBelow(DecimalScalar.of(.0001));
-    return avi.qsa();
+    return ActionValueIterations.getOptimal(gridworld, DecimalScalar.of(.0001));
   }
 
   private static final Tensor BASE = Tensors.vector(255);

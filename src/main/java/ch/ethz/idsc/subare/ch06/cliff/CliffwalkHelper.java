@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch06.cliff;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
+import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
@@ -28,9 +28,7 @@ enum CliffwalkHelper {
   ;
   // ---
   static DiscreteQsa getOptimalQsa(Cliffwalk cliffwalk) {
-    ActionValueIteration avi = new ActionValueIteration(cliffwalk);
-    avi.untilBelow(DecimalScalar.of(.0001));
-    return avi.qsa();
+    return ActionValueIterations.getOptimal(cliffwalk, DecimalScalar.of(.0001));
   }
 
   static PolicyInterface getOptimalPolicy(Cliffwalk cliffwalk) {

@@ -29,6 +29,7 @@ public enum GreedyPolicy {
    * @param standardModel
    * @param values of standardModel.states()
    * @return */
+  // TODO isn't this only meaningful for deterministic models?
   public static PolicyInterface bestEquiprobable(StandardModel standardModel, VsInterface values) {
     ActionValueAdapter actionValueAdapter = new ActionValueAdapter(standardModel);
     Map<Tensor, Index> map = new HashMap<>();
