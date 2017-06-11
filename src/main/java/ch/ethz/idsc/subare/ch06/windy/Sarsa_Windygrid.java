@@ -44,8 +44,8 @@ class Sarsa_Windygrid {
   }
 
   public static void main(String[] args) throws Exception {
-    // handle(SarsaType.qlearning, 20);
+    handle(SarsaType.qlearning, 20);
     // handle(SarsaType.expected, 20);
-    handle(SarsaType.original, 20);
+    // handle(SarsaType.original, 20);
   }
 }

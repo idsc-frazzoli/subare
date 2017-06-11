@@ -28,6 +28,11 @@ public enum TensorValuesUtils {
   }
 
   @SuppressWarnings("unchecked")
+  public static <T extends TensorValuesInterface> T logisticDifference(T tvi1, T tvi2) {
+    return (T) tvi1.create(LogisticSigmoid.of(_difference(tvi1, tvi2)).flatten(0));
+  }
+
+  @SuppressWarnings("unchecked")
   public static <T extends TensorValuesInterface> T logisticDifference(T tvi1, T tvi2, Scalar factor) {
     return (T) tvi1.create(LogisticSigmoid.of(_difference(tvi1, tvi2).multiply(factor)).flatten(0));
   }

@@ -23,7 +23,7 @@ class AVS_Blackjack {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/blackjack_avs.gif"), 250);
-    int EPISODES = 30; // 40
+    int EPISODES = 3; // 40
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     int episodes = 0;
     ActionValueStatistics avs = new ActionValueStatistics(blackjack);

@@ -9,9 +9,9 @@ import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.StateActionRasters;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.ImageResize;
-import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -42,6 +42,7 @@ enum CliffwalkHelper {
   private static final Tensor BASE = Tensors.vector(255);
   private static final int MAGNIFY = 6;
 
+  // TODO implement state raster
   static Tensor render(Cliffwalk cliffwalk, DiscreteVs vs) {
     Interpolation colorscheme = Colorscheme.classic();
     final Tensor tensor = Array.zeros(cliffwalk.NX, cliffwalk.NY, 4);
@@ -56,25 +57,16 @@ enum CliffwalkHelper {
   }
 
   static Tensor render(Cliffwalk cliffwalk, DiscreteQsa scaled) {
-    Interpolation colorscheme = Colorscheme.classic();
-    final Tensor tensor = Array.zeros(cliffwalk.NX, (cliffwalk.NY + 1) * 4 - 1, 4);
-    Index indexActions = Index.build(cliffwalk.actions);
-    for (Tensor state : cliffwalk.states())
-      for (Tensor action : cliffwalk.actions(state)) {
-        Scalar sca = scaled.value(state, action);
-        int sx = state.Get(0).number().intValue();
-        int sy = state.Get(1).number().intValue();
-        int a = indexActions.of(action);
-        tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy + (cliffwalk.NY + 1) * a);
-      }
-    return ImageResize.of(tensor, MAGNIFY);
+    return ImageResize.of(StateActionRasters.render(new CliffwalkRaster(cliffwalk), scaled), MAGNIFY);
   }
 
-  static Tensor joinAll(Cliffwalk gambler, DiscreteQsa qsa, DiscreteQsa ref) {
-    Tensor im1 = render(gambler, TensorValuesUtils.rescaled(qsa));
-    Tensor im2 = render(gambler, TensorValuesUtils.logisticDifference(qsa, ref, RealScalar.ONE));
-    List<Integer> list = Dimensions.of(im1);
-    list.set(0, 2 * MAGNIFY);
-    return Join.of(0, im1, Array.zeros(list), im2);
+  static Tensor joinAll(Cliffwalk cliffwalk, DiscreteQsa qsa, DiscreteQsa ref) {
+    CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
+    Tensor image1 = StateActionRasters.render(cliffwalkRaster, TensorValuesUtils.rescaled(qsa));
+    Tensor image2 = StateActionRasters.render(cliffwalkRaster, TensorValuesUtils.logisticDifference(qsa, ref));
+    List<Integer> list = Dimensions.of(image1);
+    list.set(0, 2);
+    System.out.println(list);
+    return ImageResize.of(Join.of(0, image1, Array.zeros(list), image2), MAGNIFY);
   }
 }

@@ -7,7 +7,9 @@ import ch.ethz.idsc.tensor.io.Import;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.opt.LinearInterpolation;
 
-public class Colorscheme {
+public enum Colorscheme {
+  ;
+  // ---
   private static Interpolation of(String string) {
     try {
       return LinearInterpolation.of( //
@@ -24,9 +26,5 @@ public class Colorscheme {
 
   public static Interpolation parula() {
     return of("parula");
-  }
-
-  public static void main(String[] args) throws Exception {
-    // ---
   }
 }
