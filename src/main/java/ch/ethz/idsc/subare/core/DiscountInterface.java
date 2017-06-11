@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.core;
 
 import ch.ethz.idsc.tensor.Scalar;
 
-public interface DiscountInterface {
+/* package */ interface DiscountInterface {
   /** @return discount factor */
   Scalar gamma();
 }

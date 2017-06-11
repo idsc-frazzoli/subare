@@ -5,8 +5,9 @@ package ch.ethz.idsc.subare.core.alg;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
+import ch.ethz.idsc.subare.core.util.ActionValueAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.DiscreteVss;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
@@ -17,6 +18,7 @@ import ch.ethz.idsc.tensor.Tensor;
 // v_*(s) == max_a Sum_{s',r} p(s',r | s,a) * (r + gamma * v_*(s'))
 public class IterativePolicyEvaluation {
   private final StandardModel standardModel;
+  private final ActionValueAdapter actionValueAdapter;
   private final PolicyInterface policyInterface;
   private final Scalar gamma;
   private DiscreteVs vs_new;
@@ -38,6 +40,7 @@ public class IterativePolicyEvaluation {
   public IterativePolicyEvaluation( //
       StandardModel standardModel, PolicyInterface policyInterface) {
     this.standardModel = standardModel;
+    actionValueAdapter = new ActionValueAdapter(standardModel);
     this.policyInterface = policyInterface;
     this.gamma = standardModel.gamma();
     vs_new = DiscreteVs.build(standardModel);
@@ -55,7 +58,7 @@ public class IterativePolicyEvaluation {
     final long tic = System.nanoTime();
     while (true) {
       step();
-      Scalar delta = DiscreteVss.distance(vs_new, vs_old);
+      Scalar delta = TensorValuesUtils.distance(vs_new, vs_old);
       final long toc = System.nanoTime();
       if (3e9 < toc - tic)
         System.out.println(past + " -> " + delta + " " + alternate);
@@ -83,7 +86,7 @@ public class IterativePolicyEvaluation {
   private Scalar jacobiAdd(Tensor state, VsInterface gvalues) {
     return standardModel.actions(state).flatten(0) //
         .map(action -> policyInterface.policy(state, action).multiply( //
-            standardModel.qsa(state, action, gvalues))) //
+            actionValueAdapter.qsa(state, action, gvalues))) //
         .reduce(Scalar::add).get();
   }
 

@@ -34,7 +34,7 @@ public class TabularTemporalDifference0 implements StepDigest {
     // ---
     Scalar value0 = vs.value(state0);
     Scalar value1 = vs.value(state1);
-    Scalar delta = reward.add(value1.multiply(gamma)).subtract(value0).multiply(alpha);
+    Scalar delta = reward.add(gamma.multiply(value1)).subtract(value0).multiply(alpha);
     vs.assign(state0, value0.add(delta));
   }
 }

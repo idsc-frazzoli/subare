@@ -1,8 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
-import java.util.function.Function;
-
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
@@ -10,29 +8,26 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
  * 
  * covers Example 4.1, p.82 */
 class Sarsa_Gridworld {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
-
   static void handle(SarsaType type, int n) throws Exception {
     System.out.println(type);
     Gridworld gridworld = new Gridworld();
@@ -45,8 +40,8 @@ class Sarsa_Gridworld {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar alpha = learning.Get(index);
-      Scalar error = DiscreteQsas.distance(qsa, ref);
-      System.out.println(index + " " + explore.map(ROUND) + " " + error.map(ROUND));
+      Scalar error = TensorValuesUtils.distance(qsa, ref);
+      System.out.println(index + " " + explore.map(Digits._1) + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
       DequeDigest dequeDigest = new OriginalSarsa(gridworld, qsa, alpha, policyInterface);
       ExploringStarts.batch(gridworld, policyInterface, n, dequeDigest);

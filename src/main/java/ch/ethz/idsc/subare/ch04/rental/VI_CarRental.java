@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
  * p.87-88 */
 class VI_CarRental {
   public static void main(String[] args) throws Exception {
-    CarRental carRental = new CarRental(true);
+    CarRental carRental = new CarRental(20);
     ValueIteration vi = new ValueIteration(carRental);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/carrental_vi.gif"), 250);
     for (int count = 0; count <= 25; ++count) {

@@ -14,6 +14,7 @@ import ch.ethz.idsc.subare.ch02.RandomAgent;
 import ch.ethz.idsc.subare.ch02.UCBAgent;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 
 class AgentSupplier {
   public static final List<Supplier<Agent>> mixed = Arrays.asList( //
@@ -31,7 +32,7 @@ class AgentSupplier {
   public static List<Supplier<Agent>> getUCBs(double cLo, double cHi, int steps) {
     List<Supplier<Agent>> list = new ArrayList<>();
     for (double c = cLo; c <= cHi; c += (cHi - cLo) / (steps - 1)) {
-      RealScalar cs = RealScalar.of(c);
+      Scalar cs = RealScalar.of(c);
       list.add(() -> new UCBAgent(2, cs));
     }
     return list;
@@ -40,7 +41,7 @@ class AgentSupplier {
   public static List<Supplier<Agent>> getOptimists(double cLo, double cHi, int steps) {
     List<Supplier<Agent>> list = new ArrayList<>();
     for (double c = cLo; c <= cHi; c += (cHi - cLo) / (steps - 1)) {
-      RealScalar cs = RealScalar.of(c);
+      Scalar cs = RealScalar.of(c);
       list.add(() -> new OptimistAgent(2, RealScalar.of(6), cs));
     }
     return list;
@@ -49,7 +50,7 @@ class AgentSupplier {
   public static List<Supplier<Agent>> getEgreedyC(double cLo, double cHi, int steps) {
     List<Supplier<Agent>> list = new ArrayList<>();
     for (double c = cLo; c <= cHi; c += (cHi - cLo) / (steps - 1)) {
-      RealScalar cs = RealScalar.of(c);
+      Scalar cs = RealScalar.of(c);
       Supplier<Agent> sup = () -> new EGreedyAgent(2, i -> cs, cs.toString());
       list.add(sup);
     }

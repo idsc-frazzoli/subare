@@ -1,27 +1,22 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
-import java.util.function.Function;
-
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** Example 4.1, p.82 */
 class MCES_Gridworld {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.1));
-
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
@@ -30,8 +25,8 @@ class MCES_Gridworld {
     final int EPISODES = 50;
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = DiscreteQsas.distance(mces.qsa(), ref);
-      System.out.println(index + " " + error.map(ROUND));
+      Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
+      System.out.println(index + " " + error.map(Digits._1));
       for (int count = 0; count < 20; ++count) {
         PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, mces.qsa(), epsilon.Get(index));
         ExploringStarts.batch(gridworld, policyInterface, mces);

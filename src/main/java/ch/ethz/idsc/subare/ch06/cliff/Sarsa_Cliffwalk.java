@@ -2,19 +2,18 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch06.cliff;
 
-import java.util.function.Function;
-
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -25,9 +24,7 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** StepDigest qsa methods applied to cliff walk */
-class SD_Cliffwalk {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.01));
-
+class Sarsa_Cliffwalk {
   static void handle(SarsaType type, int total) throws Exception {
     System.out.println(type);
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
@@ -36,8 +33,8 @@ class SD_Cliffwalk {
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < total; ++index) {
-      Scalar error = DiscreteQsas.distance(qsa, ref);
-      System.out.println(index + " " + error.map(ROUND));
+      Scalar error = TensorValuesUtils.distance(qsa, ref);
+      System.out.println(index + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, RealScalar.of(.1));
       Sarsa sarsa = type.supply(cliffwalk, qsa, RealScalar.of(.25), policyInterface);
       for (int count = 0; count < 10; ++count)

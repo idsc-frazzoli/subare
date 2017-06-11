@@ -9,10 +9,12 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.alg.Accumulate;
 import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.sca.Chop;
 
+/** class picks action based on distribution defined by given {@link PolicyInterface} */
 public class PolicyWrap {
   private final PolicyInterface policyInterface;
   private final Random random;
@@ -25,8 +27,10 @@ public class PolicyWrap {
   public Tensor next(Tensor state, Tensor actions) {
     Tensor prob = Accumulate.of( //
         Tensor.of(actions.flatten(0).map(action -> policyInterface.policy(state, action))));
+    // ---
     if (!Chop.isZeros(Last.of(prob).subtract(RealScalar.ONE)))
-      throw new RuntimeException("no distribution " + prob);
+      throw TensorRuntimeException.of(prob);
+    // ---
     Scalar threshold = DoubleScalar.of(random.nextDouble());
     int index = 0;
     for (; index < prob.length(); ++index)

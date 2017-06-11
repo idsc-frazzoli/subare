@@ -15,7 +15,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
 
-public class DiscreteQsa implements QsaInterface, Serializable {
+public class DiscreteQsa implements QsaInterface, TensorValuesInterface, Serializable {
   public static DiscreteQsa build(DiscreteModel discreteModel) {
     Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
     return new DiscreteQsa(index, Array.zeros(index.size()));
@@ -48,10 +48,6 @@ public class DiscreteQsa implements QsaInterface, Serializable {
     values.set(value, index.of(createKey(state, action)));
   }
 
-  public DiscreteQsa create(Stream<? extends Tensor> stream) {
-    return new DiscreteQsa(index, Tensor.of(stream));
-  }
-
   public void print() {
     print(Function.identity());
   }
@@ -68,10 +64,23 @@ public class DiscreteQsa implements QsaInterface, Serializable {
     }
   }
 
+  /**************************************************/
+  @Override
+  public Tensor keys() {
+    return index.keys();
+  }
+
+  @Override
   public Tensor values() {
     return values.unmodifiable();
   }
 
+  @Override
+  public DiscreteQsa create(Stream<? extends Tensor> stream) {
+    return new DiscreteQsa(index, Tensor.of(stream));
+  }
+
+  /**************************************************/
   public Scalar getMin() {
     return values.flatten(-1).map(Scalar.class::cast).reduce(Min::of).get();
   }
@@ -82,9 +91,5 @@ public class DiscreteQsa implements QsaInterface, Serializable {
 
   public int size() {
     return index.size();
-  }
-
-  public Tensor keys() {
-    return index.keys();
   }
 }

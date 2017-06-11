@@ -8,13 +8,14 @@ import ch.ethz.idsc.subare.ch02.RandomAgent;
 import ch.ethz.idsc.subare.ch02.UCBAgent;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 
 /** chapter 2:
  * Multi-arm Bandits */
 class Training {
   static void train(int epochs) {
     final int n = 3;
-    RealScalar econst = RationalScalar.of(1, 12);
+    Scalar econst = RationalScalar.of(1, 12);
     Judger judger = new Judger(new Bandits(n), //
         new RandomAgent(n), //
         new GradientAgent(n, RealScalar.of(.1)), //

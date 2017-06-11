@@ -17,11 +17,14 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** double sarsa for single-step, and n-step
  * 
- * algorithm covers
+ * implementation covers
  * 
  * Double Q-learning (box on p.145)
  * Double Expected Sarsa (Exercise 6.10)
- * Double Original Sarsa (p.145) */
+ * Double Original Sarsa (p.145)
+ * 
+ * Maximization bias and Doubled learning were introduced and investigated
+ * by Hado van Hasselt (2010, 2011) */
 public class DoubleSarsa extends DequeDigestAdapter {
   private final DiscreteModel discreteModel;
   private final SarsaType type;

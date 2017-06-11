@@ -37,12 +37,12 @@ enum CarRentalHelper {
     return ImageResize.of(tensor, 4);
   }
 
-  public static Tensor render(CarRental gambler, PolicyInterface policyInterface) {
+  public static Tensor render(CarRental carRental, PolicyInterface policyInterface) {
     Interpolation colorscheme = Colorscheme.classic();
     final Tensor tensor = Array.zeros(21, 21, 4);
     PolicyWrap policyWrap = new PolicyWrap(policyInterface, new Random());
-    for (Tensor state : gambler.states()) {
-      Tensor action = policyWrap.next(state, gambler.actions(state));
+    for (Tensor state : carRental.states()) {
+      Tensor action = policyWrap.next(state, carRental.actions(state));
       int x = state.Get(0).number().intValue();
       int y = state.Get(1).number().intValue();
       Scalar sca = action.Get().add(RealScalar.of(5)).divide(RealScalar.of(10));
@@ -51,10 +51,10 @@ enum CarRentalHelper {
     return ImageResize.of(tensor, 4);
   }
 
-  public static Tensor joinAll(CarRental gambler, DiscreteVs vs) {
-    Tensor im1 = render(gambler, vs);
-    PolicyInterface pi = GreedyPolicy.bestEquiprobable(gambler, vs);
-    Tensor im2 = render(gambler, pi);
+  public static Tensor joinAll(CarRental carRental, DiscreteVs vs) {
+    Tensor im1 = render(carRental, vs);
+    PolicyInterface pi = GreedyPolicy.bestEquiprobable(carRental, vs);
+    Tensor im2 = render(carRental, pi);
     List<Integer> list = Dimensions.of(im1);
     list.set(0, 4 * 2);
     return Join.of(0, im1, Array.zeros(list), im2);

@@ -14,12 +14,11 @@ import ch.ethz.idsc.tensor.Tensor;
  * box on p.140
  * 
  * see also Watkins 1989 */
-// TODO check convergence criteria
-// learning rate should converge to zero, sum should go to infinity, sum of squares should be finite(?)
 public class QLearning extends ActionSarsa {
   /** @param discreteModel
    * @param qsa
-   * @param alpha learning rate */
+   * @param alpha learning rate should converge to zero, with
+   * sum of alpha's should go to infinity, sum of alpha's squared should be finite */
   public QLearning(DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
     super(discreteModel, qsa, alpha);
   }

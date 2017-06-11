@@ -21,7 +21,7 @@ class VI_RaceTrack {
   public static void main(String[] args) throws Exception {
     final String name = "track2";
     Racetrack racetrack = RacetrackHelper.create(name, 5);
-    ValueIteration vi = new ValueIteration(racetrack);
+    ValueIteration vi = new ValueIteration(racetrack, racetrack);
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(racetrack, vi.vs());

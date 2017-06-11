@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.io.Serializable;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -11,7 +12,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 
-public class DiscreteVs implements VsInterface {
+public class DiscreteVs implements VsInterface, TensorValuesInterface, Serializable {
   /** initializes all state value to zero
    * 
    * @param discreteModel
@@ -46,10 +47,6 @@ public class DiscreteVs implements VsInterface {
     values.set(value, index.of(state));
   }
 
-  public DiscreteVs create(Stream<? extends Tensor> stream) {
-    return new DiscreteVs(index, Tensor.of(stream));
-  }
-
   @Override
   public DiscreteVs copy() {
     return new DiscreteVs(index, values.copy());
@@ -60,14 +57,23 @@ public class DiscreteVs implements VsInterface {
     return new DiscreteVs(index, values.multiply(gamma));
   }
 
-  public Tensor values() {
-    return values.unmodifiable();
-  }
-
+  /**************************************************/
+  @Override
   public Tensor keys() {
     return index.keys();
   }
 
+  @Override
+  public Tensor values() {
+    return values.unmodifiable();
+  }
+
+  @Override
+  public DiscreteVs create(Stream<? extends Tensor> stream) {
+    return new DiscreteVs(index, Tensor.of(stream));
+  }
+
+  /**************************************************/
   public void print() {
     print(Function.identity());
   }

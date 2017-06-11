@@ -1,25 +1,25 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.infvar;
 
+import java.util.Random;
+
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
-import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
-/** Example 5.5: Infinite Variance
- * 
- * p.114 */
-class InfiniteVariance extends DeterministicStandardModel implements MonteCarloInterface {
+/** Example 5.5 p.114: Infinite Variance */
+class InfiniteVariance implements StandardModel, MonteCarloInterface {
+  static final Scalar BACK = RealScalar.ZERO;
+  static final Scalar END = RealScalar.ONE;
+  static final Scalar PROB = RealScalar.of(.1);
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
-  final Tensor actions = Tensors.vector(0, 1).unmodifiable(); // increment
-  final Index statesIndex;
-
-  public InfiniteVariance() {
-    statesIndex = Index.build(states);
-  }
+  private final Tensor actions = Tensors.of(BACK, END).unmodifiable(); // increment
+  private final Random random = new Random();
 
   @Override
   public Tensor states() {
@@ -28,19 +28,31 @@ class InfiniteVariance extends DeterministicStandardModel implements MonteCarloI
 
   @Override
   public Tensor actions(Tensor state) {
-    return isTerminal(state) ? Tensors.of(RealScalar.ZERO) : actions;
+    return isTerminal(state) ? Tensors.of(END) : actions;
+  }
+
+  @Override
+  public Scalar gamma() {
+    return RealScalar.ONE;
   }
 
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    return state.equals(RealScalar.ZERO) && action.equals(RealScalar.ONE) ? //
-        RealScalar.ONE : RealScalar.ZERO;
+    if (action.equals(BACK) && isTerminal(next))
+      return RealScalar.ONE;
+    return RealScalar.ZERO;
   }
 
   @Override
   public Tensor move(Tensor state, Tensor action) {
-    return state.add(action);
+    if (isTerminal(state))
+      return state;
+    if (action.equals(END))
+      return END; // END is used as state
+    if (Scalars.lessThan(RealScalar.of(random.nextDouble()), PROB))
+      return END; // END is used as state
+    return BACK; // BACK is used as state
   }
 
   /**************************************************/
@@ -49,14 +61,33 @@ class InfiniteVariance extends DeterministicStandardModel implements MonteCarloI
     return Tensors.vector(0);
   }
 
+  /**************************************************/
   @Override
   public boolean isTerminal(Tensor state) {
-    return state.equals(RealScalar.ONE);
+    return state.equals(END); // END is used as state
   }
 
   /**************************************************/
   @Override
-  public Scalar gamma() {
-    return RealScalar.ONE;
+  public Tensor transitions(Tensor state, Tensor action) {
+    return isTerminal(state) ? Tensors.of(state) : states();
+  }
+
+  @Override
+  public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
+    if (isTerminal(state))
+      return KroneckerDelta.of(state, next);
+    // state == 0
+    if (action.equals(END))
+      return KroneckerDelta.of(END, next);
+    // action == BACK
+    return next.equals(BACK) ? RealScalar.ONE.subtract(PROB) : PROB;
+  }
+
+  @Override
+  public Scalar expectedReward(Tensor state, Tensor action) {
+    if (state.equals(BACK) && action.equals(BACK))
+      return PROB; // 0.1 * 1
+    return RealScalar.ZERO;
   }
 }

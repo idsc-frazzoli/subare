@@ -6,8 +6,8 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.DecimalScalar;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** solving grid world
  * 
@@ -41,10 +41,10 @@ import ch.ethz.idsc.tensor.sca.Round;
 class VI_Gridworld {
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
-    ValueIteration vi = new ValueIteration(gridworld);
+    ValueIteration vi = new ValueIteration(gridworld, gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
-    vi.vs().print(Round.toMultipleOf(DecimalScalar.of(.1)));
+    vi.vs().print(Digits._1);
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
     Policies.print(policyInterface, gridworld.states());
   }

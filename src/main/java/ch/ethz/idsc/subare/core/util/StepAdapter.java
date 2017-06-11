@@ -13,15 +13,14 @@ public class StepAdapter implements StepInterface {
   private final Tensor next;
 
   public StepAdapter(Tensor prev, Tensor action, Scalar reward, Tensor next) {
-    this.prev = prev;
-    this.action = action;
-    this.reward = reward;
-    this.next = next;
+    this.prev = prev.unmodifiable();
+    this.action = action.unmodifiable();
+    this.reward = reward; // Scalar is immutable
+    this.next = next.unmodifiable();
   }
 
   @Override
   public Tensor prevState() {
-    // TODO ensure that these are not modified, ... are unmodifiable...
     return prev;
   }
 
@@ -38,5 +37,10 @@ public class StepAdapter implements StepInterface {
   @Override
   public Tensor nextState() {
     return next;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("(%s, %s) -> r=%s next=%s", prev, action, reward, next);
   }
 }

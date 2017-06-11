@@ -1,26 +1,21 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
-import java.util.function.Function;
-
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
-import ch.ethz.idsc.tensor.sca.Round;
 
 class MCES_Wireloop {
-  static Function<Scalar, Scalar> ROUND = Round.toMultipleOf(DecimalScalar.of(.01));
-
   public static void main(String[] args) throws Exception {
     String name = "wire5";
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
@@ -30,8 +25,8 @@ class MCES_Wireloop {
     int EPISODES = 40;
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = DiscreteQsas.distance(mces.qsa(), ref);
-      System.out.println(index + " " + epsilon.Get(index).map(ROUND) + " " + error.map(ROUND));
+      Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
+      System.out.println(index + " " + epsilon.Get(index).map(Digits._2) + " " + error.map(Digits._2));
       for (int count = 0; count < 4; ++count) {
         PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(wireloop, mces.qsa(), epsilon.Get(index));
         ExploringStarts.batch(wireloop, policyInterface, mces);

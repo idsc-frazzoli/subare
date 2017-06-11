@@ -35,7 +35,7 @@ import ch.ethz.idsc.tensor.io.Export;
 class VI_Gridworld {
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
-    ValueIteration vi = new ValueIteration(gridworld);
+    ValueIteration vi = new ValueIteration(gridworld, gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     vi.vs().print();
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());

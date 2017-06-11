@@ -4,14 +4,14 @@ package ch.ethz.idsc.subare.ch06.cliff;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
-import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
+import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteQsas;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.StateActionRasters;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.ImageResize;
-import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -28,13 +28,11 @@ enum CliffwalkHelper {
   ;
   // ---
   static DiscreteQsa getOptimalQsa(Cliffwalk cliffwalk) {
-    ActionValueIteration avi = new ActionValueIteration(cliffwalk, cliffwalk);
-    avi.untilBelow(DecimalScalar.of(.0001));
-    return avi.qsa();
+    return ActionValueIterations.solve(cliffwalk, DecimalScalar.of(.0001));
   }
 
   static PolicyInterface getOptimalPolicy(Cliffwalk cliffwalk) {
-    ValueIteration vi = new ValueIteration(cliffwalk);
+    ValueIteration vi = new ValueIteration(cliffwalk, cliffwalk);
     vi.untilBelow(RealScalar.of(1e-10));
     return GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
   }
@@ -42,6 +40,7 @@ enum CliffwalkHelper {
   private static final Tensor BASE = Tensors.vector(255);
   private static final int MAGNIFY = 6;
 
+  // TODO implement state raster
   static Tensor render(Cliffwalk cliffwalk, DiscreteVs vs) {
     Interpolation colorscheme = Colorscheme.classic();
     final Tensor tensor = Array.zeros(cliffwalk.NX, cliffwalk.NY, 4);
@@ -56,25 +55,15 @@ enum CliffwalkHelper {
   }
 
   static Tensor render(Cliffwalk cliffwalk, DiscreteQsa scaled) {
-    Interpolation colorscheme = Colorscheme.classic();
-    final Tensor tensor = Array.zeros(cliffwalk.NX, (cliffwalk.NY + 1) * 4 - 1, 4);
-    Index indexActions = Index.build(cliffwalk.actions);
-    for (Tensor state : cliffwalk.states())
-      for (Tensor action : cliffwalk.actions(state)) {
-        Scalar sca = scaled.value(state, action);
-        int sx = state.Get(0).number().intValue();
-        int sy = state.Get(1).number().intValue();
-        int a = indexActions.of(action);
-        tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy + (cliffwalk.NY + 1) * a);
-      }
-    return ImageResize.of(tensor, MAGNIFY);
+    return ImageResize.of(StateActionRasters.render(new CliffwalkRaster(cliffwalk), scaled), MAGNIFY);
   }
 
-  static Tensor joinAll(Cliffwalk gambler, DiscreteQsa qsa, DiscreteQsa ref) {
-    Tensor im1 = render(gambler, DiscreteQsas.rescaled(qsa));
-    Tensor im2 = render(gambler, DiscreteQsas.logisticDifference(qsa, ref, RealScalar.ONE));
-    List<Integer> list = Dimensions.of(im1);
-    list.set(0, 2 * MAGNIFY);
-    return Join.of(0, im1, Array.zeros(list), im2);
+  static Tensor joinAll(Cliffwalk cliffwalk, DiscreteQsa qsa, DiscreteQsa ref) {
+    CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
+    Tensor image1 = StateActionRasters.render(cliffwalkRaster, TensorValuesUtils.rescaled(qsa));
+    Tensor image2 = StateActionRasters.render(cliffwalkRaster, TensorValuesUtils.logisticDifference(qsa, ref));
+    List<Integer> list = Dimensions.of(image1);
+    list.set(0, 2);
+    return ImageResize.of(Join.of(0, image1, Array.zeros(list), image2), MAGNIFY);
   }
 }
