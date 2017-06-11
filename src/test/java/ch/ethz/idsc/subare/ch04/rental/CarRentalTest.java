@@ -88,7 +88,7 @@ public class CarRentalTest extends TestCase {
     CarRental carRental = new CarRental(20);
     Tensor state = Tensors.vector(10, 10);
     Tensor action = RealScalar.of(2);
-    Scalar rew = carRental.reward(state, action, null);
-    System.out.println("reward = " + rew);
+    Scalar reward = carRental.reward(state, action, Tensors.vector(12, 8));
+    // System.out.println("reward = " + reward);
   }
 }

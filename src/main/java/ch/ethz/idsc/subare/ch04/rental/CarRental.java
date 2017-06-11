@@ -84,6 +84,11 @@ class CarRental implements StandardModel, SampleModel {
     Scalar n1out = DiscreteDistributions.nextSample(p1out);
     Scalar n2_in = DiscreteDistributions.nextSample(p2_in);
     Scalar n2out = DiscreteDistributions.nextSample(p2out);
+    return effective(morning, n1_in, n1out, n2_in, n2out);
+  }
+
+  private Tensor effective(Tensor morning, Scalar n1_in, Scalar n1out, Scalar n2_in, Scalar n2out) {
+    morning = morning.copy();
     morning.set(cars -> cars.add(n1_in.subtract(n1out)), 0);
     morning.set(cars -> cars.add(n2_in.subtract(n2out)), 1);
     return morning.map(CLIP);
@@ -92,13 +97,29 @@ class CarRental implements StandardModel, SampleModel {
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     Scalar sum = action.Get().abs().multiply(MOVE_CAR_COST);
-    // TODO why doesn't next appear in function and morning is not used?
-    Tensor morning = night_move(state, action);
-    Scalar n1out = DiscreteDistributions.nextSample(p1out);
-    Scalar n2out = DiscreteDistributions.nextSample(p2out);
-    n1out = Min.of(n1out, morning.Get(0)); // TODO does not account for returned vehicles?
+    Tensor morning = night_move(state, action).unmodifiable();
+    Scalar n1_in;
+    Scalar n1out = null;
+    Scalar n2_in;
+    Scalar n2out = null;
+    boolean status = false;
+    int attempts = 0;
+    // TODO this is very inefficient for trajectory generation...
+    while (!status) {
+      if (200 < attempts) {
+        System.out.println("warning: give up");
+        return sum;
+      }
+      n1_in = DiscreteDistributions.nextSample(p1_in);
+      n1out = DiscreteDistributions.nextSample(p1out);
+      n2_in = DiscreteDistributions.nextSample(p2_in);
+      n2out = DiscreteDistributions.nextSample(p2out);
+      status = effective(morning, n1_in, n1out, n2_in, n2out).equals(next);
+      ++attempts;
+    }
+    // System.out.println("attempts=" + attempts);
+    n1out = Min.of(n1out, morning.Get(0));
     n2out = Min.of(n2out, morning.Get(1));
-    System.out.println(n1out.add(n2out));
     Scalar rented = n1out.add(n2out);
     return sum.add(rented.multiply(RENTAL_CREDIT));
   }
