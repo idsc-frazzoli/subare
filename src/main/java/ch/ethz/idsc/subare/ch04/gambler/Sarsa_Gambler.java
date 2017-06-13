@@ -17,28 +17,26 @@ import ch.ethz.idsc.subare.core.util.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** Sarsa applied to gambler */
 class Sarsa_Gambler {
-  static void handle(SarsaType type, int n) throws Exception {
+  static void handle(SarsaType type, double factor, double exponent) throws Exception {
     System.out.println(type);
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    int EPISODES = 30;
+    int EPISODES = 100;
     Tensor epsilon = Subdivide.of(.6, .01, EPISODES);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     StateActionCounter sac = new StateActionCounter(gambler);
     System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_" + type + "" + n + ".gif"), 200);
-    GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_" + type + "" + n + ".gif"), 200);
-    LearningRate learningRate = DefaultLearningRate.of(0.8, 0.6);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_" + type + ".gif"), 200);
+    GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_" + type + ".gif"), 200);
+    LearningRate learningRate = DefaultLearningRate.of(factor, exponent);
     final Sarsa sarsa = type.supply(gambler, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
@@ -46,14 +44,14 @@ class Sarsa_Gambler {
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       sarsa.setPolicyInterface(policyInterface);
       for (int count = 0; count < 1; ++count)
-        ExploringStarts.batch(gambler, policyInterface, n, sarsa, sac);
+        ExploringStarts.batch(gambler, policyInterface, 1, sarsa, sac);
       gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
       gsc.append(ImageFormat.of(GamblerHelper.counts( //
           gambler, sac.qsa(StateActionCounter.LOGARITHMIC))));
     }
     gsw.close();
     gsc.close();
-    qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
+    // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
     PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gambler, qsa);
     EpisodeInterface mce = EpisodeKickoff.single(gambler, policyInterface);
@@ -65,8 +63,8 @@ class Sarsa_Gambler {
   }
 
   public static void main(String[] args) throws Exception {
-    // handle(SarsaType.original, 3);
-    handle(SarsaType.expected, 1);
-    // handle(SarsaType.qlearning, 1);
+    // handle(SarsaType.original, 1.3, 0.51);
+    // handle(SarsaType.expected, 1.3, 0.51);
+    handle(SarsaType.qlearning, 0.2, 0.55);
   }
 }

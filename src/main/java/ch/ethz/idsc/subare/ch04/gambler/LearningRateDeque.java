@@ -9,6 +9,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.red.Min;
 
+@Deprecated
 class LearningRateDeque {
   private double alpha;
   private double epsilon;
