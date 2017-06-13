@@ -2,9 +2,7 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.tensor.Scalar;
 
 public enum SarsaType {
   original, //
@@ -12,15 +10,15 @@ public enum SarsaType {
   qlearning, //
   ;
   // ---
-  public Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha, //
-      PolicyInterface policyInterface) {
+  public Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate //
+  ) {
     switch (this) {
     case original:
-      return new OriginalSarsa(discreteModel, qsa, alpha, policyInterface);
+      return new OriginalSarsa(discreteModel, qsa, learningRate);
     case expected:
-      return new ExpectedSarsa(discreteModel, qsa, alpha, policyInterface);
+      return new ExpectedSarsa(discreteModel, qsa, learningRate);
     case qlearning:
-      return new QLearning(discreteModel, qsa, alpha);
+      return new QLearning(discreteModel, qsa, learningRate);
     }
     throw new RuntimeException();
   }

@@ -5,6 +5,8 @@ package ch.ethz.idsc.subare.ch06.cliff;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.td.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.td.LearningRate;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -31,12 +33,14 @@ class Sarsa_Cliffwalk {
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
     System.out.println(qsa.size());
+    LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
+    Sarsa sarsa = type.supply(cliffwalk, qsa, learningRate);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < total; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, RealScalar.of(.1));
-      Sarsa sarsa = type.supply(cliffwalk, qsa, RealScalar.of(.25), policyInterface);
+      sarsa.setPolicyInterface(policyInterface);
       for (int count = 0; count < 10; ++count)
         ExploringStarts.batch(cliffwalk, policyInterface, sarsa);
       if (index % 2 == 0)

@@ -2,6 +2,8 @@
 package ch.ethz.idsc.subare.ch05.wireloop;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.td.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.td.LearningRate;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -9,7 +11,6 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -24,11 +25,13 @@ class Sarsa_Wireloop {
     Tensor epsilon = Subdivide.of(.2, .01, EPISODES);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     System.out.println(qsa.size());
+    LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
+    Sarsa sarsa = type.supply(wireloop, qsa, learningRate);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index + " " + epsilon.Get(index).map(Digits._2));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
-      Sarsa sarsa = type.supply(wireloop, qsa, RealScalar.of(.1), policyInterface);
+      sarsa.setPolicyInterface(policyInterface);
       ExploringStarts.batch(wireloop, policyInterface, n, sarsa);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, qsa)));
     }

@@ -4,6 +4,8 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.td.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.td.LearningRate;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -34,6 +36,8 @@ class QL_Gambler {
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_ql.gif"), 100);
     LearningRateDeque lr_scheduler = new LearningRateDeque(0.1, 0.1);
+    LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
+    Sarsa stepDigest = new QLearning(gambler, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       lr_scheduler.notifyError(error);
@@ -41,7 +45,6 @@ class QL_Gambler {
       Scalar eps = lr_scheduler.getEpsilon(); // epsilon.Get(index);
       // eps = Power.of(eps, 2);
       System.out.println(index + " " + eps.map(Digits._1) + " " + error.map(Digits._1));
-      Sarsa stepDigest = new QLearning(gambler, qsa, alpha);
       for (int count = 0; count < 1; ++count) {
         ExploringStarts.batch(gambler, policyInterface, 1, stepDigest);
         policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);

@@ -7,6 +7,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.N;
 import ch.ethz.idsc.tensor.sca.Power;
 
+@Deprecated
 class LearningRateScheduler {
   private final double exponent;
   private final double factor;

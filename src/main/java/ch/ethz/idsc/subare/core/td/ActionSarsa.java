@@ -8,8 +8,8 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** single action sarsa */
 abstract class ActionSarsa extends Sarsa {
-  public ActionSarsa(DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
-    super(discreteModel, qsa, alpha);
+  public ActionSarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+    super(discreteModel, qsa, learningRate);
   }
 
   /** the action "has the value" estimated by evaluate(...)

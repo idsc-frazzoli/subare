@@ -43,7 +43,8 @@ class DSarsa_Gridworld {
       System.out.println(index + " " + explore.map(Digits._1) + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable( //
           gridworld, TensorValuesUtils.average(qsa1, qsa2), explore);
-      DequeDigest dequeDigest = new DoubleSarsa(type, gridworld, qsa1, qsa2, alpha, policyInterface);
+      // FIXME
+      DequeDigest dequeDigest = new DoubleSarsa(type, gridworld, qsa1, qsa2, null, policyInterface);
       ExploringStarts.batch(gridworld, policyInterface, n, dequeDigest);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa1, ref)));
     }

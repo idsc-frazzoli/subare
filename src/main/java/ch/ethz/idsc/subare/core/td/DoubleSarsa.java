@@ -31,7 +31,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
   private final Scalar gamma;
-  private final Scalar alpha;
+  private final LearningRate learningRate;
   private final PolicyInterface policyInterface;
   private final Random random = new Random();
 
@@ -46,7 +46,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
       DiscreteModel discreteModel, //
       QsaInterface qsa1, //
       QsaInterface qsa2, //
-      Scalar alpha, //
+      LearningRate learningRate, //
       PolicyInterface policyInterface //
   ) {
     this.discreteModel = discreteModel;
@@ -54,7 +54,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
     this.qsa1 = qsa1;
     this.qsa2 = qsa2;
     this.gamma = discreteModel.gamma();
-    this.alpha = alpha;
+    this.learningRate = learningRate;
     this.policyInterface = policyInterface;
   }
 
@@ -80,7 +80,8 @@ public class DoubleSarsa extends DequeDigestAdapter {
     case original:
     case qlearning: {
       // TODO for original sarsa, the policyInterface is probably wrong!
-      ActionSarsa actionSarsa = (ActionSarsa) type.supply(discreteModel, Qsa1, alpha, policyInterface);
+      ActionSarsa actionSarsa = (ActionSarsa) type.supply(discreteModel, Qsa1, learningRate);
+      actionSarsa.setPolicyInterface(policyInterface);
       Tensor action = actionSarsa.selectAction(stateP); // use Qsa1 to select action
       rewards.append(Qsa2.value(stateP, action)); // use Qsa2 to evaluate state-action pair
       break;
@@ -96,6 +97,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
     Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
     Scalar value0 = Qsa1.value(state0, action0);
+    Scalar alpha = learningRate.learningRate(state0, action0);
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
   }
