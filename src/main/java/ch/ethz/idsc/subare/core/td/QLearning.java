@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.core.td;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** Q-learning: An off-policy TD control algorithm
@@ -19,8 +18,8 @@ public class QLearning extends ActionSarsa {
    * @param qsa
    * @param alpha learning rate should converge to zero, with
    * sum of alpha's should go to infinity, sum of alpha's squared should be finite */
-  public QLearning(DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
-    super(discreteModel, qsa, alpha);
+  public QLearning(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+    super(discreteModel, qsa, learningRate);
   }
 
   @Override

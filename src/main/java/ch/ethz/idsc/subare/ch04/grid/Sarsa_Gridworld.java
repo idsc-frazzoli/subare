@@ -1,11 +1,13 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
-import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.td.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.td.LearningRate;
 import ch.ethz.idsc.subare.core.td.OriginalSarsa;
+import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
@@ -36,15 +38,17 @@ class Sarsa_Gridworld {
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
     Tensor learning = Subdivide.of(.3, .01, EPISODES);
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_" + type + "" + n + ".gif"), 150);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + type + "" + n + ".gif"), 150);
+    LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
+    Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar alpha = learning.Get(index);
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + explore.map(Digits._1) + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
-      DequeDigest dequeDigest = new OriginalSarsa(gridworld, qsa, alpha, policyInterface);
-      ExploringStarts.batch(gridworld, policyInterface, n, dequeDigest);
+      sarsa.setPolicyInterface(policyInterface);
+      ExploringStarts.batch(gridworld, policyInterface, n, sarsa);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
     }
     gsw.close();

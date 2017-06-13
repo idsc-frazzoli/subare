@@ -21,7 +21,7 @@ class CAMC_Gridworld {
     ConstantAlphaMonteCarloVs camc = new ConstantAlphaMonteCarloVs(gridworld);
     camc.setAlpha(RealScalar.of(.3));
     // MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_camc.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_qsa_camc.gif"), 100);
     final int EPISODES = 50;
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     for (int index = 0; index < EPISODES; ++index) {

@@ -22,10 +22,10 @@ class AVI_Cliffwalk {
   public static void main(String[] args) throws Exception {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
-    Export.of(UserHome.file("Pictures/cliffwalk_qsa_avi.png"), //
+    Export.of(UserHome.Pictures("cliffwalk_qsa_avi.png"), //
         CliffwalkHelper.render(cliffwalk, TensorValuesUtils.rescaled(ref)));
     ActionValueIteration avi = new ActionValueIteration(cliffwalk);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_avi.gif"), 200);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_avi.gif"), 200);
     for (int index = 0; index < 20; ++index) {
       Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);
       System.out.println(index + " " + error.map(Digits._1));

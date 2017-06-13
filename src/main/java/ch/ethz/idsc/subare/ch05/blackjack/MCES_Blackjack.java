@@ -19,7 +19,7 @@ class MCES_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/blackjack_mces.gif"), 250);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_mces.gif"), 250);
     int EPISODES = 10; // 40
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     int episodes = 0;

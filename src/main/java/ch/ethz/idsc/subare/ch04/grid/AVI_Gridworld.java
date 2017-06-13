@@ -36,7 +36,7 @@ class AVI_Gridworld {
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     ActionValueIteration avi = new ActionValueIteration(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_qsa_avi.gif"), 250);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_qsa_avi.gif"), 250);
     for (int count = 0; count < 7; ++count) {
       gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, TensorValuesUtils.rescaled(avi.qsa()))));
       avi.step();

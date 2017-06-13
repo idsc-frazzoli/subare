@@ -42,18 +42,7 @@ public enum StateActionRasters {
   }
 
   public static Tensor render(StateActionRaster stateActionRaster, PolicyInterface policyInterface) {
-    DiscreteModel discreteModel = stateActionRaster.discreteModel();
-    Dimension dimension = stateActionRaster.dimension();
-    final Tensor tensor = Array.zeros(dimension.width, dimension.height, 4);
-    for (Tensor state : discreteModel.states())
-      for (Tensor action : discreteModel.actions(state)) {
-        Point point = stateActionRaster.point(state, action);
-        if (point != null) {
-          Scalar sca = policyInterface.policy(state, action);
-          tensor.set(COLORSCHEME.get(BASE.multiply(sca)), point.x, point.y);
-        }
-      }
-    return tensor;
+    return render(stateActionRaster, Policies.toQsa(stateActionRaster.discreteModel(), policyInterface));
   }
 
   public static Tensor qsaPolicy(StateActionRaster stateActionRaster, DiscreteQsa qsa) {

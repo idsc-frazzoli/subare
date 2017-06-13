@@ -22,10 +22,10 @@ class AVI_Windygrid {
   public static void main(String[] args) throws Exception {
     Windygrid windygrid = Windygrid.createFour();
     DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
-    Export.of(UserHome.file("Pictures/windygrid_qsa_avi.png"), //
+    Export.of(UserHome.Pictures("windygrid_qsa_avi.png"), //
         WindygridHelper.render(windygrid, TensorValuesUtils.rescaled(ref)));
     ActionValueIteration avi = new ActionValueIteration(windygrid);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/windygrid_qsa_avi.gif"), 250);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250);
     for (int index = 0; index < 20; ++index) {
       Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);
       System.out.println(index + " " + error.map(Digits._1));

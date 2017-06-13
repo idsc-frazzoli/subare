@@ -37,11 +37,11 @@ class AVI_Racetrack {
       }
     }
     System.out.println(c + " / " + qsa.size());
-    Export.of(UserHome.file("Pictures/racetrack_qsa_avi_21_11.png"), //
+    Export.of(UserHome.Pictures("racetrack_qsa_avi_21_11.png"), //
         RacetrackHelper.render(racetrack, qsa, Tensors.vector(2, 1), Tensors.vector(1, 1)));
-    Export.of(UserHome.file("Pictures/racetrack_qsa_avi_21_10.png"), //
+    Export.of(UserHome.Pictures("racetrack_qsa_avi_21_10.png"), //
         RacetrackHelper.render(racetrack, qsa, Tensors.vector(2, 1), Tensors.vector(1, 0)));
-    Export.of(UserHome.file("Pictures/racetrack_qsa_avi_21_01.png"), //
+    Export.of(UserHome.Pictures("racetrack_qsa_avi_21_01.png"), //
         RacetrackHelper.render(racetrack, qsa, Tensors.vector(2, 1), Tensors.vector(0, 1)));
   }
 }

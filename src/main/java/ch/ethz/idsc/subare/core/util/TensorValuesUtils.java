@@ -18,6 +18,10 @@ public enum TensorValuesUtils {
     return (T) tvi.create(Rescale.of(tvi.values()).flatten(0));
   }
 
+  // @SuppressWarnings("unchecked")
+  // public static <T extends TensorValuesInterface> T apply(T tvi, UnaryOperator<Tensor> operator) {
+  // return (T) tvi.create(operator.apply(tvi.values()).flatten(0));
+  // }
   public static Scalar distance(TensorValuesInterface tvi1, TensorValuesInterface tvi2) {
     return Norm._1.of(_difference(tvi1, tvi2));
   }

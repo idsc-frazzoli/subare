@@ -5,11 +5,11 @@ import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DequeDigestAdapter;
-import ch.ethz.idsc.tensor.ExactNumberQ;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Multinomial;
@@ -28,18 +28,24 @@ public abstract class Sarsa extends DequeDigestAdapter {
   final DiscreteModel discreteModel;
   final QsaInterface qsa;
   private final Scalar gamma;
-  private final Scalar alpha;
+  private final LearningRate learningRate;
+  PolicyInterface policyInterface = null;
 
   /** @param discreteModel
    * @param qsa
    * @param alpha learning rate */
-  public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, Scalar alpha) {
+  public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     this.discreteModel = discreteModel;
     this.qsa = qsa;
     this.gamma = discreteModel.gamma();
-    this.alpha = alpha;
-    if (ExactNumberQ.of(alpha)) // TODO printout warning only once
-      System.out.println("warning: symbolic values for alpha slow down the software");
+    this.learningRate = learningRate;
+    // if (ExactNumberQ.of(alpha)) // TODO printout warning only once
+    // System.out.println("warning: symbolic values for alpha slow down the software");
+  }
+
+  /** @param policyInterface */
+  public void setPolicyInterface(PolicyInterface policyInterface) {
+    this.policyInterface = policyInterface;
   }
 
   /** @param state
@@ -54,9 +60,12 @@ public abstract class Sarsa extends DequeDigestAdapter {
     // ---
     StepInterface first = deque.getFirst();
     Tensor state0 = first.prevState();
-    Tensor action0 = first.action();
-    Scalar value0 = qsa.value(state0, action0);
+    Tensor action = first.action();
+    // ---
+    Scalar alpha = learningRate.learningRate(state0, action);
+    // ---
+    Scalar value0 = qsa.value(state0, action);
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
-    qsa.assign(state0, action0, value0.add(delta));
+    qsa.assign(state0, action, value0.add(delta));
   }
 }

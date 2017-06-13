@@ -3,6 +3,8 @@
 package ch.ethz.idsc.subare.ch06.windy;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.td.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.td.LearningRate;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -24,12 +26,14 @@ class Sarsa_Windygrid {
     final DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/windygrid_qsa_" + type + ".gif"), 100);
+    LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
+    Sarsa sarsa = type.supply(windygrid, qsa, learningRate);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < total; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(windygrid, qsa, RealScalar.of(.1));
-      Sarsa sarsa = type.supply(windygrid, qsa, RealScalar.of(.25), policyInterface);
+      sarsa.setPolicyInterface(policyInterface);
       for (int count = 0; count < 10; ++count)
         ExploringStarts.batch(windygrid, policyInterface, sarsa);
       if (index % 2 == 0)

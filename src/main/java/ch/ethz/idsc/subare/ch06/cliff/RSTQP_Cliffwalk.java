@@ -20,7 +20,7 @@ class RSTQP_Cliffwalk {
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(cliffwalk, qsa);
     rstqp.setLearningRate(RealScalar.of(.1));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/cliffwalk_qsa_rstqp.gif"), 100);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_rstqp.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);

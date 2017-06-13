@@ -14,7 +14,7 @@ class VI_CarRental {
   public static void main(String[] args) throws Exception {
     CarRental carRental = new CarRental(20);
     ValueIteration vi = new ValueIteration(carRental);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/carrental_vi.gif"), 250);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("carrental_vi.gif"), 250);
     for (int count = 0; count <= 25; ++count) {
       System.out.println(count);
       gsw.append(ImageFormat.of(CarRentalHelper.joinAll(carRental, vi.vs())));

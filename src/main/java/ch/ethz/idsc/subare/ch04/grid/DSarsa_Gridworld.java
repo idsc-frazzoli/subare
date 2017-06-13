@@ -35,7 +35,7 @@ class DSarsa_Gridworld {
     Tensor learning = Subdivide.of(.3, .01, EPISODES);
     DiscreteQsa qsa1 = DiscreteQsa.build(gridworld);
     DiscreteQsa qsa2 = DiscreteQsa.build(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gridworld_double_" + type + "" + n + ".gif"), 150);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_double_" + type + "" + n + ".gif"), 150);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar alpha = learning.Get(index);
@@ -43,7 +43,8 @@ class DSarsa_Gridworld {
       System.out.println(index + " " + explore.map(Digits._1) + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable( //
           gridworld, TensorValuesUtils.average(qsa1, qsa2), explore);
-      DequeDigest dequeDigest = new DoubleSarsa(type, gridworld, qsa1, qsa2, alpha, policyInterface);
+      // FIXME
+      DequeDigest dequeDigest = new DoubleSarsa(type, gridworld, qsa1, qsa2, null, policyInterface);
       ExploringStarts.batch(gridworld, policyInterface, n, dequeDigest);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa1, ref)));
     }

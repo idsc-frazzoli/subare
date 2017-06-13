@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.Digits;
@@ -23,22 +24,27 @@ class RSTQP_Gambler {
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(gambler, qsa);
     ActionValueStatistics avs = new ActionValueStatistics(gambler);
+    StateActionCounter sac = new StateActionCounter(gambler);
     rstqp.setLearningRate(RealScalar.of(.3)); // TODO learning rate is wrong
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_rstqp.gif"), 100);
-    int EPISODES = 100;
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_rstqp.gif"), 100);
+    GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_rstqp.gif"), 200);
+    int EPISODES = 30;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(Digits._1));
-      TabularSteps.batch(gambler, gambler, rstqp, avs);
+      TabularSteps.batch(gambler, gambler, rstqp, avs, sac);
       gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
+      gsc.append(ImageFormat.of(GamblerHelper.counts( //
+          gambler, sac.qsa(StateActionCounter.LOGARITHMIC))));
     }
     gsw.close();
+    gsc.close();
     // ---
     ActionValueIteration avi = new ActionValueIteration(gambler, avs);
     avi.setMachinePrecision();
     avi.untilBelow(RealScalar.of(.0001));
     Scalar error = TensorValuesUtils.distance(ref, avi.qsa());
     System.out.println(error);
-    Export.of(UserHome.file("Pictures/gambler_avs.png"), GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref));
+    Export.of(UserHome.Pictures("gambler_avs.png"), GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref));
   }
 }

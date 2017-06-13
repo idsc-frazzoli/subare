@@ -21,7 +21,7 @@ class MCES_Gambler {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gambler);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.file("Pictures/gambler_qsa_mces.gif"), 200);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_mces.gif"), 200);
     int EPISODES = 20;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
