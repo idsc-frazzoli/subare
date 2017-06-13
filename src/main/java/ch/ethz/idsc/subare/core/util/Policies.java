@@ -14,9 +14,21 @@ public enum Policies {
     eGreedyPolicy.print(states);
   }
 
+  // function only used once
   public static Tensor flatten(PolicyInterface policyInterface, Tensor states) {
     EGreedyPolicy eGreedyPolicy = (EGreedyPolicy) policyInterface;
     return eGreedyPolicy.flatten(states);
+  }
+
+  /** function builds a {@link DiscreteQsa} where the state-action values are
+   * the evaluation of the bi-function {@link PolicyInterface#policy(Tensor, Tensor)}.
+   * 
+   * @param discreteModel
+   * @param policyInterface
+   * @return */
+  public static DiscreteQsa toQsa(DiscreteModel discreteModel, PolicyInterface policyInterface) {
+    DiscreteQsa qsa = DiscreteQsa.build(discreteModel);
+    return qsa.create(qsa.index.keys().flatten(0).map(sap -> policyInterface.policy(sap.get(0), sap.get(1))));
   }
 
   /** @param discreteModel
@@ -24,6 +36,7 @@ public enum Policies {
    * @param pi2
    * @return true, if pi1 and pi2 are equal for all state-action pairs */
   public static boolean equals(DiscreteModel discreteModel, PolicyInterface pi1, PolicyInterface pi2) {
+    // TODO implement using streams
     for (Tensor state : discreteModel.states())
       for (Tensor action : discreteModel.actions(state)) {
         Scalar value1 = pi1.policy(state, action);
@@ -32,10 +45,5 @@ public enum Policies {
           return false;
       }
     return true;
-  }
-
-  public static Scalar difference(DiscreteModel discreteModel, PolicyInterface pi1, PolicyInterface pi2) {
-    // TODO implement norm of difference between 2 policies! what is the definition?
-    return null;
   }
 }
