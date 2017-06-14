@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -27,6 +28,10 @@ public class DiscreteQsa implements QsaInterface, TensorValuesInterface, Seriali
   // TODO move function since, it's not just used in qsa ops
   public static Tensor createKey(Tensor state, Tensor action) {
     return Tensors.of(state, action);
+  }
+
+  public static Tensor createKey(StepInterface stepInterface) {
+    return Tensors.of(stepInterface.prevState(), stepInterface.action());
   }
 
   final Index index;

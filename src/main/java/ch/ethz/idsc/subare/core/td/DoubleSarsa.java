@@ -9,7 +9,7 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.util.DequeDigestAdapter;
+import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.tensor.Scalar;

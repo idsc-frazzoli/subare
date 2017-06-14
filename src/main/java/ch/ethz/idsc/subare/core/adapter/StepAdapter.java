@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.core.util;
+package ch.ethz.idsc.subare.core.adapter;
 
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;

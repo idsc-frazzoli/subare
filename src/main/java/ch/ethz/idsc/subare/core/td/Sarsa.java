@@ -10,7 +10,7 @@ import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.util.DequeDigestAdapter;
+import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.UcbPolicy;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -31,7 +31,7 @@ public abstract class Sarsa extends DequeDigestAdapter {
   final DiscreteModel discreteModel;
   final QsaInterface qsa;
   private final LearningRate learningRate;
-  PolicyInterface policyInterface = null;
+  PolicyInterface policyInterface = null; // FIXME how does this related to ucb Policy!
   // ---
   private final UcbPolicy ucbPolicy;
 
@@ -42,7 +42,7 @@ public abstract class Sarsa extends DequeDigestAdapter {
     this.discreteModel = discreteModel;
     this.qsa = qsa;
     this.learningRate = learningRate;
-    ucbPolicy = UcbPolicy.of(qsa, RealScalar.ONE);
+    ucbPolicy = UcbPolicy.of(discreteModel, qsa, RealScalar.ONE);
   }
 
   /** @param policyInterface */

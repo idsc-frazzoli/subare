@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.core.util;
+package ch.ethz.idsc.subare.core.adapter;
 
 import java.util.Deque;
 import java.util.LinkedList;

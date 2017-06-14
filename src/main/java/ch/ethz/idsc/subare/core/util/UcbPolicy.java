@@ -2,12 +2,17 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.util.FairArgMax;
+import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -24,11 +29,12 @@ public class UcbPolicy implements PolicyInterface, StepDigest {
   /** @param qsa
    * @param c factor for scaling relative to values in qsa
    * @return */
-  public static UcbPolicy of(QsaInterface qsa, Scalar c) {
-    return new UcbPolicy(qsa, c);
+  public static UcbPolicy of(DiscreteModel discreteModel, QsaInterface qsa, Scalar c) {
+    return new UcbPolicy(discreteModel, qsa, c);
   }
 
   // ---
+  private final DiscreteModel discreteModel;
   private final QsaInterface qsa;
   private final Scalar c; // TODO can merge c and t into "just t"
   // ---
@@ -36,7 +42,8 @@ public class UcbPolicy implements PolicyInterface, StepDigest {
   // ---
   private Scalar t = null;
 
-  private UcbPolicy(QsaInterface qsa, Scalar c) {
+  private UcbPolicy(DiscreteModel discreteModel, QsaInterface qsa, Scalar c) {
+    this.discreteModel = discreteModel;
     this.qsa = qsa;
     this.c = c;
   }
@@ -48,8 +55,8 @@ public class UcbPolicy implements PolicyInterface, StepDigest {
     this.t = t;
   }
 
-  @Override // from PolicyInterface
-  public Scalar policy(Tensor state, Tensor action) {
+  // TODO very private and not very efficient -> precompute!!!
+  private Scalar valueWithBias(Tensor state, Tensor action) {
     Tensor key = DiscreteQsa.createKey(state, action);
     Scalar Nta = RealScalar.of(map.containsKey(key) ? map.get(key) : 0);
     final Scalar bias;
@@ -61,12 +68,23 @@ public class UcbPolicy implements PolicyInterface, StepDigest {
     return qsa.value(state, action).add(bias);
   }
 
+  @Override // from PolicyInterface
+  public Scalar policy(Tensor state, Tensor action) {
+    Tensor actions = discreteModel.actions(state);
+    Tensor values = Tensor.of(actions.flatten(0).map(a -> valueWithBias(state, a)));
+    FairArgMax fairArgMax = FairArgMax.of(values);
+    List<Integer> options = fairArgMax.options();
+    Index index = Index.build(actions);
+    int input = index.of(action);
+    if (options.contains(input))
+      return RationalScalar.of(1, fairArgMax.optionsCount());
+    return RealScalar.ZERO;
+  }
+
   @Override // from StepDigest
   public void digest(StepInterface stepInterface) {
     // TODO code redundant... find a more elegant solution to count pairs
-    Tensor state0 = stepInterface.prevState();
-    Tensor action = stepInterface.action();
-    Tensor key = DiscreteQsa.createKey(state0, action);
+    Tensor key = DiscreteQsa.createKey(stepInterface);
     int index = map.containsKey(key) ? map.get(key) : 0;
     map.put(key, index + 1);
   }

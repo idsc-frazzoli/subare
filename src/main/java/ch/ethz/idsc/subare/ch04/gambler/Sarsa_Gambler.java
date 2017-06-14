@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
@@ -17,6 +16,7 @@ import ch.ethz.idsc.subare.core.util.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -26,31 +26,33 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** Sarsa applied to gambler */
 class Sarsa_Gambler {
-  /** @param type
-   * @param factor
-   * @param exponent
-   * @return errors
-   * @throws Exception */
-  static Tensor handle(Gambler gambler, SarsaType type, int EPISODES, double factor, double exponent) throws Exception {
-    System.out.println(type);
+  static Tensor train(Gambler gambler, SarsaType sarsaType, //
+      int EPISODES, Scalar factor, Scalar exponent) throws Exception {
+    System.out.println(sarsaType);
     final Tensor errors = Tensors.empty();
-    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    Tensor epsilon = Subdivide.of(.6, .01, EPISODES);
-    DiscreteQsa qsa = DiscreteQsa.build(gambler);
+    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler); // true q-function, for error measurement
+    Tensor epsilon = Subdivide.of(.02, .01, EPISODES);
+    DiscreteQsa qsa = DiscreteQsa.build(gambler); // q-function for training, initialized to 0
+    // ---
     StateActionCounter sac = new StateActionCounter(gambler);
-    System.out.println(qsa.size());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_" + type + ".gif"), 200);
-    GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_" + type + ".gif"), 200);
-    LearningRate learningRate = DefaultLearningRate.of(factor, exponent);
-    final Sarsa sarsa = type.supply(gambler, qsa, learningRate);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_" + sarsaType + ".gif"), 200);
+    GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_" + sarsaType + ".gif"), 200);
+    // ---
+    final Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor, exponent));
+    // ---
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       errors.append(error);
       System.out.println(index + " " + epsilon.Get(index).map(Digits._1) + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       sarsa.setPolicyInterface(policyInterface);
-      for (int count = 0; count < 1; ++count)
-        ExploringStarts.batch(gambler, policyInterface, 1, sarsa, sac);
+      sarsa.getUcbPolicy().setTime(RealScalar.of(index + 1)); // TODO
+      PolicyInterface ucbPolicy = sarsa.getUcbPolicy();
+      ExploringStarts.batch(gambler, //
+          policyInterface //
+          // ucbPolicy //
+          , 1, sarsa, sac);
+      // ---
       gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
       gsc.append(ImageFormat.of(GamblerHelper.counts( //
           gambler, sac.qsa(StateActionCounter.LOGARITHMIC))));
@@ -71,8 +73,10 @@ class Sarsa_Gambler {
 
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
-    // handle(gambler, SarsaType.original, 100, 1.3, 0.51);
-    // handle(gambler, SarsaType.expected, 100, 1.3, 0.51);
-    handle(gambler, SarsaType.qlearning, 100, 0.2, 0.55);
+    // train(gambler, SarsaType.original, 100, 1.3, 0.51);
+    Tensor errors = train(gambler, SarsaType.expected, 3, RealScalar.of(1.3), RealScalar.of(0.51));
+    System.out.println(errors.map(Digits._1));
+    // train(gambler, SarsaType.qlearning, 100, 0.2, 0.55);
+    // train(gambler, SarsaType.qlearning, 100, 0.2, 0.55);
   }
 }

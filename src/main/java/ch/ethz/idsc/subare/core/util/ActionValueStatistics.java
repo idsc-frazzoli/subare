@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.RewardInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.TerminalInterface;
+import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -43,9 +44,7 @@ public class ActionValueStatistics implements StepDigest, EpisodeDigest, ActionV
 
   @Override
   public void digest(StepInterface stepInterface) {
-    Tensor state0 = stepInterface.prevState();
-    Tensor action = stepInterface.action();
-    Tensor key = DiscreteQsa.createKey(state0, action);
+    Tensor key = DiscreteQsa.createKey(stepInterface);
     if (!transitionTrackers.containsKey(key))
       transitionTrackers.put(key, new TransitionTracker());
     transitionTrackers.get(key).digest(stepInterface);

@@ -6,6 +6,8 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Round;
 import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
+// TODO obsolete, once update of tensor lib
+@Deprecated
 public enum Digits implements ScalarUnaryOperator {
   _1("0.1"), //
   _2("0.01"), //

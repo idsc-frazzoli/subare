@@ -67,7 +67,7 @@ public class DefaultLearningRate implements LearningRate {
     Tensor key = DiscreteQsa.createKey(state, action);
     int index = map.containsKey(key) ? map.get(key) : 0;
     while (MEMO.length() <= index)
-      MEMO.append(Min.of( //
+      MEMO.append(Min.of( // TODO the "+1" in the denominator may not be ideal... perhaps +0.5, or +0 ?
           factor.multiply(Power.of(DoubleScalar.of(1.0 / (index + 1)), exponent)), //
           RealScalar.ONE));
     return MEMO.Get(index);
@@ -75,11 +75,8 @@ public class DefaultLearningRate implements LearningRate {
 
   @Override // from StepDigest
   public void digest(StepInterface stepInterface) {
-    Tensor state0 = stepInterface.prevState();
-    Tensor action = stepInterface.action();
-    Tensor key = DiscreteQsa.createKey(state0, action);
-    int index = map.containsKey(key) ? map.get(key) : 0;
-    map.put(key, index + 1);
+    Tensor key = DiscreteQsa.createKey(stepInterface);
+    map.put(key, map.containsKey(key) ? map.get(key) + 1 : 1);
   }
 
   /** @return */
