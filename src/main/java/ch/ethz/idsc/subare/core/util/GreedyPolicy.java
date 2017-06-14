@@ -17,6 +17,7 @@ import ch.ethz.idsc.tensor.alg.Extract;
 
 public enum GreedyPolicy {
   ;
+  // ---
   /** exact implementation of equiprobable greedy policy:
    * if two or more states s1,s2, ... have equal value
    * v(s1)==v(s2)
@@ -27,15 +28,15 @@ public enum GreedyPolicy {
    * and not a unique one policy.
    * 
    * @param standardModel
-   * @param values of standardModel.states()
+   * @param vs of standardModel.states()
    * @return */
-  public static PolicyInterface bestEquiprobable(StandardModel standardModel, VsInterface values) {
+  public static PolicyInterface bestEquiprobable(StandardModel standardModel, VsInterface vs) {
     ActionValueAdapter actionValueAdapter = new ActionValueAdapter(standardModel);
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : standardModel.states()) {
       Tensor actions = standardModel.actions(state);
       Tensor va = Tensor.of(actions.flatten(0) //
-          .map(action -> actionValueAdapter.qsa(state, action, values)));
+          .map(action -> actionValueAdapter.qsa(state, action, vs)));
       FairArgMax fairArgMax = FairArgMax.of(va);
       Tensor feasible = Extract.of(actions, fairArgMax.options());
       map.put(state, Index.build(feasible));

@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.tensor.Tensor;
@@ -23,7 +24,7 @@ public class QLearning extends ActionSarsa {
   }
 
   @Override
-  Tensor selectAction(Tensor state) {
+  Tensor actionForEvaluation(Tensor state) {
     return DiscreteUtils.fairBestAction(discreteModel, qsa, state); // ArgMax_a Q(S,a)
   }
 }

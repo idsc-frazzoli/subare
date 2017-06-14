@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.ch03.grid;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
+import ch.ethz.idsc.subare.core.adapter.DeterministicStandardModel;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;

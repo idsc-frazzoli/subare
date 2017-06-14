@@ -5,10 +5,11 @@ import java.util.Deque;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.util.DequeDigestAdapter;
+import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.tensor.Scalar;
@@ -82,7 +83,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
       // TODO for original sarsa, the policyInterface is probably wrong!
       ActionSarsa actionSarsa = (ActionSarsa) type.supply(discreteModel, Qsa1, learningRate);
       actionSarsa.setPolicyInterface(policyInterface);
-      Tensor action = actionSarsa.selectAction(stateP); // use Qsa1 to select action
+      Tensor action = actionSarsa.actionForEvaluation(stateP); // use Qsa1 to select action
       rewards.append(Qsa2.value(stateP, action)); // use Qsa2 to evaluate state-action pair
       break;
     }
@@ -97,7 +98,8 @@ public class DoubleSarsa extends DequeDigestAdapter {
     Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
     Scalar value0 = Qsa1.value(state0, action0);
-    Scalar alpha = learningRate.learningRate(state0, action0);
+    Scalar alpha = learningRate.alpha(state0, action0);
+    // TODO need to call learning rate digest!
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
   }

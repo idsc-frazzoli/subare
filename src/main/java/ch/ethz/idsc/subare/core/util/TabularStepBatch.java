@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.SampleModel;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;

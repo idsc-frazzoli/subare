@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -15,11 +16,11 @@ abstract class ActionSarsa extends Sarsa {
   /** the action "has the value" estimated by evaluate(...)
    * 
    * @param state
-   * @return action from state using policy derived from Q */
-  abstract Tensor selectAction(Tensor state);
+   * @return action, typically chosen based on Q and other criteria */
+  abstract Tensor actionForEvaluation(Tensor state);
 
   @Override
   protected final Scalar evaluate(Tensor state) {
-    return qsa.value(state, selectAction(state));
+    return qsa.value(state, actionForEvaluation(state));
   }
 }

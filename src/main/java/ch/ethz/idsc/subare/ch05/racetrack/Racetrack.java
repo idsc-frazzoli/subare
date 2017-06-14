@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.util.DeterministicStandardModel;
+import ch.ethz.idsc.subare.core.adapter.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.subare.util.Index;
