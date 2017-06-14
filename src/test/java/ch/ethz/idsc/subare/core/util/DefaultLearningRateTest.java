@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.core.td;
+package ch.ethz.idsc.subare.core.util;
 
 import junit.framework.TestCase;
 

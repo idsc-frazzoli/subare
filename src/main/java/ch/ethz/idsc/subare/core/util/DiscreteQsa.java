@@ -24,6 +24,7 @@ public class DiscreteQsa implements QsaInterface, TensorValuesInterface, Seriali
   /** @param state
    * @param action
    * @return */
+  // TODO move function since, it's not just used in qsa ops
   public static Tensor createKey(Tensor state, Tensor action) {
     return Tensors.of(state, action);
   }

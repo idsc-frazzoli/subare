@@ -5,11 +5,14 @@ import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DequeDigestAdapter;
+import ch.ethz.idsc.subare.core.util.UcbPolicy;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Multinomial;
@@ -27,9 +30,10 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
 public abstract class Sarsa extends DequeDigestAdapter {
   final DiscreteModel discreteModel;
   final QsaInterface qsa;
-  private final Scalar gamma;
   private final LearningRate learningRate;
   PolicyInterface policyInterface = null;
+  // ---
+  private final UcbPolicy ucbPolicy;
 
   /** @param discreteModel
    * @param qsa
@@ -37,15 +41,19 @@ public abstract class Sarsa extends DequeDigestAdapter {
   public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     this.discreteModel = discreteModel;
     this.qsa = qsa;
-    this.gamma = discreteModel.gamma();
     this.learningRate = learningRate;
-    // if (ExactNumberQ.of(alpha)) // TODO printout warning only once
-    // System.out.println("warning: symbolic values for alpha slow down the software");
+    ucbPolicy = UcbPolicy.of(qsa, RealScalar.ONE);
   }
 
   /** @param policyInterface */
+  @Deprecated // TODO deprecated only preliminary
   public void setPolicyInterface(PolicyInterface policyInterface) {
     this.policyInterface = policyInterface;
+  }
+
+  /** @param policyInterface */
+  public UcbPolicy getUcbPolicy() {
+    return ucbPolicy;
   }
 
   /** @param state
@@ -56,16 +64,22 @@ public abstract class Sarsa extends DequeDigestAdapter {
   public void digest(Deque<StepInterface> deque) {
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // ---
+    // for terminal state in queue, "=last.next", the sarsa implementation has to provide the evaluation
     rewards.append(evaluate(deque.getLast().nextState())); // <- evaluate(...) is called here
     // ---
-    StepInterface first = deque.getFirst();
-    Tensor state0 = first.prevState();
-    Tensor action = first.action();
-    // ---
-    Scalar alpha = learningRate.learningRate(state0, action);
+    final StepInterface stepInterface = deque.getFirst(); // first step in queue
+    Tensor state0 = stepInterface.prevState();
+    Tensor action = stepInterface.action();
     // ---
     Scalar value0 = qsa.value(state0, action);
+    Scalar gamma = discreteModel.gamma();
+    Scalar alpha = learningRate.alpha(state0, action);
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
     qsa.assign(state0, action, value0.add(delta));
+    // ---
+    // since qsa was update for the state-action pair
+    // the learning rate interface as well as the usb policy are notified about the state-action pair
+    learningRate.digest(stepInterface);
+    ucbPolicy.digest(stepInterface);
   }
 }

@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.td;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.tensor.Tensor;
@@ -35,7 +36,7 @@ public class OriginalSarsa extends ActionSarsa {
   }
 
   @Override
-  Tensor selectAction(Tensor state) {
+  Tensor actionForEvaluation(Tensor state) {
     PolicyWrap policyWrap = new PolicyWrap(policyInterface, random);
     return policyWrap.next(state, discreteModel.actions(state));
   }

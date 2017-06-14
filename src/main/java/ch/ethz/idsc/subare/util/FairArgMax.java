@@ -44,7 +44,7 @@ public class FairArgMax {
     return list.size() == 1;
   }
 
-  public int getOptionCount() {
+  public int optionsCount() {
     return list.size();
   }
 

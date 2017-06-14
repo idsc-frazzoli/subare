@@ -31,6 +31,7 @@ public class PolicyWrap {
     if (!Chop.isZeros(Last.of(prob).subtract(RealScalar.ONE)))
       throw TensorRuntimeException.of(prob);
     // ---
+    // TODO use random variate, wherever java.util.Random is used in project
     Scalar threshold = DoubleScalar.of(random.nextDouble());
     int index = 0;
     for (; index < prob.length(); ++index)
