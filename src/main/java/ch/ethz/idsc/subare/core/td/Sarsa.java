@@ -5,12 +5,14 @@ import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
+import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.UcbPolicy;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -27,17 +29,17 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * 
  * a single step {@link StepDigest},
  * as well as N-steps {@link DequeDigest} */
-public abstract class Sarsa extends DequeDigestAdapter {
+public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
   final DiscreteModel discreteModel;
   final QsaInterface qsa;
   private final LearningRate learningRate;
-  PolicyInterface policyInterface = null; // FIXME how does this related to ucb Policy!
+  PolicyInterface policyInterface = null;
   // ---
   private final UcbPolicy ucbPolicy;
 
   /** @param discreteModel
    * @param qsa
-   * @param alpha learning rate */
+   * @param learningRate */
   public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     this.discreteModel = discreteModel;
     this.qsa = qsa;
@@ -45,8 +47,7 @@ public abstract class Sarsa extends DequeDigestAdapter {
     ucbPolicy = UcbPolicy.of(discreteModel, qsa, RealScalar.ONE);
   }
 
-  /** @param policyInterface */
-  @Deprecated // TODO deprecated only preliminary
+  /** @param policyInterface that is used to generate the {@link StepInterface} */
   public void setPolicyInterface(PolicyInterface policyInterface) {
     this.policyInterface = policyInterface;
   }
@@ -73,7 +74,7 @@ public abstract class Sarsa extends DequeDigestAdapter {
     // ---
     Scalar value0 = qsa.value(state0, action);
     Scalar gamma = discreteModel.gamma();
-    Scalar alpha = learningRate.alpha(state0, action);
+    Scalar alpha = learningRate.alpha(stepInterface);
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
     qsa.assign(state0, action, value0.add(delta));
     // ---
@@ -81,5 +82,10 @@ public abstract class Sarsa extends DequeDigestAdapter {
     // the learning rate interface as well as the usb policy are notified about the state-action pair
     learningRate.digest(stepInterface);
     ucbPolicy.digest(stepInterface);
+  }
+
+  @Override
+  public DiscreteQsa qsa() {
+    return (DiscreteQsa) qsa;
   }
 }

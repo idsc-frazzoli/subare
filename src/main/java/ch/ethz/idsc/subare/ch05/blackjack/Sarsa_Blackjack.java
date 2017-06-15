@@ -1,7 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.blackjack;
 
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -24,8 +23,7 @@ public class Sarsa_Blackjack {
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // only used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_qsa_" + type + ".gif"), 200);
-    LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-    Sarsa sarsa = type.supply(blackjack, qsa, learningRate);
+    Sarsa sarsa = type.supply(blackjack, qsa, DefaultLearningRate.of(2, 0.6));
     for (int index = 0; index < EPISODES; ++index) {
       // Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(Digits._2));

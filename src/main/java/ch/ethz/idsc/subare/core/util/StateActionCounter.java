@@ -31,11 +31,10 @@ public class StateActionCounter extends DequeDigestAdapter implements DiscreteQs
 
   @Override
   public void digest(Deque<StepInterface> deque) {
-    for (StepInterface stepInterface : deque)
-      increment(stepInterface.prevState(), stepInterface.action());
+    StepInterface stepInterface = deque.getFirst();
+    increment(stepInterface.prevState(), stepInterface.action());
     // ---
-    if (terminalInterface != null) { // count terminal state
-      StepInterface stepInterface = deque.getLast();
+    if (deque.size() == 1 && terminalInterface != null) { // count terminal state
       Tensor state1 = stepInterface.nextState();
       if (terminalInterface.isTerminal(state1)) {
         Tensor actions = discreteModel.actions(state1);

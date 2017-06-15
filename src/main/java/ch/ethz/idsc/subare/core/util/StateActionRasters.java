@@ -65,11 +65,11 @@ public enum StateActionRasters {
     return Join.of(0, image1, Array.zeros(list), image2, Array.zeros(list), image3);
   }
 
-  public static Tensor qsaRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
+  public static Tensor qsaRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref, int dim) {
     Tensor image1 = render(stateActionRaster, TensorValuesUtils.rescaled(qsa));
     Tensor image2 = render(stateActionRaster, TensorValuesUtils.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(image1);
-    list.set(0, 3);
-    return Join.of(0, image1, Array.zeros(list), image2);
+    list.set(dim, 1);
+    return Join.of(dim, image1, Array.zeros(list), image2);
   }
 }

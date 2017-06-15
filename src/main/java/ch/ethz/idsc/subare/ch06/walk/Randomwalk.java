@@ -45,6 +45,7 @@ class Randomwalk implements MonteCarloInterface {
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
+    // TODO use bernoulli 1/2
     return random.nextBoolean() ? state.add(RealScalar.ONE) : state.subtract(RealScalar.ONE);
   }
 

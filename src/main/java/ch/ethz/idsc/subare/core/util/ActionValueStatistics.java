@@ -1,15 +1,16 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.ActionValueInterface;
+import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.RewardInterface;
-import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.TerminalInterface;
 import ch.ethz.idsc.subare.core.adapter.StepAdapter;
@@ -28,7 +29,7 @@ import ch.ethz.idsc.tensor.TensorRuntimeException;
  * the three (estimated) functions constitute {@link ActionValueInterface}
  * 
  * (s,a,r,s') originate from episodes, or single step trials */
-public class ActionValueStatistics implements StepDigest, EpisodeDigest, ActionValueInterface {
+public class ActionValueStatistics implements DequeDigest, EpisodeDigest, ActionValueInterface {
   private final Map<Tensor, TransitionTracker> transitionTrackers = new HashMap<>();
   private final DiscreteModel discreteModel;
 
@@ -48,6 +49,11 @@ public class ActionValueStatistics implements StepDigest, EpisodeDigest, ActionV
     if (!transitionTrackers.containsKey(key))
       transitionTrackers.put(key, new TransitionTracker());
     transitionTrackers.get(key).digest(stepInterface);
+  }
+
+  @Override
+  public void digest(Deque<StepInterface> deque) {
+    digest(deque.getFirst()); // only track first
   }
 
   @Override

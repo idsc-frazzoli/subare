@@ -2,11 +2,9 @@
 package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.td.OriginalSarsa;
-import ch.ethz.idsc.subare.core.td.Sarsa;
+import ch.ethz.idsc.subare.core.td.DoubleSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -26,35 +24,37 @@ import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
 
-/** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
- * 
- * covers Example 4.1, p.82 */
-class Sarsa_Gridworld {
-  static void handle(SarsaType type, int n) throws Exception {
-    System.out.println(type);
+/** Double Sarsa for gridworld */
+class Double_Gridworld {
+  static void handle(SarsaType sarsaType, int n) throws Exception {
+    System.out.println("double " + sarsaType);
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     int EPISODES = 40;
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
-    DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + type + "" + n + ".gif"), 150);
-    LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-    Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
+    DiscreteQsa qsa1 = DiscreteQsa.build(gridworld);
+    DiscreteQsa qsa2 = DiscreteQsa.build(gridworld);
+    DoubleSarsa doubleSarsa = new DoubleSarsa(sarsaType, gridworld, //
+        qsa1, qsa2, //
+        DefaultLearningRate.of(5, .51), //
+        DefaultLearningRate.of(5, .51));
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + n + ".gif"), 150);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
-      Scalar error = TensorValuesUtils.distance(qsa, ref);
-      System.out.println(index + " " + explore.map(Digits._2) + "\t" + error.map(Digits._1));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
-      sarsa.setPolicyInterface(policyInterface);
-      ExploringStarts.batch(gridworld, policyInterface, n, sarsa);
-      gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
+      Scalar error = TensorValuesUtils.distance(qsa1, ref);
+      System.out.println(index + " " + explore.map(Digits._2) + " " + error.map(Digits._1));
+      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable( //
+          gridworld, TensorValuesUtils.average(qsa1, qsa2), explore);
+      doubleSarsa.setPolicyInterface(policyInterface);
+      ExploringStarts.batch(gridworld, policyInterface, n, doubleSarsa);
+      gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa1, ref)));
     }
     gsw.close();
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
-    DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa);
-    Put.of(UserHome.file("gridworld_" + type), vs.values());
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, qsa);
+    DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa1);
+    Put.of(UserHome.file("gridworld_" + sarsaType), vs.values());
+    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, qsa1);
     EpisodeInterface ei = EpisodeKickoff.single(gridworld, policyInterface);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();
@@ -64,9 +64,8 @@ class Sarsa_Gridworld {
   }
 
   public static void main(String[] args) throws Exception {
-    int n = 0;
-    handle(SarsaType.original, n);
-    handle(SarsaType.expected, n);
-    handle(SarsaType.qlearning, n);
+    // handle(SarsaType.original, 1);
+    // handle(SarsaType.expected, 3);
+    handle(SarsaType.qlearning, 1);
   }
 }

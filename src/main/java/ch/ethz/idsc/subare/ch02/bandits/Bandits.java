@@ -20,6 +20,7 @@ import ch.ethz.idsc.tensor.sca.Sqrt;
 class Bandits {
   private static final Random random = new Random();
 
+  // TODO use random variate
   private static Tensor createGaussian(int n) {
     return Tensors.vector(i -> DoubleScalar.of(random.nextGaussian()), n);
   }

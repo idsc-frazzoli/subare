@@ -16,6 +16,7 @@ import ch.ethz.idsc.subare.core.util.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
+import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -31,23 +32,23 @@ class Sarsa_Gambler {
     System.out.println(sarsaType);
     final Tensor errors = Tensors.empty();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler); // true q-function, for error measurement
-    Tensor epsilon = Subdivide.of(.02, .01, EPISODES);
+    Tensor epsilon = Subdivide.of(.2, .01, EPISODES);
     DiscreteQsa qsa = DiscreteQsa.build(gambler); // q-function for training, initialized to 0
     // ---
     StateActionCounter sac = new StateActionCounter(gambler);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_" + sarsaType + ".gif"), 200);
-    GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_" + sarsaType + ".gif"), 200);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
+    GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
     // ---
     final Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor, exponent));
     // ---
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       errors.append(error);
-      System.out.println(index + " " + epsilon.Get(index).map(Digits._1) + " " + error.map(Digits._1));
+      System.out.println(index + " " + epsilon.Get(index).map(Digits._2) + " " + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       sarsa.setPolicyInterface(policyInterface);
-      sarsa.getUcbPolicy().setTime(RealScalar.of(index + 1)); // TODO
-      PolicyInterface ucbPolicy = sarsa.getUcbPolicy();
+      // sarsa.getUcbPolicy().setTime(RealScalar.of(index + 1)); // TODO
+      // PolicyInterface ucbPolicy = sarsa.getUcbPolicy();
       ExploringStarts.batch(gambler, //
           policyInterface //
           // ucbPolicy //
@@ -73,9 +74,10 @@ class Sarsa_Gambler {
 
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
-    // train(gambler, SarsaType.original, 100, 1.3, 0.51);
-    Tensor errors = train(gambler, SarsaType.expected, 3, RealScalar.of(1.3), RealScalar.of(0.51));
-    System.out.println(errors.map(Digits._1));
+    gambler = new Gambler(100, RationalScalar.of(4, 10));
+    train(gambler, SarsaType.expected, 20, RealScalar.of(16), RealScalar.of(1.35));
+    // Tensor errors = train(gambler, SarsaType.qlearning, 80, RealScalar.of(0.2), RealScalar.of(0.55));
+    // System.out.println(errors.map(Digits._1));
     // train(gambler, SarsaType.qlearning, 100, 0.2, 0.55);
     // train(gambler, SarsaType.qlearning, 100, 0.2, 0.55);
   }

@@ -15,11 +15,11 @@ public class DefaultLearningRateTest extends TestCase {
     LearningRate learningRate = DefaultLearningRate.of(0.9, .51);
     Tensor state = Tensors.vector(1);
     Tensor action = Tensors.vector(0);
-    Scalar first = learningRate.alpha(state, action);
+    Scalar first = learningRate.alpha(new StepAdapter(state, action, RealScalar.ZERO, state));
     assertEquals(first, RealScalar.ONE);
     learningRate.digest(new StepAdapter(state, action, RealScalar.ZERO, state));
-    Scalar second = learningRate.alpha(state, action);
-    System.out.println(second);
+    Scalar second = learningRate.alpha(new StepAdapter(state, action, RealScalar.ZERO, state));
+    // System.out.println(second);
     assertTrue(Scalars.lessThan(second, first));
   }
 
