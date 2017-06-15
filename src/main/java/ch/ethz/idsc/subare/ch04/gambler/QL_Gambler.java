@@ -18,7 +18,6 @@ import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
@@ -28,20 +27,19 @@ class QL_Gambler {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     int EPISODES = 100;
-    Tensor epsilon = Subdivide.of(.2, .001, EPISODES);
+    // Tensor epsilon = Subdivide.of(.2, .001, EPISODES);
     PolicyInterface policyInterface = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_ql.gif"), 100);
-    LearningRateDeque lr_scheduler = new LearningRateDeque(0.1, 0.1);
+    ExplorationRateDeque lr_scheduler = new ExplorationRateDeque(0.1);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
     Sarsa stepDigest = new QLearning(gambler, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       lr_scheduler.notifyError(error);
-      Scalar alpha = lr_scheduler.getRate(); // lr_scheduler.getRate(index);
-      Scalar eps = lr_scheduler.getEpsilon(); // epsilon.Get(index);
-      // eps = Power.of(eps, 2);
+      Scalar eps = lr_scheduler.getEpsilon();
+      // eps = epsilon.Get(index);
       System.out.println(index + " " + eps.map(Digits._1) + " " + error.map(Digits._1));
       for (int count = 0; count < 1; ++count) {
         ExploringStarts.batch(gambler, policyInterface, 1, stepDigest);

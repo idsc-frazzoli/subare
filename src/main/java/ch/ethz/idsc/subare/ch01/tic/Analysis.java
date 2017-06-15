@@ -14,6 +14,7 @@ class Analysis {
     p1.loadPolicy();
     Estimation estimation = p1.estimation;
     Set<State> set = AllStates.instance.getAll();
+    @SuppressWarnings("unused")
     int count = 0;
     List<Double> list = new ArrayList<>();
     while (!set.isEmpty()) {
@@ -41,7 +42,8 @@ class Analysis {
             subset.stream().mapToDouble(s -> estimation.get(s)).toArray();
         // System.out.println("-----");
         // System.out.println(subset.iterator().next());
-        for (State state : subset) {
+        for (@SuppressWarnings("unused")
+        State state : subset) {
           // System.out.println(estimation.get(state));
         }
         Statistics myStatistics = new Statistics(data);
@@ -61,6 +63,7 @@ class Analysis {
     Agent p1 = new Agent(1);
     p1.loadPolicy();
     Estimation estimation = p1.estimation;
+    @SuppressWarnings("unused")
     Set<State> set = AllStates.instance.getAll();
     for (State state : AllStates.instance.getEquivalenceSet()) {
       System.out.println(state);

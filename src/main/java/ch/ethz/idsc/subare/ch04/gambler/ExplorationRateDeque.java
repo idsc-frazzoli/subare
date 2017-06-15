@@ -10,18 +10,12 @@ import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.red.Min;
 
 @Deprecated
-class LearningRateDeque {
-  private double alpha;
+class ExplorationRateDeque {
   private double epsilon;
   private final Deque<Scalar> errors = new LinkedList<>();
 
-  public LearningRateDeque(double alpha, double epsilon) {
-    this.alpha = alpha;
+  public ExplorationRateDeque(double epsilon) {
     this.epsilon = epsilon;
-  }
-
-  Scalar getRate() {
-    return RealScalar.of(alpha);
   }
 
   void notifyError(Scalar error) {
@@ -30,9 +24,8 @@ class LearningRateDeque {
       Scalar error_prev = errors.poll(); // n-5
       Scalar error_min = errors.stream().reduce(Min::of).get();
       if (Scalars.lessThan(error_prev, error_min)) {
-        alpha /= 2;
         epsilon /= 2;
-        System.out.println("Current alpha: " + alpha);
+        System.out.println("Current epsilon: " + epsilon);
         errors.clear();
       }
     }

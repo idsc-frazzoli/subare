@@ -13,6 +13,7 @@ import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.sca.Log;
 import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
@@ -26,7 +27,6 @@ public class StateActionCounter extends DequeDigestAdapter implements DiscreteQs
   public StateActionCounter(DiscreteModel discreteModel) {
     this.discreteModel = discreteModel;
     terminalInterface = discreteModel instanceof TerminalInterface ? (TerminalInterface) discreteModel : null;
-    // FIXME
   }
 
   @Override
@@ -34,17 +34,15 @@ public class StateActionCounter extends DequeDigestAdapter implements DiscreteQs
     StepInterface stepInterface = deque.getFirst();
     increment(stepInterface.prevState(), stepInterface.action());
     // ---
-    // FIXME
-    // if (terminalInterface != null) { // count terminal state
-    // StepInterface stepInterface = deque.getLast();
-    // Tensor state1 = stepInterface.nextState();
-    // if (terminalInterface.isTerminal(state1)) {
-    // Tensor actions = discreteModel.actions(state1);
-    // if (actions.length() != 1)
-    // throw TensorRuntimeException.of(state1, actions);
-    // increment(state1, actions.get(0));
-    // }
-    // }
+    if (deque.size() == 1 && terminalInterface != null) { // count terminal state
+      Tensor state1 = stepInterface.nextState();
+      if (terminalInterface.isTerminal(state1)) {
+        Tensor actions = discreteModel.actions(state1);
+        if (actions.length() != 1)
+          throw TensorRuntimeException.of(state1, actions);
+        increment(state1, actions.get(0));
+      }
+    }
   }
 
   private void increment(Tensor state0, Tensor action) {

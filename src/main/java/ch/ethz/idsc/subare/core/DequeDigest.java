@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.core;
 import java.util.Deque;
 
 /** interface is implemented by n-step temporal difference learning algorithms */
-public interface DequeDigest {
+public interface DequeDigest extends StepDigest {
   /** typically the implementation uses all {@link StepInterface}s in the deque
    * to update the first state, or state-action of only the first step in the deque
    * 

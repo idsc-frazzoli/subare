@@ -3,10 +3,10 @@ package ch.ethz.idsc.subare.core.td;
 
 import java.util.Deque;
 
-import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.VsInterface;
+import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Multinomial;
@@ -15,7 +15,7 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * 
  * box on p.154 */
 // TODO not tested yet
-public class NStepTemporalDifference implements DequeDigest {
+public class NStepTemporalDifference extends DequeDigestAdapter {
   private final VsInterface vs;
   private final Scalar gamma;
   private final LearningRate learningRate;

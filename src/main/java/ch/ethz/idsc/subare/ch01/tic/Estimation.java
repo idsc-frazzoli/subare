@@ -35,7 +35,7 @@ class Estimation implements Serializable {
     }
   }
 
-  private State normalize(State state) {
+  private static State normalize(State state) {
     // return AllStates.instance.getEquivalent(state);
     return AllStates.instance.getRepresentative(state);
   }
