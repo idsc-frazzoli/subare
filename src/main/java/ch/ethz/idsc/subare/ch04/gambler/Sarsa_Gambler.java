@@ -75,7 +75,7 @@ class Sarsa_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     gambler = new Gambler(100, RationalScalar.of(4, 10));
-    train(gambler, SarsaType.expected, 150, RealScalar.of(16), RealScalar.of(1.35));
+    train(gambler, SarsaType.expected, 20, RealScalar.of(16), RealScalar.of(1.35));
     // Tensor errors = train(gambler, SarsaType.qlearning, 80, RealScalar.of(0.2), RealScalar.of(0.55));
     // System.out.println(errors.map(Digits._1));
     // train(gambler, SarsaType.qlearning, 100, 0.2, 0.55);

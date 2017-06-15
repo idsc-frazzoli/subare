@@ -19,7 +19,7 @@ public class DefaultLearningRateTest extends TestCase {
     assertEquals(first, RealScalar.ONE);
     learningRate.digest(new StepAdapter(state, action, RealScalar.ZERO, state));
     Scalar second = learningRate.alpha(state, action);
-    System.out.println(second);
+    // System.out.println(second);
     assertTrue(Scalars.lessThan(second, first));
   }
 

@@ -5,12 +5,14 @@ import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
+import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.UcbPolicy;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -27,7 +29,7 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * 
  * a single step {@link StepDigest},
  * as well as N-steps {@link DequeDigest} */
-public abstract class Sarsa extends DequeDigestAdapter {
+public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
   final DiscreteModel discreteModel;
   final QsaInterface qsa;
   private final LearningRate learningRate;
@@ -80,5 +82,10 @@ public abstract class Sarsa extends DequeDigestAdapter {
     // the learning rate interface as well as the usb policy are notified about the state-action pair
     learningRate.digest(stepInterface);
     ucbPolicy.digest(stepInterface);
+  }
+
+  @Override
+  public DiscreteQsa qsa() {
+    return (DiscreteQsa) qsa;
   }
 }

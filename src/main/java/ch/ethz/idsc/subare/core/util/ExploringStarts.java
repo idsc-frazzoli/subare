@@ -69,11 +69,11 @@ public enum ExploringStarts {
 
   /** @param monteCarloInterface
    * @param policyInterface
-   * @param size of deque (if size == 0 then deque contains a complete episode)
+   * @param nstep of deque (if nstep == 0 then deque contains a complete episode)
    * @param dequeDigest
    * @return */
   public static int batch( //
-      MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, int size, //
+      MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, int nstep, //
       DequeDigest... dequeDigest) {
     List<DequeDigest> list = Arrays.asList(dequeDigest);
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
@@ -84,7 +84,7 @@ public enum ExploringStarts {
       while (episodeInterface.hasNext()) {
         final StepInterface stepInterface = episodeInterface.step();
         deque.add(stepInterface);
-        if (deque.size() == size) {
+        if (deque.size() == nstep) {
           list.stream().parallel() //
               .forEach(_dequeDigest -> _dequeDigest.digest(deque));
           deque.poll();

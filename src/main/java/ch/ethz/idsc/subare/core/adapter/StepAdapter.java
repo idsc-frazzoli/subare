@@ -6,7 +6,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** adapter to hold the four entries (s,a,r,s') */
-public class StepAdapter implements StepInterface {
+public final class StepAdapter implements StepInterface {
   private final Tensor prev;
   private final Tensor action;
   private final Scalar reward;
