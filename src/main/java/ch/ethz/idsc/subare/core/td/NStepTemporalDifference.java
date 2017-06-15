@@ -33,11 +33,10 @@ public class NStepTemporalDifference extends DequeDigestAdapter {
     rewards.append(vs.value(last.nextState()));
     // ---
     final StepInterface stepInterface = deque.getFirst(); // first step in queue
-    Tensor state0 = stepInterface.prevState();
-    Tensor action = stepInterface.action();
     // ---
-    Scalar alpha = learningRate.alpha(stepInterface);
+    Tensor state0 = stepInterface.prevState();
     Scalar value0 = vs.value(state0);
+    Scalar alpha = learningRate.alpha(stepInterface);
     vs.assign(state0, value0.add(Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha)));
     learningRate.digest(stepInterface);
   }

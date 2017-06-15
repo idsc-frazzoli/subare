@@ -29,7 +29,7 @@ public class TabularTemporalDifference0 implements StepDigest {
   @Override
   public final void digest(StepInterface stepInterface) {
     Tensor state0 = stepInterface.prevState();
-    Tensor action = stepInterface.action(); // action is only required for learning rate
+    // action is only required for learning rate
     Scalar reward = stepInterface.reward();
     Tensor state1 = stepInterface.nextState();
     // ---
@@ -38,5 +38,6 @@ public class TabularTemporalDifference0 implements StepDigest {
     Scalar alpha = learningRate.alpha(stepInterface);
     Scalar delta = reward.add(gamma.multiply(value1)).subtract(value0).multiply(alpha);
     vs.assign(state0, value0.add(delta));
+    learningRate.alpha(stepInterface);
   }
 }

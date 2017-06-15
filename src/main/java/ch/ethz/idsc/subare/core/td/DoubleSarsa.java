@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Multinomial;
@@ -28,60 +29,66 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * by Hado van Hasselt (2010, 2011) */
 public class DoubleSarsa extends DequeDigestAdapter {
   private final DiscreteModel discreteModel;
-  private final SarsaType type;
+  private final SarsaType sarsaType;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
   private final Scalar gamma;
-  private final LearningRate learningRate;
-  private final PolicyInterface policyInterface;
-  private final Random random = new Random();
+  private final LearningRate learningRate1;
+  private final LearningRate learningRate2;
+  private PolicyInterface policyInterface = null;
+  private final Random random = new Random(); // TODO remove
 
-  /** @param type
+  /** @param sarsaType
    * @param discreteModel
    * @param qsa1
    * @param qsa2
-   * @param learningRate
+   * @param learningRate1
+   * @param learningRate2
    * @param policyInterface */
   public DoubleSarsa( //
-      SarsaType type, //
+      SarsaType sarsaType, //
       DiscreteModel discreteModel, //
       QsaInterface qsa1, //
       QsaInterface qsa2, //
-      LearningRate learningRate, //
-      PolicyInterface policyInterface //
+      LearningRate learningRate1, //
+      LearningRate learningRate2 //
   ) {
     this.discreteModel = discreteModel;
-    this.type = type;
+    this.sarsaType = sarsaType;
     this.qsa1 = qsa1;
     this.qsa2 = qsa2;
     this.gamma = discreteModel.gamma();
-    this.learningRate = learningRate;
-    this.policyInterface = policyInterface;
+    this.learningRate1 = learningRate1;
+    this.learningRate2 = learningRate2;
   }
 
   public PolicyInterface getEGreedy(Scalar epsilon) {
-    DiscreteQsa dqsa1 = (DiscreteQsa) qsa1;
-    DiscreteQsa dqsa2 = (DiscreteQsa) qsa2;
-    Tensor value = dqsa1.values().add(dqsa2.values());
-    return EGreedyPolicy.bestEquiprobable( //
-        discreteModel, dqsa1.create(value.flatten(0)), epsilon);
+    DiscreteQsa avg = TensorValuesUtils.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
+    return EGreedyPolicy.bestEquiprobable(discreteModel, avg, epsilon);
+  }
+
+  /** @param policyInterface that is used to generate the {@link StepInterface} */
+  public void setPolicyInterface(PolicyInterface policyInterface) {
+    this.policyInterface = policyInterface;
   }
 
   @Override
   public void digest(Deque<StepInterface> deque) {
     // randomly select which qsa to read and write
+    // TODO use bernoulli
     boolean flip = random.nextBoolean(); // flip coin, probability 0.5 each
-    QsaInterface Qsa1 = flip ? qsa2 : qsa1;
-    QsaInterface Qsa2 = flip ? qsa1 : qsa2;
+    QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for updating
+    QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation
+    LearningRate LearningRate1 = flip ? learningRate2 : learningRate1;
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // ---
     Tensor stateP = deque.getLast().nextState(); // S' == "state prime"
-    switch (type) {
+    switch (sarsaType) {
     case original:
     case qlearning: {
       // TODO for original sarsa, the policyInterface is probably wrong!
-      ActionSarsa actionSarsa = (ActionSarsa) type.supply(discreteModel, Qsa1, learningRate);
+      ActionSarsa actionSarsa = (ActionSarsa) sarsaType.supply(discreteModel, Qsa1, LearningRate1);
       actionSarsa.setPolicyInterface(policyInterface);
       Tensor action = actionSarsa.actionForEvaluation(stateP); // use Qsa1 to select action
       rewards.append(Qsa2.value(stateP, action)); // use Qsa2 to evaluate state-action pair
@@ -98,9 +105,9 @@ public class DoubleSarsa extends DequeDigestAdapter {
     Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
     Scalar value0 = Qsa1.value(state0, action0);
-    Scalar alpha = learningRate.alpha(first);
-    // TODO need to call learning rate digest!
+    Scalar alpha = LearningRate1.alpha(first);
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
+    LearningRate1.digest(first); // signal to LearningRate1
   }
 }
