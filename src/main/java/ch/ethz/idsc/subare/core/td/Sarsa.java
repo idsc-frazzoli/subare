@@ -74,7 +74,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     // ---
     Scalar value0 = qsa.value(state0, action);
     Scalar gamma = discreteModel.gamma();
-    Scalar alpha = learningRate.alpha(state0, action);
+    Scalar alpha = learningRate.alpha(stepInterface);
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
     qsa.assign(state0, action, value0.add(delta));
     // ---

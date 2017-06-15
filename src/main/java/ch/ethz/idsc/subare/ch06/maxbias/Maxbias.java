@@ -23,7 +23,7 @@ class Maxbias implements StandardModel, MonteCarloInterface {
   final Tensor states = Tensors.vector(0, 1, 2, 3).unmodifiable();
   final Tensor actionsA = Tensors.vector(-1, 1); // left, or right
   final Tensor actionsB;
-  final Random random = new Random();
+  final Random random = new Random(); // TODO normal distrib
 
   public Maxbias(int choices) {
     actionsB = Range.of(0, choices).unmodifiable();

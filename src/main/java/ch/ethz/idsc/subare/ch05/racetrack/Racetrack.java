@@ -155,6 +155,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
       if (collisions.get(key))
         return next;
     }
+    // TODO use discrete uniform distrib
     return statesStart.get(random.nextInt(statesStart.length()));
   }
 

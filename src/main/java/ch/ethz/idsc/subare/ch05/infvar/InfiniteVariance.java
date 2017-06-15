@@ -50,6 +50,7 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface {
       return state;
     if (action.equals(END))
       return END; // END is used as state
+    // TODO use bernoulli
     if (Scalars.lessThan(RealScalar.of(random.nextDouble()), PROB))
       return END; // END is used as state
     return BACK; // BACK is used as state

@@ -19,7 +19,7 @@ class Blackjack implements MonteCarloInterface {
   private static final Tensor END_DRAW = Tensors.vector(0);
   private static final Tensor END_LOSS = Tensors.vector(-1);
   // ---
-  private Random random = new Random();
+  private Random random = new Random(); // TODO discrete uniform
   // states are product of
   // dealer showing: 1(=A), 2, 3, 4, 5, 6, 7, 8, 9, {T, J, Q, K} - #=10
   // player sum 12, 13, ..., 21 - #=10

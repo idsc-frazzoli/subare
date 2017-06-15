@@ -29,6 +29,7 @@ public class LearningCompetition {
   private final Scalar errorcap;
   // ---
   // override default values if necessary:
+  public int PERIOD = 200;
   public int NSTEP = 1;
   public int MAGNIFY = 5;
 
@@ -47,7 +48,7 @@ public class LearningCompetition {
     int RESX = map.keySet().stream().mapToInt(point -> point.x).reduce(Math::max).getAsInt() + 1;
     int RESY = map.keySet().stream().mapToInt(point -> point.y).reduce(Math::max).getAsInt() + 1;
     Tensor image = Array.zeros(RESX, RESY, 4);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("bulk_" + name + ".gif"), 200);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("bulk_" + name + ".gif"), PERIOD);
     for (int index = 0; index < epsilon.length(); ++index) {
       System.out.println(index);
       // TODO can do next loop in parallel

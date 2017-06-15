@@ -3,11 +3,11 @@ package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
+import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.Digits;
-import ch.ethz.idsc.tensor.RealScalar;
 
 /** Example 4.1, p.82
  * 
@@ -32,9 +32,9 @@ public class TTD0_Gridworld {
     Gridworld gridWorld = new Gridworld();
     DiscreteVs vs = DiscreteVs.build(gridWorld);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
-        vs, gridWorld.gamma(), RealScalar.of(.5));
+        vs, gridWorld.gamma(), DefaultLearningRate.of(3, .6));
     PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
-    for (int count = 0; count < 1000; ++count)
+    for (int count = 0; count < 300; ++count)
       ExploringStarts.batch(gridWorld, policyInterface, ttd0);
     vs.print(Digits._2);
   }

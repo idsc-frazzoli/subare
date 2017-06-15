@@ -40,7 +40,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
    * @param discreteModel
    * @param qsa1
    * @param qsa2
-   * @param alpha
+   * @param learningRate
    * @param policyInterface */
   public DoubleSarsa( //
       SarsaType type, //
@@ -98,7 +98,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
     Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
     Scalar value0 = Qsa1.value(state0, action0);
-    Scalar alpha = learningRate.alpha(state0, action0);
+    Scalar alpha = learningRate.alpha(first);
     // TODO need to call learning rate digest!
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1

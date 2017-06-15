@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.core;
 
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
 
 /** functionality to implement formula's for learning rate
  * that may depend on the {@link StepInterface} seen in the episodes */
@@ -17,5 +16,5 @@ public interface LearningRate extends StepDigest {
    * @param state
    * @param action
    * @return learning rate for given state-action pair */
-  Scalar alpha(Tensor state, Tensor action);
+  Scalar alpha(StepInterface stepInterface);
 }
