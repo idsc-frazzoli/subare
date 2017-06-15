@@ -12,8 +12,10 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.PDF;
 import ch.ethz.idsc.tensor.pdf.PoissonDistribution;
+import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -42,6 +44,11 @@ class CarRental implements StandardModel, SampleModel {
   private final PDF p1_in = PDF.of(PoissonDistribution.of(RealScalar.of(RETURN_FIRST_LOC)));
   private final PDF p2out = PDF.of(PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_SECOND_LOC)));
   private final PDF p2_in = PDF.of(PoissonDistribution.of(RealScalar.of(RETURN_SECOND_LOC)));
+  // ---
+  private final Distribution d1out = PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_FIRST_LOC));
+  private final Distribution d1_in = PoissonDistribution.of(RealScalar.of(RETURN_FIRST_LOC));
+  private final Distribution d2out = PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_SECOND_LOC));
+  private final Distribution d2_in = PoissonDistribution.of(RealScalar.of(RETURN_SECOND_LOC));
   // ---
   private final Clip CLIP;
 
@@ -80,10 +87,10 @@ class CarRental implements StandardModel, SampleModel {
   @Override
   public Tensor move(Tensor state, Tensor action) {
     Tensor morning = night_move(state, action);
-    Scalar n1_in = p1_in.nextSample();
-    Scalar n1out = p1out.nextSample();
-    Scalar n2_in = p2_in.nextSample();
-    Scalar n2out = p2out.nextSample();
+    Scalar n1_in = RandomVariate.of(d1_in);
+    Scalar n1out = RandomVariate.of(d1out);
+    Scalar n2_in = RandomVariate.of(d2_in);
+    Scalar n2out = RandomVariate.of(d2out);
     return effective(morning, n1_in, n1out, n2_in, n2out);
   }
 
@@ -110,10 +117,10 @@ class CarRental implements StandardModel, SampleModel {
         System.out.println("warning: give up");
         return sum;
       }
-      n1_in = p1_in.nextSample();
-      n1out = p1out.nextSample();
-      n2_in = p2_in.nextSample();
-      n2out = p2out.nextSample();
+      n1_in = RandomVariate.of(d1_in);
+      n1out = RandomVariate.of(d1out);
+      n2_in = RandomVariate.of(d2_in);
+      n2out = RandomVariate.of(d2out);
       status = effective(morning, n1_in, n1out, n2_in, n2out).equals(next);
       ++attempts;
     }

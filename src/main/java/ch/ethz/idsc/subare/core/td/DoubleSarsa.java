@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.core.td;
 
 import java.util.Deque;
-import java.util.Random;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.LearningRate;
@@ -13,9 +12,14 @@ import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.tensor.RationalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Multinomial;
+import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
+import ch.ethz.idsc.tensor.pdf.Distribution;
+import ch.ethz.idsc.tensor.pdf.RandomVariate;
 
 /** double sarsa for single-step, and n-step
  * 
@@ -28,6 +32,8 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
 public class DoubleSarsa extends DequeDigestAdapter {
+  private static final Distribution COINFLIPPING = BernoulliDistribution.of(RationalScalar.of(1, 2));
+  // ---
   private final DiscreteModel discreteModel;
   private final SarsaType sarsaType;
   private final QsaInterface qsa1;
@@ -36,7 +42,6 @@ public class DoubleSarsa extends DequeDigestAdapter {
   private final LearningRate learningRate1;
   private final LearningRate learningRate2;
   private PolicyInterface policyInterface = null;
-  private final Random random = new Random(); // TODO remove
 
   /** @param sarsaType
    * @param discreteModel
@@ -75,8 +80,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
   @Override
   public void digest(Deque<StepInterface> deque) {
     // randomly select which qsa to read and write
-    // TODO use bernoulli
-    boolean flip = random.nextBoolean(); // flip coin, probability 0.5 each
+    boolean flip = RandomVariate.of(COINFLIPPING).equals(RealScalar.ZERO); // flip coin, probability 0.5 each
     QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for updating
     QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation
     LearningRate LearningRate1 = flip ? learningRate2 : learningRate1;

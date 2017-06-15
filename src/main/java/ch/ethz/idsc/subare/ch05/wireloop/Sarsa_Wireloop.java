@@ -9,12 +9,12 @@ import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 class Sarsa_Wireloop {
   static void handle(SarsaType type, int n) throws Exception {
@@ -29,7 +29,7 @@ class Sarsa_Wireloop {
     Sarsa sarsa = type.supply(wireloop, qsa, learningRate);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
-      System.out.println(index + " " + epsilon.Get(index).map(Digits._2));
+      System.out.println(index + " " + epsilon.Get(index).map(Round._2));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
       sarsa.setPolicyInterface(policyInterface);
       ExploringStarts.batch(wireloop, policyInterface, n, sarsa);

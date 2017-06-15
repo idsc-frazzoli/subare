@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.util.Digits;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** Example 4.1, p.82
  * 
@@ -36,6 +36,6 @@ public class TTD0_Gridworld {
     PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
     for (int count = 0; count < 300; ++count)
       ExploringStarts.batch(gridWorld, policyInterface, ttd0);
-    vs.print(Digits._2);
+    vs.print(Round._2);
   }
 }

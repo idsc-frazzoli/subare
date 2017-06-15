@@ -13,10 +13,10 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
+import ch.ethz.idsc.tensor.sca.Round;
 
 class Sarsa_Maxbias {
   static void handle(SarsaType sarsaType, int n) throws Exception {
@@ -35,9 +35,9 @@ class Sarsa_Maxbias {
       ExploringStarts.batch(maxbias, policyInterface, n, sarsa, avs);
     }
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa);
-    vs.print(Digits._3);
+    vs.print(Round._3);
     Scalar error = TensorValuesUtils.distance(qsa, ref);
-    System.out.println("error = " + error.map(Digits._3));
+    System.out.println("error = " + error.map(Round._3));
   }
 
   public static void main(String[] args) throws Exception {

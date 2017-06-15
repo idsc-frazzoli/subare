@@ -14,12 +14,12 @@ import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** Q-Learning applied to gambler with adaptive learning rate */
 class QL_Gambler {
@@ -40,7 +40,7 @@ class QL_Gambler {
       lr_scheduler.notifyError(error);
       Scalar eps = lr_scheduler.getEpsilon();
       // eps = epsilon.Get(index);
-      System.out.println(index + " " + eps.map(Digits._1) + " " + error.map(Digits._1));
+      System.out.println(index + " " + eps.map(Round._1) + " " + error.map(Round._1));
       for (int count = 0; count < 1; ++count) {
         ExploringStarts.batch(gambler, policyInterface, 1, stepDigest);
         policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);
@@ -48,7 +48,7 @@ class QL_Gambler {
       gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
     }
     gsw.close();
-    qsa.print(Digits._2);
+    qsa.print(Round._2);
     System.out.println("---");
     EpisodeInterface mce = EpisodeKickoff.single(gambler, policyInterface);
     while (mce.hasNext()) {

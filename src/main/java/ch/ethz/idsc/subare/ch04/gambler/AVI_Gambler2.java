@@ -4,11 +4,11 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** action value iteration for gambler's dilemma */
 class AVI_Gambler2 {
@@ -19,7 +19,7 @@ class AVI_Gambler2 {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_avi.gif"), 500);
     for (int index = 0; index < 13; ++index) {
       Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);
-      System.out.println(index + " " + error.map(Digits._1));
+      System.out.println(index + " " + error.map(Round._1));
       gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref)));
       avi.step();
     }

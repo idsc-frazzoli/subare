@@ -8,8 +8,8 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Policies;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** {0, 0} 0
  * {1, 0} 0.24
@@ -33,6 +33,6 @@ class MCES_Randomwalk {
       ExploringStarts.batch(randomwalk, policyInterface, mces);
     }
     DiscreteQsa qsa = mces.qsa();
-    qsa.print(Digits._2);
+    qsa.print(Round._2);
   }
 }

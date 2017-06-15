@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.util.Digits;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** tabular temporal difference (0) to learn value of states
  * 
@@ -27,6 +27,6 @@ class TTD0_Randomwalk {
     PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policyInterface, ttd0);
-    vs.print(Digits._2);
+    vs.print(Round._2);
   }
 }

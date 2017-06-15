@@ -14,13 +14,13 @@ import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** StepDigest qsa methods applied to cliff walk */
 class Sarsa_Cliffwalk {
@@ -35,7 +35,7 @@ class Sarsa_Cliffwalk {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_" + type + ".gif"), 200);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
-      System.out.println(index + " " + error.map(Digits._1));
+      System.out.println(index + " " + error.map(Round._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, epsilon.Get(index));
       sarsa.setPolicyInterface(policyInterface);
       ExploringStarts.batch(cliffwalk, policyInterface, sarsa);

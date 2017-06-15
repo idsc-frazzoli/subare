@@ -8,12 +8,12 @@ import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 public class Sarsa_Blackjack {
   static void handle(SarsaType type) throws Exception {
@@ -26,7 +26,7 @@ public class Sarsa_Blackjack {
     Sarsa sarsa = type.supply(blackjack, qsa, DefaultLearningRate.of(2, 0.6));
     for (int index = 0; index < EPISODES; ++index) {
       // Scalar error = DiscreteQsas.distance(qsa, ref);
-      System.out.println(index + " " + epsilon.Get(index).map(Digits._2));
+      System.out.println(index + " " + epsilon.Get(index).map(Round._2));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(blackjack, qsa, epsilon.Get(index));
       sarsa.setPolicyInterface(policyInterface);
       for (int count = 0; count < 10; ++count)

@@ -6,11 +6,11 @@ import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 // TODO R1STQP algorithm is suited or not ??? 
 class RSTQP_Cliffwalk {
@@ -24,7 +24,7 @@ class RSTQP_Cliffwalk {
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
-      System.out.println(index + " " + error.map(Digits._1));
+      System.out.println(index + " " + error.map(Round._1));
       TabularSteps.batch(cliffwalk, cliffwalk, rstqp);
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, qsa, ref)));
     }

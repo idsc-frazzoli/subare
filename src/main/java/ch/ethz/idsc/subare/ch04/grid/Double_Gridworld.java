@@ -15,7 +15,6 @@ import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -23,6 +22,7 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** Double Sarsa for gridworld */
 class Double_Gridworld {
@@ -42,7 +42,7 @@ class Double_Gridworld {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar error = TensorValuesUtils.distance(qsa1, ref);
-      System.out.println(index + " " + explore.map(Digits._2) + " " + error.map(Digits._1));
+      System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable( //
           gridworld, TensorValuesUtils.average(qsa1, qsa2), explore);
       doubleSarsa.setPolicyInterface(policyInterface);

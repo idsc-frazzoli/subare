@@ -7,12 +7,12 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** monte carlo is bad in this example, since the steep negative reward biases most episodes */
 // TODO this does not really converge at all
@@ -25,7 +25,7 @@ class MCES_Cliffwalk {
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
-      System.out.println(index + " " + error.map(Digits._1));
+      System.out.println(index + " " + error.map(Round._1));
       for (int count = 0; count < 10; ++count) {
         PolicyInterface policyInterface = //
             EGreedyPolicy.bestEquiprobable(cliffwalk, mces.qsa(), RealScalar.of(.1));

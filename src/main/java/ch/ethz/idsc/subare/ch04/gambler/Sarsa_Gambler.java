@@ -14,7 +14,6 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -24,6 +23,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** Sarsa applied to gambler */
 class Sarsa_Gambler {
@@ -44,7 +44,7 @@ class Sarsa_Gambler {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       errors.append(error);
-      System.out.println(index + " " + epsilon.Get(index).map(Digits._2) + " " + error.map(Digits._1));
+      System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + error.map(Round._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       sarsa.setPolicyInterface(policyInterface);
       // sarsa.getUcbPolicy().setTime(RealScalar.of(index + 1)); // TODO

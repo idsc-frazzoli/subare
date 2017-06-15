@@ -10,12 +10,12 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** action value iteration for cliff walk */
 class AVI_Cliffwalk {
@@ -28,7 +28,7 @@ class AVI_Cliffwalk {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_avi.gif"), 200);
     for (int index = 0; index < 20; ++index) {
       Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);
-      System.out.println(index + " " + error.map(Digits._1));
+      System.out.println(index + " " + error.map(Round._1));
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, avi.qsa(), ref)));
       avi.step();
     }

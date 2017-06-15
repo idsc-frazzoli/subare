@@ -8,9 +8,9 @@ import java.util.zip.DataFormatException;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Import;
+import ch.ethz.idsc.tensor.sca.Round;
 
 class IPE_RaceTrack {
   public static void main(String[] args) throws ClassNotFoundException, DataFormatException, IOException {
@@ -19,6 +19,6 @@ class IPE_RaceTrack {
     PolicyInterface policyInterface = new EquiprobablePolicy(racetrack);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(racetrack, policyInterface);
     ipe.until(RealScalar.of(.1));
-    ipe.vs().print(Digits._1);
+    ipe.vs().print(Round._1);
   }
 }

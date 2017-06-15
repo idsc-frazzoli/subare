@@ -10,8 +10,8 @@ import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.io.Import;
+import ch.ethz.idsc.tensor.sca.Round;
 
 class FVPE_RaceTrack {
   public static void main(String[] args) throws ClassNotFoundException, DataFormatException, IOException {
@@ -23,6 +23,6 @@ class FVPE_RaceTrack {
     for (int count = 0; count < 10; ++count)
       ExploringStarts.batch(racetrack, policyInterface, fvpe);
     DiscreteVs vs = fvpe.vs();
-    vs.print(Digits._1);
+    vs.print(Round._1);
   }
 }

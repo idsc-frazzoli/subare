@@ -10,7 +10,7 @@ import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.util.Digits;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** determines state action value function q(s,a).
  * initial policy is irrelevant because each state allows only one action.
@@ -33,7 +33,7 @@ class Sarsa_Randomwalk {
     sarsa.setPolicyInterface(policyInterface);
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policyInterface, 4, sarsa); // sarsa, 4
-    qsa.print(Digits._2);
+    qsa.print(Round._2);
   }
 
   public static void main(String[] args) {

@@ -4,9 +4,9 @@ package ch.ethz.idsc.subare.ch05.infvar;
 import ch.ethz.idsc.subare.core.PolicyInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.sca.Round;
 
 // TODO check again
 class IPE_InfiniteVariance {
@@ -17,6 +17,6 @@ class IPE_InfiniteVariance {
         standardModel, policyInterface);
     a.until(RealScalar.of(.0001));
     System.out.println(a.iterations());
-    a.vs().print(Digits._2);
+    a.vs().print(Round._2);
   }
 }

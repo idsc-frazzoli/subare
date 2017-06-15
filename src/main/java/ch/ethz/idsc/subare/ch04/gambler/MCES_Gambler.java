@@ -9,12 +9,12 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Round;
 
 class MCES_Gambler {
   public static void main(String[] args) throws Exception {
@@ -25,7 +25,7 @@ class MCES_Gambler {
     int EPISODES = 20;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
-      System.out.println(index + " " + error.map(Digits._1));
+      System.out.println(index + " " + error.map(Round._1));
       for (int count = 0; count < 2; ++count) {
         PolicyInterface policyInterface = //
             EGreedyPolicy.bestEquiprobable(gambler, mces.qsa(), RealScalar.of(.1));
@@ -35,6 +35,6 @@ class MCES_Gambler {
     }
     gsw.close();
     DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, mces.qsa());
-    discreteVs.print(Digits._1);
+    discreteVs.print(Round._1);
   }
 }

@@ -6,7 +6,7 @@ import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.util.Digits;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** first visit policy evaluation determines state values v(s)
  * 
@@ -26,6 +26,6 @@ class FVPE_Randomwalk {
     for (int count = 0; count < 100; ++count)
       ExploringStarts.batch(randomwalk, policyInterface, fvpe);
     DiscreteVs vs = fvpe.vs();
-    vs.print(Digits._2);
+    vs.print(Round._2);
   }
 }
