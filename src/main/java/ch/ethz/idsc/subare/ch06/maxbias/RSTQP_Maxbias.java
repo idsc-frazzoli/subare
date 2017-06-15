@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch06.maxbias;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
+import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
@@ -15,8 +16,8 @@ class RSTQP_Maxbias {
     Maxbias maxbias = new Maxbias(3);
     DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias);
     DiscreteQsa qsa = DiscreteQsa.build(maxbias);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(maxbias, qsa);
-    rstqp.setLearningRate(RealScalar.of(1.));
+    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+        maxbias, qsa, DefaultLearningRate.of(5, 1.0)); // TODO try learning rate
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
     for (int index = 0; index < 500; ++index)
       TabularSteps.batch(maxbias, maxbias, rstqp, avs);

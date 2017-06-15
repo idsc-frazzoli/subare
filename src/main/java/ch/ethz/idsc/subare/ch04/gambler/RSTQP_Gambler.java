@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
+import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
@@ -22,10 +23,10 @@ class RSTQP_Gambler {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(gambler, qsa);
+    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+        gambler, qsa, DefaultLearningRate.of(5, 1.0)); // TODO try learning rate
     ActionValueStatistics avs = new ActionValueStatistics(gambler);
     StateActionCounter sac = new StateActionCounter(gambler);
-    rstqp.setLearningRate(RealScalar.of(.3)); // TODO learning rate is wrong
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_rstqp.gif"), 100);
     GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_rstqp.gif"), 200);
     int EPISODES = 30;

@@ -2,12 +2,12 @@
 package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
+import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
@@ -18,8 +18,8 @@ class RSTQP_Gridworld {
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(gridworld, qsa);
-    rstqp.setLearningRate(RealScalar.of(.25));
+    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+        gridworld, qsa, DefaultLearningRate.of(5, 1.0)); // TODO try learning rate
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_qsa_rstqp.gif"), 150);
     int EPISODES = 30;
     for (int index = 0; index < EPISODES; ++index) {
