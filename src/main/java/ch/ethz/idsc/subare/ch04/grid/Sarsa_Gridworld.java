@@ -36,16 +36,14 @@ class Sarsa_Gridworld {
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     int EPISODES = 40;
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
-    Tensor learning = Subdivide.of(.3, .01, EPISODES);
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + type + "" + n + ".gif"), 150);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
-      Scalar alpha = learning.Get(index);
       Scalar error = TensorValuesUtils.distance(qsa, ref);
-      System.out.println(index + " " + explore.map(Digits._1) + " " + error.map(Digits._1));
+      System.out.println(index + " " + explore.map(Digits._2) + "\t" + error.map(Digits._1));
       PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
       sarsa.setPolicyInterface(policyInterface);
       ExploringStarts.batch(gridworld, policyInterface, n, sarsa);
@@ -66,7 +64,7 @@ class Sarsa_Gridworld {
   }
 
   public static void main(String[] args) throws Exception {
-    int n = 2;
+    int n = 0;
     handle(SarsaType.original, n);
     handle(SarsaType.expected, n);
     handle(SarsaType.qlearning, n);

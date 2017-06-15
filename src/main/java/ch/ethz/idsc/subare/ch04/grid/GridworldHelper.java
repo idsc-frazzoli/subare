@@ -39,10 +39,12 @@ enum GridworldHelper {
   }
 
   static Tensor render(Gridworld gridworld, DiscreteQsa qsa) {
-    return ImageResize.of(StateActionRasters.render(new GridworldRaster(gridworld), qsa), MAGNIFY);
+    return ImageResize.of( //
+        StateActionRasters.render(new GridworldRaster(gridworld), qsa), MAGNIFY);
   }
 
   public static Tensor joinAll(Gridworld gridworld, DiscreteQsa qsa, DiscreteQsa ref) {
-    return ImageResize.of(StateActionRasters.qsaRef(new GridworldRaster(gridworld), qsa, ref), MAGNIFY);
+    return ImageResize.of( //
+        StateActionRasters.qsaRef(new GridworldRaster(gridworld), qsa, ref, 1), MAGNIFY);
   }
 }

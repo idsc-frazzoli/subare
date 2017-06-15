@@ -31,13 +31,13 @@ public abstract class Sarsa extends DequeDigestAdapter {
   final DiscreteModel discreteModel;
   final QsaInterface qsa;
   private final LearningRate learningRate;
-  PolicyInterface policyInterface = null; // FIXME how does this related to ucb Policy!
+  PolicyInterface policyInterface = null;
   // ---
   private final UcbPolicy ucbPolicy;
 
   /** @param discreteModel
    * @param qsa
-   * @param alpha learning rate */
+   * @param learningRate */
   public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     this.discreteModel = discreteModel;
     this.qsa = qsa;
@@ -45,8 +45,7 @@ public abstract class Sarsa extends DequeDigestAdapter {
     ucbPolicy = UcbPolicy.of(discreteModel, qsa, RealScalar.ONE);
   }
 
-  /** @param policyInterface */
-  @Deprecated // TODO deprecated only preliminary
+  /** @param policyInterface that is used to generate the {@link StepInterface} */
   public void setPolicyInterface(PolicyInterface policyInterface) {
     this.policyInterface = policyInterface;
   }

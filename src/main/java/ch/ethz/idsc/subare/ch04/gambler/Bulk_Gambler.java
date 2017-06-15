@@ -39,7 +39,7 @@ class Bulk_Gambler {
   Bulk_Gambler(Gambler gambler, SarsaType sarsaType, //
       int EPISODES, Scalar factor, Scalar exponent) throws Exception {
     this.gambler = gambler;
-    epsilon = Subdivide.of(.2, .01, EPISODES);
+    epsilon = Subdivide.of(.2, .01, EPISODES); // .2, .6
     qsa = DiscreteQsa.build(gambler); // q-function for training, initialized to 0
     sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor, exponent));
   }
@@ -47,24 +47,25 @@ class Bulk_Gambler {
   void step(int index) {
     PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
     sarsa.setPolicyInterface(policyInterface);
-    sarsa.getUcbPolicy().setTime(RealScalar.of(index + 1)); // TODO
-    PolicyInterface ucbPolicy = sarsa.getUcbPolicy();
+    // sarsa.getUcbPolicy().setTime(RealScalar.of(index + 1)); // TODO
+    // PolicyInterface ucbPolicy = sarsa.getUcbPolicy();
     ExploringStarts.batch(gambler, policyInterface, 1, sarsa);
   }
 
   public static void main(String[] args) throws Exception {
-    SarsaType sarsaType = SarsaType.original;
-    final int EPISODES = 80;
-    final int ERRORCAP = 15;
-    Gambler gambler = new Gambler(20, RationalScalar.of(4, 10));
+    SarsaType sarsaType = SarsaType.qlearning;
+    final int EPISODES = 80; // 80
+    final int ERRORCAP = 15; // 15
+    Gambler gambler = new Gambler(20, RationalScalar.of(4, 10)); // 20, 4/10
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler); // true q-function, for error measurement
     Map<Point, Bulk_Gambler> map = new HashMap<>();
     final int RESX = 32;
     final int RESY = 25;
     int x = 0;
-    for (Tensor factor : Subdivide.of(.5, 16, RESX - 1)) {
+    // for (Tensor factor : Subdivide.of(.5, 16, RESX - 1)) { // .5 16
+    for (Tensor factor : Subdivide.of(.1, 3, RESX - 1)) { // .5 16
       int y = 0;
-      for (Tensor exponent : Subdivide.of(.51, 2, RESY - 1)) {
+      for (Tensor exponent : Subdivide.of(.51, 1, RESY - 1)) { // .51 2
         Bulk_Gambler bg = new Bulk_Gambler(gambler, sarsaType, EPISODES, factor.Get(), exponent.Get());
         map.put(new Point(x, y), bg);
         ++y;
