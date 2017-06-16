@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
@@ -33,7 +33,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   final DiscreteModel discreteModel;
   final QsaInterface qsa;
   private final LearningRate learningRate;
-  PolicyInterface policyInterface = null;
+  Policy policy = null;
   // ---
   private final UcbPolicy ucbPolicy;
 
@@ -47,12 +47,11 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     ucbPolicy = UcbPolicy.of(discreteModel, qsa, RealScalar.ONE);
   }
 
-  /** @param policyInterface that is used to generate the {@link StepInterface} */
-  public void setPolicyInterface(PolicyInterface policyInterface) {
-    this.policyInterface = policyInterface;
+  /** @param policy that is used to generate the {@link StepInterface} */
+  public void setPolicyInterface(Policy policy) {
+    this.policy = policy;
   }
 
-  /** @param policyInterface */
   public UcbPolicy getUcbPolicy() {
     return ucbPolicy;
   }

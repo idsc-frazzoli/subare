@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
@@ -27,9 +27,9 @@ class MCES_Gambler {
       Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
       System.out.println(index + " " + error.map(Round._1));
       for (int count = 0; count < 2; ++count) {
-        PolicyInterface policyInterface = //
+        Policy policy = //
             EGreedyPolicy.bestEquiprobable(gambler, mces.qsa(), RealScalar.of(.1));
-        ExploringStarts.batch(gambler, policyInterface, mces);
+        ExploringStarts.batch(gambler, policy, mces);
       }
       gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, mces.qsa(), ref)));
     }

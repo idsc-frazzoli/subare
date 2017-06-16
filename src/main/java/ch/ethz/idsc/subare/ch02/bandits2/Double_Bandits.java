@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02.bandits2;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -35,10 +35,10 @@ class Double_Bandits {
       // PolicyInterface greedy = GreedyPolicy.bestEquiprobable(bandits, qsa1);
       Scalar error = Policies.expectedLoss(bandits, ref, qsa1);
       System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._3));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable( //
+      Policy policy = EGreedyPolicy.bestEquiprobable( //
           bandits, TensorValuesUtils.average(qsa1, qsa2), explore);
-      doubleSarsa.setPolicyInterface(policyInterface);
-      ExploringStarts.batch(bandits, policyInterface, n, doubleSarsa);
+      doubleSarsa.setPolicyInterface(policy);
+      ExploringStarts.batch(bandits, policy, n, doubleSarsa);
     }
     System.out.println("---");
     System.out.println("true state values:");

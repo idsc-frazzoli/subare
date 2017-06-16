@@ -3,7 +3,7 @@
 package ch.ethz.idsc.subare.ch06.windy;
 
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -32,10 +32,10 @@ class Sarsa_Windygrid {
     for (int index = 0; index < total; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(Round._1));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(windygrid, qsa, RealScalar.of(.1));
-      sarsa.setPolicyInterface(policyInterface);
+      Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, RealScalar.of(.1));
+      sarsa.setPolicyInterface(policy);
       for (int count = 0; count < 10; ++count)
-        ExploringStarts.batch(windygrid, policyInterface, sarsa);
+        ExploringStarts.batch(windygrid, policy, sarsa);
       if (index % 2 == 0)
         gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, qsa, ref)));
     }

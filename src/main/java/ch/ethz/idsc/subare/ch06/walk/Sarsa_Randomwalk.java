@@ -3,7 +3,7 @@
 package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -29,10 +29,10 @@ class Sarsa_Randomwalk {
     DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = type.supply(randomwalk, qsa, learningRate);
-    PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
-    sarsa.setPolicyInterface(policyInterface);
+    Policy policy = new EquiprobablePolicy(randomwalk);
+    sarsa.setPolicyInterface(policy);
     for (int count = 0; count < 1000; ++count)
-      ExploringStarts.batch(randomwalk, policyInterface, 4, sarsa); // sarsa, 4
+      ExploringStarts.batch(randomwalk, policy, 4, sarsa); // sarsa, 4
     qsa.print(Round._2);
   }
 

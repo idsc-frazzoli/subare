@@ -6,7 +6,7 @@ import java.util.Random;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
@@ -18,18 +18,18 @@ import ch.ethz.idsc.tensor.Tensor;
 public final class MonteCarloEpisode implements EpisodeInterface {
   private final Random random = new Random();
   private final MonteCarloInterface monteCarloInterface;
-  private final PolicyInterface policyInterface;
+  private final Policy policy;
   private Tensor state;
   private final Queue<Tensor> openingActions;
 
   /** @param monteCarloInterface
-   * @param policyInterface
+   * @param policy
    * @param state start of episode
    * @param openingActions */
-  public MonteCarloEpisode(MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, //
+  public MonteCarloEpisode(MonteCarloInterface monteCarloInterface, Policy policy, //
       Tensor state, Queue<Tensor> openingActions) {
     this.monteCarloInterface = monteCarloInterface;
-    this.policyInterface = policyInterface;
+    this.policy = policy;
     this.state = state;
     this.openingActions = openingActions;
   }
@@ -39,7 +39,7 @@ public final class MonteCarloEpisode implements EpisodeInterface {
     final Tensor prev = state;
     final Tensor action;
     if (openingActions.isEmpty()) {
-      PolicyWrap policyWrap = new PolicyWrap(policyInterface, random);
+      PolicyWrap policyWrap = new PolicyWrap(policy, random);
       action = policyWrap.next(state, monteCarloInterface.actions(state));
     } else {
       action = openingActions.poll();

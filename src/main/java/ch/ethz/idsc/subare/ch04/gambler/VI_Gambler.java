@@ -2,7 +2,7 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.gambler;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
@@ -32,7 +32,7 @@ class VI_Gambler {
     final DiscreteVs vr = DiscreteUtils.createVs(gambler, ref);
     Scalar diff = TensorValuesUtils.distance(vs, vr);
     System.out.println("error=" + N.of(diff));
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gambler, vi.vs());
-    Policies.print(policyInterface, gambler.states());
+    Policy policy = GreedyPolicy.bestEquiprobable(gambler, vi.vs());
+    Policies.print(policy, gambler.states());
   }
 }

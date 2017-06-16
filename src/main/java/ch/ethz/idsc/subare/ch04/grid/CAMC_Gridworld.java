@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.ConstantAlphaMonteCarloVs;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
@@ -29,10 +29,10 @@ class CAMC_Gridworld {
       // + " " + error.map(ROUND)
       System.out.println(index);
       for (int count = 0; count < 20; ++count) {
-        PolicyInterface policyInterface = //
+        Policy policy = //
             new EquiprobablePolicy(gridworld);
         // EGreedyPolicy.bestEquiprobable(gridworld, camc.vs(), epsilon.Get(index));
-        ExploringStarts.batch(gridworld, policyInterface, camc);
+        ExploringStarts.batch(gridworld, policy, camc);
       }
       gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, camc.vs())));
     }

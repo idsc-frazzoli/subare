@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch05.blackjack;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -28,7 +28,7 @@ public class BlackjackTest extends TestCase {
 
   public void testEpisodeLength() {
     Blackjack blackjack = new Blackjack();
-    PolicyInterface pi = new EquiprobablePolicy(blackjack);
+    Policy pi = new EquiprobablePolicy(blackjack);
     Tensor tally = Tensors.empty();
     for (int EPISODES = 0; EPISODES < 10000; ++EPISODES) {
       EpisodeInterface ei = EpisodeKickoff.single(blackjack, pi);

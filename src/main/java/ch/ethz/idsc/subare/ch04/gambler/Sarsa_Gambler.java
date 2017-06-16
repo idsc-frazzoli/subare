@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -45,12 +45,12 @@ class Sarsa_Gambler {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       errors.append(error);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + error.map(Round._1));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policyInterface);
+      Policy policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
+      sarsa.setPolicyInterface(policy);
       // sarsa.getUcbPolicy().setTime(RealScalar.of(index + 1)); // TODO
       // PolicyInterface ucbPolicy = sarsa.getUcbPolicy();
       ExploringStarts.batch(gambler, //
-          policyInterface //
+          policy //
           // ucbPolicy //
           , 1, sarsa, sac);
       // ---
@@ -62,8 +62,8 @@ class Sarsa_Gambler {
     gsc.close();
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gambler, qsa);
-    EpisodeInterface mce = EpisodeKickoff.single(gambler, policyInterface);
+    Policy policy = GreedyPolicy.bestEquiprobable(gambler, qsa);
+    EpisodeInterface mce = EpisodeKickoff.single(gambler, policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

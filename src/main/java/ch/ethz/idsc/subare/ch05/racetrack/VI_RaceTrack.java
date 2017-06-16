@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch05.racetrack;
 
 import java.util.LinkedList;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
@@ -24,12 +24,12 @@ class VI_RaceTrack {
     ValueIteration vi = new ValueIteration(racetrack, racetrack);
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(racetrack, vi.vs());
+    Policy policy = GreedyPolicy.bestEquiprobable(racetrack, vi.vs());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + ".gif"), 400);
     for (Tensor start : racetrack.statesStart) {
       Tensor image = racetrack.image();
       MonteCarloEpisode mce = new MonteCarloEpisode( //
-          racetrack, policyInterface, start, new LinkedList<>());
+          racetrack, policy, start, new LinkedList<>());
       while (mce.hasNext()) {
         StepInterface stepInterface = mce.step();
         {

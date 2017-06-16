@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.td.Sarsa;
@@ -28,7 +28,7 @@ class QL_Gambler {
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     int EPISODES = 100;
     // Tensor epsilon = Subdivide.of(.2, .001, EPISODES);
-    PolicyInterface policyInterface = new EquiprobablePolicy(gambler);
+    Policy policy = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_ql.gif"), 100);
@@ -42,15 +42,15 @@ class QL_Gambler {
       // eps = epsilon.Get(index);
       System.out.println(index + " " + eps.map(Round._1) + " " + error.map(Round._1));
       for (int count = 0; count < 1; ++count) {
-        ExploringStarts.batch(gambler, policyInterface, 1, stepDigest);
-        policyInterface = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);
+        ExploringStarts.batch(gambler, policy, 1, stepDigest);
+        policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);
       }
       gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
     }
     gsw.close();
     qsa.print(Round._2);
     System.out.println("---");
-    EpisodeInterface mce = EpisodeKickoff.single(gambler, policyInterface);
+    EpisodeInterface mce = EpisodeKickoff.single(gambler, policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

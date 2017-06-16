@@ -10,7 +10,7 @@ import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.EpisodeDigest;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 
@@ -20,12 +20,12 @@ import ch.ethz.idsc.subare.core.StepInterface;
 public enum ExploringStarts {
   ;
   public static int batch( //
-      MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, //
+      MonteCarloInterface monteCarloInterface, Policy policy, //
       EpisodeDigest episodeDigest) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;
     while (exploringStartBatch.hasNext()) {
-      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
+      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policy);
       episodeDigest.digest(episodeInterface);
       ++episodes;
     }
@@ -33,13 +33,13 @@ public enum ExploringStarts {
   }
 
   public static int batchWithReplay( //
-      MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, //
+      MonteCarloInterface monteCarloInterface, Policy policy, //
       EpisodeDigest... episodeDigest) {
     List<EpisodeDigest> list = Arrays.asList(episodeDigest);
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;
     while (exploringStartBatch.hasNext()) {
-      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
+      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policy);
       EpisodeRecording episodeRecording = new EpisodeRecording(episodeInterface);
       list.stream().parallel() //
           .forEach(_episodeDigest -> _episodeDigest.digest(episodeRecording.replay()));
@@ -49,13 +49,13 @@ public enum ExploringStarts {
   }
 
   public static int batch( //
-      MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, //
+      MonteCarloInterface monteCarloInterface, Policy policy, //
       StepDigest... stepDigest) {
     List<StepDigest> list = Arrays.asList(stepDigest);
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;
     while (exploringStartBatch.hasNext()) {
-      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
+      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policy);
       while (episodeInterface.hasNext()) {
         StepInterface stepInterface = episodeInterface.step();
         list.stream().parallel() //
@@ -67,18 +67,18 @@ public enum ExploringStarts {
   }
 
   /** @param monteCarloInterface
-   * @param policyInterface
+   * @param policy
    * @param nstep of deque (if nstep == 0 then deque contains a complete episode)
    * @param dequeDigest
    * @return */
   public static int batch( //
-      MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, int nstep, //
+      MonteCarloInterface monteCarloInterface, Policy policy, int nstep, //
       DequeDigest... dequeDigest) {
     List<DequeDigest> list = Arrays.asList(dequeDigest);
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;
     while (exploringStartBatch.hasNext()) {
-      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policyInterface);
+      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policy);
       Deque<StepInterface> deque = new LinkedList<>();
       while (episodeInterface.hasNext()) {
         final StepInterface stepInterface = episodeInterface.step();

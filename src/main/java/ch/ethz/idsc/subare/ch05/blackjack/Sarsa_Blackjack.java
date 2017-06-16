@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.blackjack;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -27,10 +27,10 @@ public class Sarsa_Blackjack {
     for (int index = 0; index < EPISODES; ++index) {
       // Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(blackjack, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policyInterface);
+      Policy policy = EGreedyPolicy.bestEquiprobable(blackjack, qsa, epsilon.Get(index));
+      sarsa.setPolicyInterface(policy);
       for (int count = 0; count < 10; ++count)
-        ExploringStarts.batch(blackjack, policyInterface, sarsa);
+        ExploringStarts.batch(blackjack, policy, sarsa);
       gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, qsa)));
     }
     gsw.close();

@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.zip.DataFormatException;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
@@ -19,9 +19,9 @@ class FVPE_RaceTrack {
     Racetrack racetrack = new Racetrack(Import.of(new File(path)), 3);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         racetrack, null);
-    PolicyInterface policyInterface = new EquiprobablePolicy(racetrack);
+    Policy policy = new EquiprobablePolicy(racetrack);
     for (int count = 0; count < 10; ++count)
-      ExploringStarts.batch(racetrack, policyInterface, fvpe);
+      ExploringStarts.batch(racetrack, policy, fvpe);
     DiscreteVs vs = fvpe.vs();
     vs.print(Round._1);
   }

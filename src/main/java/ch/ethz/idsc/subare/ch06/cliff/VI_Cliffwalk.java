@@ -3,7 +3,7 @@
 package ch.ethz.idsc.subare.ch06.cliff;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -37,8 +37,8 @@ class VI_Cliffwalk {
     // Tensor state = statesIndex.get(stateI);
     // System.out.println(state + " " + values.get(stateI).map(ROUND));
     // }
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
-    EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policyInterface);
+    Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
+    EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

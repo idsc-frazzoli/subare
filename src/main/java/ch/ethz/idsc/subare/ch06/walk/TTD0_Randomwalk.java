@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.walk;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
@@ -24,9 +24,9 @@ class TTD0_Randomwalk {
     DiscreteVs vs = DiscreteVs.build(randomwalk);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
         vs, randomwalk.gamma(), DefaultLearningRate.of(3, .6));
-    PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
+    Policy policy = new EquiprobablePolicy(randomwalk);
     for (int count = 0; count < 1000; ++count)
-      ExploringStarts.batch(randomwalk, policyInterface, ttd0);
+      ExploringStarts.batch(randomwalk, policy, ttd0);
     vs.print(Round._2);
   }
 }

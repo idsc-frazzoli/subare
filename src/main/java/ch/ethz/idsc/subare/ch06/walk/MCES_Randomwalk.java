@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.walk;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -24,13 +24,13 @@ class MCES_Randomwalk {
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(randomwalk);
     int EPISODES = 1000;
     for (int count = 0; count < EPISODES; ++count) {
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(randomwalk, mces.qsa(), RealScalar.of(.1));
+      Policy policy = EGreedyPolicy.bestEquiprobable(randomwalk, mces.qsa(), RealScalar.of(.1));
       if (count == 0) {
-        boolean equals = Policies.equals(randomwalk, policyInterface, new EquiprobablePolicy(randomwalk));
+        boolean equals = Policies.equals(randomwalk, policy, new EquiprobablePolicy(randomwalk));
         if (!equals)
           throw new RuntimeException();
       }
-      ExploringStarts.batch(randomwalk, policyInterface, mces);
+      ExploringStarts.batch(randomwalk, policy, mces);
     }
     DiscreteQsa qsa = mces.qsa();
     qsa.print(Round._2);

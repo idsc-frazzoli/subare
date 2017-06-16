@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch06.cliff;
 
 import java.util.List;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -30,7 +30,7 @@ enum CliffwalkHelper {
     return ActionValueIterations.solve(cliffwalk, DecimalScalar.of(.0001));
   }
 
-  static PolicyInterface getOptimalPolicy(Cliffwalk cliffwalk) {
+  static Policy getOptimalPolicy(Cliffwalk cliffwalk) {
     ValueIteration vi = new ValueIteration(cliffwalk, cliffwalk);
     vi.untilBelow(RealScalar.of(1e-10));
     return GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());

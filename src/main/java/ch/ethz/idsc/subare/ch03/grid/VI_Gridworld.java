@@ -2,7 +2,7 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch03.grid;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
@@ -45,7 +45,7 @@ class VI_Gridworld {
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
     vi.vs().print(Round._1);
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
-    Policies.print(policyInterface, gridworld.states());
+    Policy policy = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
+    Policies.print(policy, gridworld.states());
   }
 }

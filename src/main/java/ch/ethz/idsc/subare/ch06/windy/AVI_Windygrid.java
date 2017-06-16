@@ -2,7 +2,7 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch06.windy;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
@@ -37,7 +37,7 @@ class AVI_Windygrid {
     // TODO extract code below to other file
     DiscreteVs vs = DiscreteUtils.createVs(windygrid, ref);
     vs.print();
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(windygrid, ref);
-    Policies.print(policyInterface, windygrid.states());
+    Policy policy = GreedyPolicy.bestEquiprobable(windygrid, ref);
+    Policies.print(policy, windygrid.states());
   }
 }

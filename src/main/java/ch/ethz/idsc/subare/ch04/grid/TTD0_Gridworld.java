@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
@@ -33,9 +33,9 @@ public class TTD0_Gridworld {
     DiscreteVs vs = DiscreteVs.build(gridWorld);
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
         vs, gridWorld.gamma(), DefaultLearningRate.of(3, .6));
-    PolicyInterface policyInterface = new EquiprobablePolicy(gridWorld);
+    Policy policy = new EquiprobablePolicy(gridWorld);
     for (int count = 0; count < 300; ++count)
-      ExploringStarts.batch(gridWorld, policyInterface, ttd0);
+      ExploringStarts.batch(gridWorld, policy, ttd0);
     vs.print(Round._2);
   }
 }

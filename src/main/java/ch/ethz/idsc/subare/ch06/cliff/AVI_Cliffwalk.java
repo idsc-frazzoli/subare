@@ -2,7 +2,7 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch06.cliff;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
@@ -36,7 +36,7 @@ class AVI_Cliffwalk {
     gsw.close();
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
     vs.print();
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(cliffwalk, ref);
-    Policies.print(policyInterface, cliffwalk.states());
+    Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, ref);
+    Policies.print(policy, cliffwalk.states());
   }
 }

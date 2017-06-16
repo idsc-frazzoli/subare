@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -43,10 +43,10 @@ class Double_Gridworld {
       Scalar explore = epsilon.Get(index);
       Scalar error = TensorValuesUtils.distance(qsa1, ref);
       System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._1));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable( //
+      Policy policy = EGreedyPolicy.bestEquiprobable( //
           gridworld, TensorValuesUtils.average(qsa1, qsa2), explore);
-      doubleSarsa.setPolicyInterface(policyInterface);
-      ExploringStarts.batch(gridworld, policyInterface, n, doubleSarsa);
+      doubleSarsa.setPolicyInterface(policy);
+      ExploringStarts.batch(gridworld, policy, n, doubleSarsa);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa1, ref)));
     }
     gsw.close();
@@ -54,8 +54,8 @@ class Double_Gridworld {
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa1);
     Put.of(UserHome.file("gridworld_" + sarsaType), vs.values());
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, qsa1);
-    EpisodeInterface ei = EpisodeKickoff.single(gridworld, policyInterface);
+    Policy policy = GreedyPolicy.bestEquiprobable(gridworld, qsa1);
+    EpisodeInterface ei = EpisodeKickoff.single(gridworld, policy);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();
       Tensor state = stepInterface.prevState();

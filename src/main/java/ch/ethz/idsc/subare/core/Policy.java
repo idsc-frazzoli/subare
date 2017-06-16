@@ -10,9 +10,9 @@ import ch.ethz.idsc.tensor.Tensor;
  * 
  * since a PolicyInterface outputs probabilities, the additional constraint holds:
  * sum_a pi(a|s) == 1 for all states s */
-public interface PolicyInterface {
+public interface Policy {
   /** @param state
    * @param action
    * @return probability that action is taken when in given state */
-  Scalar policy(Tensor state, Tensor action);
+  Scalar probability(Tensor state, Tensor action);
 }

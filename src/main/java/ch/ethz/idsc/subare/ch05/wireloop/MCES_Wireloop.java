@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -28,8 +28,8 @@ class MCES_Wireloop {
       Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + error.map(Round._2));
       for (int count = 0; count < 4; ++count) {
-        PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(wireloop, mces.qsa(), epsilon.Get(index));
-        ExploringStarts.batch(wireloop, policyInterface, mces);
+        Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, mces.qsa(), epsilon.Get(index));
+        ExploringStarts.batch(wireloop, policy, mces);
       }
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, mces.qsa())));
     }

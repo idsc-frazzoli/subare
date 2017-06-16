@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02.bandits2;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -13,6 +13,7 @@ import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -28,11 +29,14 @@ class Sarsa_Bandits {
     final Sarsa sarsa = sarsaType.supply(bandits, qsa, DefaultLearningRate.of(factor, exponent));
     // ---
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = Policies.expectedLoss(bandits, ref, qsa);
-      System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + error.map(Round._3));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(bandits, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policyInterface);
-      ExploringStarts.batch(bandits, policyInterface, 1, sarsa);
+      Scalar error1 = Policies.expectedLoss(bandits, ref, qsa);
+      Scalar error2 = Policies.expectedLossOld(bandits, ref, qsa);
+      if (!error1.equals(error2) && 0 < index) // FIXME what is going on here? with 0 < index?
+        throw TensorRuntimeException.of(error1, error2);
+      System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + error1.map(Round._3) + " " + error2.map(Round._3));
+      Policy policy = EGreedyPolicy.bestEquiprobable(bandits, qsa, epsilon.Get(index));
+      sarsa.setPolicyInterface(policy);
+      ExploringStarts.batch(bandits, policy, 1, sarsa);
     }
     System.out.println("---");
     System.out.println("true state values:");

@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.util.List;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
@@ -33,7 +33,7 @@ enum BlackjackHelper {
         TensorValuesUtils.rescaled(DiscreteUtils.createVs(blackjack, qsa)));
   }
 
-  public static Tensor render(Blackjack blackjack, PolicyInterface policyInterface) {
+  public static Tensor render(Blackjack blackjack, Policy policy) {
     BlackjackRaster blackjackRaster = new BlackjackRaster(blackjack);
     Dimension dimension = blackjackRaster.dimension();
     Tensor tensor = Array.zeros(dimension.width, dimension.height, 4);
@@ -41,7 +41,7 @@ enum BlackjackHelper {
       Point point = blackjackRaster.point(state);
       if (point != null) {
         Tensor action = RealScalar.ZERO;
-        Scalar sca = policyInterface.policy(state, action);
+        Scalar sca = policy.probability(state, action);
         tensor.set(COLORSCHEME.get(BASE.multiply(sca)), point.x, point.y);
       }
     }
@@ -50,8 +50,8 @@ enum BlackjackHelper {
 
   public static Tensor joinAll(Blackjack blackjack, DiscreteQsa qsa) {
     Tensor im1 = render(blackjack, qsa);
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(blackjack, qsa);
-    Tensor im2 = render(blackjack, policyInterface);
+    Policy policy = GreedyPolicy.bestEquiprobable(blackjack, qsa);
+    Tensor im2 = render(blackjack, policy);
     List<Integer> list = Dimensions.of(im1);
     list.set(1, 2);
     return ImageResize.of(Join.of(1, im1, Array.zeros(list), im2), MAGNIFY);

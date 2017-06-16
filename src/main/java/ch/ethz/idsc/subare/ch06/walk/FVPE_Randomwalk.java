@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.walk;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
@@ -22,9 +22,9 @@ class FVPE_Randomwalk {
     Randomwalk randomwalk = new Randomwalk();
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         randomwalk, null);
-    PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
+    Policy policy = new EquiprobablePolicy(randomwalk);
     for (int count = 0; count < 100; ++count)
-      ExploringStarts.batch(randomwalk, policyInterface, fvpe);
+      ExploringStarts.batch(randomwalk, policy, fvpe);
     DiscreteVs vs = fvpe.vs();
     vs.print(Round._2);
   }

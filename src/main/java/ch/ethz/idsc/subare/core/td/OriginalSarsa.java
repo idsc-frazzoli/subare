@@ -29,15 +29,14 @@ public class OriginalSarsa extends ActionSarsa {
 
   /** @param discreteModel
    * @param qsa
-   * @param alpha learning rate
-   * @param policyInterface */
+   * @param learningRate */
   public OriginalSarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     super(discreteModel, qsa, learningRate);
   }
 
   @Override
   Tensor actionForEvaluation(Tensor state) {
-    PolicyWrap policyWrap = new PolicyWrap(policyInterface, random);
+    PolicyWrap policyWrap = new PolicyWrap(policy, random);
     return policyWrap.next(state, discreteModel.actions(state));
   }
 }

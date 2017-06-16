@@ -3,7 +3,7 @@
 package ch.ethz.idsc.subare.ch06.cliff;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -36,16 +36,16 @@ class Sarsa_Cliffwalk {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(Round._1));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policyInterface);
-      ExploringStarts.batch(cliffwalk, policyInterface, sarsa);
+      Policy policy = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, epsilon.Get(index));
+      sarsa.setPolicyInterface(policy);
+      ExploringStarts.batch(cliffwalk, policy, sarsa);
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, qsa, ref)));
     }
     gsw.close();
     // qsa.print(Digits._2);
     System.out.println("---");
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(cliffwalk, qsa);
-    EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policyInterface);
+    Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, qsa);
+    EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

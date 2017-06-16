@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
@@ -30,7 +30,7 @@ import ch.ethz.idsc.tensor.Tensor;
     return index < list.size();
   }
 
-  public EpisodeInterface nextEpisode(PolicyInterface policyInterface) {
+  public EpisodeInterface nextEpisode(Policy policy) {
     Tensor key = list.get(index);
     Tensor state = key.get(0); // first state
     Tensor action = key.get(1); // first action
@@ -39,6 +39,6 @@ import ch.ethz.idsc.tensor.Tensor;
     Queue<Tensor> queue = new LinkedList<>();
     queue.add(action);
     ++index;
-    return new MonteCarloEpisode(monteCarloInterface, policyInterface, state, queue);
+    return new MonteCarloEpisode(monteCarloInterface, policy, state, queue);
   }
 }

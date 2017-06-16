@@ -13,9 +13,7 @@ import ch.ethz.idsc.tensor.Tensor;
 public class ExpectedSarsa extends Sarsa {
   /** @param discreteModel
    * @param qsa
-   * @param alpha if all state transtions are deterministic and all randomness comes
-   * from the policy then alpha can be set to 1
-   * @param policyInterface */
+   * @param learningRate */
   public ExpectedSarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     super(discreteModel, qsa, learningRate);
   }
@@ -23,7 +21,7 @@ public class ExpectedSarsa extends Sarsa {
   @Override
   protected Scalar evaluate(Tensor state) {
     return discreteModel.actions(state).flatten(0) //
-        .map(action1 -> policyInterface.policy(state, action1).multiply(qsa.value(state, action1))) //
+        .map(action1 -> policy.probability(state, action1).multiply(qsa.value(state, action1))) //
         .reduce(Scalar::add).get();
   }
 }

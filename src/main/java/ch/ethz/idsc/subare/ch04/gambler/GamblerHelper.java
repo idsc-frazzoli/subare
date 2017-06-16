@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.alg.ValueIterations;
@@ -27,7 +27,7 @@ enum GamblerHelper {
     return ValueIterations.solve(gambler, RealScalar.of(1e-10));
   }
 
-  public static PolicyInterface getOptimalPolicy(Gambler gambler) {
+  public static Policy getOptimalPolicy(Gambler gambler) {
     // TODO test for equality of policies from qsa and vs
     ValueIteration vi = new ValueIteration(gambler, gambler);
     vi.untilBelow(RealScalar.of(1e-10));

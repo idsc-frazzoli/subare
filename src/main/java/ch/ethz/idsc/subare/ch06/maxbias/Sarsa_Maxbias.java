@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.ch06.maxbias;
 
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
@@ -30,9 +30,9 @@ class Sarsa_Maxbias {
     Sarsa sarsa = sarsaType.supply(maxbias, qsa, learningRate);
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
     for (int index = 0; index < EPISODES; ++index) {
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(maxbias, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policyInterface);
-      ExploringStarts.batch(maxbias, policyInterface, n, sarsa, avs);
+      Policy policy = EGreedyPolicy.bestEquiprobable(maxbias, qsa, epsilon.Get(index));
+      sarsa.setPolicyInterface(policy);
+      ExploringStarts.batch(maxbias, policy, n, sarsa, avs);
     }
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa);
     vs.print(Round._3);

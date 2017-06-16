@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -28,8 +28,8 @@ class MCES_Gridworld {
       Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
       System.out.println(index + " " + error.map(Round._1));
       for (int count = 0; count < 20; ++count) {
-        PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(gridworld, mces.qsa(), epsilon.Get(index));
-        ExploringStarts.batch(gridworld, policyInterface, mces);
+        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, mces.qsa(), epsilon.Get(index));
+        ExploringStarts.batch(gridworld, policy, mces);
       }
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, mces.qsa(), ref)));
     }

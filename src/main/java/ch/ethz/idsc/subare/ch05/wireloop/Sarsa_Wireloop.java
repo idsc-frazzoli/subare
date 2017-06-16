@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.ch05.wireloop;
 
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -30,9 +30,9 @@ class Sarsa_Wireloop {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_qsa_" + type + ".gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       System.out.println(index + " " + epsilon.Get(index).map(Round._2));
-      PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policyInterface);
-      ExploringStarts.batch(wireloop, policyInterface, n, sarsa);
+      Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
+      sarsa.setPolicyInterface(policy);
+      ExploringStarts.batch(wireloop, policy, n, sarsa);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, qsa)));
     }
     gsw.close();

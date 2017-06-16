@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
@@ -32,8 +32,8 @@ class FVPE_Gridworld {
     Gridworld gridworld = new Gridworld();
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gridworld, null);
-    PolicyInterface policyInterface = new EquiprobablePolicy(gridworld);
-    ExploringStarts.batch(gridworld, policyInterface, fvpe);
+    Policy policy = new EquiprobablePolicy(gridworld);
+    ExploringStarts.batch(gridworld, policy, fvpe);
     DiscreteVs vs = fvpe.vs();
     vs.print(Round._1);
   }

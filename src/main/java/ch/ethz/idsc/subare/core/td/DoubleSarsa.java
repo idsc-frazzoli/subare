@@ -5,7 +5,7 @@ import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
@@ -41,15 +41,14 @@ public class DoubleSarsa extends DequeDigestAdapter {
   private final Scalar gamma;
   private final LearningRate learningRate1;
   private final LearningRate learningRate2;
-  private PolicyInterface policyInterface = null;
+  private Policy policy = null;
 
   /** @param sarsaType
    * @param discreteModel
    * @param qsa1
    * @param qsa2
    * @param learningRate1
-   * @param learningRate2
-   * @param policyInterface */
+   * @param learningRate2 */
   public DoubleSarsa( //
       SarsaType sarsaType, //
       DiscreteModel discreteModel, //
@@ -67,14 +66,14 @@ public class DoubleSarsa extends DequeDigestAdapter {
     this.learningRate2 = learningRate2;
   }
 
-  public PolicyInterface getEGreedy(Scalar epsilon) {
+  public Policy getEGreedy(Scalar epsilon) {
     DiscreteQsa avg = TensorValuesUtils.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
     return EGreedyPolicy.bestEquiprobable(discreteModel, avg, epsilon);
   }
 
-  /** @param policyInterface that is used to generate the {@link StepInterface} */
-  public void setPolicyInterface(PolicyInterface policyInterface) {
-    this.policyInterface = policyInterface;
+  /** @param policy that is used to generate the {@link StepInterface} */
+  public void setPolicyInterface(Policy policy) {
+    this.policy = policy;
   }
 
   @Override
@@ -93,7 +92,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
     case qlearning: {
       // TODO for original sarsa, the policyInterface is probably wrong!
       ActionSarsa actionSarsa = (ActionSarsa) sarsaType.supply(discreteModel, Qsa1, LearningRate1);
-      actionSarsa.setPolicyInterface(policyInterface);
+      actionSarsa.setPolicyInterface(policy);
       Tensor action = actionSarsa.actionForEvaluation(stateP); // use Qsa1 to select action
       rewards.append(Qsa2.value(stateP, action)); // use Qsa2 to evaluate state-action pair
       break;

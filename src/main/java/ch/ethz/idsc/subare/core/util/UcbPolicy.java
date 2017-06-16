@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
@@ -25,7 +25,7 @@ import ch.ethz.idsc.tensor.sca.Sqrt;
  * exploration if an action has not been encountered often relative to other actions
  * 
  * p.37 equation (2.8) */
-public class UcbPolicy implements PolicyInterface, StepDigest {
+public class UcbPolicy implements Policy, StepDigest {
   /** @param qsa
    * @param c factor for scaling relative to values in qsa
    * @return */
@@ -69,7 +69,7 @@ public class UcbPolicy implements PolicyInterface, StepDigest {
   }
 
   @Override // from PolicyInterface
-  public Scalar policy(Tensor state, Tensor action) {
+  public Scalar probability(Tensor state, Tensor action) {
     Tensor actions = discreteModel.actions(state);
     Tensor values = Tensor.of(actions.flatten(0).map(a -> valueWithBias(state, a)));
     FairArgMax fairArgMax = FairArgMax.of(values);

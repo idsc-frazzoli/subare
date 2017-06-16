@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.cliff;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -27,9 +27,9 @@ class MCES_Cliffwalk {
       Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
       System.out.println(index + " " + error.map(Round._1));
       for (int count = 0; count < 10; ++count) {
-        PolicyInterface policyInterface = //
+        Policy policy = //
             EGreedyPolicy.bestEquiprobable(cliffwalk, mces.qsa(), RealScalar.of(.1));
-        ExploringStarts.batch(cliffwalk, policyInterface, mces);
+        ExploringStarts.batch(cliffwalk, policy, mces);
       }
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, mces.qsa(), ref)));
     }
