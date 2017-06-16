@@ -17,6 +17,7 @@ import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.red.Min;
+import ch.ethz.idsc.tensor.sca.Round;
 
 public class LearningCompetition {
   private final Map<Point, LearningContender> map = new HashMap<>();
@@ -54,12 +55,12 @@ public class LearningCompetition {
     Tensor image = Array.zeros(RESX + 1 + RESX, RESY, 4);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("bulk_" + name + ".gif"), PERIOD);
     for (int index = 0; index < epsilon.length(); ++index) {
-      System.out.println(index);
-      // TODO can do next loop in parallel
       final int findex = index;
-      // for (Entry<Point, LearningContender> entry : )
+      long tic = System.currentTimeMillis();
       map.entrySet().stream().parallel().forEach(entry -> //
       processEntry(image, entry.getKey(), entry.getValue(), findex));
+      long delta = System.currentTimeMillis() - tic;
+      System.out.println(index + " " + RealScalar.of(delta * 1e-3).map(Round._1) + " sec");
       gsw.append(ImageFormat.of(ImageResize.of(image, MAGNIFY)));
     }
     gsw.close();
