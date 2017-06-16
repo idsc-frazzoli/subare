@@ -18,7 +18,6 @@ import ch.ethz.idsc.tensor.io.Import;
 
 enum WireloopHelper {
   ;
-  // ---
   static Wireloop create(String trackName, Function<Tensor, Scalar> function) throws Exception {
     String path = "".getClass().getResource("/ch05/" + trackName + ".png").getPath();
     Tensor image = Import.of(new File(path)).unmodifiable();

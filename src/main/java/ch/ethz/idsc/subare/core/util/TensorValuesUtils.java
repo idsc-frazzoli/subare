@@ -12,7 +12,6 @@ public enum TensorValuesUtils {
   ;
   private static final Scalar HALF = RationalScalar.of(1, 2);
 
-  // ---
   @SuppressWarnings("unchecked")
   public static <T extends TensorValuesInterface> T rescaled(T tvi) {
     return (T) tvi.create(Rescale.of(tvi.values()).flatten(0));

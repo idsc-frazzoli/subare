@@ -26,7 +26,6 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum CliffwalkHelper {
   ;
-  // ---
   static DiscreteQsa getOptimalQsa(Cliffwalk cliffwalk) {
     return ActionValueIterations.solve(cliffwalk, DecimalScalar.of(.0001));
   }

@@ -17,7 +17,6 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum RacetrackHelper {
   ;
-  // ---
   static Racetrack create(String trackName, int maxSpeed) throws Exception {
     String path = "".getClass().getResource("/ch05/" + trackName + ".png").getPath();
     Tensor image = Import.of(new File(path)).unmodifiable();

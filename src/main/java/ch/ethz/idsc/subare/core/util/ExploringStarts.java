@@ -19,7 +19,6 @@ import ch.ethz.idsc.subare.core.StepInterface;
  * {@link StepDigest}, {@link DequeDigest}, or {@link EpisodeDigest} */
 public enum ExploringStarts {
   ;
-  // ---
   public static int batch( //
       MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface, //
       EpisodeDigest episodeDigest) {

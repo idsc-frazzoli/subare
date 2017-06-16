@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.red.Mean;
 import ch.ethz.idsc.tensor.red.Variance;
 import ch.ethz.idsc.tensor.sca.Sqrt;
 
-/** TODO cite page 
+/** TODO cite page
  * TODO test */
 class Bandits implements StandardModel, MonteCarloInterface {
   static final Tensor START = RealScalar.ZERO;

@@ -17,7 +17,6 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum GridworldHelper {
   ;
-  // ---
   static DiscreteQsa getOptimalQsa(Gridworld gridworld) {
     return ActionValueIterations.solve(gridworld, DecimalScalar.of(.0001));
   }

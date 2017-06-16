@@ -14,7 +14,6 @@ public enum EpisodeKickoff {
   ;
   private static Random random = new Random();
 
-  // ---
   public static EpisodeInterface single(MonteCarloInterface monteCarloInterface, PolicyInterface policyInterface) {
     Tensor starts = monteCarloInterface.startStates();
     Tensor start = starts.get(random.nextInt(starts.length()));

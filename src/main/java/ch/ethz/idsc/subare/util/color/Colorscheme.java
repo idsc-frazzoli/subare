@@ -9,7 +9,6 @@ import ch.ethz.idsc.tensor.opt.LinearInterpolation;
 
 public enum Colorscheme {
   ;
-  // ---
   private static Interpolation of(String string) {
     try {
       return LinearInterpolation.of( //

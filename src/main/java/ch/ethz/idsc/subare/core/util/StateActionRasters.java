@@ -19,7 +19,6 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 public enum StateActionRasters {
   ;
-  // ---
   private static final Interpolation COLORSCHEME = Colorscheme.classic();
   private static final Tensor BASE = Tensors.vector(255);
 

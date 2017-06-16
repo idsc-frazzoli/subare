@@ -17,7 +17,6 @@ import ch.ethz.idsc.tensor.alg.Join;
 
 enum WindygridHelper {
   ;
-  // ---
   static DiscreteQsa getOptimalQsa(Windygrid windygrid) {
     return ActionValueIterations.solve(windygrid, DecimalScalar.of(.0001));
   }
