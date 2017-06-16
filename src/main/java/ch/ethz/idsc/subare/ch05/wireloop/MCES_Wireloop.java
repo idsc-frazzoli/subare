@@ -19,10 +19,10 @@ class MCES_Wireloop {
   public static void main(String[] args) throws Exception {
     String name = "wire5";
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
-    final DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
+    DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(wireloop);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_mces.gif"), 100);
-    int EPISODES = 40;
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "L_mces.gif"), 100);
+    int EPISODES = 10;
     Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
@@ -31,7 +31,7 @@ class MCES_Wireloop {
         Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, mces.qsa(), epsilon.Get(index));
         ExploringStarts.batch(wireloop, policy, mces);
       }
-      gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, mces.qsa())));
+      gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ref, mces.qsa())));
     }
     gsw.close();
   }

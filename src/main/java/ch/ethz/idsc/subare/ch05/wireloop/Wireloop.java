@@ -35,15 +35,17 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
   }).unmodifiable();
   // ---
   private final Tensor image;
-  final Function<Tensor, Scalar> function;
-  final Tensor states = Tensors.empty();
-  final Set<Tensor> startStates = new HashSet<>();
-  final Set<Tensor> endStates = new HashSet<>();
-  StateActionMap stateActionMap = StateActionMap.empty();
+  private final Function<Tensor, Scalar> function;
+  private final Scalar stepCost;
+  private final Tensor states = Tensors.empty();
+  private final Set<Tensor> startStates = new HashSet<>();
+  private final Set<Tensor> endStates = new HashSet<>();
+  private final StateActionMap stateActionMap = StateActionMap.empty();
 
-  Wireloop(Tensor image, Function<Tensor, Scalar> function) {
+  Wireloop(Tensor image, Function<Tensor, Scalar> function, Scalar stepCost) {
     this.image = image;
     this.function = function;
+    this.stepCost = stepCost;
     System.out.println(Dimensions.of(image));
     List<Integer> dims = Dimensions.of(image);
     for (int x = 0; x < dims.get(0); ++x)
@@ -100,10 +102,11 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    if (startStates.contains(state) && endStates.contains(next)) {
+    if (isTerminal(state))
+      return RealScalar.ZERO;
+    if (startStates.contains(state) && endStates.contains(next))
       return function.apply(next);
-    }
-    return RealScalar.ZERO;
+    return stepCost;
   }
 
   /**************************************************/
