@@ -27,27 +27,31 @@ public class LearningCompetition {
   private final String name;
   private final Tensor epsilon;
   private final Scalar errorcap;
+  private final Scalar errorcap2;
   // ---
   // override default values if necessary:
   public int PERIOD = 200;
   public int NSTEP = 1;
   public int MAGNIFY = 5;
 
-  public LearningCompetition(DiscreteQsa ref, String name, Tensor epsilon, Scalar errorcap) {
+  public LearningCompetition(DiscreteQsa ref, String name, Tensor epsilon, Scalar errorcap, Scalar errorcap2) {
     this.ref = ref;
     this.name = name;
     this.epsilon = epsilon.unmodifiable();
     this.errorcap = errorcap;
+    this.errorcap2 = errorcap2;
   }
 
   public void put(Point point, LearningContender learningContender) {
     map.put(point, learningContender);
   }
 
+  private int RESX = 0;
+
   public void doit() throws Exception {
-    int RESX = map.keySet().stream().mapToInt(point -> point.x).reduce(Math::max).getAsInt() + 1;
+    RESX = map.keySet().stream().mapToInt(point -> point.x).reduce(Math::max).getAsInt() + 1;
     int RESY = map.keySet().stream().mapToInt(point -> point.y).reduce(Math::max).getAsInt() + 1;
-    Tensor image = Array.zeros(RESX, RESY, 4);
+    Tensor image = Array.zeros(RESX + 1 + RESX, RESY, 4);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("bulk_" + name + ".gif"), PERIOD);
     for (int index = 0; index < epsilon.length(); ++index) {
       System.out.println(index);
@@ -62,8 +66,16 @@ public class LearningCompetition {
   }
 
   private void processEntry(Tensor image, Point point, LearningContender learningContender, int index) {
-    Scalar error = learningContender.stepAndCompare(epsilon.Get(index), NSTEP, ref);
-    error = Min.of(error.divide(errorcap), RealScalar.ONE);
-    image.set(interpolation.get(BASE.multiply(error)), point.x, point.y);
+    learningContender.stepAndCompare(epsilon.Get(index), NSTEP, ref);
+    {
+      Scalar error = learningContender.q_difference(ref);
+      error = Min.of(error.divide(errorcap), RealScalar.ONE);
+      image.set(interpolation.get(BASE.multiply(error)), point.x, point.y);
+    }
+    {
+      Scalar error = learningContender.loss(ref);
+      error = Min.of(error.divide(errorcap2), RealScalar.ONE);
+      image.set(interpolation.get(BASE.multiply(error)), RESX + 1 + point.x, point.y);
+    }
   }
 }

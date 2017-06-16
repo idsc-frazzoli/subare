@@ -46,12 +46,12 @@ public class StateActionCounter extends DequeDigestAdapter implements DiscreteQs
   }
 
   private void increment(Tensor state0, Tensor action) {
-    Tensor key = DiscreteQsa.createKey(state0, action);
+    Tensor key = StateAction.key(state0, action);
     map.put(key, map.containsKey(key) ? map.get(key) + 1 : 1);
   }
 
   public Scalar getCount(Tensor state, Tensor action) {
-    Tensor key = DiscreteQsa.createKey(state, action);
+    Tensor key = StateAction.key(state, action);
     return map.containsKey(key) ? RealScalar.of(map.get(key)) : RealScalar.ZERO;
   }
 

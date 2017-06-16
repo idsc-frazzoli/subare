@@ -9,7 +9,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -32,8 +32,7 @@ class Double_Bandits {
         DefaultLearningRate.of(15, 1.31));
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
-      // PolicyInterface greedy = GreedyPolicy.bestEquiprobable(bandits, qsa1);
-      Scalar error = Policies.expectedLoss(bandits, ref, qsa1);
+      Scalar error = Loss.accumulation(bandits, ref, qsa1);
       System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._3));
       Policy policy = EGreedyPolicy.bestEquiprobable( //
           bandits, TensorValuesUtils.average(qsa1, qsa2), explore);

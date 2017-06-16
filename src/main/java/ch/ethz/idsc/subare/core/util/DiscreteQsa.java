@@ -7,11 +7,9 @@ import java.util.stream.Stream;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
@@ -22,18 +20,7 @@ public class DiscreteQsa implements QsaInterface, TensorValuesInterface, Seriali
     return new DiscreteQsa(index, Array.zeros(index.size()));
   }
 
-  /** @param state
-   * @param action
-   * @return */
-  // TODO move function since, it's not just used in qsa ops
-  public static Tensor createKey(Tensor state, Tensor action) {
-    return Tensors.of(state, action);
-  }
-
-  public static Tensor createKey(StepInterface stepInterface) {
-    return Tensors.of(stepInterface.prevState(), stepInterface.action());
-  }
-
+  // ---
   final Index index;
   final Tensor values;
 
@@ -46,12 +33,12 @@ public class DiscreteQsa implements QsaInterface, TensorValuesInterface, Seriali
 
   @Override
   public Scalar value(Tensor state, Tensor action) {
-    return values.Get(index.of(createKey(state, action)));
+    return values.Get(index.of(StateAction.key(state, action)));
   }
 
   @Override
   public void assign(Tensor state, Tensor action, Scalar value) {
-    values.set(value, index.of(createKey(state, action)));
+    values.set(value, index.of(StateAction.key(state, action)));
   }
 
   public void print() {

@@ -10,11 +10,14 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
+/** learning rate of alpha except in first update of state-action pair
+ * for which the learning rate equals 1. */
 public class ConstantLearningRate implements LearningRate {
   public static LearningRate of(Scalar alpha) {
     return new ConstantLearningRate(alpha);
   }
 
+  // ---
   private final Set<Tensor> visited = new HashSet<>();
   private final Scalar alpha;
 
@@ -24,12 +27,12 @@ public class ConstantLearningRate implements LearningRate {
 
   @Override
   public void digest(StepInterface stepInterface) {
-    visited.add(DiscreteQsa.createKey(stepInterface));
+    visited.add(StateAction.key(stepInterface));
   }
 
   @Override
   public Scalar alpha(StepInterface stepInterface) {
-    boolean visited1 = visited.contains(DiscreteQsa.createKey(stepInterface));
-    return visited1 ? alpha : RealScalar.ONE; // overcome init bias
+    boolean visited1 = visited.contains(StateAction.key(stepInterface));
+    return visited1 ? alpha : RealScalar.ONE; // overcome initialization bias
   }
 }

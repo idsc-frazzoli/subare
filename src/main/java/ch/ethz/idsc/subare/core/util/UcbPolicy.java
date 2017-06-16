@@ -57,7 +57,7 @@ public class UcbPolicy implements Policy, StepDigest {
 
   // TODO very private and not very efficient -> precompute!!!
   private Scalar valueWithBias(Tensor state, Tensor action) {
-    Tensor key = DiscreteQsa.createKey(state, action);
+    Tensor key = StateAction.key(state, action);
     Scalar Nta = RealScalar.of(map.containsKey(key) ? map.get(key) : 0);
     final Scalar bias;
     if (Scalars.isZero(Nta))
@@ -84,7 +84,7 @@ public class UcbPolicy implements Policy, StepDigest {
   @Override // from StepDigest
   public void digest(StepInterface stepInterface) {
     // TODO code redundant... find a more elegant solution to count pairs
-    Tensor key = DiscreteQsa.createKey(stepInterface);
+    Tensor key = StateAction.key(stepInterface);
     int index = map.containsKey(key) ? map.get(key) : 0;
     map.put(key, index + 1);
   }

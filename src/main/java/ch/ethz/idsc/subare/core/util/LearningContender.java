@@ -24,13 +24,20 @@ public class LearningContender {
     this.dequeDigest = sarsa;
   }
 
-  public Scalar stepAndCompare(Scalar epsilon, int nstep, DiscreteQsa ref) {
+  public void stepAndCompare(Scalar epsilon, int nstep, DiscreteQsa ref) {
     Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa, epsilon);
     if (dequeDigest instanceof Sarsa) {
       Sarsa sarsa = (Sarsa) dequeDigest;
       sarsa.setPolicyInterface(policy);
     }
     ExploringStarts.batch(monteCarloInterface, policy, nstep, dequeDigest);
-    return TensorValuesUtils.distance(qsa, ref);
+  }
+
+  public Scalar q_difference(DiscreteQsa ref) {
+    return TensorValuesUtils.distance(ref, qsa);
+  }
+
+  public Scalar loss(DiscreteQsa ref) {
+    return Loss.accumulation(monteCarloInterface, ref, qsa);
   }
 }

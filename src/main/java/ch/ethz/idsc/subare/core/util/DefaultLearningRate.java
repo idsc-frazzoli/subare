@@ -41,6 +41,6 @@ public class DefaultLearningRate extends DecayedLearningRate {
 
   @Override
   Tensor key(StepInterface stepInterface) {
-    return DiscreteQsa.createKey(stepInterface);
+    return StateAction.key(stepInterface);
   }
 }

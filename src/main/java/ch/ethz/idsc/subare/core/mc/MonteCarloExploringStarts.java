@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeQsaEstimator;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.subare.util.Average;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -43,7 +44,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator {
     List<StepInterface> trajectory = new ArrayList<>();
     while (episodeInterface.hasNext()) {
       StepInterface stepInterface = episodeInterface.step();
-      Tensor key = DiscreteQsa.createKey(stepInterface.prevState(), stepInterface.action());
+      Tensor key = StateAction.key(stepInterface);
       if (!first.containsKey(key))
         first.put(key, trajectory.size());
       rewards.append(stepInterface.reward());
@@ -74,7 +75,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator {
     // TODO more efficient update of average
     // compute average(Returns(s,a))
     for (StepInterface stepInterface : trajectory) {
-      Tensor key = DiscreteQsa.createKey(stepInterface.prevState(), stepInterface.action());
+      Tensor key = StateAction.key(stepInterface);
       if (!map.containsKey(key))
         map.put(key, new Average());
       map.get(key).track(gains.get(key));

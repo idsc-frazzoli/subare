@@ -19,21 +19,22 @@ import ch.ethz.idsc.tensor.red.Mean;
 import ch.ethz.idsc.tensor.red.Variance;
 import ch.ethz.idsc.tensor.sca.Sqrt;
 
-/** TODO cite page
- * TODO test */
+/** "A k-armed Bandit Problem"
+ * Section 2.1 p.28 */
 class Bandits implements StandardModel, MonteCarloInterface {
   static final Tensor START = RealScalar.ZERO;
   static final Tensor END = RealScalar.ONE;
   // ---
-  List<Distribution> distributions = new ArrayList<>();
+  private final List<Distribution> distributions = new ArrayList<>();
 
-  public Bandits(int num) {
+  /** @param k number of arms of bandit */
+  public Bandits(int k) {
     Distribution STANDARD = NormalDistribution.standard();
-    Tensor data = RandomVariate.of(STANDARD, num);
+    Tensor data = RandomVariate.of(STANDARD, k);
     Scalar mean = (Scalar) Mean.of(data);
     Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
     Tensor prep = temp.multiply(Sqrt.of((Scalar) Variance.ofVector(temp)).invert());
-    for (int index = 0; index < num; ++index)
+    for (int index = 0; index < k; ++index)
       distributions.add(NormalDistribution.of(prep.Get(index), RealScalar.ONE));
   }
 
