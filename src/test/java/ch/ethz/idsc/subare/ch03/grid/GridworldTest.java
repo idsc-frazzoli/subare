@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch03.grid;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
-import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
@@ -34,10 +34,16 @@ public class GridworldTest extends TestCase {
     DiscreteQsa ref = ActionValueIterations.solve(gridworld, DecimalScalar.of(0.0001));
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
-        gridworld, qsa, DefaultLearningRate.of(10, .51));
-    for (int index = 0; index < 40; ++index)
+        gridworld, qsa, //
+        // DefaultLearningRate.of(10, .51) //
+        ConstantLearningRate.of(RealScalar.ONE) //
+    );
+    Scalar error = null;
+    for (int index = 0; index < 40; ++index) {
       TabularSteps.batch(gridworld, gridworld, rstqp);
-    Scalar error = TensorValuesUtils.distance(ref, qsa);
+      error = TensorValuesUtils.distance(ref, qsa);
+      // System.out.println(error);
+    }
     assertTrue(Scalars.lessThan(error, RealScalar.of(2)));
   }
 }

@@ -17,13 +17,13 @@ import ch.ethz.idsc.tensor.sca.Sqrt;
 
 /** implementation corresponds to Figure 2.1, p. 30 */
 class Bandits {
-  private static final Distribution normal = NormalDistribution.standard();
+  private static final Distribution STANDARD = NormalDistribution.standard();
   // ---
   private final Tensor prep;
   private Tensor states;
 
   Bandits(int n) {
-    Tensor data = RandomVariate.of(normal, n);
+    Tensor data = RandomVariate.of(STANDARD, n);
     Scalar mean = (Scalar) Mean.of(data);
     Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
     prep = temp.multiply(Sqrt.function.apply((Scalar) Variance.ofVector(temp)).invert());
@@ -36,7 +36,7 @@ class Bandits {
   Scalar max = RealScalar.ZERO;
 
   void pullAll() {
-    states = prep.add(RandomVariate.of(normal, prep.length()));
+    states = prep.add(RandomVariate.of(STANDARD, prep.length()));
     Tensor sorted = Sort.of(states);
     min = min.add(sorted.Get(0));
     max = max.add(sorted.Get(states.length() - 1));
