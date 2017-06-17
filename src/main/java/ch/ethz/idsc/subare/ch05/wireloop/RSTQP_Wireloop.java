@@ -6,6 +6,7 @@ import java.util.function.Function;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
@@ -20,7 +21,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 /** Example 4.1, p.82 */
 class RSTQP_Wireloop {
   public static void main(String[] args) throws Exception {
-    String name = "wire6";
+    String name = "wire5";
     Tensor grad = Tensors.vector(-1.1, .5);
     Function<Tensor, Scalar> stepCost = action -> action.dot(grad).Get();
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x, stepCost);
@@ -32,10 +33,11 @@ class RSTQP_Wireloop {
     // DefaultLearningRate.of(5, 1.0) //
     );
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "L_qsa_rstqp.gif"), 250);
-    int EPISODES = 40;
+    int EPISODES = 20;
     for (int index = 0; index < EPISODES; ++index) {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
-      System.out.println(index + " " + error.map(Round._1));
+      Scalar loss = Loss.accumulation(wireloop, ref, qsa);
+      System.out.println(index + " " + error.map(Round._1) + " " + loss.map(Round._3));
       TabularSteps.batch(wireloop, wireloop, rstqp);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ref, qsa)));
     }

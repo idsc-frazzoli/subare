@@ -42,10 +42,10 @@ public class DoubleSarsa extends DequeDigestAdapter {
   private final SarsaType sarsaType;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
-  private final Scalar gamma;
   private final LearningRate learningRate1;
   private final LearningRate learningRate2;
-  private Policy policy = null;
+  private Policy policy1 = null;
+  private Policy policy2 = null;
 
   /** @param sarsaType
    * @param discreteModel
@@ -65,19 +65,22 @@ public class DoubleSarsa extends DequeDigestAdapter {
     this.sarsaType = sarsaType;
     this.qsa1 = qsa1;
     this.qsa2 = qsa2;
-    this.gamma = discreteModel.gamma();
     this.learningRate1 = learningRate1;
     this.learningRate2 = learningRate2;
   }
 
-  // TODO this should be used somewhere!!!
+  /** @param epsilon
+   * @return epsilon-greedy policy with respect to (qsa1 + qsa2) / 2 */
   public Policy getEGreedy(Scalar epsilon) {
     DiscreteQsa avg = TensorValuesUtils.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
     return EGreedyPolicy.bestEquiprobable(discreteModel, avg, epsilon);
   }
 
-  public void setPolicy(Policy policy) {
-    this.policy = policy;
+  /** @param policy1 e-greedy with respect to qsa1
+   * @param policy2 e-greedy with respect to qsa2 */
+  public void setPolicy(Policy policy1, Policy policy2) {
+    this.policy1 = policy1;
+    this.policy2 = policy2;
   }
 
   @Override
@@ -87,10 +90,11 @@ public class DoubleSarsa extends DequeDigestAdapter {
     QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for selecting actions and updating
     QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation (of actions provided by Qsa1)
     LearningRate LearningRate1 = flip ? learningRate2 : learningRate1; // for updating
+    Policy Policy1 = flip ? policy2 : policy1;
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     Sarsa sarsa = sarsaType.supply(discreteModel, Qsa1, null); // not used for learning
-    sarsa.setPolicy(policy); // TODO policy should be e-greedy with respect to qsa == Qsa1
+    sarsa.setPolicy(Policy1); // e-greedy with respect to qsa == Qsa1
     rewards.append(sarsa.crossEvaluate(deque.getLast().nextState(), Qsa2));
     // ---
     // the code below is identical to Sarsa
@@ -98,6 +102,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
     Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
     Scalar value0 = Qsa1.value(state0, action0);
+    Scalar gamma = discreteModel.gamma();
     Scalar alpha = LearningRate1.alpha(first);
     Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1

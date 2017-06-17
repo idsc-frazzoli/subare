@@ -10,7 +10,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Loss;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -33,11 +32,12 @@ class Double_Bandits {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar error = Loss.accumulation(bandits, ref, qsa1);
-      System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._3));
-      Policy policy = EGreedyPolicy.bestEquiprobable( //
-          bandits, TensorValuesUtils.average(qsa1, qsa2), explore);
-      doubleSarsa.setPolicy(policy);
-      ExploringStarts.batch(bandits, policy, n, doubleSarsa);
+      if (EPISODES - 10 < index)
+        System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._3));
+      Policy policy1 = EGreedyPolicy.bestEquiprobable(bandits, qsa1, explore);
+      Policy policy2 = EGreedyPolicy.bestEquiprobable(bandits, qsa2, explore);
+      doubleSarsa.setPolicy(policy1, policy2);
+      ExploringStarts.batch(bandits, doubleSarsa.getEGreedy(explore), n, doubleSarsa);
     }
     System.out.println("---");
     System.out.println("true state values:");
@@ -48,7 +48,7 @@ class Double_Bandits {
 
   public static void main(String[] args) throws Exception {
     handle(SarsaType.qlearning, 1);
-    // handle(SarsaType.expected, 3);
-    // handle(SarsaType.qlearning, 2);
+    handle(SarsaType.expected, 3);
+    handle(SarsaType.qlearning, 2);
   }
 }

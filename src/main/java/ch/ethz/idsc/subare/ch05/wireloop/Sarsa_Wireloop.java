@@ -18,6 +18,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
+import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Round;
 
 class Sarsa_Wireloop {
@@ -25,7 +26,8 @@ class Sarsa_Wireloop {
     System.out.println(sarsaType);
     String name = "wire5";
     Tensor grad = Tensors.vector(-1.1, .5);
-    Function<Tensor, Scalar> stepCost = action -> action.dot(grad).Get();
+    Clip clip = Clip.function(-1, .5);
+    Function<Tensor, Scalar> stepCost = action -> clip.apply(action.dot(grad).Get());
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x, stepCost);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     Tensor epsilon = Subdivide.of(.2, .01, EPISODES);
@@ -36,7 +38,7 @@ class Sarsa_Wireloop {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 200);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar loss = Loss.accumulation(wireloop, ref, qsa);
-      System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + loss.map(Round._3));
+      System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + loss.map(Round._2));
       Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
       sarsa.setPolicy(policy);
       ExploringStarts.batch(wireloop, policy, nstep, sarsa);
@@ -46,6 +48,6 @@ class Sarsa_Wireloop {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.qlearning, 1, 20);
+    handle(SarsaType.expected, 1, 20);
   }
 }

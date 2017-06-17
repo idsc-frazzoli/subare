@@ -14,6 +14,7 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
@@ -26,9 +27,9 @@ import ch.ethz.idsc.tensor.sca.Round;
 class Double_Maxbias {
   static void handle(SarsaType sarsaType, int n) throws Exception {
     System.out.println("double " + sarsaType);
-    Maxbias maxbias = new Maxbias(1);
+    Maxbias maxbias = new Maxbias(10);
     final DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias);
-    int EPISODES = 40;
+    int EPISODES = 10;
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
     DiscreteQsa qsa1 = DiscreteQsa.build(maxbias);
     DiscreteQsa qsa2 = DiscreteQsa.build(maxbias);
@@ -39,11 +40,14 @@ class Double_Maxbias {
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar error = TensorValuesUtils.distance(qsa1, ref);
-      System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._1));
-      Policy policy = EGreedyPolicy.bestEquiprobable( //
-          maxbias, TensorValuesUtils.average(qsa1, qsa2), explore);
-      doubleSarsa.setPolicy(policy);
-      ExploringStarts.batch(maxbias, policy, n, doubleSarsa);
+      Scalar loss = Loss.accumulation(maxbias, ref, qsa1);
+      if (EPISODES - 10 < index)
+        System.out.println(String.format("%3d%8s%8s", //
+            index, error.map(Round._2), loss.map(Round._2)));
+      Policy policy1 = EGreedyPolicy.bestEquiprobable(maxbias, qsa1, explore);
+      Policy policy2 = EGreedyPolicy.bestEquiprobable(maxbias, qsa2, explore);
+      doubleSarsa.setPolicy(policy1, policy2);
+      ExploringStarts.batch(maxbias, doubleSarsa.getEGreedy(explore), n, doubleSarsa);
     }
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
@@ -59,8 +63,8 @@ class Double_Maxbias {
   }
 
   public static void main(String[] args) throws Exception {
+    handle(SarsaType.original, 1);
+    handle(SarsaType.expected, 1);
     handle(SarsaType.qlearning, 1);
-    // handle(SarsaType.expected, 3);
-    // handle(SarsaType.qlearning, 2);
   }
 }

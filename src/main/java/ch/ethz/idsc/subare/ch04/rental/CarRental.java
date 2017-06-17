@@ -163,10 +163,10 @@ class CarRental implements StandardModel, SampleModel {
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
         Scalar prob = Total.prod(Tensors.of( //
-            p1_in.p_equals(RealScalar.of(returns0)), // returns (added)
-            p1out.p_equals(RealScalar.of(request0)), // rental requests (subtracted)
-            p2_in.p_equals(RealScalar.of(returns1)), // returns (added)
-            p2out.p_equals(RealScalar.of(request1)) // rental requests (subtracted)
+            p1_in.at(RealScalar.of(returns0)), // returns (added)
+            p1out.at(RealScalar.of(request0)), // rental requests (subtracted)
+            p2_in.at(RealScalar.of(returns1)), // returns (added)
+            p2out.at(RealScalar.of(request1)) // rental requests (subtracted)
         )).Get();
         sum = sum.add(prob.multiply(RealScalar.of(request0 + request1).multiply(RENTAL_CREDIT)));
       }
@@ -200,10 +200,10 @@ class CarRental implements StandardModel, SampleModel {
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
         prob = prob.add(Total.prod(Tensors.of( //
-            p1_in.p_equals(RealScalar.of(returns0)), // returns (added)
-            p1out.p_equals(RealScalar.of(request0)), // rental requests (subtracted)
-            p2_in.p_equals(RealScalar.of(returns1)), // returns (added)
-            p2out.p_equals(RealScalar.of(request1)) // rental requests (subtracted)
+            p1_in.at(RealScalar.of(returns0)), // returns (added)
+            p1out.at(RealScalar.of(request0)), // rental requests (subtracted)
+            p2_in.at(RealScalar.of(returns1)), // returns (added)
+            p2out.at(RealScalar.of(request1)) // rental requests (subtracted)
         )));
       }
     }

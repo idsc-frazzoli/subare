@@ -26,7 +26,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 
 /** Double Sarsa for gridworld */
 class Double_Gridworld {
-  static void handle(SarsaType sarsaType, int n) throws Exception {
+  static void handle(SarsaType sarsaType, int nstep) throws Exception {
     System.out.println("double " + sarsaType);
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
@@ -38,15 +38,16 @@ class Double_Gridworld {
         qsa1, qsa2, //
         DefaultLearningRate.of(5, .51), //
         DefaultLearningRate.of(5, .51));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + n + ".gif"), 150);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar error = TensorValuesUtils.distance(qsa1, ref);
-      System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._1));
-      Policy policy = EGreedyPolicy.bestEquiprobable( //
-          gridworld, TensorValuesUtils.average(qsa1, qsa2), explore);
-      doubleSarsa.setPolicy(policy);
-      ExploringStarts.batch(gridworld, policy, n, doubleSarsa);
+      if (EPISODES - 10 < index)
+        System.out.println(index + " " + explore.map(Round._2) + "\t" + error.map(Round._2));
+      Policy policy1 = EGreedyPolicy.bestEquiprobable(gridworld, qsa1, explore);
+      Policy policy2 = EGreedyPolicy.bestEquiprobable(gridworld, qsa2, explore);
+      doubleSarsa.setPolicy(policy1, policy2);
+      ExploringStarts.batch(gridworld, doubleSarsa.getEGreedy(explore), nstep, doubleSarsa);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa1, ref)));
     }
     gsw.close();
@@ -64,8 +65,8 @@ class Double_Gridworld {
   }
 
   public static void main(String[] args) throws Exception {
-    // handle(SarsaType.original, 1);
-    // handle(SarsaType.expected, 3);
+    handle(SarsaType.original, 1);
+    handle(SarsaType.expected, 1);
     handle(SarsaType.qlearning, 1);
   }
 }

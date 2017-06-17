@@ -14,6 +14,7 @@ import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.StateRasters;
 import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.ImageResize;
+import ch.ethz.idsc.subare.util.RobustArgMax;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -22,7 +23,6 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.io.Import;
-import ch.ethz.idsc.tensor.red.ArgMax;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 enum WireloopHelper {
@@ -50,7 +50,10 @@ enum WireloopHelper {
   public static Tensor renderActions(Wireloop wireloop, QsaInterface qsa) {
     DiscreteVs vs = DiscreteVs.build(wireloop);
     for (Tensor state : wireloop.startStates()) {
-      int index = ArgMax.of(Tensor.of(wireloop.actions(state).flatten(0).map(action -> qsa.value(state, action))));
+      Tensor tensor = Tensor.of(wireloop.actions(state).flatten(0).map(action -> qsa.value(state, action)));
+      int index;
+      // index = ArgMax.of(tensor);
+      index = RobustArgMax.of(tensor);
       vs.assign(state, RealScalar.of(index * 0.25 + 0.185));
     }
     return render_asIs(wireloop, vs);
