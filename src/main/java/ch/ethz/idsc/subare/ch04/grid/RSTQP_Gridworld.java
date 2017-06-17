@@ -4,8 +4,8 @@ package ch.ethz.idsc.subare.ch04.grid;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -23,7 +23,7 @@ class RSTQP_Gridworld {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_qsa_rstqp.gif"), 150);
     int EPISODES = 30;
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = TensorValuesUtils.distance(qsa, ref);
+      Scalar error = DiscreteValueFunctions.distance(qsa, ref);
       System.out.println(index + " " + error.map(Round._1));
       TabularSteps.batch(gridworld, gridworld, rstqp);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));

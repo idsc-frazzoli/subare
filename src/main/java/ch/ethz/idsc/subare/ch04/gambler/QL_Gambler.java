@@ -9,11 +9,11 @@ import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -36,7 +36,7 @@ class QL_Gambler {
     LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
     Sarsa stepDigest = new QLearning(gambler, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = TensorValuesUtils.distance(qsa, ref);
+      Scalar error = DiscreteValueFunctions.distance(qsa, ref);
       lr_scheduler.notifyError(error);
       Scalar eps = lr_scheduler.getEpsilon();
       // eps = epsilon.Get(index);

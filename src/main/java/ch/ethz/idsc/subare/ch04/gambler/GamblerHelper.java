@@ -6,10 +6,10 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.alg.ValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.StateActionRasters;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -36,7 +36,7 @@ enum GamblerHelper {
 
   public static Tensor counts(Gambler gambler, DiscreteQsa qsa) {
     // UnaryOperator<Tensor> operator = tensor -> Rescale.of(tensor.map(scalar -> Log.of(scalar.add(RealScalar.ONE))));
-    DiscreteQsa rescaled = TensorValuesUtils.rescaled(qsa);
+    DiscreteQsa rescaled = DiscreteValueFunctions.rescaled(qsa);
     return ImageResize.of(StateActionRasters.render(new GamblerRaster(gambler), rescaled), MAGNIFY);
   }
 

@@ -10,8 +10,8 @@ import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -72,7 +72,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
   /** @param epsilon
    * @return epsilon-greedy policy with respect to (qsa1 + qsa2) / 2 */
   public Policy getEGreedy(Scalar epsilon) {
-    DiscreteQsa avg = TensorValuesUtils.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
+    DiscreteQsa avg = DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
     return EGreedyPolicy.bestEquiprobable(discreteModel, avg, epsilon);
   }
 

@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
 
-public class DiscreteQsa implements QsaInterface, TensorValuesInterface, Serializable {
+public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Serializable {
   public static DiscreteQsa build(DiscreteModel discreteModel) {
     Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
     return new DiscreteQsa(index, Array.zeros(index.size()));

@@ -4,8 +4,8 @@ package ch.ethz.idsc.subare.ch06.cliff;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -23,7 +23,7 @@ class RSTQP_Cliffwalk {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_rstqp.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = TensorValuesUtils.distance(qsa, ref);
+      Scalar error = DiscreteValueFunctions.distance(qsa, ref);
       System.out.println(index + " " + error.map(Round._1));
       TabularSteps.batch(cliffwalk, cliffwalk, rstqp);
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, qsa, ref)));

@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.util.color;
+package ch.ethz.idsc.subare.util;
 
 import java.io.File;
 
@@ -10,6 +10,7 @@ import ch.ethz.idsc.tensor.opt.LinearInterpolation;
 public enum Colorscheme {
   ;
   private static final Interpolation CLASSIC = of("classic");
+  // LinearInterpolation.of(ResourceData.of("/colorscheme/classic.csv"));
   private static final Interpolation PARULA = of("parula");
 
   private static Interpolation of(String string) {

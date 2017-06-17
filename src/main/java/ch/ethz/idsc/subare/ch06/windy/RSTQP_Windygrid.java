@@ -4,8 +4,8 @@ package ch.ethz.idsc.subare.ch06.windy;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -23,7 +23,7 @@ class RSTQP_Windygrid {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_rstqp.gif"), 250);
     int EPISODES = 20;
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = TensorValuesUtils.distance(qsa, ref);
+      Scalar error = DiscreteValueFunctions.distance(qsa, ref);
       System.out.println(index + " " + error.map(Round._1));
       TabularSteps.batch(windygrid, windygrid, rstqp);
       gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, qsa, ref)));

@@ -34,7 +34,7 @@ public class LearningContender {
   }
 
   public Scalar q_difference(DiscreteQsa ref) {
-    return TensorValuesUtils.distance(ref, qsa);
+    return DiscreteValueFunctions.distance(ref, qsa);
   }
 
   public Scalar loss(DiscreteQsa ref) {

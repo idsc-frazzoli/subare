@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 
-public class DiscreteVs implements VsInterface, TensorValuesInterface, Serializable {
+public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializable {
   /** initializes all state value to zero
    * 
    * @param discreteModel

@@ -5,8 +5,8 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -41,7 +41,7 @@ public class GridworldTest extends TestCase {
     Scalar error = null;
     for (int index = 0; index < 40; ++index) {
       TabularSteps.batch(gridworld, gridworld, rstqp);
-      error = TensorValuesUtils.distance(ref, qsa);
+      error = DiscreteValueFunctions.distance(ref, qsa);
       // System.out.println(error);
     }
     assertTrue(Scalars.lessThan(error, RealScalar.of(2)));

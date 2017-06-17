@@ -30,7 +30,7 @@ List of algorithms:
 * Double Sarsa, Double Expected Sarsa, Double Q-Learning (from p.145)
 * n-step Temporal Difference for estimating V(s) (from p.154)
 * n-step Sarsa, n-step Expected Sarsa, n-step Q-Learning (from p.157)
-* Random-sample one-step tabular Q-planning (from p.169)
+* Random-sample one-step tabular Q-planning (parallel, from p.169)
 
 ## Examples from the book
 

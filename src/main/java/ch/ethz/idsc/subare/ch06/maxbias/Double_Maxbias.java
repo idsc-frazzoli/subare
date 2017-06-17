@@ -9,13 +9,13 @@ import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Loss;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -39,7 +39,7 @@ class Double_Maxbias {
         DefaultLearningRate.of(5, .51));
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
-      Scalar error = TensorValuesUtils.distance(qsa1, ref);
+      Scalar error = DiscreteValueFunctions.distance(qsa1, ref);
       Scalar loss = Loss.accumulation(maxbias, ref, qsa1);
       if (EPISODES - 10 < index)
         System.out.println(String.format("%3d%8s%8s", //

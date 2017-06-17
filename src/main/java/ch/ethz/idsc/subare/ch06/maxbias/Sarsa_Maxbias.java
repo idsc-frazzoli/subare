@@ -9,10 +9,10 @@ import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -36,7 +36,7 @@ class Sarsa_Maxbias {
     }
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa);
     vs.print(Round._3);
-    Scalar error = TensorValuesUtils.distance(qsa, ref);
+    Scalar error = DiscreteValueFunctions.distance(qsa, ref);
     System.out.println("error = " + error.map(Round._3));
   }
 

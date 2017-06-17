@@ -11,6 +11,11 @@ import ch.ethz.idsc.subare.core.StepInterface;
 
 public enum TabularSteps {
   ;
+  /** parallel processing of batch of steps by given {@link StepDigest}s
+   * 
+   * @param discreteModel
+   * @param sampleModel
+   * @param stepDigest */
   public static void batch(DiscreteModel discreteModel, SampleModel sampleModel, StepDigest... stepDigest) {
     List<StepDigest> list = Arrays.asList(stepDigest);
     TabularStepBatch tabularStepBatch = new TabularStepBatch(discreteModel, sampleModel);

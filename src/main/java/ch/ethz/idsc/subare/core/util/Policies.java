@@ -54,7 +54,7 @@ public enum Policies {
    * @return distance between probabilities */
   // not used yet
   public static Scalar p_distance(DiscreteModel discreteModel, Policy pi1, Policy pi2) {
-    return TensorValuesUtils.distance( //
+    return DiscreteValueFunctions.distance( //
         toQsa(discreteModel, pi1), //
         toQsa(discreteModel, pi2));
   }

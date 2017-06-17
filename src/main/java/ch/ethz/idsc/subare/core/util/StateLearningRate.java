@@ -7,8 +7,9 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/** stochastic approximation theory
- * p.35 equation (2.7)
+/** adaptive learning rate for states but independent of the action taken
+ * 
+ * see documentation of {@link DecayedLearningRate}
  * 
  * conditions required for convergence with probability 1:
  * sum_n alpha_n(s)^1 == infinity
@@ -33,7 +34,7 @@ public class StateLearningRate extends DecayedLearningRate {
   }
 
   @Override
-  Tensor key(StepInterface stepInterface) {
+  protected Tensor key(StepInterface stepInterface) {
     return stepInterface.prevState();
   }
 }

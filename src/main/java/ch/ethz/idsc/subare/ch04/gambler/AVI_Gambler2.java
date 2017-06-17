@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -18,7 +18,7 @@ class AVI_Gambler2 {
     ActionValueIteration avi = new ActionValueIteration(gambler);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_avi.gif"), 500);
     for (int index = 0; index < 13; ++index) {
-      Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);
+      Scalar error = DiscreteValueFunctions.distance(avi.qsa(), ref);
       System.out.println(index + " " + error.map(Round._1));
       gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref)));
       avi.step();

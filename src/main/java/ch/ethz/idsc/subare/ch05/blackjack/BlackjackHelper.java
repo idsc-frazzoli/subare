@@ -8,11 +8,11 @@ import java.util.List;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.StateRasters;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
-import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -30,7 +30,7 @@ enum BlackjackHelper {
 
   public static Tensor render(Blackjack blackjack, DiscreteQsa qsa) {
     return StateRasters.render(new BlackjackRaster(blackjack), //
-        TensorValuesUtils.rescaled(DiscreteUtils.createVs(blackjack, qsa)));
+        DiscreteValueFunctions.rescaled(DiscreteUtils.createVs(blackjack, qsa)));
   }
 
   public static Tensor render(Blackjack blackjack, Policy policy) {

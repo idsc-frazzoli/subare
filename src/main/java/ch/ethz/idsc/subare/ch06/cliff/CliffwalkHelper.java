@@ -7,12 +7,12 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.StateActionRasters;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
-import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -59,8 +59,8 @@ enum CliffwalkHelper {
 
   static Tensor joinAll(Cliffwalk cliffwalk, DiscreteQsa qsa, DiscreteQsa ref) {
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
-    Tensor image1 = StateActionRasters.render(cliffwalkRaster, TensorValuesUtils.rescaled(qsa));
-    Tensor image2 = StateActionRasters.render(cliffwalkRaster, TensorValuesUtils.logisticDifference(qsa, ref));
+    Tensor image1 = StateActionRasters.render(cliffwalkRaster, DiscreteValueFunctions.rescaled(qsa));
+    Tensor image2 = StateActionRasters.render(cliffwalkRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 2);
     return ImageResize.of(Join.of(0, image1, Array.zeros(list), image2), MAGNIFY);

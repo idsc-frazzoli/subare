@@ -6,8 +6,8 @@ import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 
@@ -22,7 +22,7 @@ class RSTQP_Maxbias {
     for (int index = 0; index < 500; ++index)
       TabularSteps.batch(maxbias, maxbias, rstqp, avs);
     {
-      Scalar error = TensorValuesUtils.distance(ref, qsa);
+      Scalar error = DiscreteValueFunctions.distance(ref, qsa);
       System.out.println("r1s error=" + error);
     }
     System.out.println("---");
@@ -30,7 +30,7 @@ class RSTQP_Maxbias {
     avi.untilBelow(RealScalar.of(.0001));
     avi.qsa().print();
     {
-      Scalar error = TensorValuesUtils.distance(ref, avi.qsa());
+      Scalar error = DiscreteValueFunctions.distance(ref, avi.qsa());
       System.out.println("avs error=" + error);
     }
   }

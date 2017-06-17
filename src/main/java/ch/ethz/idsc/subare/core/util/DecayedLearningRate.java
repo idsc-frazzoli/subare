@@ -69,5 +69,7 @@ abstract class DecayedLearningRate implements LearningRate {
     return MEMO.length();
   }
 
-  abstract Tensor key(StepInterface stepInterface);
+  /** @param stepInterface
+   * @return key for identifying steps that are considered identical for counting */
+  protected abstract Tensor key(StepInterface stepInterface);
 }

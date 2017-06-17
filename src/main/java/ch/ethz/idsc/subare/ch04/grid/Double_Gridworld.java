@@ -9,12 +9,12 @@ import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -41,7 +41,7 @@ class Double_Gridworld {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150);
     for (int index = 0; index < EPISODES; ++index) {
       Scalar explore = epsilon.Get(index);
-      Scalar error = TensorValuesUtils.distance(qsa1, ref);
+      Scalar error = DiscreteValueFunctions.distance(qsa1, ref);
       if (EPISODES - 10 < index)
         System.out.println(index + " " + explore.map(Round._2) + "\t" + error.map(Round._2));
       Policy policy1 = EGreedyPolicy.bestEquiprobable(gridworld, qsa1, explore);

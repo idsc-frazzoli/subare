@@ -18,6 +18,8 @@ class TabularStepBatch {
   private final List<Tensor> list;
   private int index = 0;
 
+  /** constructor generates randomized batch of steps
+   * collection consists of all state-action pairs including terminal states */
   public TabularStepBatch(DiscreteModel discreteModel, SampleModel sampleModel) {
     this.sampleModel = sampleModel;
     Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
