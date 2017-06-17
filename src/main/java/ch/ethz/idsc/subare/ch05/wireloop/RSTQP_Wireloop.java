@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
+import java.util.function.Function;
+
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -9,6 +11,8 @@ import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -17,7 +21,8 @@ import ch.ethz.idsc.tensor.sca.Round;
 class RSTQP_Wireloop {
   public static void main(String[] args) throws Exception {
     String name = "wire6";
-    Scalar stepCost = RealScalar.of(-.7);
+    Tensor grad = Tensors.vector(-1.1, .5);
+    Function<Tensor, Scalar> stepCost = action -> action.dot(grad).Get();
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x, stepCost);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);

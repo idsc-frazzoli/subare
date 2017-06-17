@@ -9,6 +9,9 @@ import ch.ethz.idsc.tensor.opt.LinearInterpolation;
 
 public enum Colorscheme {
   ;
+  private static final Interpolation CLASSIC = of("classic");
+  private static final Interpolation PARULA = of("parula");
+
   private static Interpolation of(String string) {
     try {
       return LinearInterpolation.of( //
@@ -20,10 +23,10 @@ public enum Colorscheme {
   }
 
   public static Interpolation classic() {
-    return of("classic");
+    return CLASSIC;
   }
 
   public static Interpolation parula() {
-    return of("parula");
+    return PARULA;
   }
 }

@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
@@ -27,7 +28,7 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
   static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);
   // ---
-  static final Tensor actions = Tensors.matrix(new Number[][] { //
+  static final Tensor ACTIONS = Tensors.matrix(new Number[][] { //
       { -1, 0 }, //
       { +1, 0 }, //
       { 0, -1 }, //
@@ -36,13 +37,13 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
   // ---
   private final Tensor image;
   private final Function<Tensor, Scalar> function;
-  private final Scalar stepCost;
+  private final Function<Tensor, Scalar> stepCost;
   private final Tensor states = Tensors.empty();
   private final Set<Tensor> startStates = new HashSet<>();
   private final Set<Tensor> endStates = new HashSet<>();
   private final StateActionMap stateActionMap = StateActionMap.empty();
 
-  Wireloop(Tensor image, Function<Tensor, Scalar> function, Scalar stepCost) {
+  Wireloop(Tensor image, Function<Tensor, Scalar> function, Function<Tensor, Scalar> stepCost) {
     this.image = image;
     this.function = function;
     this.stepCost = stepCost;
@@ -73,15 +74,18 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
 
   private Tensor _actions(Tensor state) {
     if (startStates.contains(state)) {
-      Tensor tensor = Tensors.empty();
-      for (Tensor action : actions) {
+      Tensor actions = Tensors.empty();
+      for (Tensor action : ACTIONS) {
         Tensor probe = state.add(action);
         if (startStates.contains(probe) || endStates.contains(probe))
-          tensor.append(action);
+          actions.append(action);
       }
-      return tensor;
+      // for now, all start states are in the interior and therefore permit all directions:
+      if (actions.length() != 4)
+        throw TensorRuntimeException.of(actions);
+      return actions;
     }
-    return Array.zeros(1, 2);
+    return Array.zeros(1, 2); // list of actions {...} with only single action = {0, 0}
   }
 
   @Override
@@ -106,7 +110,7 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
       return RealScalar.ZERO;
     if (startStates.contains(state) && endStates.contains(next))
       return function.apply(next);
-    return stepCost;
+    return stepCost.apply(action);
   }
 
   /**************************************************/
