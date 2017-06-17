@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.core.td;
 
 import java.util.Deque;
 
+import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
@@ -16,7 +17,6 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Multinomial;
 import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
@@ -39,6 +39,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
   private static final Distribution COINFLIPPING = BernoulliDistribution.of(RationalScalar.of(1, 2));
   // ---
   private final DiscreteModel discreteModel;
+  private final DiscountFunction discountFunction;
   private final SarsaType sarsaType;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
@@ -62,6 +63,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
       LearningRate learningRate2 //
   ) {
     this.discreteModel = discreteModel;
+    discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.sarsaType = sarsaType;
     this.qsa1 = qsa1;
     this.qsa2 = qsa2;
@@ -102,9 +104,8 @@ public class DoubleSarsa extends DequeDigestAdapter {
     Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
     Scalar value0 = Qsa1.value(state0, action0);
-    Scalar gamma = discreteModel.gamma();
     Scalar alpha = LearningRate1.alpha(first);
-    Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
+    Scalar delta = discountFunction.apply(rewards).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
     LearningRate1.digest(first); // signal to LearningRate1
   }

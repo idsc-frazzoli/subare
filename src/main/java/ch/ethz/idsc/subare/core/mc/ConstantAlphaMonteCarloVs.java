@@ -4,13 +4,13 @@ package ch.ethz.idsc.subare.core.mc;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeVsEstimator;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.util.FastHorner;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -19,13 +19,13 @@ import ch.ethz.idsc.tensor.Tensors;
  * 
  * (6.1) p.127 */
 public class ConstantAlphaMonteCarloVs implements EpisodeVsEstimator {
-  private final Scalar gamma;
+  private final DiscountFunction discountFunction;
   private final DiscreteVs vs;
   private final LearningRate learningRate;
 
   /** @param discreteModel */
   public ConstantAlphaMonteCarloVs(DiscreteModel discreteModel, LearningRate learningRate) {
-    gamma = discreteModel.gamma();
+    discountFunction = DiscountFunction.of(discreteModel.gamma());
     vs = DiscreteVs.build(discreteModel); // <- "arbitrary"
     this.learningRate = learningRate;
   }
@@ -42,7 +42,7 @@ public class ConstantAlphaMonteCarloVs implements EpisodeVsEstimator {
     int fromIndex = 0;
     for (StepInterface stepInterface : trajectory) {
       Tensor state = stepInterface.prevState();
-      Scalar gain = FastHorner.of(rewards.extract(fromIndex, rewards.length()), gamma);
+      Scalar gain = discountFunction.apply(rewards.extract(fromIndex, rewards.length()));
       Scalar value0 = vs.value(state);
       Scalar alpha = learningRate.alpha(stepInterface);
       Scalar delta = gain.subtract(value0).multiply(alpha);

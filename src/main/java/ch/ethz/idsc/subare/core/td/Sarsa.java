@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.td;
 import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
+import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
@@ -15,7 +16,6 @@ import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** base class for implementations of
  * 
@@ -29,6 +29,7 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * as well as N-steps {@link DequeDigest} */
 public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
   final DiscreteModel discreteModel;
+  private final DiscountFunction discountFunction;
   final QsaInterface qsa;
   private final LearningRate learningRate;
   Policy policy = null;
@@ -38,6 +39,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
    * @param learningRate */
   public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     this.discreteModel = discreteModel;
+    discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.qsa = qsa;
     this.learningRate = learningRate;
   }
@@ -73,9 +75,8 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     Tensor action = stepInterface.action();
     // ---
     Scalar value0 = qsa.value(state0, action);
-    Scalar gamma = discreteModel.gamma();
     Scalar alpha = learningRate.alpha(stepInterface);
-    Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
+    Scalar delta = discountFunction.apply(rewards).subtract(value0).multiply(alpha);
     qsa.assign(state0, action, value0.add(delta));
     // ---
     // since qsa was update for the state-action pair

@@ -3,13 +3,13 @@ package ch.ethz.idsc.subare.core.td;
 
 import java.util.Deque;
 
+import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** n-step temporal difference for estimating V(s)
  * 
@@ -17,12 +17,12 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
 // TODO not tested yet
 public class NStepTemporalDifference extends DequeDigestAdapter {
   private final VsInterface vs;
-  private final Scalar gamma;
+  private final DiscountFunction discountFunction;
   private final LearningRate learningRate;
 
   public NStepTemporalDifference(VsInterface vs, Scalar gamma, LearningRate learningRate) {
     this.vs = vs;
-    this.gamma = gamma;
+    discountFunction = DiscountFunction.of(gamma);
     this.learningRate = learningRate;
   }
 
@@ -37,7 +37,7 @@ public class NStepTemporalDifference extends DequeDigestAdapter {
     Tensor state0 = stepInterface.prevState();
     Scalar value0 = vs.value(state0);
     Scalar alpha = learningRate.alpha(stepInterface);
-    vs.assign(state0, value0.add(Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha)));
+    vs.assign(state0, value0.add(discountFunction.apply(rewards).subtract(value0).multiply(alpha)));
     learningRate.digest(stepInterface);
   }
 }

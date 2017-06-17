@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeVsEstimator;
@@ -18,7 +19,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** estimates the state value function for a given policy
  * see box on p.100
@@ -32,10 +32,12 @@ public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
   private final DiscreteModel discreteModel;
   private final DiscreteVs vs;
   private final Map<Tensor, Average> map = new HashMap<>(); // TODO no good!
+  private final DiscountFunction discountFunction;
 
   public FirstVisitPolicyEvaluation(DiscreteModel discreteModel, DiscreteVs vs) {
     this.discreteModel = discreteModel;
     this.vs = vs; // TODO write results directly in vs!
+    discountFunction = DiscountFunction.of(discreteModel.gamma());
   }
 
   @Override
@@ -52,11 +54,10 @@ public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
       rewards.append(stepInterface.reward());
       trajectory.add(stepInterface);
     }
-    Scalar gamma = discreteModel.gamma();
     for (Entry<Tensor, Integer> entry : first.entrySet()) {
       Tensor state = entry.getKey();
       int fromIndex = entry.getValue();
-      gains.put(state, Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma));
+      gains.put(state, discountFunction.apply(rewards.extract(fromIndex, rewards.length())));
     }
     // TODO more efficient update of average
     for (StepInterface stepInterface : trajectory) {
