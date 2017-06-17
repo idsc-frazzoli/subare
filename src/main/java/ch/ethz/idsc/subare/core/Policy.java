@@ -13,6 +13,8 @@ import ch.ethz.idsc.tensor.Tensor;
 public interface Policy {
   /** @param state
    * @param action
-   * @return probability that action is taken when in given state */
+   * @return probability that action is taken when in given state,
+   * the probability is in the interval [0, 1], and the sum of
+   * probabilities of all actions for a given state has to equal 1 */
   Scalar probability(Tensor state, Tensor action);
 }

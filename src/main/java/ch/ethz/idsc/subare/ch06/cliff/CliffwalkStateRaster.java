@@ -5,17 +5,14 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.util.StateActionRaster;
-import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.subare.core.util.StateRaster;
 import ch.ethz.idsc.tensor.Tensor;
 
-class CliffwalkRaster implements StateActionRaster {
+public class CliffwalkStateRaster implements StateRaster {
   private final Cliffwalk cliffwalk;
-  private final Index indexActions;
 
-  public CliffwalkRaster(Cliffwalk cliffwalk) {
+  public CliffwalkStateRaster(Cliffwalk cliffwalk) {
     this.cliffwalk = cliffwalk;
-    indexActions = Index.build(Cliffwalk.ACTIONS);
   }
 
   @Override
@@ -25,14 +22,13 @@ class CliffwalkRaster implements StateActionRaster {
 
   @Override
   public Dimension dimension() {
-    return new Dimension(cliffwalk.NX, (cliffwalk.NY + 1) * 4 - 1);
+    return new Dimension(cliffwalk.NX, cliffwalk.NY);
   }
 
   @Override
-  public Point point(Tensor state, Tensor action) {
+  public Point point(Tensor state) {
     int sx = state.Get(0).number().intValue();
     int sy = state.Get(1).number().intValue();
-    int a = indexActions.of(action);
-    return new Point(sx, sy + (cliffwalk.NY + 1) * a);
+    return new Point(sx, sy);
   }
 }

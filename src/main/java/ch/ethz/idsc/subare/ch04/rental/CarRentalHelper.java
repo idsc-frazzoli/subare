@@ -26,6 +26,7 @@ enum CarRentalHelper {
 
   public static Tensor render(CarRental carRental, DiscreteVs vs) {
     Interpolation colorscheme = Colorscheme.classic();
+    // TODO use CarRentalRaster
     final Tensor tensor = Array.zeros(21, 21, 4);
     DiscreteVs scaled = vs.create(Rescale.of(vs.values()).flatten(0));
     for (Tensor state : carRental.states()) {

@@ -34,16 +34,13 @@ public class GridworldTest extends TestCase {
     DiscreteQsa ref = ActionValueIterations.solve(gridworld, DecimalScalar.of(0.0001));
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
-        gridworld, qsa, //
-        // DefaultLearningRate.of(10, .51) //
-        ConstantLearningRate.of(RealScalar.ONE) //
-    );
+        gridworld, qsa, ConstantLearningRate.of(RealScalar.ONE));
     Scalar error = null;
     for (int index = 0; index < 40; ++index) {
       TabularSteps.batch(gridworld, gridworld, rstqp);
       error = DiscreteValueFunctions.distance(ref, qsa);
       // System.out.println(error);
     }
-    assertTrue(Scalars.lessThan(error, RealScalar.of(2)));
+    assertTrue(Scalars.lessThan(error, RealScalar.of(3)));
   }
 }

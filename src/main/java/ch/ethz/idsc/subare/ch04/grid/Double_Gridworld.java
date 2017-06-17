@@ -9,12 +9,12 @@ import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -22,7 +22,6 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** Double Sarsa for gridworld */
 class Double_Gridworld {
@@ -40,10 +39,9 @@ class Double_Gridworld {
         DefaultLearningRate.of(5, .51));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150);
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar explore = epsilon.Get(index);
-      Scalar error = DiscreteValueFunctions.distance(qsa1, ref);
       if (EPISODES - 10 < index)
-        System.out.println(index + " " + explore.map(Round._2) + "\t" + error.map(Round._2));
+        Infoline.print(gridworld, index, ref, qsa1);
+      Scalar explore = epsilon.Get(index);
       Policy policy1 = EGreedyPolicy.bestEquiprobable(gridworld, qsa1, explore);
       Policy policy2 = EGreedyPolicy.bestEquiprobable(gridworld, qsa2, explore);
       doubleSarsa.setPolicy(policy1, policy2);

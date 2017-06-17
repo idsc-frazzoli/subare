@@ -11,18 +11,15 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.StateActionRasters;
-import ch.ethz.idsc.subare.util.Colorscheme;
+import ch.ethz.idsc.subare.core.util.StateRasters;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Rescale;
-import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum CliffwalkHelper {
   ;
@@ -36,21 +33,11 @@ enum CliffwalkHelper {
     return GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
   }
 
-  private static final Tensor BASE = Tensors.vector(255);
-  private static final int MAGNIFY = 6;
+  private static final int MAGNIFY = 5;
 
-  // TODO implement state raster
   static Tensor render(Cliffwalk cliffwalk, DiscreteVs vs) {
-    Interpolation colorscheme = Colorscheme.classic();
-    final Tensor tensor = Array.zeros(cliffwalk.NX, cliffwalk.NY, 4);
     DiscreteVs scaled = vs.create(Rescale.of(vs.values()).flatten(0));
-    for (Tensor state : cliffwalk.states()) {
-      Scalar sca = scaled.value(state);
-      int sx = state.Get(0).number().intValue();
-      int sy = state.Get(1).number().intValue();
-      tensor.set(colorscheme.get(BASE.multiply(sca)), sx, sy);
-    }
-    return ImageResize.of(tensor, MAGNIFY);
+    return ImageResize.of(StateRasters.render(new CliffwalkStateRaster(cliffwalk), scaled), MAGNIFY);
   }
 
   static Tensor render(Cliffwalk cliffwalk, DiscreteQsa scaled) {

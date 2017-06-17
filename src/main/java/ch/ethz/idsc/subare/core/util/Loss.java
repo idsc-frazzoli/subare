@@ -17,6 +17,8 @@ import ch.ethz.idsc.tensor.red.Norm;
  * loss is non-negative
  * positive loss means deviation from optimal policy
  * 
+ * if the reference qsa is in exact precision, the return values also have exact precision
+ * 
  * loss can be measures per state-action, per state, and overall accumulated as a single number */
 public enum Loss {
   ;

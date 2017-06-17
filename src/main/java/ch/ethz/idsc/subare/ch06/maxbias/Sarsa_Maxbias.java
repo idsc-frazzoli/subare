@@ -9,18 +9,17 @@ import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.sca.Round;
 
 class Sarsa_Maxbias {
-  static void handle(SarsaType sarsaType, int n) throws Exception {
-    System.out.println("--- " + sarsaType);
+  static void handle(SarsaType sarsaType, int nstep) throws Exception {
+    System.out.println(sarsaType);
     Maxbias maxbias = new Maxbias(3);
     final DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias);
     int EPISODES = 100;
@@ -30,14 +29,14 @@ class Sarsa_Maxbias {
     Sarsa sarsa = sarsaType.supply(maxbias, qsa, learningRate);
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
     for (int index = 0; index < EPISODES; ++index) {
+      if (EPISODES - 10 < index)
+        Infoline.print(maxbias, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(maxbias, qsa, epsilon.Get(index));
       sarsa.setPolicy(policy);
-      ExploringStarts.batch(maxbias, policy, n, sarsa, avs);
+      ExploringStarts.batch(maxbias, policy, nstep, sarsa, avs);
     }
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa);
     vs.print(Round._3);
-    Scalar error = DiscreteValueFunctions.distance(qsa, ref);
-    System.out.println("error = " + error.map(Round._3));
   }
 
   public static void main(String[] args) throws Exception {

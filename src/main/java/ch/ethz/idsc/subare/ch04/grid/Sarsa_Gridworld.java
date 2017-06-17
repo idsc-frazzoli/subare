@@ -11,12 +11,12 @@ import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -24,7 +24,6 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
  * 
@@ -41,9 +40,8 @@ class Sarsa_Gridworld {
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
+      Infoline.print(gridworld, index, ref, qsa);
       Scalar explore = epsilon.Get(index);
-      Scalar error = DiscreteValueFunctions.distance(qsa, ref);
-      System.out.println(index + " " + explore.map(Round._2) + "\t" + error.map(Round._1));
       Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
       sarsa.setPolicy(policy);
       ExploringStarts.batch(gridworld, policy, n, sarsa);

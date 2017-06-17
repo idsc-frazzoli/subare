@@ -5,10 +5,10 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.util.StateActionRaster;
+import ch.ethz.idsc.subare.core.util.StateRaster;
 import ch.ethz.idsc.tensor.Tensor;
 
-class CarRentalRaster implements StateActionRaster {
+class CarRentalRaster implements StateRaster {
   private final CarRental carRental;
 
   public CarRentalRaster(CarRental carRental) {
@@ -22,13 +22,13 @@ class CarRentalRaster implements StateActionRaster {
 
   @Override
   public Dimension dimension() {
-    // TODO Auto-generated method stub
-    return null;
+    return new Dimension(carRental.maxCars + 1, carRental.maxCars + 1);
   }
 
   @Override
-  public Point point(Tensor state, Tensor action) {
-    // TODO Auto-generated method stub
-    return null;
+  public Point point(Tensor state) {
+    int x = state.Get(0).number().intValue();
+    int y = state.Get(1).number().intValue();
+    return new Point(x, y);
   }
 }

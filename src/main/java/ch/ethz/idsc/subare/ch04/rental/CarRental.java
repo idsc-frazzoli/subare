@@ -51,8 +51,10 @@ class CarRental implements StandardModel, SampleModel {
   private final Distribution d2_in = PoissonDistribution.of(RealScalar.of(RETURN_SECOND_LOC));
   // ---
   private final Clip CLIP;
+  final int maxCars;
 
   public CarRental(int maxCars) {
+    this.maxCars = maxCars;
     CLIP = Clip.function(0, maxCars);
     states = Flatten.of(Array.of(Tensors::vector, maxCars + 1, maxCars + 1), 1).unmodifiable();
   }

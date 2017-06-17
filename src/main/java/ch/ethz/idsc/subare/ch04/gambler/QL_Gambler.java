@@ -14,6 +14,7 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -36,11 +37,10 @@ class QL_Gambler {
     LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
     Sarsa stepDigest = new QLearning(gambler, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
+      Infoline.print(gambler, index, ref, qsa);
       Scalar error = DiscreteValueFunctions.distance(qsa, ref);
       lr_scheduler.notifyError(error);
       Scalar eps = lr_scheduler.getEpsilon();
-      // eps = epsilon.Get(index);
-      System.out.println(index + " " + eps.map(Round._1) + " " + error.map(Round._1));
       for (int count = 0; count < 1; ++count) {
         ExploringStarts.batch(gambler, policy, 1, stepDigest);
         policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);

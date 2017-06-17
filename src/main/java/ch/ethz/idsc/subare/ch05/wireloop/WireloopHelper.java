@@ -27,12 +27,12 @@ import ch.ethz.idsc.tensor.sca.Clip;
 
 enum WireloopHelper {
   ;
-  private static final int MAGNIFY = 3; // 3
+  private static final int MAGNIFY = 2; // 3
 
-  static Wireloop create(String trackName, Function<Tensor, Scalar> function, WireloopReward stepCost) throws Exception {
+  static Wireloop create(String trackName, Function<Tensor, Scalar> function, WireloopReward wireloopReward) throws Exception {
     String path = "".getClass().getResource("/ch05/" + trackName + ".png").getPath();
     Tensor image = Import.of(new File(path)).unmodifiable();
-    return new Wireloop(image, function, stepCost);
+    return new Wireloop(image, function, wireloopReward);
   }
 
   static Wireloop create(String trackName, Function<Tensor, Scalar> function) throws Exception {

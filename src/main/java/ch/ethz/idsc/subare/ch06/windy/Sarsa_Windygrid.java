@@ -8,43 +8,40 @@ import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 class Sarsa_Windygrid {
-  static void handle(SarsaType type, int total) throws Exception {
+  static void handle(SarsaType type, int EPISODES) throws Exception {
     System.out.println(type);
     Windygrid windygrid = Windygrid.createFour();
     final DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
-    System.out.println(qsa.size());
-    LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
+    Tensor epsilon = Subdivide.of(.2, .01, EPISODES);
+    LearningRate learningRate = DefaultLearningRate.of(3, 0.51);
     Sarsa sarsa = type.supply(windygrid, qsa, learningRate);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_" + type + ".gif"), 100);
-    for (int index = 0; index < total; ++index) {
-      Scalar error = DiscreteValueFunctions.distance(qsa, ref);
-      System.out.println(index + " " + error.map(Round._1));
-      Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, RealScalar.of(.1));
+    for (int index = 0; index < EPISODES; ++index) {
+      Infoline.print(windygrid, index, ref, qsa);
+      Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, epsilon.Get(index));
       sarsa.setPolicy(policy);
-      for (int count = 0; count < 10; ++count)
+      for (int count = 0; count < 10; ++count) // because there is only 1 start state
         ExploringStarts.batch(windygrid, policy, sarsa);
-      if (index % 2 == 0)
-        gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, qsa, ref)));
+      gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, qsa, ref)));
     }
     gsw.close();
   }
 
   public static void main(String[] args) throws Exception {
+    handle(SarsaType.original, 20);
+    handle(SarsaType.expected, 20);
     handle(SarsaType.qlearning, 20);
-    // handle(SarsaType.expected, 20);
-    // handle(SarsaType.original, 20);
   }
 }

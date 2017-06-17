@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.SampleModel;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 
+/** only suitable for models with all states as start states... */
 public enum TabularSteps {
   ;
   /** parallel processing of batch of steps by given {@link StepDigest}s

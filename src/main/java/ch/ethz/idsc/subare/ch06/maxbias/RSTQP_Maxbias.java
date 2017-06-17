@@ -7,6 +7,7 @@ import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -17,14 +18,12 @@ class RSTQP_Maxbias {
     DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias);
     DiscreteQsa qsa = DiscreteQsa.build(maxbias);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
-        maxbias, qsa, DefaultLearningRate.of(5, 1.0)); // TODO try learning rate
+        maxbias, qsa, DefaultLearningRate.of(3, 0.51));
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
+    int EPISODES = 5000;
     for (int index = 0; index < 500; ++index)
       TabularSteps.batch(maxbias, maxbias, rstqp, avs);
-    {
-      Scalar error = DiscreteValueFunctions.distance(ref, qsa);
-      System.out.println("r1s error=" + error);
-    }
+    Infoline.print(maxbias, EPISODES, ref, qsa);
     System.out.println("---");
     ActionValueIteration avi = new ActionValueIteration(maxbias, avs);
     avi.untilBelow(RealScalar.of(.0001));

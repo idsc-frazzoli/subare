@@ -8,11 +8,9 @@ import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.adapter.DeterministicStandardModel;
-import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
@@ -34,6 +32,7 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
       { 0, -1 }, //
       { 0, +1 } //
   }).unmodifiable();
+  static final Tensor ACTIONS_TERMINAL = Array.zeros(1, 2).unmodifiable();
   // ---
   private final Tensor image;
   private final Function<Tensor, Scalar> function;
@@ -41,7 +40,7 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
   private final Tensor states = Tensors.empty();
   private final Set<Tensor> startStates = new HashSet<>();
   private final Set<Tensor> endStates = new HashSet<>();
-  private final StateActionMap stateActionMap = StateActionMap.empty();
+  // private final StateActionMap stateActionMap = StateActionMap.empty();
 
   Wireloop(Tensor image, Function<Tensor, Scalar> function, WireloopReward wireloopReward) {
     this.image = image;
@@ -63,8 +62,6 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
           states.append(row);
         }
       }
-    for (Tensor state : states)
-      stateActionMap.put(state, _actions(state));
   }
 
   @Override
@@ -72,25 +69,11 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
     return states;
   }
 
-  private Tensor _actions(Tensor state) {
-    if (startStates.contains(state)) {
-      Tensor actions = Tensors.empty();
-      for (Tensor action : ACTIONS) {
-        Tensor probe = state.add(action);
-        if (startStates.contains(probe) || endStates.contains(probe))
-          actions.append(action);
-      }
-      // for now, all start states are in the interior and therefore permit all directions:
-      if (actions.length() != 4)
-        throw TensorRuntimeException.of(actions);
-      return actions;
-    }
-    return Array.zeros(1, 2); // list of actions {...} with only single action = {0, 0}
-  }
-
   @Override
   public Tensor actions(Tensor state) {
-    return stateActionMap.actions(state);
+    if (isTerminal(state))
+      return ACTIONS_TERMINAL; // list of actions {...} with only single action = {0, 0}
+    return ACTIONS;
   }
 
   @Override

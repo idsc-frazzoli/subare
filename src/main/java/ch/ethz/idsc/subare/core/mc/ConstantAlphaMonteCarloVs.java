@@ -7,12 +7,13 @@ import java.util.List;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeVsEstimator;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.util.FastHorner;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.alg.Multinomial;
 
 /** simple every-visit Monte Carlo method suitable for nonstationary environments
  * 
@@ -20,16 +21,13 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
 public class ConstantAlphaMonteCarloVs implements EpisodeVsEstimator {
   private final Scalar gamma;
   private final DiscreteVs vs;
-  private Scalar alpha = null;
+  private final LearningRate learningRate;
 
   /** @param discreteModel */
-  public ConstantAlphaMonteCarloVs(DiscreteModel discreteModel) {
+  public ConstantAlphaMonteCarloVs(DiscreteModel discreteModel, LearningRate learningRate) {
     gamma = discreteModel.gamma();
     vs = DiscreteVs.build(discreteModel); // <- "arbitrary"
-  }
-
-  public void setAlpha(Scalar alpha) {
-    this.alpha = alpha;
+    this.learningRate = learningRate;
   }
 
   @Override
@@ -41,15 +39,15 @@ public class ConstantAlphaMonteCarloVs implements EpisodeVsEstimator {
       rewards.append(stepInterface.reward());
       trajectory.add(stepInterface);
     }
-    // TODO more efficient update if gamma == 1
     int fromIndex = 0;
     for (StepInterface stepInterface : trajectory) {
       Tensor state = stepInterface.prevState();
-      Scalar gain = Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma);
+      Scalar gain = FastHorner.of(rewards.extract(fromIndex, rewards.length()), gamma);
       Scalar value0 = vs.value(state);
-      vs.assign(state, value0.add( //
-          gain.subtract(value0).multiply(alpha) // (6.1)
-      ));
+      Scalar alpha = learningRate.alpha(stepInterface);
+      Scalar delta = gain.subtract(value0).multiply(alpha);
+      vs.assign(state, value0.add(delta)); // (6.1)
+      learningRate.digest(stepInterface);
       ++fromIndex;
     }
   }

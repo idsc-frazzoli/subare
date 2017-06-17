@@ -7,10 +7,16 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.sca.LogisticSigmoid;
+import ch.ethz.idsc.tensor.sca.N;
 
 public enum DiscreteValueFunctions {
   ;
   private static final Scalar HALF = RationalScalar.of(1, 2);
+
+  @SuppressWarnings("unchecked")
+  public static <T extends DiscreteValueFunction> T numeric(T tvi) {
+    return (T) tvi.create(N.of(tvi.values()).flatten(0));
+  }
 
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T rescaled(T tvi) {
