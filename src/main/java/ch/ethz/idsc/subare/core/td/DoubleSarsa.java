@@ -26,8 +26,12 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
  * implementation covers
  * 
  * Double Q-learning (box on p.145)
- * Double Expected Sarsa (Exercise 6.10)
+ * Double Expected Sarsa (Exercise 6.10 p.145)
  * Double Original Sarsa (p.145)
+ * 
+ * the update equation in the box uses argmax_a.
+ * since there may not be a unique best action, we average the evaluation
+ * over all best actions.
  * 
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
@@ -66,13 +70,13 @@ public class DoubleSarsa extends DequeDigestAdapter {
     this.learningRate2 = learningRate2;
   }
 
+  // TODO this should be used somewhere!!!
   public Policy getEGreedy(Scalar epsilon) {
     DiscreteQsa avg = TensorValuesUtils.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
     return EGreedyPolicy.bestEquiprobable(discreteModel, avg, epsilon);
   }
 
-  /** @param policy that is used to generate the {@link StepInterface} */
-  public void setPolicyInterface(Policy policy) {
+  public void setPolicy(Policy policy) {
     this.policy = policy;
   }
 
@@ -80,28 +84,14 @@ public class DoubleSarsa extends DequeDigestAdapter {
   public void digest(Deque<StepInterface> deque) {
     // randomly select which qsa to read and write
     boolean flip = RandomVariate.of(COINFLIPPING).equals(RealScalar.ZERO); // flip coin, probability 0.5 each
-    QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for updating
-    QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation
-    LearningRate LearningRate1 = flip ? learningRate2 : learningRate1;
+    QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for selecting actions and updating
+    QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation (of actions provided by Qsa1)
+    LearningRate LearningRate1 = flip ? learningRate2 : learningRate1; // for updating
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
-    // ---
-    Tensor stateP = deque.getLast().nextState(); // S' == "state prime"
-    switch (sarsaType) {
-    case original:
-    case qlearning: {
-      // TODO for original sarsa, the policyInterface is probably wrong!
-      ActionSarsa actionSarsa = (ActionSarsa) sarsaType.supply(discreteModel, Qsa1, LearningRate1);
-      actionSarsa.setPolicyInterface(policy);
-      Tensor action = actionSarsa.actionForEvaluation(stateP); // use Qsa1 to select action
-      rewards.append(Qsa2.value(stateP, action)); // use Qsa2 to evaluate state-action pair
-      break;
-    }
-    case expected:
-      // TODO figure out formula for double expected sarsa
-    default:
-      throw new RuntimeException();
-    }
+    Sarsa sarsa = sarsaType.supply(discreteModel, Qsa1, null); // not used for learning
+    sarsa.setPolicy(policy); // TODO policy should be e-greedy with respect to qsa == Qsa1
+    rewards.append(sarsa.crossEvaluate(deque.getLast().nextState(), Qsa2));
     // ---
     // the code below is identical to Sarsa
     StepInterface first = deque.getFirst();

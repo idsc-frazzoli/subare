@@ -36,7 +36,7 @@ class Double_Bandits {
       System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._3));
       Policy policy = EGreedyPolicy.bestEquiprobable( //
           bandits, TensorValuesUtils.average(qsa1, qsa2), explore);
-      doubleSarsa.setPolicyInterface(policy);
+      doubleSarsa.setPolicy(policy);
       ExploringStarts.batch(bandits, policy, n, doubleSarsa);
     }
     System.out.println("---");

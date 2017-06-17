@@ -36,7 +36,7 @@ class Sarsa_Wireloop {
       Scalar loss = Loss.accumulation(wireloop, ref, qsa);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + loss.map(Round._3));
       Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policy);
+      sarsa.setPolicy(policy);
       ExploringStarts.batch(wireloop, policy, nstep, sarsa);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ref, qsa)));
     }

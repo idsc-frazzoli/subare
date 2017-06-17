@@ -12,31 +12,18 @@ import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Norm;
 
-/** measure to compare performance between optimal state-action value function and learned q-function */
+/** measures to compare performance between optimal state-action value function and learned q-function
+ * 
+ * loss is non-negative
+ * positive loss means deviation from optimal policy
+ * 
+ * loss can be measures per state-action, per state, and overall accumulated as a single number */
 public enum Loss {
   ;
   /** @param discreteModel
    * @param ref ground truth
    * @param qsa
-   * @return non-negative number which should be subtracted from the optimal gains */
-  public static Scalar accumulation(DiscreteModel discreteModel, DiscreteQsa ref, DiscreteQsa qsa) {
-    return Norm._1.of(perState(discreteModel, ref, qsa).values());
-  }
-
-  /** @param discreteModel
-   * @param ref ground truth
-   * @param qsa
-   * @return map that assigns each state a non-negative number which is the deficiency
-   * of the evaluation of the state from the optimal evaluation */
-  public static DiscreteVs perState(DiscreteModel discreteModel, DiscreteQsa ref, DiscreteQsa qsa) {
-    return DiscreteUtils.createVs(discreteModel, asQsa(discreteModel, ref, qsa), Scalar::add);
-  }
-
-  /** @param discreteModel
-   * @param ref ground truth
-   * @param qsa
-   * @return map that assigns each state a non-negative number which is the deficiency
-   * of the evaluation of the state from the optimal evaluation */
+   * @return */
   public static DiscreteQsa asQsa(DiscreteModel discreteModel, DiscreteQsa ref, DiscreteQsa qsa) {
     DiscreteQsa loss = DiscreteQsa.build(discreteModel);
     for (Tensor state : discreteModel.states()) {
@@ -56,5 +43,22 @@ public enum Loss {
       }
     }
     return loss;
+  }
+
+  /** @param discreteModel
+   * @param ref ground truth
+   * @param qsa
+   * @return map that assigns each state a non-negative number which is the deficiency
+   * of the evaluation of the state from the optimal evaluation */
+  public static DiscreteVs perState(DiscreteModel discreteModel, DiscreteQsa ref, DiscreteQsa qsa) {
+    return DiscreteUtils.reduce(discreteModel, asQsa(discreteModel, ref, qsa), Scalar::add);
+  }
+
+  /** @param discreteModel
+   * @param ref ground truth
+   * @param qsa
+   * @return non-negative number which should be subtracted from the optimal gains */
+  public static Scalar accumulation(DiscreteModel discreteModel, DiscreteQsa ref, DiscreteQsa qsa) {
+    return Norm._1.of(perState(discreteModel, ref, qsa).values());
   }
 }

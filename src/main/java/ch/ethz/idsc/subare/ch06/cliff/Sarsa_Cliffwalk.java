@@ -37,7 +37,7 @@ class Sarsa_Cliffwalk {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(Round._1));
       Policy policy = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policy);
+      sarsa.setPolicy(policy);
       ExploringStarts.batch(cliffwalk, policy, sarsa);
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, qsa, ref)));
     }

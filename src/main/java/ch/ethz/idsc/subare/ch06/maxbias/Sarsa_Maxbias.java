@@ -31,7 +31,7 @@ class Sarsa_Maxbias {
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
     for (int index = 0; index < EPISODES; ++index) {
       Policy policy = EGreedyPolicy.bestEquiprobable(maxbias, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policy);
+      sarsa.setPolicy(policy);
       ExploringStarts.batch(maxbias, policy, n, sarsa, avs);
     }
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa);

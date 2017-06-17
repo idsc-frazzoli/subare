@@ -13,8 +13,6 @@ import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.UcbPolicy;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Multinomial;
@@ -34,8 +32,6 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   final QsaInterface qsa;
   private final LearningRate learningRate;
   Policy policy = null;
-  // ---
-  private final UcbPolicy ucbPolicy;
 
   /** @param discreteModel
    * @param qsa
@@ -44,21 +40,26 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     this.discreteModel = discreteModel;
     this.qsa = qsa;
     this.learningRate = learningRate;
-    ucbPolicy = UcbPolicy.of(discreteModel, qsa, RealScalar.ONE);
   }
 
-  /** @param policy that is used to generate the {@link StepInterface} */
-  public void setPolicyInterface(Policy policy) {
+  /** the input policy is used to generate the {@link StepInterface}.
+   * 
+   * setting the policy is required for {@link OriginalSarsa} and {@link ExpectedSarsa}.
+   * On the other hand, {@link QLearning} does not require the knowledge of the policy.
+   * 
+   * @param policy */
+  public void setPolicy(Policy policy) {
     this.policy = policy;
-  }
-
-  public UcbPolicy getUcbPolicy() {
-    return ucbPolicy;
   }
 
   /** @param state
    * @return value estimation of state */
   protected abstract Scalar evaluate(Tensor state);
+
+  /** @param state
+   * @param Qsa2
+   * @return value from evaluations of Qsa2 via actions provided by qsa (== Qsa1) */
+  protected abstract Scalar crossEvaluate(Tensor state, QsaInterface Qsa2);
 
   @Override
   public void digest(Deque<StepInterface> deque) {
@@ -80,7 +81,6 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     // since qsa was update for the state-action pair
     // the learning rate interface as well as the usb policy are notified about the state-action pair
     learningRate.digest(stepInterface);
-    ucbPolicy.digest(stepInterface);
   }
 
   @Override

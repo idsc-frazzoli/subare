@@ -45,7 +45,7 @@ class Double_Gridworld {
       System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._1));
       Policy policy = EGreedyPolicy.bestEquiprobable( //
           gridworld, TensorValuesUtils.average(qsa1, qsa2), explore);
-      doubleSarsa.setPolicyInterface(policy);
+      doubleSarsa.setPolicy(policy);
       ExploringStarts.batch(gridworld, policy, n, doubleSarsa);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa1, ref)));
     }

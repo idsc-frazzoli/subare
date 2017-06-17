@@ -45,7 +45,7 @@ class Sarsa_Gridworld {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + explore.map(Round._2) + "\t" + error.map(Round._1));
       Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
-      sarsa.setPolicyInterface(policy);
+      sarsa.setPolicy(policy);
       ExploringStarts.batch(gridworld, policy, n, sarsa);
       gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
     }

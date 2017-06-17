@@ -33,7 +33,7 @@ class Sarsa_Windygrid {
       Scalar error = TensorValuesUtils.distance(qsa, ref);
       System.out.println(index + " " + error.map(Round._1));
       Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, RealScalar.of(.1));
-      sarsa.setPolicyInterface(policy);
+      sarsa.setPolicy(policy);
       for (int count = 0; count < 10; ++count)
         ExploringStarts.batch(windygrid, policy, sarsa);
       if (index % 2 == 0)

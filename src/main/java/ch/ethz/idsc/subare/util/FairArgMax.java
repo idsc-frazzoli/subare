@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.ArgMax;
 
 public class FairArgMax {
-  private static final Random random = new Random();
+  private static final Random RANDOM = new Random();
 
   /** @param tensor
    * @return
@@ -21,6 +21,7 @@ public class FairArgMax {
     return new FairArgMax(tensor);
   }
 
+  // ---
   private final List<Integer> list;
 
   private FairArgMax(Tensor tensor) {
@@ -33,7 +34,7 @@ public class FairArgMax {
   }
 
   public int nextRandomIndex() {
-    return nextRandomIndex(random);
+    return nextRandomIndex(RANDOM);
   }
 
   public int nextRandomIndex(Random random) {

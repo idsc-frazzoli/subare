@@ -30,7 +30,7 @@ class Sarsa_Randomwalk {
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = type.supply(randomwalk, qsa, learningRate);
     Policy policy = new EquiprobablePolicy(randomwalk);
-    sarsa.setPolicyInterface(policy);
+    sarsa.setPolicy(policy);
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policy, 4, sarsa); // sarsa, 4
     qsa.print(Round._2);

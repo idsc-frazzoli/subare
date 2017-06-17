@@ -42,7 +42,7 @@ class Double_Maxbias {
       System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._1));
       Policy policy = EGreedyPolicy.bestEquiprobable( //
           maxbias, TensorValuesUtils.average(qsa1, qsa2), explore);
-      doubleSarsa.setPolicyInterface(policy);
+      doubleSarsa.setPolicy(policy);
       ExploringStarts.batch(maxbias, policy, n, doubleSarsa);
     }
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

@@ -20,8 +20,13 @@ public class ExpectedSarsa extends Sarsa {
 
   @Override
   protected Scalar evaluate(Tensor state) {
+    return crossEvaluate(state, qsa);
+  }
+
+  @Override
+  protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
     return discreteModel.actions(state).flatten(0) //
-        .map(action1 -> policy.probability(state, action1).multiply(qsa.value(state, action1))) //
+        .map(action -> policy.probability(state, action).multiply(Qsa2.value(state, action))) //
         .reduce(Scalar::add).get();
   }
 }

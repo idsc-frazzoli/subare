@@ -46,7 +46,7 @@ class Sarsa_Gambler {
       errors.append(error);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + error.map(Round._1));
       Policy policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
-      sarsa.setPolicyInterface(policy);
+      sarsa.setPolicy(policy);
       // sarsa.getUcbPolicy().setTime(RealScalar.of(index + 1)); // TODO
       // PolicyInterface ucbPolicy = sarsa.getUcbPolicy();
       ExploringStarts.batch(gambler, //

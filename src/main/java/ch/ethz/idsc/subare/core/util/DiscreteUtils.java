@@ -25,26 +25,26 @@ public enum DiscreteUtils {
   }
 
   // ---
+  /** @param discreteModel
+   * @param qsa
+   * @param binaryOperator
+   * @return */
+  public static DiscreteVs reduce( //
+      DiscreteModel discreteModel, QsaInterface qsa, BinaryOperator<Scalar> binaryOperator) {
+    return DiscreteVs.build(discreteModel, //
+        Tensor.of(discreteModel.states().flatten(0) //
+            .map(state -> discreteModel.actions(state).flatten(0) //
+                .map(action -> qsa.value(state, action)) //
+                .reduce(binaryOperator).get()))); // <- assumes greedy policy
+  }
+
   /** compute state value function v(s) based on given action-value function q(s,a)
    * 
    * @param discreteModel
    * @param qsa
    * @return state values */
   public static DiscreteVs createVs(DiscreteModel discreteModel, QsaInterface qsa) {
-    // return DiscreteVs.build(discreteModel, //
-    // Tensor.of(discreteModel.states().flatten(0) //
-    // .map(state -> discreteModel.actions(state).flatten(0) //
-    // .map(action -> qsa.value(state, action)) //
-    // .reduce(Max::of).get()))); // <- assumes greedy policy
-    return createVs(discreteModel, qsa, Max::of);
-  }
-
-  public static DiscreteVs createVs(DiscreteModel discreteModel, QsaInterface qsa, BinaryOperator<Scalar> op) {
-    return DiscreteVs.build(discreteModel, //
-        Tensor.of(discreteModel.states().flatten(0) //
-            .map(state -> discreteModel.actions(state).flatten(0) //
-                .map(action -> qsa.value(state, action)) //
-                .reduce(op).get()))); // <- assumes greedy policy
+    return reduce(discreteModel, qsa, Max::of);
   }
 
   /** @param discreteModel
