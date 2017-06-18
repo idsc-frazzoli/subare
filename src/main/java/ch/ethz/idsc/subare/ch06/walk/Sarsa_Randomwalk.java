@@ -3,14 +3,14 @@
 package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.util.Digits;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** determines state action value function q(s,a).
  * initial policy is irrelevant because each state allows only one action.
@@ -23,17 +23,17 @@ import ch.ethz.idsc.subare.util.Digits;
  * {5, 0} 0.79
  * {6, 0} 0 */
 class Sarsa_Randomwalk {
-  static void handle(SarsaType type) {
-    System.out.println(type);
+  static void handle(SarsaType sarsaType) {
+    System.out.println(sarsaType);
     Randomwalk randomwalk = new Randomwalk();
     DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-    Sarsa sarsa = type.supply(randomwalk, qsa, learningRate);
-    PolicyInterface policyInterface = new EquiprobablePolicy(randomwalk);
-    sarsa.setPolicyInterface(policyInterface);
+    Sarsa sarsa = sarsaType.supply(randomwalk, qsa, learningRate);
+    Policy policy = new EquiprobablePolicy(randomwalk);
+    sarsa.setPolicy(policy);
     for (int count = 0; count < 1000; ++count)
-      ExploringStarts.batch(randomwalk, policyInterface, 4, sarsa); // sarsa, 4
-    qsa.print(Digits._2);
+      ExploringStarts.batch(randomwalk, policy, 4, sarsa); // sarsa, 4
+    qsa.print(Round._2);
   }
 
   public static void main(String[] args) {

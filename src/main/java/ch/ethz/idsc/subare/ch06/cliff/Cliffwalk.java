@@ -28,7 +28,7 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
   final Clip CLIP_Y;
   // ---
   private final Tensor states;
-  final Tensor actions = Tensors.matrix(new Number[][] { //
+  static final Tensor ACTIONS = Tensors.matrix(new Number[][] { //
       { +1, 0 }, //
       { -1, 0 }, //
       { 0, +1 }, //
@@ -60,7 +60,7 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
 
   @Override
   public Tensor actions(Tensor state) {
-    return actions;
+    return ACTIONS;
   }
 
   @Override

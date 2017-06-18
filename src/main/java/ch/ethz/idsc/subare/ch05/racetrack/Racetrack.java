@@ -60,7 +60,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   private final Map<Tensor, Boolean> collisions = new HashMap<>();
   private final Tensor image;
 
-  public Racetrack(Tensor image, int maxSpeed) {
+  Racetrack(Tensor image, int maxSpeed) {
     interpolation = NearestInterpolation.of(image.get(Tensor.ALL, Tensor.ALL, 2));
     List<Integer> list = Dimensions.of(image);
     dimensions = Tensors.vector(list.subList(0, 2)).map(Decrement.ONE);

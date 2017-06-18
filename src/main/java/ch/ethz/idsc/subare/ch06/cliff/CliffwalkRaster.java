@@ -15,7 +15,7 @@ class CliffwalkRaster implements StateActionRaster {
 
   public CliffwalkRaster(Cliffwalk cliffwalk) {
     this.cliffwalk = cliffwalk;
-    indexActions = Index.build(cliffwalk.actions);
+    indexActions = Index.build(Cliffwalk.ACTIONS);
   }
 
   @Override

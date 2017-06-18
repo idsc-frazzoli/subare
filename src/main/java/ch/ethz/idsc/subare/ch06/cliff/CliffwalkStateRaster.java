@@ -1,31 +1,28 @@
 // code by jph
-package ch.ethz.idsc.subare.ch05.wireloop;
+package ch.ethz.idsc.subare.ch06.cliff;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.util.List;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.StateRaster;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Dimensions;
 
-class WireloopRaster implements StateRaster {
-  private final Wireloop wireloop;
+class CliffwalkStateRaster implements StateRaster {
+  private final Cliffwalk cliffwalk;
 
-  public WireloopRaster(Wireloop wireloop) {
-    this.wireloop = wireloop;
+  public CliffwalkStateRaster(Cliffwalk cliffwalk) {
+    this.cliffwalk = cliffwalk;
   }
 
   @Override
   public DiscreteModel discreteModel() {
-    return wireloop;
+    return cliffwalk;
   }
 
   @Override
   public Dimension dimension() {
-    List<Integer> list = Dimensions.of(wireloop.image());
-    return new Dimension(list.get(0), list.get(1));
+    return new Dimension(cliffwalk.NX, cliffwalk.NY);
   }
 
   @Override

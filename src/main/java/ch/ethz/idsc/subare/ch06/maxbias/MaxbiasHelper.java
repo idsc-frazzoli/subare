@@ -7,7 +7,6 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 
 public enum MaxbiasHelper {
   ;
-  // ---
   static DiscreteQsa getOptimalQsa(Maxbias maxbias) {
     return ActionValueIterations.solve(maxbias, DecimalScalar.of(.0001));
   }

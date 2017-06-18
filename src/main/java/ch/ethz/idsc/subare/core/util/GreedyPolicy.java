@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
@@ -30,7 +30,7 @@ public enum GreedyPolicy {
    * @param standardModel
    * @param vs of standardModel.states()
    * @return */
-  public static PolicyInterface bestEquiprobable(StandardModel standardModel, VsInterface vs) {
+  public static Policy bestEquiprobable(StandardModel standardModel, VsInterface vs) {
     ActionValueAdapter actionValueAdapter = new ActionValueAdapter(standardModel);
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : standardModel.states()) {
@@ -45,7 +45,7 @@ public enum GreedyPolicy {
   }
 
   // this simplicity may be the reason why q(s,a) is preferred over v(s)
-  public static PolicyInterface bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa) {
+  public static Policy bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa) {
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : discreteModel.states()) {
       Tensor actions = discreteModel.actions(state);

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
@@ -25,7 +25,7 @@ import ch.ethz.idsc.tensor.sca.Sqrt;
  * exploration if an action has not been encountered often relative to other actions
  * 
  * p.37 equation (2.8) */
-public class UcbPolicy implements PolicyInterface, StepDigest {
+public class UcbPolicy implements Policy, StepDigest {
   /** @param qsa
    * @param c factor for scaling relative to values in qsa
    * @return */
@@ -57,7 +57,7 @@ public class UcbPolicy implements PolicyInterface, StepDigest {
 
   // TODO very private and not very efficient -> precompute!!!
   private Scalar valueWithBias(Tensor state, Tensor action) {
-    Tensor key = DiscreteQsa.createKey(state, action);
+    Tensor key = StateAction.key(state, action);
     Scalar Nta = RealScalar.of(map.containsKey(key) ? map.get(key) : 0);
     final Scalar bias;
     if (Scalars.isZero(Nta))
@@ -69,7 +69,7 @@ public class UcbPolicy implements PolicyInterface, StepDigest {
   }
 
   @Override // from PolicyInterface
-  public Scalar policy(Tensor state, Tensor action) {
+  public Scalar probability(Tensor state, Tensor action) {
     Tensor actions = discreteModel.actions(state);
     Tensor values = Tensor.of(actions.flatten(0).map(a -> valueWithBias(state, a)));
     FairArgMax fairArgMax = FairArgMax.of(values);
@@ -84,7 +84,7 @@ public class UcbPolicy implements PolicyInterface, StepDigest {
   @Override // from StepDigest
   public void digest(StepInterface stepInterface) {
     // TODO code redundant... find a more elegant solution to count pairs
-    Tensor key = DiscreteQsa.createKey(stepInterface);
+    Tensor key = StateAction.key(stepInterface);
     int index = map.containsKey(key) ? map.get(key) : 0;
     map.put(key, index + 1);
   }

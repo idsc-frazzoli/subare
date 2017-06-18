@@ -48,7 +48,7 @@ abstract class DecayedLearningRate implements LearningRate {
   }
 
   @Override // from LearningRate
-  public final Scalar alpha(StepInterface stepInterface) {
+  public synchronized final Scalar alpha(StepInterface stepInterface) {
     Tensor key = key(stepInterface);
     int index = map.containsKey(key) ? map.get(key) : 0;
     while (MEMO.length() <= index)
@@ -59,15 +59,17 @@ abstract class DecayedLearningRate implements LearningRate {
   }
 
   @Override // from StepDigest
-  public final void digest(StepInterface stepInterface) {
+  public synchronized final void digest(StepInterface stepInterface) {
     Tensor key = key(stepInterface);
     map.put(key, map.containsKey(key) ? map.get(key) + 1 : 1);
   }
 
   /** @return */
-  public final int maxCount() {
+  public final int maxCount() { // function is not used yet...
     return MEMO.length();
   }
 
-  abstract Tensor key(StepInterface stepInterface);
+  /** @param stepInterface
+   * @return key for identifying steps that are considered identical for counting */
+  protected abstract Tensor key(StepInterface stepInterface);
 }

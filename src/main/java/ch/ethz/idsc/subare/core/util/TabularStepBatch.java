@@ -13,11 +13,14 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
+/** only suitable for models with all states as start states */
 class TabularStepBatch {
   private final SampleModel sampleModel;
   private final List<Tensor> list;
   private int index = 0;
 
+  /** constructor generates randomized batch of steps
+   * collection consists of all state-action pairs including terminal states */
   public TabularStepBatch(DiscreteModel discreteModel, SampleModel sampleModel) {
     this.sampleModel = sampleModel;
     Index index = DiscreteUtils.build(discreteModel, discreteModel.states());

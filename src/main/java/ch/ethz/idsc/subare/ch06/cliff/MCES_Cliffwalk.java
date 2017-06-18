@@ -1,16 +1,14 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.cliff;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
@@ -24,12 +22,11 @@ class MCES_Cliffwalk {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_mces.gif"), 100);
     int EPISODES = 100;
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar error = TensorValuesUtils.distance(mces.qsa(), ref);
-      System.out.println(index + " " + error.map(Digits._1));
+      Infoline.print(cliffwalk, index, ref, mces.qsa());
       for (int count = 0; count < 10; ++count) {
-        PolicyInterface policyInterface = //
-            EGreedyPolicy.bestEquiprobable(cliffwalk, mces.qsa(), RealScalar.of(.1));
-        ExploringStarts.batch(cliffwalk, policyInterface, mces);
+        Policy policy = //
+            EGreedyPolicy.bestEquiprobable(cliffwalk, mces.qsa(), RealScalar.of(.4));
+        ExploringStarts.batch(cliffwalk, policy, mces);
       }
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, mces.qsa(), ref)));
     }

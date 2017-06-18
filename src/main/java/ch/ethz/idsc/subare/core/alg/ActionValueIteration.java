@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -65,7 +65,7 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
     final long tic = System.nanoTime();
     while (true) {
       step();
-      final Scalar delta = TensorValuesUtils.distance(qsa_new, (DiscreteQsa) qsa_old);
+      final Scalar delta = DiscreteValueFunctions.distance(qsa_new, (DiscreteQsa) qsa_old);
       final long toc = System.nanoTime();
       if (3e9 < toc - tic) // print info if iteration takes longer than 3 seconds
         System.out.println(past + " -> " + delta + " " + alternate);

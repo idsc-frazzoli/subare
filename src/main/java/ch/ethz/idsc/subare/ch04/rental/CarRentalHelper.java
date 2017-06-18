@@ -1,15 +1,18 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.rental;
 
+import java.awt.Dimension;
 import java.util.List;
 import java.util.Random;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
+import ch.ethz.idsc.subare.core.util.StateRaster;
+import ch.ethz.idsc.subare.core.util.StateRasters;
+import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
-import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -22,10 +25,15 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum CarRentalHelper {
   ;
+  public static StateRaster createRaster(CarRental carRental) {
+    return StateRasters.create(carRental, new Dimension(carRental.maxCars + 1, carRental.maxCars + 1));
+  }
+
   private static final Tensor BASE = Tensors.vector(255);
 
   public static Tensor render(CarRental carRental, DiscreteVs vs) {
     Interpolation colorscheme = Colorscheme.classic();
+    // TODO use createRaster
     final Tensor tensor = Array.zeros(21, 21, 4);
     DiscreteVs scaled = vs.create(Rescale.of(vs.values()).flatten(0));
     for (Tensor state : carRental.states()) {
@@ -37,10 +45,10 @@ enum CarRentalHelper {
     return ImageResize.of(tensor, 4);
   }
 
-  public static Tensor render(CarRental carRental, PolicyInterface policyInterface) {
+  public static Tensor render(CarRental carRental, Policy policy) {
     Interpolation colorscheme = Colorscheme.classic();
     final Tensor tensor = Array.zeros(21, 21, 4);
-    PolicyWrap policyWrap = new PolicyWrap(policyInterface, new Random());
+    PolicyWrap policyWrap = new PolicyWrap(policy, new Random());
     for (Tensor state : carRental.states()) {
       Tensor action = policyWrap.next(state, carRental.actions(state));
       int x = state.Get(0).number().intValue();
@@ -53,7 +61,7 @@ enum CarRentalHelper {
 
   public static Tensor joinAll(CarRental carRental, DiscreteVs vs) {
     Tensor im1 = render(carRental, vs);
-    PolicyInterface pi = GreedyPolicy.bestEquiprobable(carRental, vs);
+    Policy pi = GreedyPolicy.bestEquiprobable(carRental, vs);
     Tensor im2 = render(carRental, pi);
     List<Integer> list = Dimensions.of(im1);
     list.set(0, 4 * 2);

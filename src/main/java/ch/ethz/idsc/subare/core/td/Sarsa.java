@@ -4,20 +4,19 @@ package ch.ethz.idsc.subare.core.td;
 import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
+import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.UcbPolicy;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Multinomial;
+import ch.ethz.idsc.tensor.Tensors;
 
 /** base class for implementations of
  * 
@@ -31,36 +30,41 @@ import ch.ethz.idsc.tensor.alg.Multinomial;
  * as well as N-steps {@link DequeDigest} */
 public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
   final DiscreteModel discreteModel;
+  private final DiscountFunction discountFunction;
   final QsaInterface qsa;
   private final LearningRate learningRate;
-  PolicyInterface policyInterface = null;
-  // ---
-  private final UcbPolicy ucbPolicy;
+  Policy policy = null;
 
   /** @param discreteModel
    * @param qsa
    * @param learningRate */
   public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     this.discreteModel = discreteModel;
+    discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.qsa = qsa;
     this.learningRate = learningRate;
-    ucbPolicy = UcbPolicy.of(discreteModel, qsa, RealScalar.ONE);
   }
 
-  /** @param policyInterface that is used to generate the {@link StepInterface} */
-  public void setPolicyInterface(PolicyInterface policyInterface) {
-    this.policyInterface = policyInterface;
-  }
-
-  /** @param policyInterface */
-  public UcbPolicy getUcbPolicy() {
-    return ucbPolicy;
+  /** the input policy is used to generate the {@link StepInterface}.
+   * 
+   * setting the policy is required for {@link OriginalSarsa} and {@link ExpectedSarsa}.
+   * On the other hand, {@link QLearning} does not require the knowledge of the policy.
+   * 
+   * @param policy */
+  public void setPolicy(Policy policy) {
+    this.policy = policy;
   }
 
   /** @param state
    * @return value estimation of state */
   protected abstract Scalar evaluate(Tensor state);
 
+  /** @param state
+   * @param Qsa2
+   * @return value from evaluations of Qsa2 via actions provided by qsa (== Qsa1) */
+  protected abstract Scalar crossEvaluate(Tensor state, QsaInterface Qsa2);
+
+  // private Scalar shift;
   @Override
   public void digest(Deque<StepInterface> deque) {
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
@@ -73,15 +77,23 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     Tensor action = stepInterface.action();
     // ---
     Scalar value0 = qsa.value(state0, action);
-    Scalar gamma = discreteModel.gamma();
     Scalar alpha = learningRate.alpha(stepInterface);
-    Scalar delta = Multinomial.horner(rewards, gamma).subtract(value0).multiply(alpha);
+    Scalar delta = discountFunction.apply(rewards).subtract(value0).multiply(alpha);
     qsa.assign(state0, action, value0.add(delta));
     // ---
     // since qsa was update for the state-action pair
     // the learning rate interface as well as the usb policy are notified about the state-action pair
     learningRate.digest(stepInterface);
-    ucbPolicy.digest(stepInterface);
+  }
+
+  /** @param stepInterface
+   * @return non-negative priority rating */
+  Scalar priority(StepInterface stepInterface) {
+    Tensor rewards = Tensors.of(stepInterface.reward(), evaluate(stepInterface.nextState()));
+    Tensor state0 = stepInterface.prevState();
+    Tensor action = stepInterface.action();
+    Scalar value0 = qsa.value(state0, action);
+    return discountFunction.apply(rewards).subtract(value0).abs();
   }
 
   @Override

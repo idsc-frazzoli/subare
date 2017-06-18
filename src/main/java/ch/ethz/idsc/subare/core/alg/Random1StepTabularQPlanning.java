@@ -27,7 +27,8 @@ public class Random1StepTabularQPlanning implements StepDigest {
   private final LearningRate learningRate;
 
   /** @param discreteModel
-   * @param qsa */
+   * @param qsa
+   * @param learningRate for deterministic tasks, a learning rate of constant == 1 is feasible */
   public Random1StepTabularQPlanning( //
       DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     this.discreteModel = discreteModel;

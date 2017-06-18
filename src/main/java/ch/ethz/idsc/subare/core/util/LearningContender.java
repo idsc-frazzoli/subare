@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.tensor.Scalar;
 
@@ -24,13 +24,20 @@ public class LearningContender {
     this.dequeDigest = sarsa;
   }
 
-  public Scalar stepAndCompare(Scalar epsilon, int nstep, DiscreteQsa ref) {
-    PolicyInterface policyInterface = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa, epsilon);
+  public void stepAndCompare(Scalar epsilon, int nstep, DiscreteQsa ref) {
+    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa, epsilon);
     if (dequeDigest instanceof Sarsa) {
       Sarsa sarsa = (Sarsa) dequeDigest;
-      sarsa.setPolicyInterface(policyInterface);
+      sarsa.setPolicy(policy);
     }
-    ExploringStarts.batch(monteCarloInterface, policyInterface, nstep, dequeDigest);
-    return TensorValuesUtils.distance(qsa, ref);
+    ExploringStarts.batch(monteCarloInterface, policy, nstep, dequeDigest);
+  }
+
+  public Scalar q_difference(DiscreteQsa ref) {
+    return DiscreteValueFunctions.distance(ref, qsa);
+  }
+
+  public Scalar loss(DiscreteQsa ref) {
+    return Loss.accumulation(monteCarloInterface, ref, qsa);
   }
 }

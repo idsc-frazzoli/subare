@@ -2,17 +2,16 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch06.cliff;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
@@ -23,12 +22,11 @@ class AVI_Cliffwalk {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     Export.of(UserHome.Pictures("cliffwalk_qsa_avi.png"), //
-        CliffwalkHelper.render(cliffwalk, TensorValuesUtils.rescaled(ref)));
+        CliffwalkHelper.render(cliffwalk, DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = new ActionValueIteration(cliffwalk);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_avi.gif"), 200);
     for (int index = 0; index < 20; ++index) {
-      Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);
-      System.out.println(index + " " + error.map(Digits._1));
+      Infoline.print(cliffwalk, index, ref, avi.qsa());
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, avi.qsa(), ref)));
       avi.step();
     }
@@ -36,7 +34,7 @@ class AVI_Cliffwalk {
     gsw.close();
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
     vs.print();
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(cliffwalk, ref);
-    Policies.print(policyInterface, cliffwalk.states());
+    Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, ref);
+    Policies.print(policy, cliffwalk.states());
   }
 }

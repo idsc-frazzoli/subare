@@ -8,7 +8,6 @@ import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.adapter.DeterministicStandardModel;
-import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -27,23 +26,26 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
   static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   static final Tensor GREEN = Tensors.vector(0, 255, 0, 255);
   // ---
-  static final Tensor actions = Tensors.matrix(new Number[][] { //
+  static final Tensor ACTIONS = Tensors.matrix(new Number[][] { //
       { -1, 0 }, //
       { +1, 0 }, //
       { 0, -1 }, //
       { 0, +1 } //
   }).unmodifiable();
+  static final Tensor ACTIONS_TERMINAL = Array.zeros(1, 2).unmodifiable();
   // ---
   private final Tensor image;
-  final Function<Tensor, Scalar> function;
-  final Tensor states = Tensors.empty();
-  final Set<Tensor> startStates = new HashSet<>();
-  final Set<Tensor> endStates = new HashSet<>();
-  StateActionMap stateActionMap = StateActionMap.empty();
+  private final Function<Tensor, Scalar> function;
+  private final WireloopReward wireloopReward;
+  private final Tensor states = Tensors.empty();
+  private final Set<Tensor> startStates = new HashSet<>();
+  private final Set<Tensor> endStates = new HashSet<>();
+  // private final StateActionMap stateActionMap = StateActionMap.empty();
 
-  Wireloop(Tensor image, Function<Tensor, Scalar> function) {
+  Wireloop(Tensor image, Function<Tensor, Scalar> function, WireloopReward wireloopReward) {
     this.image = image;
     this.function = function;
+    this.wireloopReward = wireloopReward;
     System.out.println(Dimensions.of(image));
     List<Integer> dims = Dimensions.of(image);
     for (int x = 0; x < dims.get(0); ++x)
@@ -60,8 +62,6 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
           states.append(row);
         }
       }
-    for (Tensor state : states)
-      stateActionMap.put(state, _actions(state));
   }
 
   @Override
@@ -69,22 +69,11 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
     return states;
   }
 
-  private Tensor _actions(Tensor state) {
-    if (startStates.contains(state)) {
-      Tensor tensor = Tensors.empty();
-      for (Tensor action : actions) {
-        Tensor probe = state.add(action);
-        if (startStates.contains(probe) || endStates.contains(probe))
-          tensor.append(action);
-      }
-      return tensor;
-    }
-    return Array.zeros(1, 2);
-  }
-
   @Override
   public Tensor actions(Tensor state) {
-    return stateActionMap.actions(state);
+    if (isTerminal(state))
+      return ACTIONS_TERMINAL; // list of actions {...} with only single action = {0, 0}
+    return ACTIONS;
   }
 
   @Override
@@ -100,10 +89,11 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    if (startStates.contains(state) && endStates.contains(next)) {
+    if (isTerminal(state))
+      return RealScalar.ZERO;
+    if (startStates.contains(state) && endStates.contains(next))
       return function.apply(next);
-    }
-    return RealScalar.ZERO;
+    return wireloopReward.reward(state, action, next);
   }
 
   /**************************************************/

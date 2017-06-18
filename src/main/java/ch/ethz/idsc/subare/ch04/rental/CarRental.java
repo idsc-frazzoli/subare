@@ -12,8 +12,10 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.PDF;
 import ch.ethz.idsc.tensor.pdf.PoissonDistribution;
+import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -43,9 +45,16 @@ class CarRental implements StandardModel, SampleModel {
   private final PDF p2out = PDF.of(PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_SECOND_LOC)));
   private final PDF p2_in = PDF.of(PoissonDistribution.of(RealScalar.of(RETURN_SECOND_LOC)));
   // ---
+  private final Distribution d1out = PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_FIRST_LOC));
+  private final Distribution d1_in = PoissonDistribution.of(RealScalar.of(RETURN_FIRST_LOC));
+  private final Distribution d2out = PoissonDistribution.of(RealScalar.of(RENTAL_REQUEST_SECOND_LOC));
+  private final Distribution d2_in = PoissonDistribution.of(RealScalar.of(RETURN_SECOND_LOC));
+  // ---
   private final Clip CLIP;
+  final int maxCars;
 
   public CarRental(int maxCars) {
+    this.maxCars = maxCars;
     CLIP = Clip.function(0, maxCars);
     states = Flatten.of(Array.of(Tensors::vector, maxCars + 1, maxCars + 1), 1).unmodifiable();
   }
@@ -80,10 +89,10 @@ class CarRental implements StandardModel, SampleModel {
   @Override
   public Tensor move(Tensor state, Tensor action) {
     Tensor morning = night_move(state, action);
-    Scalar n1_in = p1_in.nextSample();
-    Scalar n1out = p1out.nextSample();
-    Scalar n2_in = p2_in.nextSample();
-    Scalar n2out = p2out.nextSample();
+    Scalar n1_in = RandomVariate.of(d1_in);
+    Scalar n1out = RandomVariate.of(d1out);
+    Scalar n2_in = RandomVariate.of(d2_in);
+    Scalar n2out = RandomVariate.of(d2out);
     return effective(morning, n1_in, n1out, n2_in, n2out);
   }
 
@@ -110,10 +119,10 @@ class CarRental implements StandardModel, SampleModel {
         System.out.println("warning: give up");
         return sum;
       }
-      n1_in = p1_in.nextSample();
-      n1out = p1out.nextSample();
-      n2_in = p2_in.nextSample();
-      n2out = p2out.nextSample();
+      n1_in = RandomVariate.of(d1_in);
+      n1out = RandomVariate.of(d1out);
+      n2_in = RandomVariate.of(d2_in);
+      n2out = RandomVariate.of(d2out);
       status = effective(morning, n1_in, n1out, n2_in, n2out).equals(next);
       ++attempts;
     }
@@ -156,10 +165,10 @@ class CarRental implements StandardModel, SampleModel {
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
         Scalar prob = Total.prod(Tensors.of( //
-            p1_in.p_equals(RealScalar.of(returns0)), // returns (added)
-            p1out.p_equals(RealScalar.of(request0)), // rental requests (subtracted)
-            p2_in.p_equals(RealScalar.of(returns1)), // returns (added)
-            p2out.p_equals(RealScalar.of(request1)) // rental requests (subtracted)
+            p1_in.at(RealScalar.of(returns0)), // returns (added)
+            p1out.at(RealScalar.of(request0)), // rental requests (subtracted)
+            p2_in.at(RealScalar.of(returns1)), // returns (added)
+            p2out.at(RealScalar.of(request1)) // rental requests (subtracted)
         )).Get();
         sum = sum.add(prob.multiply(RealScalar.of(request0 + request1).multiply(RENTAL_CREDIT)));
       }
@@ -193,10 +202,10 @@ class CarRental implements StandardModel, SampleModel {
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
         prob = prob.add(Total.prod(Tensors.of( //
-            p1_in.p_equals(RealScalar.of(returns0)), // returns (added)
-            p1out.p_equals(RealScalar.of(request0)), // rental requests (subtracted)
-            p2_in.p_equals(RealScalar.of(returns1)), // returns (added)
-            p2out.p_equals(RealScalar.of(request1)) // rental requests (subtracted)
+            p1_in.at(RealScalar.of(returns0)), // returns (added)
+            p1out.at(RealScalar.of(request0)), // rental requests (subtracted)
+            p2_in.at(RealScalar.of(returns1)), // returns (added)
+            p2out.at(RealScalar.of(request1)) // rental requests (subtracted)
         )));
       }
     }

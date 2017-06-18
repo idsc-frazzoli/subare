@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.ch06.windy;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
@@ -18,8 +18,8 @@ class VI_Windygrid {
     final Tensor values = vi.vs().values();
     System.out.println("iterations=" + vi.iterations());
     System.out.println(values);
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(windygrid, vi.vs());
-    EpisodeInterface episodeInterface = EpisodeKickoff.single(windygrid, policyInterface);
+    Policy policy = GreedyPolicy.bestEquiprobable(windygrid, vi.vs());
+    EpisodeInterface episodeInterface = EpisodeKickoff.single(windygrid, policy);
     while (episodeInterface.hasNext()) {
       StepInterface stepInterface = episodeInterface.step();
       System.out.println(stepInterface.prevState() + " + " + stepInterface.action() + " -> " + stepInterface.nextState());

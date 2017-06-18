@@ -1,10 +1,12 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.util.function.BinaryOperator;
+
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.red.Max;
@@ -22,27 +24,25 @@ public enum DiscreteUtils {
   }
 
   // ---
+  /** @param discreteModel
+   * @param qsa
+   * @param binaryOperator
+   * @return */
+  public static DiscreteVs reduce( //
+      DiscreteModel discreteModel, QsaInterface qsa, BinaryOperator<Scalar> binaryOperator) {
+    return DiscreteVs.build(discreteModel, //
+        Tensor.of(discreteModel.states().flatten(0) //
+            .map(state -> discreteModel.actions(state).flatten(0) //
+                .map(action -> qsa.value(state, action)) //
+                .reduce(binaryOperator).get()))); // <- assumes greedy policy
+  }
+
   /** compute state value function v(s) based on given action-value function q(s,a)
    * 
    * @param discreteModel
    * @param qsa
    * @return state values */
   public static DiscreteVs createVs(DiscreteModel discreteModel, QsaInterface qsa) {
-    return DiscreteVs.build(discreteModel, //
-        Tensor.of(discreteModel.states().flatten(0) //
-            .map(state -> discreteModel.actions(state).flatten(0) //
-                .map(action -> qsa.value(state, action)) //
-                .reduce(Max::of).get()))); // <- assumes greedy policy
-  }
-
-  /** @param discreteModel
-   * @param qsa
-   * @param state
-   * @return action with max value, or random action among the actions with max value */
-  public static Tensor fairBestAction(DiscreteModel discreteModel, QsaInterface qsa, Tensor state) {
-    Tensor actions = discreteModel.actions(state);
-    Tensor qvalues = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
-    FairArgMax fairArgMax = FairArgMax.of(qvalues);
-    return actions.get(fairArgMax.nextRandomIndex());
+    return reduce(discreteModel, qsa, Max::of);
   }
 }

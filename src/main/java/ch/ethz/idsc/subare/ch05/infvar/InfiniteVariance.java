@@ -1,15 +1,15 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.infvar;
 
-import java.util.Random;
-
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
+import ch.ethz.idsc.tensor.pdf.Distribution;
+import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
 /** Example 5.5 p.114: Infinite Variance */
@@ -19,7 +19,7 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface {
   static final Scalar PROB = RealScalar.of(.1);
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   private final Tensor actions = Tensors.of(BACK, END).unmodifiable(); // increment
-  private final Random random = new Random();
+  private final Distribution distribution = BernoulliDistribution.of(PROB);
 
   @Override
   public Tensor states() {
@@ -50,8 +50,7 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface {
       return state;
     if (action.equals(END))
       return END; // END is used as state
-    // TODO use bernoulli
-    if (Scalars.lessThan(RealScalar.of(random.nextDouble()), PROB))
+    if (RandomVariate.of(distribution).equals(RealScalar.ZERO)) // TODO check if this is the model
       return END; // END is used as state
     return BACK; // BACK is used as state
   }

@@ -2,17 +2,16 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch06.windy;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
@@ -23,12 +22,11 @@ class AVI_Windygrid {
     Windygrid windygrid = Windygrid.createFour();
     DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
     Export.of(UserHome.Pictures("windygrid_qsa_avi.png"), //
-        WindygridHelper.render(windygrid, TensorValuesUtils.rescaled(ref)));
+        WindygridHelper.render(windygrid, DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = new ActionValueIteration(windygrid);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250);
     for (int index = 0; index < 20; ++index) {
-      Scalar error = TensorValuesUtils.distance(avi.qsa(), ref);
-      System.out.println(index + " " + error.map(Digits._1));
+      Infoline.print(windygrid, index, ref, avi.qsa());
       gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, avi.qsa(), ref)));
       avi.step();
     }
@@ -37,7 +35,7 @@ class AVI_Windygrid {
     // TODO extract code below to other file
     DiscreteVs vs = DiscreteUtils.createVs(windygrid, ref);
     vs.print();
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(windygrid, ref);
-    Policies.print(policyInterface, windygrid.states());
+    Policy policy = GreedyPolicy.bestEquiprobable(windygrid, ref);
+    Policies.print(policy, windygrid.states());
   }
 }

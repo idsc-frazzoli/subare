@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.io.IOException;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
@@ -28,9 +28,9 @@ class Gambler_Ex4_04 {
     // System.out.println(values);
     Put.of(UserHome.file("ex403_values"), values);
     Put.of(UserHome.file("ex403_record"), record);
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gambler, vi.vs());
-    Policies.print(policyInterface, gambler.states());
-    Tensor greedy = Policies.flatten(policyInterface, gambler.states());
+    Policy policy = GreedyPolicy.bestEquiprobable(gambler, vi.vs());
+    Policies.print(policy, gambler.states());
+    Tensor greedy = Policies.flatten(policy, gambler.states());
     Put.of(UserHome.file("ex403_greedy"), greedy);
   }
 }

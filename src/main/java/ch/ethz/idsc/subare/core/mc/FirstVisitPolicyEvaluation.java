@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeVsEstimator;
@@ -18,19 +19,25 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.alg.Multinomial;
 
-/** see box on p.100 */
+/** estimates the state value function for a given policy
+ * see box on p.100
+ * 
+ * the policy is not visible to the method.
+ * 
+ * the policy is only used to generate episodes that are then digested by the method.
+ * 
+ * for the gambler problem. */
 public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
   private final DiscreteModel discreteModel;
-  private final Scalar gamma;
-  final DiscreteVs vs;
-  final Map<Tensor, Average> map = new HashMap<>(); // TODO no good!
+  private final DiscreteVs vs;
+  private final Map<Tensor, Average> map = new HashMap<>(); // TODO no good!
+  private final DiscountFunction discountFunction;
 
   public FirstVisitPolicyEvaluation(DiscreteModel discreteModel, DiscreteVs vs) {
     this.discreteModel = discreteModel;
-    this.gamma = discreteModel.gamma();
     this.vs = vs; // TODO write results directly in vs!
+    discountFunction = DiscountFunction.of(discreteModel.gamma());
   }
 
   @Override
@@ -46,13 +53,11 @@ public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
         first.put(state, trajectory.size());
       rewards.append(stepInterface.reward());
       trajectory.add(stepInterface);
-      // System.out.println(state+" "+stepInterface.action());
     }
-    // System.out.println("reached final");
     for (Entry<Tensor, Integer> entry : first.entrySet()) {
       Tensor state = entry.getKey();
       int fromIndex = entry.getValue();
-      gains.put(state, Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma));
+      gains.put(state, discountFunction.apply(rewards.extract(fromIndex, rewards.length())));
     }
     // TODO more efficient update of average
     for (StepInterface stepInterface : trajectory) {

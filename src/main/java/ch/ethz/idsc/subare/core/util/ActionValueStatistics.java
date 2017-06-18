@@ -45,7 +45,7 @@ public class ActionValueStatistics implements DequeDigest, EpisodeDigest, Action
 
   @Override
   public void digest(StepInterface stepInterface) {
-    Tensor key = DiscreteQsa.createKey(stepInterface);
+    Tensor key = StateAction.key(stepInterface);
     if (!transitionTrackers.containsKey(key))
       transitionTrackers.put(key, new TransitionTracker());
     transitionTrackers.get(key).digest(stepInterface);
@@ -100,7 +100,7 @@ public class ActionValueStatistics implements DequeDigest, EpisodeDigest, Action
     int den = 0;
     for (Tensor state : discreteModel.states())
       for (Tensor action : discreteModel.actions(state)) {
-        Tensor key = DiscreteQsa.createKey(state, action);
+        Tensor key = StateAction.key(state, action);
         num += transitionTrackers.containsKey(key) ? 1 : 0;
         ++den;
       }
@@ -110,19 +110,19 @@ public class ActionValueStatistics implements DequeDigest, EpisodeDigest, Action
   /**************************************************/
   @Override
   public Scalar expectedReward(Tensor state, Tensor action) {
-    Tensor key = DiscreteQsa.createKey(state, action);
+    Tensor key = StateAction.key(state, action);
     return transitionTrackers.get(key).expectedReward();
   }
 
   @Override
   public Tensor transitions(Tensor state, Tensor action) {
-    Tensor key = DiscreteQsa.createKey(state, action);
+    Tensor key = StateAction.key(state, action);
     return transitionTrackers.get(key).transitions();
   }
 
   @Override
   public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
-    Tensor key = DiscreteQsa.createKey(state, action);
+    Tensor key = StateAction.key(state, action);
     return transitionTrackers.get(key).transitionProbability(next);
   }
 }

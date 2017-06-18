@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.UCBAgent;
+import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;

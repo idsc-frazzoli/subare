@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.util.color.Colorscheme;
+import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -14,7 +14,30 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 public enum StateRasters {
   ;
-  // ---
+  /** @param discreteModel
+   * @param dimension
+   * @return */
+  public static StateRaster create(DiscreteModel discreteModel, Dimension dimension) {
+    return new StateRaster() {
+      @Override
+      public DiscreteModel discreteModel() {
+        return discreteModel;
+      }
+
+      @Override
+      public Dimension dimension() {
+        return dimension;
+      }
+
+      @Override
+      public Point point(Tensor state) {
+        return new Point( //
+            state.Get(0).number().intValue(), //
+            state.Get(1).number().intValue());
+      }
+    };
+  }
+
   private static final Interpolation COLORSCHEME = Colorscheme.classic();
   private static final Tensor BASE = Tensors.vector(255);
 

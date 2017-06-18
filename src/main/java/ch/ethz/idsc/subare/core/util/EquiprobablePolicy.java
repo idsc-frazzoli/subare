@@ -1,38 +1,34 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** the term "equiprobable" appears in Exercise 4.1 */
-public class EquiprobablePolicy implements PolicyInterface {
+public class EquiprobablePolicy implements Policy {
   private final DiscreteModel discreteModel;
-  private final Map<Tensor, Scalar> map = new ConcurrentHashMap<>();
+  private final Map<Tensor, Index> map = new HashMap<>();
 
   public EquiprobablePolicy(DiscreteModel discreteModel) {
     this.discreteModel = discreteModel;
   }
 
-  // TODO concurrent hash map may be unnecessary if policy would be synchronized -> test!
   @Override
-  public Scalar policy(Tensor state, Tensor action) {
-    if (!map.containsKey(state)) {
-      Tensor actions = discreteModel.actions(state);
-      Index actionIndex = Index.build(actions);
-      if (!actionIndex.containsKey(action))
-        throw new RuntimeException("action invalid " + action);
-      int den = actions.length();
-      if (den == 0)
-        throw new RuntimeException();
-      map.put(state, RationalScalar.of(1, den));
+  public synchronized Scalar probability(Tensor state, Tensor action) {
+    Index index = map.get(state);
+    if (index == null) {
+      index = Index.build(discreteModel.actions(state));
+      map.put(state, index);
     }
-    return map.get(state);
+    if (!index.containsKey(action)) // alternatively return 0
+      throw new RuntimeException("action invalid " + action);
+    return RationalScalar.of(1, index.size());
   }
 }

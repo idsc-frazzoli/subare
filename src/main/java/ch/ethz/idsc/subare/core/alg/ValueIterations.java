@@ -7,7 +7,6 @@ import ch.ethz.idsc.tensor.Scalar;
 
 public enum ValueIterations {
   ;
-  // ---
   public static DiscreteVs solve(StandardModel standardModel, Scalar threshold) {
     ValueIteration valueIteration = new ValueIteration(standardModel);
     valueIteration.untilBelow(threshold);

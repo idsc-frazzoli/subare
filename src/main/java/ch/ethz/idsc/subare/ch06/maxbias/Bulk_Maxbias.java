@@ -22,10 +22,11 @@ class Bulk_Maxbias {
     // ---
     SarsaType sarsaType = SarsaType.original;
     final Scalar errorcap = RealScalar.of(.5); // 15
+    final Scalar losscap = RealScalar.of(.5); // .5
     final Tensor epsilon = Subdivide.of(.2, .01, 100); // .2, .6
     int x = 0;
     LearningCompetition learningCompetition = new LearningCompetition( //
-        ref, "maxbias_" + sarsaType.name() + "_E" + epsilon.Get(0), epsilon, errorcap);
+        ref, "maxbias_" + sarsaType.name() + "_E" + epsilon.Get(0), epsilon, errorcap, losscap);
     learningCompetition.NSTEP = 1;
     learningCompetition.MAGNIFY = 5;
     learningCompetition.PERIOD = 100;

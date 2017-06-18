@@ -23,15 +23,16 @@ class Bulk_Gambler {
     // ---
     SarsaType sarsaType = SarsaType.original;
     final Scalar errorcap = RealScalar.of(15); // 15
-    final Tensor epsilon = Subdivide.of(.2, .01, 10); // .2, .6
+    final Scalar losscap = RealScalar.of(.25); // .5
+    final Tensor epsilon = Subdivide.of(.2, .01, 100); // .2, .6
     int x = 0;
     LearningCompetition learningCompetition = new LearningCompetition( //
-        ref, "gambler_" + sarsaType.name() + "_E" + epsilon.Get(0), epsilon, errorcap);
+        ref, "gambler_Q_" + sarsaType.name() + "_E" + epsilon.Get(0), epsilon, errorcap, losscap);
     learningCompetition.NSTEP = 1;
     learningCompetition.MAGNIFY = 5;
-    for (Tensor factor : Subdivide.of(.1, 3, 10)) { // .5 16
+    for (Tensor factor : Subdivide.of(.1, 10, 20)) { // .5 16
       int y = 0;
-      for (Tensor exponent : Subdivide.of(.51, 1, 10)) { // .51 2
+      for (Tensor exponent : Subdivide.of(.51, 1.5, 13)) { // .51 2
         DiscreteQsa qsa = DiscreteQsa.build(gambler);
         Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor.Get(), exponent.Get()));
         LearningContender learningContender = LearningContender.sarsa(gambler, sarsa);

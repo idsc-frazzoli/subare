@@ -22,11 +22,12 @@ class Bulk_Gridworld {
     // ---
     SarsaType sarsaType = SarsaType.expected;
     final Scalar errorcap = RealScalar.of(30); // 15
+    final Scalar losscap = RealScalar.of(.5); // .5
     final Tensor epsilon = Subdivide.of(.2, .01, 100); // .2, .6
     int x = 0;
     int NSTEP = 2;
     LearningCompetition learningCompetition = new LearningCompetition( //
-        ref, "gridworld_" + sarsaType.name() + "_E" + epsilon.Get(0) + "_N" + NSTEP, epsilon, errorcap);
+        ref, "gridworld_" + sarsaType.name() + "_E" + epsilon.Get(0) + "_N" + NSTEP, epsilon, errorcap, losscap);
     learningCompetition.NSTEP = NSTEP;
     learningCompetition.MAGNIFY = 5;
     learningCompetition.PERIOD = 100;

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
@@ -18,9 +18,9 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Extract;
 
 /** p.33 */
-public class EGreedyPolicy implements PolicyInterface {
+public class EGreedyPolicy implements Policy {
   // this simplicity may be the reason why q(s,a) is preferred over v(s)
-  public static PolicyInterface bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon) {
+  public static Policy bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon) {
     Map<Tensor, Index> map = new HashMap<>();
     Map<Tensor, Integer> sizes = new HashMap<>();
     for (Tensor state : discreteModel.states()) {
@@ -48,7 +48,7 @@ public class EGreedyPolicy implements PolicyInterface {
   }
 
   @Override
-  public Scalar policy(Tensor state, Tensor action) {
+  public Scalar probability(Tensor state, Tensor action) {
     Index index = map.get(state);
     final int optimalCount = index.size();
     if (sizes == null) // greedy

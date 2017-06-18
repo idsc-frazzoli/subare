@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.util.UserHome;
@@ -12,9 +12,9 @@ class IPE_Wireloop {
   public static void main(String[] args) throws Exception {
     String name = "wire5";
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x);
-    PolicyInterface policyInterface = new EquiprobablePolicy(wireloop);
+    Policy policy = new EquiprobablePolicy(wireloop);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
-        wireloop, policyInterface);
+        wireloop, policy);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_ipe_iteration.gif"), 200);
     for (int count = 0; count < 20; ++count) {
       System.out.println(count);

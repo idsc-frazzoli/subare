@@ -4,9 +4,9 @@ package ch.ethz.idsc.subare.ch05.racetrack;
 import java.io.File;
 
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.Index;
-import ch.ethz.idsc.subare.util.color.Colorscheme;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -17,7 +17,6 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum RacetrackHelper {
   ;
-  // ---
   static Racetrack create(String trackName, int maxSpeed) throws Exception {
     String path = "".getClass().getResource("/ch05/" + trackName + ".png").getPath();
     Tensor image = Import.of(new File(path)).unmodifiable();

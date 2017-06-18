@@ -2,12 +2,12 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch03.grid;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
-import ch.ethz.idsc.subare.util.Digits;
 import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** solving grid world
  * 
@@ -44,8 +44,8 @@ class VI_Gridworld {
     ValueIteration vi = new ValueIteration(gridworld, gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
-    vi.vs().print(Digits._1);
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
-    Policies.print(policyInterface, gridworld.states());
+    vi.vs().print(Round._1);
+    Policy policy = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
+    Policies.print(policy, gridworld.states());
   }
 }

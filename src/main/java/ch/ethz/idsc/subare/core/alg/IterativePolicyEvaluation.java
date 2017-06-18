@@ -2,12 +2,12 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.core.alg;
 
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.ActionValueAdapter;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.Tensor;
 public class IterativePolicyEvaluation {
   private final StandardModel standardModel;
   private final ActionValueAdapter actionValueAdapter;
-  private final PolicyInterface policyInterface;
+  private final Policy policy;
   private final Scalar gamma;
   private DiscreteVs vs_new;
   private DiscreteVs vs_old;
@@ -35,13 +35,13 @@ public class IterativePolicyEvaluation {
    * Jacobi style, i.e. updates take effect only in the next iteration
    * 
    * @param standardModel
-   * @param policyInterface
+   * @param policy
    * @return */
   public IterativePolicyEvaluation( //
-      StandardModel standardModel, PolicyInterface policyInterface) {
+      StandardModel standardModel, Policy policy) {
     this.standardModel = standardModel;
     actionValueAdapter = new ActionValueAdapter(standardModel);
-    this.policyInterface = policyInterface;
+    this.policy = policy;
     this.gamma = standardModel.gamma();
     vs_new = DiscreteVs.build(standardModel);
   }
@@ -58,7 +58,7 @@ public class IterativePolicyEvaluation {
     final long tic = System.nanoTime();
     while (true) {
       step();
-      Scalar delta = TensorValuesUtils.distance(vs_new, vs_old);
+      Scalar delta = DiscreteValueFunctions.distance(vs_new, vs_old);
       final long toc = System.nanoTime();
       if (3e9 < toc - tic)
         System.out.println(past + " -> " + delta + " " + alternate);
@@ -85,7 +85,7 @@ public class IterativePolicyEvaluation {
   // helper function
   private Scalar jacobiAdd(Tensor state, VsInterface gvalues) {
     return standardModel.actions(state).flatten(0) //
-        .map(action -> policyInterface.policy(state, action).multiply( //
+        .map(action -> policy.probability(state, action).multiply( //
             actionValueAdapter.qsa(state, action, gvalues))) //
         .reduce(Scalar::add).get();
   }

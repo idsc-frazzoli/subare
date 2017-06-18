@@ -3,23 +3,13 @@ package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.td.OriginalSarsa;
-import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/** stochastic approximation theory
- * p.35 equation (2.7)
+/** adaptive learning rate for state-action pairs
  * 
- * conditions required for convergence with probability 1:
- * sum_n alpha_n(s,a)^1 == infinity
- * sum_n alpha_n(s,a)^2 < infinity
- * 
- * Example:
- * in the Gambler problem the following values seem to work well
- * {@link OriginalSarsa} factor == 1.3, and exponent == 0.51
- * {@link QLearning} factor == 0.2, and exponent == 0.55 */
+ * see documentation of {@link DecayedLearningRate} */
 public class DefaultLearningRate extends DecayedLearningRate {
   /** @param factor positive, larger values result in larger alpha's
    * @param exponent greater than 1/2, larger values result in smaller alpha's
@@ -40,7 +30,7 @@ public class DefaultLearningRate extends DecayedLearningRate {
   }
 
   @Override
-  Tensor key(StepInterface stepInterface) {
-    return DiscreteQsa.createKey(stepInterface);
+  protected Tensor key(StepInterface stepInterface) {
+    return StateAction.key(stepInterface);
   }
 }

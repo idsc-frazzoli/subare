@@ -3,15 +3,15 @@
 package ch.ethz.idsc.subare.ch06.cliff;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.PolicyInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
-import ch.ethz.idsc.subare.core.util.TensorValuesUtils;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -27,7 +27,7 @@ class VI_Cliffwalk {
     vi.untilBelow(DecimalScalar.of(.0001));
     DiscreteVs vs = vi.vs();
     DiscreteVs vr = DiscreteUtils.createVs(cliffwalk, ref);
-    Scalar error = TensorValuesUtils.distance(vs, vr);
+    Scalar error = DiscreteValueFunctions.distance(vs, vr);
     System.out.println("error=" + error);
     Export.of(UserHome.Pictures("cliffwalk_qsa_vi.png"), CliffwalkHelper.render(cliffwalk, vi.vs()));
     // GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(cliffWalk, values);
@@ -37,8 +37,8 @@ class VI_Cliffwalk {
     // Tensor state = statesIndex.get(stateI);
     // System.out.println(state + " " + values.get(stateI).map(ROUND));
     // }
-    PolicyInterface policyInterface = GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
-    EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policyInterface);
+    Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
+    EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();
