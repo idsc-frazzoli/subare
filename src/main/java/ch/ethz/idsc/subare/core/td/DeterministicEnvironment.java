@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.core.util;
+package ch.ethz.idsc.subare.core.td;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,12 +7,13 @@ import java.util.Random;
 
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 /** utility class to implement "Model" for deterministic environments
  * in Tabular Dyna-Q p.172 */
-public class DeterministicEnvironment implements StepDigest {
+class DeterministicEnvironment implements StepDigest {
   private static final Random RANDOM = new Random();
   // ---
   private final Map<Tensor, StepInterface> map = new HashMap<>();
@@ -20,6 +21,10 @@ public class DeterministicEnvironment implements StepDigest {
 
   public StepInterface getRandomStep() {
     return map.get(keys.get(RANDOM.nextInt(size())));
+  }
+
+  public StepInterface get(Tensor state, Tensor action) {
+    return map.get(StateAction.key(state, action));
   }
 
   @Override

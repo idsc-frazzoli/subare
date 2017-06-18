@@ -32,6 +32,7 @@ List of algorithms:
 * n-step Sarsa, n-step Expected Sarsa, n-step Q-Learning (from p.157)
 * Random-sample one-step tabular Q-planning (parallel, from p.169)
 * Tabular Dyna-Q (from p.172)
+* Prioritized Sweeping (from p.178)
 
 ## Examples from the book
 

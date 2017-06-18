@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.core.td;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.util.DeterministicEnvironment;
 
 /** Tabular Dyna-Q
  * 

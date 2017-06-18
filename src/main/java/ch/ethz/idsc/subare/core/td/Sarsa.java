@@ -16,6 +16,7 @@ import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 
 /** base class for implementations of
  * 
@@ -63,6 +64,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
    * @return value from evaluations of Qsa2 via actions provided by qsa (== Qsa1) */
   protected abstract Scalar crossEvaluate(Tensor state, QsaInterface Qsa2);
 
+  // private Scalar shift;
   @Override
   public void digest(Deque<StepInterface> deque) {
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
@@ -82,6 +84,16 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     // since qsa was update for the state-action pair
     // the learning rate interface as well as the usb policy are notified about the state-action pair
     learningRate.digest(stepInterface);
+  }
+
+  /** @param stepInterface
+   * @return non-negative priority rating */
+  Scalar priority(StepInterface stepInterface) {
+    Tensor rewards = Tensors.of(stepInterface.reward(), evaluate(stepInterface.nextState()));
+    Tensor state0 = stepInterface.prevState();
+    Tensor action = stepInterface.action();
+    Scalar value0 = qsa.value(state0, action);
+    return discountFunction.apply(rewards).subtract(value0).abs();
   }
 
   @Override
