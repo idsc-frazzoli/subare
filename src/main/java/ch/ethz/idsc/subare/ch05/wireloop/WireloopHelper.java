@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.util.List;
 import java.util.function.Function;
@@ -12,6 +13,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.Loss;
+import ch.ethz.idsc.subare.core.util.StateRaster;
 import ch.ethz.idsc.subare.core.util.StateRasters;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.RobustArgMax;
@@ -27,6 +29,11 @@ import ch.ethz.idsc.tensor.sca.Clip;
 
 enum WireloopHelper {
   ;
+  public static StateRaster createRaster(Wireloop wireloop) {
+    List<Integer> list = Dimensions.of(wireloop.image());
+    return StateRasters.create(wireloop, new Dimension(list.get(0), list.get(1)));
+  }
+
   private static final int MAGNIFY = 2; // 3
 
   static Wireloop create(String trackName, Function<Tensor, Scalar> function, WireloopReward wireloopReward) throws Exception {
@@ -78,7 +85,7 @@ enum WireloopHelper {
 
   public static Tensor render_asIs(Wireloop wireloop, DiscreteVs vs) {
     return ImageResize.of(StateRasters.render( //
-        new WireloopRaster(wireloop), vs), MAGNIFY);
+        createRaster(wireloop), vs), MAGNIFY);
   }
 
   /***************************************************/

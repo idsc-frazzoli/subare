@@ -21,7 +21,7 @@ enum WindygridHelper {
     return ActionValueIterations.solve(windygrid, DecimalScalar.of(.0001));
   }
 
-  private static final int MAGNIFY = 6;
+  private static final int MAGNIFY = 5;
 
   static Tensor render(Windygrid windygrid, DiscreteQsa scaled) {
     return ImageResize.of(StateActionRasters.render(new WindygridRaster(windygrid), scaled), MAGNIFY);

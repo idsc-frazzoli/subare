@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 /** Example 4.1, p.82 */
 class RSTQP_Wireloop {
   public static void main(String[] args) throws Exception {
-    String name = "wire5";
+    String name = "wire7";
     WireloopReward wireloopReward = WireloopReward.freeSteps();
     wireloopReward = WireloopReward.constantCost();
     Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x, wireloopReward);
@@ -23,7 +23,7 @@ class RSTQP_Wireloop {
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         wireloop, qsa, ConstantLearningRate.of(RealScalar.ONE));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "L_qsa_rstqp.gif"), 250);
-    int EPISODES = 20;
+    int EPISODES = 30;
     for (int index = 0; index < EPISODES; ++index) {
       Infoline.print(wireloop, index, ref, qsa);
       TabularSteps.batch(wireloop, wireloop, rstqp);

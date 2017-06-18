@@ -17,6 +17,6 @@ interface WireloopReward extends RewardInterface {
    * 
    * @return constant zero */
   static WireloopReward constantCost() {
-    return (s, a, n) -> RealScalar.of(-1.2);
+    return (s, a, n) -> RealScalar.of(-1.4); // -1.2
   }
 }

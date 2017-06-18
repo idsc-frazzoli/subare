@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 
 public class DynamazeTest extends TestCase {
   public void testSimple() throws Exception {
-    Dynamaze dynamaze = DynamazeHelper.create("maze2");
+    Dynamaze dynamaze = DynamazeHelper.original("maze2");
     assertEquals(dynamaze.startStates().length(), 1);
   }
 }
