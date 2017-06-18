@@ -31,6 +31,7 @@ List of algorithms:
 * n-step Temporal Difference for estimating V(s) (from p.154)
 * n-step Sarsa, n-step Expected Sarsa, n-step Q-Learning (from p.157)
 * Random-sample one-step tabular Q-planning (parallel, from p.169)
+* Tabular Dyna-Q (from p.172)
 
 ## Examples from the book
 

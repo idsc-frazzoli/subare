@@ -13,9 +13,11 @@ import ch.ethz.idsc.tensor.red.Total;
 /** provides different implementation for adding the discounted rewards:
  * in case gamma == 1, the rewards are simply added, else the horner scheme is used */
 public interface DiscountFunction extends Function<Tensor, Scalar>, Serializable {
-  public static DiscountFunction of(Scalar gamma) {
+  static final DiscountFunction TOTAL = rewards -> Total.of(rewards).Get();
+
+  static DiscountFunction of(Scalar gamma) {
     if (gamma.equals(RealScalar.ONE))
-      return rewards -> Total.of(rewards).Get();
+      return TOTAL;
     return rewards -> Multinomial.horner(rewards, gamma);
   }
 }

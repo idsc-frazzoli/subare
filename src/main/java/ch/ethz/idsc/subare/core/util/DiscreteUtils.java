@@ -45,10 +45,4 @@ public enum DiscreteUtils {
   public static DiscreteVs createVs(DiscreteModel discreteModel, QsaInterface qsa) {
     return reduce(discreteModel, qsa, Max::of);
   }
-  // public static Tensor fairBestAction(DiscreteModel discreteModel, QsaInterface qsa, Tensor state) {
-  // Tensor actions = discreteModel.actions(state);
-  // Tensor qvalues = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
-  // FairArgMax fairArgMax = FairArgMax.of(qvalues);
-  // return actions.get(fairArgMax.nextRandomIndex());
-  // }
 }
