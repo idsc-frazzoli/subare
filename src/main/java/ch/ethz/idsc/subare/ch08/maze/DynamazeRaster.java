@@ -1,28 +1,31 @@
 // code by jph
-package ch.ethz.idsc.subare.ch04.rental;
+package ch.ethz.idsc.subare.ch08.maze;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.List;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.StateRaster;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.alg.Dimensions;
 
-class CarRentalRaster implements StateRaster {
-  private final CarRental carRental;
+public class DynamazeRaster implements StateRaster {
+  private final Dynamaze dynamaze;
 
-  public CarRentalRaster(CarRental carRental) {
-    this.carRental = carRental;
+  public DynamazeRaster(Dynamaze dynamaze) {
+    this.dynamaze = dynamaze;
   }
 
   @Override
   public DiscreteModel discreteModel() {
-    return carRental;
+    return dynamaze;
   }
 
   @Override
   public Dimension dimension() {
-    return new Dimension(carRental.maxCars + 1, carRental.maxCars + 1);
+    List<Integer> dimensions = Dimensions.of(dynamaze.image());
+    return new Dimension(dimensions.get(0), dimensions.get(1));
   }
 
   @Override

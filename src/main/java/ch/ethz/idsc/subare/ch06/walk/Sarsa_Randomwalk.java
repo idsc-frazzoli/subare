@@ -23,12 +23,12 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {5, 0} 0.79
  * {6, 0} 0 */
 class Sarsa_Randomwalk {
-  static void handle(SarsaType type) {
-    System.out.println(type);
+  static void handle(SarsaType sarsaType) {
+    System.out.println(sarsaType);
     Randomwalk randomwalk = new Randomwalk();
     DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-    Sarsa sarsa = type.supply(randomwalk, qsa, learningRate);
+    Sarsa sarsa = sarsaType.supply(randomwalk, qsa, learningRate);
     Policy policy = new EquiprobablePolicy(randomwalk);
     sarsa.setPolicy(policy);
     for (int count = 0; count < 1000; ++count)

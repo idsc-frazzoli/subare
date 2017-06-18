@@ -9,13 +9,12 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
-import ch.ethz.idsc.tensor.sca.Round;
 
 /** action value iteration for cliff walk */
 class AVI_Windygrid {
@@ -27,8 +26,7 @@ class AVI_Windygrid {
     ActionValueIteration avi = new ActionValueIteration(windygrid);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250);
     for (int index = 0; index < 20; ++index) {
-      Scalar error = DiscreteValueFunctions.distance(avi.qsa(), ref);
-      System.out.println(index + " " + error.map(Round._1));
+      Infoline.print(windygrid, index, ref, avi.qsa());
       gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, avi.qsa(), ref)));
       avi.step();
     }

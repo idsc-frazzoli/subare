@@ -18,14 +18,14 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** StepDigest qsa methods applied to cliff walk */
 class Sarsa_Cliffwalk {
-  static void handle(SarsaType type, int EPISODES) throws Exception {
-    System.out.println(type);
+  static void handle(SarsaType sarsaType, int EPISODES) throws Exception {
+    System.out.println(sarsaType);
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
     Tensor epsilon = Subdivide.of(.5, .01, EPISODES);
-    Sarsa sarsa = type.supply(cliffwalk, qsa, DefaultLearningRate.of(5, 0.51));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_" + type + ".gif"), 200);
+    Sarsa sarsa = sarsaType.supply(cliffwalk, qsa, DefaultLearningRate.of(5, 0.51));
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_" + sarsaType + ".gif"), 200);
     for (int index = 0; index < EPISODES; ++index) {
       if (EPISODES - 10 < index)
         Infoline.print(cliffwalk, index, ref, qsa);

@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.StateRaster;
 import ch.ethz.idsc.tensor.Tensor;
 
-public class CliffwalkStateRaster implements StateRaster {
+class CliffwalkStateRaster implements StateRaster {
   private final Cliffwalk cliffwalk;
 
   public CliffwalkStateRaster(Cliffwalk cliffwalk) {
@@ -27,8 +27,8 @@ public class CliffwalkStateRaster implements StateRaster {
 
   @Override
   public Point point(Tensor state) {
-    int sx = state.Get(0).number().intValue();
-    int sy = state.Get(1).number().intValue();
-    return new Point(sx, sy);
+    return new Point( //
+        state.Get(0).number().intValue(), //
+        state.Get(1).number().intValue());
   }
 }

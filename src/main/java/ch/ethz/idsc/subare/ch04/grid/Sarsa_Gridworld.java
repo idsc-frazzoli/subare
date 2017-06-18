@@ -29,14 +29,14 @@ import ch.ethz.idsc.tensor.io.Put;
  * 
  * covers Example 4.1, p.82 */
 class Sarsa_Gridworld {
-  static void handle(SarsaType type, int n) throws Exception {
-    System.out.println(type);
+  static void handle(SarsaType sarsaType, int n) throws Exception {
+    System.out.println(sarsaType);
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     int EPISODES = 40;
     Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + type + "" + n + ".gif"), 150);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + sarsaType + "" + n + ".gif"), 150);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
@@ -51,7 +51,7 @@ class Sarsa_Gridworld {
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa);
-    Put.of(UserHome.file("gridworld_" + type), vs.values());
+    Put.of(UserHome.file("gridworld_" + sarsaType), vs.values());
     Policy policy = GreedyPolicy.bestEquiprobable(gridworld, qsa);
     EpisodeInterface ei = EpisodeKickoff.single(gridworld, policy);
     while (ei.hasNext()) {

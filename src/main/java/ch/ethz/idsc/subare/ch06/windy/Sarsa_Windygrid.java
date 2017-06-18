@@ -19,15 +19,15 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 class Sarsa_Windygrid {
-  static void handle(SarsaType type, int EPISODES) throws Exception {
-    System.out.println(type);
+  static void handle(SarsaType sarsaType, int EPISODES) throws Exception {
+    System.out.println(sarsaType);
     Windygrid windygrid = Windygrid.createFour();
     final DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     Tensor epsilon = Subdivide.of(.2, .01, EPISODES);
     LearningRate learningRate = DefaultLearningRate.of(3, 0.51);
-    Sarsa sarsa = type.supply(windygrid, qsa, learningRate);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_" + type + ".gif"), 100);
+    Sarsa sarsa = sarsaType.supply(windygrid, qsa, learningRate);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100);
     for (int index = 0; index < EPISODES; ++index) {
       Infoline.print(windygrid, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, epsilon.Get(index));
