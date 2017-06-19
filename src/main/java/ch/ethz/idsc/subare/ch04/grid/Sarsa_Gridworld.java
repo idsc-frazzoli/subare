@@ -44,7 +44,7 @@ class Sarsa_Gridworld {
       Infoline.print(gridworld, index, ref, qsa);
       Scalar explore = epsilon.Get(index);
       Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
-      sarsa.setPolicy(policy);
+      sarsa.supplyPolicy(() -> policy);
       ExploringStarts.batch(gridworld, policy, nstep, sarsa);
     }
     gsw.close();

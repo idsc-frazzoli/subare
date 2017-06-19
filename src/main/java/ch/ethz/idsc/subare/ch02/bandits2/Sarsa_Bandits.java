@@ -31,7 +31,7 @@ class Sarsa_Bandits {
       Scalar error1 = Loss.accumulation(bandits, ref, qsa);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + error1.map(Round._3));
       Policy policy = EGreedyPolicy.bestEquiprobable(bandits, qsa, epsilon.Get(index));
-      sarsa.setPolicy(policy);
+      sarsa.supplyPolicy(() -> policy);
       ExploringStarts.batch(bandits, policy, 1, sarsa);
     }
     System.out.println("---");

@@ -40,7 +40,7 @@ class GridworldRaster implements StateActionRaster {
 
   @Override
   public Scalar scaleLoss() {
-    return RealScalar.of(2);
+    return RealScalar.of(1);
   }
 
   @Override
@@ -55,6 +55,6 @@ class GridworldRaster implements StateActionRaster {
 
   @Override
   public int magify() {
-    return 7;
+    return 6;
   }
 }

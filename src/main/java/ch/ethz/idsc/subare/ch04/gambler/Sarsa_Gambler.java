@@ -42,7 +42,7 @@ class Sarsa_Gambler {
     for (int index = 0; index < EPISODES; ++index) {
       Infoline.print(gambler, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
-      sarsa.setPolicy(policy);
+      sarsa.supplyPolicy(() -> policy);
       ExploringStarts.batch(gambler, policy, 1, sarsa, sac);
       // ---
       gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref)));

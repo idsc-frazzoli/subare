@@ -32,7 +32,7 @@ class Sarsa_Wireloop {
     for (int index = 0; index < EPISODES; ++index) {
       Infoline.print(wireloop, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
-      sarsa.setPolicy(policy);
+      sarsa.supplyPolicy(() -> policy);
       ExploringStarts.batch(wireloop, policy, nstep, sarsa);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ref, qsa)));
     }

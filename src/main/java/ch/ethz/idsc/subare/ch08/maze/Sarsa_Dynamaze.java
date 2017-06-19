@@ -33,7 +33,7 @@ class Sarsa_Dynamaze {
       // if (EPISODES - 10 < index)
       Infoline.print(dynamaze, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(index));
-      sarsa.setPolicy(policy);
+      sarsa.supplyPolicy(() -> policy);
       // for (int count = 0; count < 5; ++count)
       ExploringStarts.batch(dynamaze, policy, nstep, sarsa);
       gsw.append(ImageFormat.of(DynamazeHelper.render(dynamaze, qsa)));

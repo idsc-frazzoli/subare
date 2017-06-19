@@ -30,7 +30,7 @@ class Sarsa_Cliffwalk {
       if (EPISODES - 10 < index)
         Infoline.print(cliffwalk, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, epsilon.Get(index));
-      sarsa.setPolicy(policy);
+      sarsa.supplyPolicy(() -> policy);
       ExploringStarts.batch(cliffwalk, policy, sarsa);
       gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, qsa, ref)));
     }

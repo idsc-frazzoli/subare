@@ -83,7 +83,7 @@ public enum ExploringStarts {
       while (episodeInterface.hasNext()) {
         final StepInterface stepInterface = episodeInterface.step();
         deque.add(stepInterface);
-        if (deque.size() == nstep) {
+        if (deque.size() == nstep) { // never true, if nstep == 0
           list.stream().parallel() //
               .forEach(_dequeDigest -> _dequeDigest.digest(deque));
           deque.poll();

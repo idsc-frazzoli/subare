@@ -2,9 +2,11 @@
 package ch.ethz.idsc.subare.core.td;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.tensor.Scalar;
@@ -33,6 +35,11 @@ public class OriginalSarsa extends Sarsa {
    * @param learningRate */
   public OriginalSarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     super(discreteModel, qsa, learningRate);
+  }
+
+  @Override
+  public void supplyPolicy(Supplier<Policy> supplier) {
+    policy = supplier.get();
   }
 
   @Override

@@ -28,7 +28,7 @@ public class LearningContender {
     Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa, epsilon);
     if (dequeDigest instanceof Sarsa) {
       Sarsa sarsa = (Sarsa) dequeDigest;
-      sarsa.setPolicy(policy);
+      sarsa.supplyPolicy(() -> policy);
     }
     ExploringStarts.batch(monteCarloInterface, policy, nstep, dequeDigest);
   }

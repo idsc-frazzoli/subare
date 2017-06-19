@@ -33,7 +33,7 @@ public class PrioritizedSweeping implements StepDigest {
   }
 
   public void setPolicy(Policy policy) {
-    sarsa.setPolicy(policy);
+    sarsa.supplyPolicy(() -> policy);
   }
 
   private void consider(StepInterface stepInterface) {

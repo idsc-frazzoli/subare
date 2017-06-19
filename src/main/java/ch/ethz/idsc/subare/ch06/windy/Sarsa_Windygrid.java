@@ -31,7 +31,7 @@ class Sarsa_Windygrid {
     for (int index = 0; index < EPISODES; ++index) {
       Infoline.print(windygrid, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, epsilon.Get(index));
-      sarsa.setPolicy(policy);
+      sarsa.supplyPolicy(() -> policy);
       for (int count = 0; count < 10; ++count) // because there is only 1 start state
         ExploringStarts.batch(windygrid, policy, sarsa);
       gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, qsa, ref)));

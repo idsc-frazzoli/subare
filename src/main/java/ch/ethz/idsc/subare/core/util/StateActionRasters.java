@@ -69,12 +69,12 @@ public enum StateActionRasters {
   }
 
   // only called in ch04.gridworld
+  // TODO should return type Tensor
   public static BufferedImage qsaLossRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor image1 = render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
-    Scalar scale = stateActionRaster.scaleLoss();
     DiscreteQsa loss = Loss.asQsa(stateActionRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().flatten(0) //
-        .map(tensor -> tensor.multiply(scale)) //
+        .map(tensor -> tensor.multiply(stateActionRaster.scaleLoss())) //
         .map(Clip.UNIT::of));
     Tensor image2 = render(stateActionRaster, loss);
     Tensor image3 = render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
