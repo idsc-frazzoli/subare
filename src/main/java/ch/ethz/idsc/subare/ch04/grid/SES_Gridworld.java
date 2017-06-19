@@ -34,7 +34,7 @@ class SES_Gridworld {
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
     ExploringStartsStream exploringStartsStream = new ExploringStartsStream(gridworld, nstep, sarsa) {
       @Override
-      public Policy providePolicy() {
+      public Policy batchPolicy() {
         Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(batchIndex()));
         sarsa.supplyPolicy(() -> policy);
         return policy;

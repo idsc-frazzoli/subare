@@ -27,10 +27,10 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 /** Sarsa applied to gambler */
 class Sarsa_Gambler {
   static void train(Gambler gambler, SarsaType sarsaType, //
-      int EPISODES, Scalar factor, Scalar exponent) throws Exception {
+      int batches, Scalar factor, Scalar exponent) throws Exception {
     System.out.println(sarsaType);
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler); // true q-function, for error measurement
-    Tensor epsilon = Subdivide.of(.2, .01, EPISODES);
+    Tensor epsilon = Subdivide.of(.2, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(gambler); // q-function for training, initialized to 0
     // ---
     StateActionCounter sac = new StateActionCounter(gambler);
@@ -39,7 +39,7 @@ class Sarsa_Gambler {
     // ---
     final Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor, exponent));
     // ---
-    for (int index = 0; index < EPISODES; ++index) {
+    for (int index = 0; index < batches; ++index) {
       Infoline.print(gambler, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, epsilon.Get(index));
       sarsa.supplyPolicy(() -> policy);

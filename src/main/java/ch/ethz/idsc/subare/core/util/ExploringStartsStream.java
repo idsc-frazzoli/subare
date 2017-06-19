@@ -12,34 +12,30 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 
-// TODO EXPERIMENTAL API not finalized
 public abstract class ExploringStartsStream {
   private final MonteCarloInterface monteCarloInterface;
   private final int nstep;
   private final List<DequeDigest> list;
+  private int batchIndex = -1; // incremented from constructor
   private ExploringStartsBatch exploringStartBatch;
-  private int batchIndex = 0;
+  private Policy policy;
+  private int episodeIndex = 0;
 
   public ExploringStartsStream( //
       MonteCarloInterface monteCarloInterface, int nstep, DequeDigest... dequeDigest) {
     this.monteCarloInterface = monteCarloInterface;
     this.nstep = nstep;
     list = Arrays.asList(dequeDigest);
-    exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
-  }
-
-  public boolean hasNextEpisode() {
-    // TODO possibly use function in application in while loop
-    return false;
   }
 
   public void nextEpisode() {
-    if (!exploringStartBatch.hasNext()) {
+    if (exploringStartBatch == null || !exploringStartBatch.hasNext()) {
+      ++batchIndex; // holds subsequent batch id that won't change during the next episodes
       exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
-      ++batchIndex;
+      policy = batchPolicy();
     }
     // ---
-    EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(providePolicy());
+    EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policy);
     Deque<StepInterface> deque = new LinkedList<>();
     while (episodeInterface.hasNext()) {
       final StepInterface stepInterface = episodeInterface.step();
@@ -55,12 +51,16 @@ public abstract class ExploringStartsStream {
           .forEach(_dequeDigest -> _dequeDigest.digest(deque));
       deque.poll();
     }
-    // ++episodes;
+    ++episodeIndex;
   }
 
-  public abstract Policy providePolicy();
+  public abstract Policy batchPolicy();
 
   public int batchIndex() {
     return batchIndex;
+  }
+
+  public int episodeIndex() {
+    return episodeIndex;
   }
 }
