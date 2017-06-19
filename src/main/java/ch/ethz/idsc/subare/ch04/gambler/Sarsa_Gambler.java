@@ -14,6 +14,7 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.StateActionCounter;
+import ch.ethz.idsc.subare.core.util.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -44,7 +45,7 @@ class Sarsa_Gambler {
       sarsa.setPolicy(policy);
       ExploringStarts.batch(gambler, policy, 1, sarsa, sac);
       // ---
-      gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
+      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref)));
       gsc.append(ImageFormat.of(GamblerHelper.counts( //
           gambler, sac.qsa(StateActionCounter.LOGARITHMIC))));
     }

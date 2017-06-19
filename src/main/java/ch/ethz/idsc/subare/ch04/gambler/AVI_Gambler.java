@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.Put;
@@ -13,7 +14,8 @@ class AVI_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    Export.of(UserHome.Pictures("gambler_qsa_avi.png"), GamblerHelper.qsaPolicyRef(gambler, ref, ref));
+    Export.of(UserHome.Pictures("gambler_qsa_avi.png"), //
+        StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), ref, ref));
     Export.of(UserHome.Pictures("gambler_qsa_avi2.png"), GamblerHelper.qsaPolicy(gambler, ref));
     DiscreteVs dvs = DiscreteUtils.createVs(gambler, ref);
     Put.of(UserHome.file("ex403_qsa_values"), dvs.values());

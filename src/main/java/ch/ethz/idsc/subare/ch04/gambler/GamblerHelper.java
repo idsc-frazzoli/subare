@@ -43,8 +43,4 @@ enum GamblerHelper {
   public static Tensor qsaPolicy(Gambler gambler, DiscreteQsa qsa) {
     return ImageResize.of(StateActionRasters.qsaPolicy(new GamblerRaster(gambler), qsa), MAGNIFY);
   }
-
-  public static Tensor qsaPolicyRef(Gambler gambler, DiscreteQsa qsa, DiscreteQsa ref) {
-    return ImageResize.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref), MAGNIFY);
-  }
 }

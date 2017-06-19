@@ -15,12 +15,12 @@ import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** Double Sarsa for gridworld */
@@ -46,7 +46,7 @@ class Double_Gridworld {
       Policy policy2 = EGreedyPolicy.bestEquiprobable(gridworld, qsa2, explore);
       doubleSarsa.setPolicy(policy1, policy2);
       ExploringStarts.batch(gridworld, doubleSarsa.getEGreedy(explore), nstep, doubleSarsa);
-      gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa1, ref)));
+      gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
     }
     gsw.close();
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

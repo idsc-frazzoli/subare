@@ -3,19 +3,22 @@ package ch.ethz.idsc.subare.core.util;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
+import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.opt.Interpolation;
+import ch.ethz.idsc.tensor.sca.Clip;
 
 public enum StateActionRasters {
   ;
@@ -57,18 +60,28 @@ public enum StateActionRasters {
     Tensor image1 = render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
     Policy policy = GreedyPolicy.bestEquiprobable(stateActionRaster.discreteModel(), qsa);
     Tensor image2 = render(stateActionRaster, policy);
-    // TODO magic const
-    Tensor image3 = render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, RealScalar.of(15)));
+    Scalar qdelta = stateActionRaster.scaleQdelta();
+    Tensor image3 = render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta));
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 3);
-    return Join.of(0, image1, Array.zeros(list), image2, Array.zeros(list), image3);
+    return ImageResize.of( //
+        Join.of(0, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magify());
   }
 
-  public static Tensor qsaRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref, int dim) {
+  // only called in ch04.gridworld
+  public static BufferedImage qsaLossRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor image1 = render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
-    Tensor image2 = render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
+    Scalar scale = stateActionRaster.scaleLoss();
+    DiscreteQsa loss = Loss.asQsa(stateActionRaster.discreteModel(), ref, qsa);
+    loss = loss.create(loss.values().flatten(0) //
+        .map(tensor -> tensor.multiply(scale)) //
+        .map(Clip.UNIT::of));
+    Tensor image2 = render(stateActionRaster, loss);
+    Tensor image3 = render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(image1);
+    int dim = stateActionRaster.joinAlongDimension();
     list.set(dim, 1);
-    return Join.of(dim, image1, Array.zeros(list), image2);
+    return ImageFormat.of(ImageResize.of( //
+        Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magify()));
   }
 }

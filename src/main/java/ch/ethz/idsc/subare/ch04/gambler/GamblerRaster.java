@@ -6,6 +6,8 @@ import java.awt.Point;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.StateActionRaster;
+import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 class GamblerRaster implements StateActionRaster {
@@ -33,5 +35,25 @@ class GamblerRaster implements StateActionRaster {
     return new Point( //
         state.Get().number().intValue(), //
         offset - action.Get().number().intValue());
+  }
+
+  @Override
+  public Scalar scaleQdelta() {
+    return RealScalar.of(15);
+  }
+
+  @Override
+  public Scalar scaleLoss() {
+    return RealScalar.of(100);
+  }
+
+  @Override
+  public int joinAlongDimension() {
+    return 0;
+  }
+
+  @Override
+  public int magify() {
+    return 2;
   }
 }

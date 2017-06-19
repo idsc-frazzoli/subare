@@ -58,9 +58,7 @@ enum WireloopHelper {
     DiscreteVs vs = DiscreteVs.build(wireloop);
     for (Tensor state : wireloop.startStates()) {
       Tensor tensor = Tensor.of(wireloop.actions(state).flatten(0).map(action -> qsa.value(state, action)));
-      int index;
-      // index = ArgMax.of(tensor);
-      index = RobustArgMax.of(tensor);
+      int index = RobustArgMax.of(tensor);
       vs.assign(state, RealScalar.of(index * 0.25 + 0.185));
     }
     return render_asIs(wireloop, vs);
@@ -70,7 +68,7 @@ enum WireloopHelper {
     Tensor im1 = render(wireloop, DiscreteUtils.createVs(wireloop, qsa));
     DiscreteVs loss = Loss.perState(wireloop, ref, qsa);
     loss = loss.create(loss.values().flatten(0) //
-        .map(tensor -> tensor.multiply(RealScalar.of(100))) //
+        .map(tensor -> tensor.multiply(RealScalar.of(100))) // TODO magic const
         .map(Clip.UNIT::of));
     Tensor im2 = render_asIs(wireloop, loss);
     Tensor im3 = renderActions(wireloop, qsa);

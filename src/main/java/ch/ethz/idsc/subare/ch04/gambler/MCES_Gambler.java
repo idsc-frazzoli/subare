@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -27,7 +28,7 @@ class MCES_Gambler {
       Policy policy = //
           EGreedyPolicy.bestEquiprobable(gambler, mces.qsa(), RealScalar.of(.1));
       ExploringStarts.batch(gambler, policy, mces);
-      gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, mces.qsa(), ref)));
+      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), mces.qsa(), ref)));
     }
     gsw.close();
     DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, mces.qsa());

@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.StateActionCounter;
+import ch.ethz.idsc.subare.core.util.StateActionRasters;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -23,10 +24,8 @@ class RSTQP_Gambler {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
-        gambler, qsa, //
-        DefaultLearningRate.of(3, .51) //
-    );
+    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(gambler, qsa, //
+        DefaultLearningRate.of(10, 1.11));
     ActionValueStatistics avs = new ActionValueStatistics(gambler);
     StateActionCounter sac = new StateActionCounter(gambler);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_rstqp.gif"), 100);
@@ -35,7 +34,7 @@ class RSTQP_Gambler {
     for (int index = 0; index < EPISODES; ++index) {
       Infoline.print(gambler, index, ref, qsa);
       TabularSteps.batch(gambler, gambler, rstqp, avs, sac);
-      gsw.append(ImageFormat.of(GamblerHelper.qsaPolicyRef(gambler, qsa, ref)));
+      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref)));
       gsc.append(ImageFormat.of(GamblerHelper.counts( //
           gambler, sac.qsa(StateActionCounter.LOGARITHMIC))));
     }
@@ -47,6 +46,8 @@ class RSTQP_Gambler {
     avi.untilBelow(RealScalar.of(.0001));
     Scalar error = DiscreteValueFunctions.distance(ref, avi.qsa());
     System.out.println(error);
-    Export.of(UserHome.Pictures("gambler_avs.png"), GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref));
+    Export.of(UserHome.Pictures("gambler_avs.png"),
+        // GamblerHelper.qsaPolicyRef(gambler, avi.qsa(), ref)
+        StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
   }
 }

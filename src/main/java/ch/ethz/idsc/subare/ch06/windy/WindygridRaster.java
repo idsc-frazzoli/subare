@@ -7,6 +7,8 @@ import java.awt.Point;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.StateActionRaster;
 import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 class WindygridRaster implements StateActionRaster {
@@ -34,5 +36,25 @@ class WindygridRaster implements StateActionRaster {
     int sy = state.Get(1).number().intValue();
     int a = indexActions.of(action);
     return new Point(sx, sy + (Windygrid.NY + 1) * a);
+  }
+
+  @Override
+  public Scalar scaleLoss() {
+    return RealScalar.of(100);
+  }
+
+  @Override
+  public Scalar scaleQdelta() {
+    return RealScalar.of(15);
+  }
+
+  @Override
+  public int joinAlongDimension() {
+    return 0;
+  }
+
+  @Override
+  public int magify() {
+    return 3;
   }
 }
