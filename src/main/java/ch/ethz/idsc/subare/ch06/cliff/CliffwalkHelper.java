@@ -50,6 +50,6 @@ enum CliffwalkHelper {
     Tensor image2 = StateActionRasters.render(cliffwalkRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 2);
-    return ImageResize.of(Join.of(0, image1, Array.zeros(list), image2), MAGNIFY);
+    return ImageResize.of(Join.of(0, image1, Array.zeros(list), image2), cliffwalkRaster.magify());
   }
 }

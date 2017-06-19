@@ -23,6 +23,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
@@ -40,7 +41,8 @@ class Sarsa_Gridworld {
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
     for (int index = 0; index < EPISODES; ++index) {
-      gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+      gsw.append(ImageFormat.of( //
+          StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref)));
       Infoline.print(gridworld, index, ref, qsa);
       Scalar explore = epsilon.Get(index);
       Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);

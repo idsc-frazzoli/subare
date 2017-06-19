@@ -1,9 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch08.maze;
 
-import java.awt.Dimension;
 import java.io.File;
-import java.util.List;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -15,7 +13,6 @@ import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.io.Import;
 
@@ -24,9 +21,9 @@ enum DynamazeHelper {
   private static final Tensor STARTS = Tensors.matrixInt(new int[][] { //
       { 15, 31 }, { 15, 9 }, { 12, 18 } });
 
+  @Deprecated
   public static StateRaster createRaster(Dynamaze dynamaze) {
-    List<Integer> list = Dimensions.of(dynamaze.image());
-    return StateRasters.create(dynamaze, new Dimension(list.get(0), list.get(1)));
+    return new DynamazeStateRaster(dynamaze);
   }
 
   public static Dynamaze original(String name) throws Exception {

@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.core.util;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
@@ -16,7 +15,6 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
 
@@ -68,9 +66,7 @@ public enum StateActionRasters {
         Join.of(0, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magify());
   }
 
-  // only called in ch04.gridworld
-  // TODO should return type Tensor
-  public static BufferedImage qsaLossRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
+  public static Tensor qsaLossRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor image1 = render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
     DiscreteQsa loss = Loss.asQsa(stateActionRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().flatten(0) //
@@ -81,7 +77,7 @@ public enum StateActionRasters {
     List<Integer> list = Dimensions.of(image1);
     int dim = stateActionRaster.joinAlongDimension();
     list.set(dim, 1);
-    return ImageFormat.of(ImageResize.of( //
-        Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magify()));
+    return ImageResize.of( //
+        Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magify());
   }
 }

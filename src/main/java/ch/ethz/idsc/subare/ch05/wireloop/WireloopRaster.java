@@ -1,20 +1,19 @@
 // code by jph
-package ch.ethz.idsc.subare.ch06.cliff;
-
-import java.util.Arrays;
+package ch.ethz.idsc.subare.ch05.wireloop;
 
 import ch.ethz.idsc.subare.core.util.DefaultStateRaster;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.alg.Dimensions;
 
-class CliffwalkStateRaster extends DefaultStateRaster {
-  public CliffwalkStateRaster(Cliffwalk cliffwalk) {
-    super(cliffwalk, Arrays.asList(cliffwalk.NX, cliffwalk.NY));
+public class WireloopRaster extends DefaultStateRaster {
+  public WireloopRaster(Wireloop wireloop) {
+    super(wireloop, Dimensions.of(wireloop.image()));
   }
 
   @Override
   public Scalar scaleLoss() {
-    return RealScalar.ONE;
+    return RealScalar.of(100.);
   }
 
   @Override
@@ -24,11 +23,11 @@ class CliffwalkStateRaster extends DefaultStateRaster {
 
   @Override
   public int joinAlongDimension() {
-    return 1;
+    return 0;
   }
 
   @Override
   public int magify() {
-    return 5;
+    return 2;
   }
 }

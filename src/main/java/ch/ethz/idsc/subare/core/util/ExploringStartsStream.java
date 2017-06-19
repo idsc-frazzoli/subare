@@ -28,6 +28,11 @@ public abstract class ExploringStartsStream {
     exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
   }
 
+  public boolean hasNextEpisode() {
+    // TODO possibly use function in application in while loop
+    return false;
+  }
+
   public void nextEpisode() {
     if (!exploringStartBatch.hasNext()) {
       exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);

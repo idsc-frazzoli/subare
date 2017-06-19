@@ -74,6 +74,7 @@ public enum ExploringStarts {
   public static int batch( //
       MonteCarloInterface monteCarloInterface, Policy policy, int nstep, //
       DequeDigest... dequeDigest) {
+    // TODO this code is now redundant to ExploringStartsStream
     List<DequeDigest> list = Arrays.asList(dequeDigest);
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;

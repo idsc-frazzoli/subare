@@ -13,20 +13,19 @@ import ch.ethz.idsc.subare.core.util.ExploringStartsStream;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
  * 
  * covers Example 4.1, p.82 */
 class SES_Gridworld {
-  static void handle(SarsaType sarsaType, int nstep) throws Exception {
+  static void handle(SarsaType sarsaType, int nstep, int BATCHES) throws Exception {
     System.out.println(sarsaType);
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    int BATCHES = 40;
     Tensor epsilon = Subdivide.of(.1, .01, BATCHES); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of( //
@@ -36,25 +35,28 @@ class SES_Gridworld {
     ExploringStartsStream exploringStartsStream = new ExploringStartsStream(gridworld, nstep, sarsa) {
       @Override
       public Policy providePolicy() {
-        Scalar explore = epsilon.Get(batchIndex());
-        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
+        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(batchIndex()));
         sarsa.supplyPolicy(() -> policy);
         return policy;
       }
     };
-    for (int index = 0; index < 100; ++index) {
-      Infoline.print(gridworld, index, ref, qsa);
+    int index = 0;
+    while (exploringStartsStream.batchIndex() < BATCHES) {
       exploringStartsStream.nextEpisode();
-      // if (index % 4 == 0)
-      gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+      if (index % 5 == 0) {
+        Infoline.print(gridworld, index, ref, qsa);
+        gsw.append(ImageFormat.of( //
+            StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref)));
+      }
+      ++index;
     }
     gsw.close();
   }
 
   public static void main(String[] args) throws Exception {
     int nstep = 3;
-    handle(SarsaType.original, nstep);
-    handle(SarsaType.expected, nstep);
-    handle(SarsaType.qlearning, nstep);
+    handle(SarsaType.original, nstep, 3);
+    handle(SarsaType.expected, nstep, 3);
+    handle(SarsaType.qlearning, nstep, 3);
   }
 }
