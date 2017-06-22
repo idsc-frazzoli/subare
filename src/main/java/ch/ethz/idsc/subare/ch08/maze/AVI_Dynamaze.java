@@ -10,10 +10,8 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
@@ -22,16 +20,17 @@ class AVI_Dynamaze {
   public static void main(String[] args) throws Exception {
     String name = "maze5";
     Dynamaze dynamaze = DynamazeHelper.create5(3);
+    DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
     DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     // Export.of(UserHome.Pictures("dynamaze_qsa_avi.png"), //
     // DynamazeHelper.render(windygrid, DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = new ActionValueIteration(dynamaze);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_qsa_avi.gif"), 250);
     for (int index = 0; index < 50; ++index) {
-      Scalar loss = Infoline.print(dynamaze, index, ref, avi.qsa());
-      gsw.append(ImageFormat.of(DynamazeHelper.render(dynamaze, avi.qsa())));
+      Infoline infoline = Infoline.print(dynamaze, index, ref, avi.qsa());
+      gsw.append(ImageFormat.of(StateRasters.vs_rescale(dynamazeRaster, avi.qsa())));
       avi.step();
-      if (Scalars.lessEquals(loss, RealScalar.ZERO))
+      if (infoline.isLossfree())
         break;
     }
     // gsw.append(ImageFormat.of(DynamazeHelper.render(dynamaze, avi.qsa(), ref)));

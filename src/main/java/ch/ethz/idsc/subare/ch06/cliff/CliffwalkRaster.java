@@ -67,6 +67,6 @@ class CliffwalkRaster implements StateRaster, StateActionRaster {
 
   @Override
   public int magify() {
-    return 3;
+    return 5;
   }
 }

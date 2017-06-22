@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -23,6 +24,7 @@ class TDQ_Dynamaze {
     System.out.println(sarsaType);
     String name = "maze5";
     Dynamaze dynamaze = DynamazeHelper.create5(3);
+    DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
     final DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
     Tensor epsilon = Subdivide.of(.2, .01, EPISODES);
@@ -37,7 +39,7 @@ class TDQ_Dynamaze {
       tabularDynaQ.setPolicy(policy);
       // for (int count = 0; count < 5; ++count)
       ExploringStarts.batch(dynamaze, policy, tabularDynaQ);
-      gsw.append(ImageFormat.of(DynamazeHelper.render(dynamaze, qsa)));
+      gsw.append(ImageFormat.of(StateRasters.vs_rescale(dynamazeRaster, qsa)));
     }
     gsw.close();
   }

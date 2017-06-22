@@ -92,4 +92,16 @@ public enum StateActionRasters {
     return ImageResize.of( //
         Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magify());
   }
+
+  // not recommended, use qsaLossRef instead
+  static Tensor qsaRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
+    Tensor image1 = render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
+    Scalar qdelta = stateActionRaster.scaleQdelta();
+    Tensor image2 = render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta));
+    List<Integer> list = Dimensions.of(image1);
+    int dim = stateActionRaster.joinAlongDimension();
+    list.set(dim, 3);
+    return ImageResize.of( //
+        Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magify());
+  }
 }

@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -20,17 +21,22 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 class AVI_Cliffwalk {
   public static void main(String[] args) throws Exception {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
+    CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
     DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     Export.of(UserHome.Pictures("cliffwalk_qsa_avi.png"), //
-        CliffwalkHelper.render(cliffwalk, DiscreteValueFunctions.rescaled(ref)));
+        StateActionRasters.qsa(new CliffwalkRaster(cliffwalk), DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = new ActionValueIteration(cliffwalk);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_avi.gif"), 200);
     for (int index = 0; index < 20; ++index) {
-      Infoline.print(cliffwalk, index, ref, avi.qsa());
-      gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, avi.qsa(), ref)));
+      Infoline infoline = Infoline.print(cliffwalk, index, ref, avi.qsa());
+      gsw.append(ImageFormat.of( //
+          StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref)));
       avi.step();
+      if (infoline.isLossfree())
+        break;
     }
-    gsw.append(ImageFormat.of(CliffwalkHelper.joinAll(cliffwalk, avi.qsa(), ref)));
+    gsw.append(ImageFormat.of( //
+        StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref)));
     gsw.close();
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
     vs.print();

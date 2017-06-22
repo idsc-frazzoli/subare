@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
@@ -12,6 +14,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 
 public enum StateRasters {
@@ -28,6 +31,7 @@ public enum StateRasters {
   /** @param stateActionRaster
    * @param vs scaled to contain values in the interval [0, 1]
    * @return */
+  @Deprecated // should be private!
   public static Tensor render(StateRaster stateRaster, DiscreteVs vs) {
     DiscreteModel discreteModel = stateRaster.discreteModel();
     Dimension dimension = stateRaster.dimensionStateRaster();
@@ -44,5 +48,16 @@ public enum StateRasters {
 
   public static Tensor vs(StateRaster stateRaster, DiscreteVs vs) {
     return ImageResize.of(render(stateRaster, vs), stateRaster.magify());
+  }
+
+  public static Tensor vs_rescale(StateRaster stateRaster, DiscreteVs vs) {
+    DiscreteVs rescale = vs.create(Rescale.of(vs.values()).flatten(0));
+    return vs(stateRaster, rescale);
+  }
+
+  public static Tensor vs_rescale(StateRaster stateRaster, DiscreteQsa qsa) {
+    DiscreteVs vs = DiscreteUtils.createVs(stateRaster.discreteModel(), qsa);
+    DiscreteVs rescale = vs.create(Rescale.of(vs.values()).flatten(0));
+    return vs(stateRaster, rescale);
   }
 }

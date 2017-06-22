@@ -7,8 +7,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
@@ -25,10 +23,10 @@ class RSTQP_Windygrid {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_rstqp.gif"), 250);
     int EPISODES = 40;
     for (int index = 0; index < EPISODES; ++index) {
-      Scalar loss = Infoline.print(windygrid, index, ref, qsa);
+      Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
       TabularSteps.batch(windygrid, windygrid, rstqp);
       gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, qsa, ref)));
-      if (loss.equals(RealScalar.ZERO))
+      if (infoline.isLossfree())
         break;
     }
     gsw.close();
