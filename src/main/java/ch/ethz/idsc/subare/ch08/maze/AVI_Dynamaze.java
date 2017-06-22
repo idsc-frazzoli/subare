@@ -28,7 +28,7 @@ class AVI_Dynamaze {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_qsa_avi.gif"), 250);
     for (int index = 0; index < 50; ++index) {
       Infoline infoline = Infoline.print(dynamaze, index, ref, avi.qsa());
-      gsw.append(ImageFormat.of(StateRasters.vs_rescale(dynamazeRaster, avi.qsa())));
+      gsw.append(ImageFormat.of(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref)));
       avi.step();
       if (infoline.isLossfree())
         break;

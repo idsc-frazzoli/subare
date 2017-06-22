@@ -49,7 +49,7 @@ public enum ExploringStarts {
     StepExploringStarts stepExploringStarts = //
         new StepExploringStarts(monteCarloInterface, stepDigest) {
           @Override
-          public Policy batchPolicy() {
+          public Policy batchPolicy(int batch) {
             return policy;
           }
         };
@@ -68,7 +68,7 @@ public enum ExploringStarts {
     DequeExploringStarts dequeExploringStarts = //
         new DequeExploringStarts(monteCarloInterface, nstep, dequeDigest) {
           @Override
-          public Policy batchPolicy() {
+          public Policy batchPolicy(int batch) {
             return policy;
           }
         };

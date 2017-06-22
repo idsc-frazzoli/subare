@@ -27,25 +27,27 @@ class Sarsa_Dynamaze {
     DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
     final DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
-    Tensor epsilon = Subdivide.of(.2, .01, batches);
-    LearningRate learningRate = DefaultLearningRate.of(5, 0.51);
+    Tensor epsilon = Subdivide.of(.3, .01, batches);
+    LearningRate learningRate = DefaultLearningRate.of(15, 0.51);
     Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200);
     for (int index = 0; index < batches; ++index) {
       // if (EPISODES - 10 < index)
-      Infoline.print(dynamaze, index, ref, qsa);
+      Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(index));
       sarsa.supplyPolicy(() -> policy);
       // for (int count = 0; count < 5; ++count)
       ExploringStarts.batch(dynamaze, policy, nstep, sarsa);
       gsw.append(ImageFormat.of(StateRasters.vs_rescale(dynamazeRaster, qsa)));
+      if (infoline.isLossfree())
+        break;
     }
     gsw.close();
   }
 
   public static void main(String[] args) throws Exception {
     // handle(SarsaType.original, 3, 50);
-    handle(SarsaType.expected, 2, 50);
-    // handle(SarsaType.qlearning, 1, 50);
+    // handle(SarsaType.expected, 2, 50);
+    handle(SarsaType.qlearning, 1, 50);
   }
 }

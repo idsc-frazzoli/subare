@@ -34,8 +34,8 @@ class SES_Gridworld {
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
     DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
       @Override
-      public Policy batchPolicy() {
-        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(batchIndex()));
+      public Policy batchPolicy(int batch) {
+        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(batch));
         sarsa.supplyPolicy(() -> policy);
         return policy;
       }

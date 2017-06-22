@@ -19,7 +19,7 @@ abstract class AbstractExploringStarts {
   final void nextBatch() {
     ++batchIndex; // holds subsequent batch id that won't change during the next episodes
     exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
-    policy = batchPolicy();
+    policy = batchPolicy(batchIndex);
   }
 
   public final void nextEpisode() {
@@ -42,5 +42,7 @@ abstract class AbstractExploringStarts {
 
   public abstract void protected_nextEpisode(EpisodeInterface episodeInterface);
 
-  public abstract Policy batchPolicy();
+  /** @param batch = 0, 1, 2, ...
+   * @return */
+  public abstract Policy batchPolicy(int batch);
 }

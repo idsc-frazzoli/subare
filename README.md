@@ -249,6 +249,23 @@ Expected Sarsa
 
 </tr></table>
 
+
+### 8.1 Dynamaze
+
+<table><tr><td>
+
+Action Value Iteration
+
+![maze5_qsa_avi](https://user-images.githubusercontent.com/4012178/27436123-8b2578a6-575e-11e7-8edb-5ac41405f4da.gif)
+
+<td>
+
+Prioritized sweeping
+
+![maze2_ps_qlearning](https://user-images.githubusercontent.com/4012178/27436055-4cd6ec42-575e-11e7-95bc-2708a2905822.gif)
+
+</tr></table>
+
 ---
 
 ## Additional Examples

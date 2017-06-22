@@ -31,8 +31,8 @@ class SES_Wireloop {
     Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(3, 0.51));
     DequeExploringStarts exploringStartsStream = new DequeExploringStarts(wireloop, nstep, sarsa) {
       @Override
-      public Policy batchPolicy() {
-        Scalar explore = epsilon.Get(batchIndex());
+      public Policy batchPolicy(int batch) {
+        Scalar explore = epsilon.Get(batch);
         System.out.println("policy update " + batchIndex() + " " + explore);
         Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, explore);
         sarsa.supplyPolicy(() -> policy);

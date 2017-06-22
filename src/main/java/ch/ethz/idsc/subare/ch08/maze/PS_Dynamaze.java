@@ -30,30 +30,25 @@ class PS_Dynamaze {
     DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
     final DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
-    Tensor epsilon = Subdivide.of(.2, .01, batches);
-    LearningRate learningRate = DefaultLearningRate.of(5, 0.51);
+    Tensor epsilon = Subdivide.of(.3, .01, batches);
+    LearningRate learningRate = DefaultLearningRate.of(5, 1.01);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsaType.supply(dynamaze, qsa, learningRate), 10, RealScalar.ZERO);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250);
     // ---
-    Infoline infoline = null;
-    for (int index = 0; index < batches; ++index) {
-      Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(index));
-      StepExploringStarts stepExploringStarts = //
-          new StepExploringStarts(dynamaze, prioritizedSweeping) {
-            @Override
-            public Policy batchPolicy() {
-              return policy;
-            }
-          };
-      while (stepExploringStarts.batchIndex() == 0) {
-        infoline = Infoline.print(dynamaze, index, ref, qsa);
-        prioritizedSweeping.setPolicy(policy);
-        stepExploringStarts.nextEpisode();
-        gsw.append(ImageFormat.of(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref)));
-        if (infoline.isLossfree())
-          break;
-      }
+    StepExploringStarts stepExploringStarts = //
+        new StepExploringStarts(dynamaze, prioritizedSweeping) {
+          @Override
+          public Policy batchPolicy(int batch) {
+            Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(batch));
+            prioritizedSweeping.setPolicy(policy);
+            return policy;
+          }
+        };
+    while (stepExploringStarts.batchIndex() < batches) {
+      Infoline infoline = Infoline.print(dynamaze, stepExploringStarts.batchIndex(), ref, qsa);
+      stepExploringStarts.nextEpisode();
+      gsw.append(ImageFormat.of(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref)));
       if (infoline.isLossfree())
         break;
     }
@@ -61,8 +56,8 @@ class PS_Dynamaze {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.original, 50);
+    // handle(SarsaType.original, 10);
     // handle(SarsaType.expected, 50);
-    // handle(SarsaType.qlearning, 50);
+    handle(SarsaType.qlearning, 10);
   }
 }
