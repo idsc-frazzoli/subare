@@ -2,8 +2,6 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
@@ -72,30 +70,19 @@ public enum ExploringStarts {
    * @param dequeDigest
    * @return */
   public static int batch( //
-      MonteCarloInterface monteCarloInterface, Policy policy, int nstep, //
-      DequeDigest... dequeDigest) {
-    List<DequeDigest> list = Arrays.asList(dequeDigest);
-    ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
-    int episodes = 0;
-    while (exploringStartBatch.hasNext()) {
-      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policy);
-      Deque<StepInterface> deque = new LinkedList<>();
-      while (episodeInterface.hasNext()) {
-        final StepInterface stepInterface = episodeInterface.step();
-        deque.add(stepInterface);
-        if (deque.size() == nstep) {
-          list.stream().parallel() //
-              .forEach(_dequeDigest -> _dequeDigest.digest(deque));
-          deque.poll();
-        }
-      }
-      while (!deque.isEmpty()) {
-        list.stream().parallel() //
-            .forEach(_dequeDigest -> _dequeDigest.digest(deque));
-        deque.poll();
-      }
-      ++episodes;
+      MonteCarloInterface monteCarloInterface, Policy policy, int nstep, DequeDigest... dequeDigest) {
+    ExploringStartsStream exploringStartsStream = //
+        new ExploringStartsStream(monteCarloInterface, nstep, dequeDigest) {
+          @Override
+          public Policy batchPolicy() {
+            return policy;
+          }
+        };
+    System.out.println("batch " + exploringStartsStream.batchIndex());
+    while (exploringStartsStream.batchIndex() == 0) {
+      // System.out.println("nextEpi " + exploringStartsStream.episodeIndex());
+      exploringStartsStream.nextEpisode();
     }
-    return episodes;
+    return exploringStartsStream.episodeIndex();
   }
 }

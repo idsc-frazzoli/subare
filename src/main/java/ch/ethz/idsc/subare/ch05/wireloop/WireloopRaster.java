@@ -1,46 +1,44 @@
 // code by jph
-package ch.ethz.idsc.subare.ch05.blackjack;
+package ch.ethz.idsc.subare.ch05.wireloop;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.List;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
+import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.alg.Dimensions;
 
-class BlackjackRaster implements StateRaster {
-  private final Blackjack blackjack;
+class WireloopRaster implements StateRaster {
+  private final Wireloop wireloop;
 
-  public BlackjackRaster(Blackjack blackjack) {
-    this.blackjack = blackjack;
+  public WireloopRaster(Wireloop wireloop) {
+    this.wireloop = wireloop;
   }
 
   @Override
   public DiscreteModel discreteModel() {
-    return blackjack;
+    return wireloop;
   }
 
   @Override
   public Dimension dimensionStateRaster() {
-    return new Dimension(20 + 2, 20);
+    List<Integer> dimensions = Dimensions.of(wireloop.image());
+    return new Dimension(dimensions.get(0), dimensions.get(1));
   }
 
   @Override
   public Point point(Tensor state) {
-    if (state.length() == 3) {
-      int useAce = state.Get(0).number().intValue();
-      int player = state.Get(1).number().intValue() - 12;
-      int dealer = state.Get(2).number().intValue() - 1;
-      return new Point(dealer + (10 + 2) * useAce, 9 - player);
-    }
-    return null;
+    return StateRasters.canonicPoint(state);
   }
 
   @Override
   public Scalar scaleLoss() {
-    return RealScalar.ONE;
+    return RealScalar.of(100.);
   }
 
   @Override
@@ -55,6 +53,6 @@ class BlackjackRaster implements StateRaster {
 
   @Override
   public int magify() {
-    return 5;
+    return 2;
   }
 }

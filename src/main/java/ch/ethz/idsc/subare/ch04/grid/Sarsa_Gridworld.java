@@ -17,6 +17,7 @@ import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -29,23 +30,24 @@ import ch.ethz.idsc.tensor.io.Put;
  * 
  * covers Example 4.1, p.82 */
 class Sarsa_Gridworld {
-  static void handle(SarsaType sarsaType, int n) throws Exception {
+  static void handle(SarsaType sarsaType, int nstep) throws Exception {
     System.out.println(sarsaType);
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    int EPISODES = 40;
-    Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
+    int batches = 10;
+    Tensor epsilon = Subdivide.of(.1, .01, batches); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + sarsaType + "" + n + ".gif"), 150);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
-    for (int index = 0; index < EPISODES; ++index) {
+    for (int index = 0; index < batches; ++index) {
+      gsw.append(ImageFormat.of( //
+          StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref)));
       Infoline.print(gridworld, index, ref, qsa);
       Scalar explore = epsilon.Get(index);
       Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
-      sarsa.setPolicy(policy);
-      ExploringStarts.batch(gridworld, policy, n, sarsa);
-      gsw.append(ImageFormat.of(GridworldHelper.joinAll(gridworld, qsa, ref)));
+      sarsa.supplyPolicy(() -> policy);
+      ExploringStarts.batch(gridworld, policy, nstep, sarsa);
     }
     gsw.close();
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
@@ -62,9 +64,9 @@ class Sarsa_Gridworld {
   }
 
   public static void main(String[] args) throws Exception {
-    int n = 0;
-    handle(SarsaType.original, n);
-    handle(SarsaType.expected, n);
-    handle(SarsaType.qlearning, n);
+    int nstep = 1;
+    handle(SarsaType.original, nstep);
+    handle(SarsaType.expected, nstep);
+    handle(SarsaType.qlearning, nstep);
   }
 }

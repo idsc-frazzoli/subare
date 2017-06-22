@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
@@ -35,13 +36,16 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 class AVI_Gridworld {
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
+    GridworldRaster gridworldRaster = new GridworldRaster(gridworld);
     ActionValueIteration avi = new ActionValueIteration(gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_qsa_avi.gif"), 250);
     for (int count = 0; count < 7; ++count) {
-      gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, DiscreteValueFunctions.rescaled(avi.qsa()))));
+      gsw.append(ImageFormat.of( //
+          StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa()))));
       avi.step();
     }
-    gsw.append(ImageFormat.of(GridworldHelper.render(gridworld, DiscreteValueFunctions.rescaled(avi.qsa()))));
+    gsw.append(ImageFormat.of( //
+        StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa()))));
     gsw.close();
     // ---
     avi.qsa().print();

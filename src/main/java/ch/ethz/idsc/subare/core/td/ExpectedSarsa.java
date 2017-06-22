@@ -1,8 +1,11 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
+import java.util.function.Supplier;
+
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -16,6 +19,11 @@ public class ExpectedSarsa extends Sarsa {
    * @param learningRate */
   public ExpectedSarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     super(discreteModel, qsa, learningRate);
+  }
+
+  @Override
+  public void supplyPolicy(Supplier<Policy> supplier) {
+    policy = supplier.get();
   }
 
   @Override

@@ -1,41 +1,36 @@
 // code by jph
-package ch.ethz.idsc.subare.ch05.blackjack;
+package ch.ethz.idsc.subare.ch04.rental;
 
 import java.awt.Dimension;
 import java.awt.Point;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
+import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-class BlackjackRaster implements StateRaster {
-  private final Blackjack blackjack;
+class CarRentalRaster implements StateRaster {
+  private final CarRental carRental;
 
-  public BlackjackRaster(Blackjack blackjack) {
-    this.blackjack = blackjack;
+  public CarRentalRaster(CarRental carRental) {
+    this.carRental = carRental;
   }
 
   @Override
   public DiscreteModel discreteModel() {
-    return blackjack;
+    return carRental;
   }
 
   @Override
   public Dimension dimensionStateRaster() {
-    return new Dimension(20 + 2, 20);
+    return new Dimension(carRental.maxCars + 1, carRental.maxCars + 1);
   }
 
   @Override
   public Point point(Tensor state) {
-    if (state.length() == 3) {
-      int useAce = state.Get(0).number().intValue();
-      int player = state.Get(1).number().intValue() - 12;
-      int dealer = state.Get(2).number().intValue() - 1;
-      return new Point(dealer + (10 + 2) * useAce, 9 - player);
-    }
-    return null;
+    return StateRasters.canonicPoint(state);
   }
 
   @Override
@@ -55,6 +50,6 @@ class BlackjackRaster implements StateRaster {
 
   @Override
   public int magify() {
-    return 5;
+    return 4;
   }
 }

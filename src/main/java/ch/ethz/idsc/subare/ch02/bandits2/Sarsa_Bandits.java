@@ -19,19 +19,19 @@ import ch.ethz.idsc.tensor.sca.Round;
 /** Sarsa applied to bandits */
 class Sarsa_Bandits {
   static void train(Bandits bandits, SarsaType sarsaType, //
-      int EPISODES, Scalar factor, Scalar exponent) throws Exception {
+      int batches, Scalar factor, Scalar exponent) throws Exception {
     System.out.println(sarsaType);
     final DiscreteQsa ref = BanditsHelper.getOptimalQsa(bandits); // true q-function, for error measurement
-    Tensor epsilon = Subdivide.of(.6, .01, EPISODES);
+    Tensor epsilon = Subdivide.of(.6, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(bandits); // q-function for training, initialized to 0
     // ---
     final Sarsa sarsa = sarsaType.supply(bandits, qsa, DefaultLearningRate.of(factor, exponent));
     // ---
-    for (int index = 0; index < EPISODES; ++index) {
+    for (int index = 0; index < batches; ++index) {
       Scalar error1 = Loss.accumulation(bandits, ref, qsa);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + error1.map(Round._3));
       Policy policy = EGreedyPolicy.bestEquiprobable(bandits, qsa, epsilon.Get(index));
-      sarsa.setPolicy(policy);
+      sarsa.supplyPolicy(() -> policy);
       ExploringStarts.batch(bandits, policy, 1, sarsa);
     }
     System.out.println("---");

@@ -18,7 +18,7 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 class Bulk_Wireloop {
   public static void main(String[] args) throws Exception {
     String name = "wire4";
-    Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x); // 20, 4/10
+    Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x); // 20, 4/10
     final DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop); // true q-function, for error measurement
     // ---
     SarsaType sarsaType = SarsaType.qlearning;

@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.core.td;
 
 import java.util.Deque;
+import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscountFunction;
@@ -50,10 +51,8 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
    * setting the policy is required for {@link OriginalSarsa} and {@link ExpectedSarsa}.
    * On the other hand, {@link QLearning} does not require the knowledge of the policy.
    * 
-   * @param policy */
-  public void setPolicy(Policy policy) {
-    this.policy = policy;
-  }
+   * @param supplier */
+  public abstract void supplyPolicy(Supplier<Policy> supplier);
 
   /** @param state
    * @return value estimation of state */

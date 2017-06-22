@@ -27,17 +27,17 @@ class Double_Maxbias {
     System.out.println("double " + sarsaType);
     Maxbias maxbias = new Maxbias(10);
     final DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias);
-    int EPISODES = 10;
-    Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
+    int batches = 10;
+    Tensor epsilon = Subdivide.of(.1, .01, batches); // used in egreedy
     DiscreteQsa qsa1 = DiscreteQsa.build(maxbias);
     DiscreteQsa qsa2 = DiscreteQsa.build(maxbias);
     DoubleSarsa doubleSarsa = new DoubleSarsa(sarsaType, maxbias, //
         qsa1, qsa2, //
         DefaultLearningRate.of(5, .51), //
         DefaultLearningRate.of(5, .51));
-    for (int index = 0; index < EPISODES; ++index) {
+    for (int index = 0; index < batches; ++index) {
       Scalar explore = epsilon.Get(index);
-      if (EPISODES - 10 < index)
+      if (batches - 10 < index)
         Infoline.print(maxbias, index, ref, qsa1);
       Policy policy1 = EGreedyPolicy.bestEquiprobable(maxbias, qsa1, explore);
       Policy policy2 = EGreedyPolicy.bestEquiprobable(maxbias, qsa2, explore);

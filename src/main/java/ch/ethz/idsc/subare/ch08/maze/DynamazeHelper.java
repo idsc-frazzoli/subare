@@ -1,22 +1,14 @@
 // code by jph
 package ch.ethz.idsc.subare.ch08.maze;
 
-import java.awt.Dimension;
 import java.io.File;
-import java.util.List;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.StateRaster;
-import ch.ethz.idsc.subare.core.util.StateRasters;
-import ch.ethz.idsc.subare.util.ImageResize;
+import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.alg.Dimensions;
-import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.io.Import;
 
 enum DynamazeHelper {
@@ -24,9 +16,9 @@ enum DynamazeHelper {
   private static final Tensor STARTS = Tensors.matrixInt(new int[][] { //
       { 15, 31 }, { 15, 9 }, { 12, 18 } });
 
+  @Deprecated
   public static StateRaster createRaster(Dynamaze dynamaze) {
-    List<Integer> list = Dimensions.of(dynamaze.image());
-    return StateRasters.create(dynamaze, new Dimension(list.get(0), list.get(1)));
+    return new DynamazeRaster(dynamaze);
   }
 
   public static Dynamaze original(String name) throws Exception {
@@ -55,16 +47,5 @@ enum DynamazeHelper {
 
   static DiscreteQsa getOptimalQsa(Dynamaze dynamaze) {
     return ActionValueIterations.solve(dynamaze, DecimalScalar.of(.0000001));
-  }
-
-  private static final int MAGNIFY = 4;
-
-  static Tensor render(Dynamaze dynamaze, DiscreteQsa qsa) {
-    return render(dynamaze, DiscreteUtils.createVs(dynamaze, qsa));
-  }
-
-  static Tensor render(Dynamaze dynamaze, DiscreteVs vs) {
-    DiscreteVs scaled = vs.create(Rescale.of(vs.values()).flatten(0));
-    return ImageResize.of(StateRasters.render(createRaster(dynamaze), scaled), MAGNIFY);
   }
 }

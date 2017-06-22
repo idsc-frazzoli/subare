@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -22,6 +23,7 @@ import ch.ethz.idsc.tensor.io.Export;
 class VI_Cliffwalk {
   public static void main(String[] args) throws Exception {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
+    CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
     DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     ValueIteration vi = new ValueIteration(cliffwalk, cliffwalk);
     vi.untilBelow(DecimalScalar.of(.0001));
@@ -29,7 +31,8 @@ class VI_Cliffwalk {
     DiscreteVs vr = DiscreteUtils.createVs(cliffwalk, ref);
     Scalar error = DiscreteValueFunctions.distance(vs, vr);
     System.out.println("error=" + error);
-    Export.of(UserHome.Pictures("cliffwalk_qsa_vi.png"), CliffwalkHelper.render(cliffwalk, vi.vs()));
+    Export.of(UserHome.Pictures("cliffwalk_qsa_vi.png"), //
+        StateRasters.vs_rescale(cliffwalkRaster, vi.vs()));
     // GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(cliffWalk, values);
     // greedyPolicy.print(cliffWalk.states());
     // Index statesIndex = Index.build(cliffWalk.states());

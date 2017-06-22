@@ -21,7 +21,7 @@ public class TabularDynaQ implements StepDigest {
   }
 
   public void setPolicy(Policy policy) {
-    sarsa.setPolicy(policy);
+    sarsa.supplyPolicy(() -> policy);
   }
 
   @Override
