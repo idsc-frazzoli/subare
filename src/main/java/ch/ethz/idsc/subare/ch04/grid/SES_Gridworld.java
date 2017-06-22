@@ -7,9 +7,9 @@ import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.util.DequeExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsStream;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
@@ -22,17 +22,17 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
  * 
  * covers Example 4.1, p.82 */
 class SES_Gridworld {
-  static void handle(SarsaType sarsaType, int nstep, int BATCHES) throws Exception {
+  static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
     System.out.println(sarsaType);
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    Tensor epsilon = Subdivide.of(.1, .01, BATCHES); // used in egreedy
+    Tensor epsilon = Subdivide.of(.1, .01, batches); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of( //
-        UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 100);
+        UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250);
     LearningRate learningRate = DefaultLearningRate.of(5, 1.1);
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
-    ExploringStartsStream exploringStartsStream = new ExploringStartsStream(gridworld, nstep, sarsa) {
+    DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
       @Override
       public Policy batchPolicy() {
         Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(batchIndex()));
@@ -41,12 +41,14 @@ class SES_Gridworld {
       }
     };
     int index = 0;
-    while (exploringStartsStream.batchIndex() < BATCHES) {
+    while (exploringStartsStream.batchIndex() < batches) {
       exploringStartsStream.nextEpisode();
       if (index % 5 == 0) {
-        Infoline.print(gridworld, index, ref, qsa);
+        Infoline infoline = Infoline.print(gridworld, index, ref, qsa);
         gsw.append(ImageFormat.of( //
             StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref)));
+        if (infoline.isLossfree())
+          break;
       }
       ++index;
     }

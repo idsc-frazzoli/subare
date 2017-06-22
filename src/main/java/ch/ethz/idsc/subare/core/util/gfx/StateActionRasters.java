@@ -32,7 +32,7 @@ public enum StateActionRasters {
   /** @param stateActionRaster
    * @param qsa scaled to contain values in the interval [0, 1]
    * @return */
-  public static Tensor render(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
+  private static Tensor _render(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
     DiscreteModel discreteModel = stateActionRaster.discreteModel();
     Dimension dimension = stateActionRaster.dimensionStateActionRaster();
     final Tensor tensor = Array.zeros(dimension.width, dimension.height, 4);
@@ -47,13 +47,13 @@ public enum StateActionRasters {
     return tensor;
   }
 
-  private static Tensor render(StateActionRaster stateActionRaster, Policy policy) {
-    return render(stateActionRaster, Policies.toQsa(stateActionRaster.discreteModel(), policy));
+  private static Tensor _render(StateActionRaster stateActionRaster, Policy policy) {
+    return _render(stateActionRaster, Policies.toQsa(stateActionRaster.discreteModel(), policy));
   }
 
   /***************************************************/
   public static Tensor qsa(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
-    return ImageResize.of(render(stateActionRaster, qsa), stateActionRaster.magnify());
+    return ImageResize.of(_render(stateActionRaster, qsa), stateActionRaster.magnify());
   }
 
   public static Tensor qsa_rescaled(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
@@ -61,9 +61,9 @@ public enum StateActionRasters {
   }
 
   public static Tensor qsaPolicy(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
-    Tensor image1 = render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
+    Tensor image1 = _render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
     Policy policy = GreedyPolicy.bestEquiprobable(stateActionRaster.discreteModel(), qsa);
-    Tensor image2 = render(stateActionRaster, policy);
+    Tensor image2 = _render(stateActionRaster, policy);
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 3);
     return ImageResize.of( //
@@ -71,11 +71,11 @@ public enum StateActionRasters {
   }
 
   public static Tensor qsaPolicyRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
-    Tensor image1 = render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
+    Tensor image1 = _render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
     Policy policy = GreedyPolicy.bestEquiprobable(stateActionRaster.discreteModel(), qsa);
-    Tensor image2 = render(stateActionRaster, policy);
+    Tensor image2 = _render(stateActionRaster, policy);
     Scalar qdelta = stateActionRaster.scaleQdelta();
-    Tensor image3 = render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta));
+    Tensor image3 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta));
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 3);
     return ImageResize.of( //
@@ -83,13 +83,13 @@ public enum StateActionRasters {
   }
 
   public static Tensor qsaLossRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
-    Tensor image1 = render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
+    Tensor image1 = _render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
     DiscreteQsa loss = Loss.asQsa(stateActionRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().flatten(0) //
         .map(tensor -> tensor.multiply(stateActionRaster.scaleLoss())) //
         .map(Clip.UNIT::of));
-    Tensor image2 = render(stateActionRaster, loss);
-    Tensor image3 = render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
+    Tensor image2 = _render(stateActionRaster, loss);
+    Tensor image3 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(image1);
     int dim = stateActionRaster.joinAlongDimension();
     list.set(dim, 1);
@@ -99,9 +99,9 @@ public enum StateActionRasters {
 
   // not recommended, use qsaLossRef instead
   static Tensor qsaRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
-    Tensor image1 = render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
+    Tensor image1 = _render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
     Scalar qdelta = stateActionRaster.scaleQdelta();
-    Tensor image2 = render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta));
+    Tensor image2 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta));
     List<Integer> list = Dimensions.of(image1);
     int dim = stateActionRaster.joinAlongDimension();
     list.set(dim, 3);

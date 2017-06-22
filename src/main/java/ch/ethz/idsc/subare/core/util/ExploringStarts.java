@@ -10,7 +10,6 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepDigest;
-import ch.ethz.idsc.subare.core.StepInterface;
 
 /** contains helper functions to launch batches of episodes
  * that satisfy the exploring starts condition and have them processed by
@@ -31,8 +30,7 @@ public enum ExploringStarts {
   }
 
   public static int batchWithReplay( //
-      MonteCarloInterface monteCarloInterface, Policy policy, //
-      EpisodeDigest... episodeDigest) {
+      MonteCarloInterface monteCarloInterface, Policy policy, EpisodeDigest... episodeDigest) {
     List<EpisodeDigest> list = Arrays.asList(episodeDigest);
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;
@@ -47,21 +45,17 @@ public enum ExploringStarts {
   }
 
   public static int batch( //
-      MonteCarloInterface monteCarloInterface, Policy policy, //
-      StepDigest... stepDigest) {
-    List<StepDigest> list = Arrays.asList(stepDigest);
-    ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
-    int episodes = 0;
-    while (exploringStartBatch.hasNext()) {
-      EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policy);
-      while (episodeInterface.hasNext()) {
-        StepInterface stepInterface = episodeInterface.step();
-        list.stream().parallel() //
-            .forEach(_stepDigest -> _stepDigest.digest(stepInterface));
-      }
-      ++episodes;
-    }
-    return episodes;
+      MonteCarloInterface monteCarloInterface, Policy policy, StepDigest... stepDigest) {
+    StepExploringStarts stepExploringStarts = //
+        new StepExploringStarts(monteCarloInterface, stepDigest) {
+          @Override
+          public Policy batchPolicy() {
+            return policy;
+          }
+        };
+    while (stepExploringStarts.batchIndex() == 0)
+      stepExploringStarts.nextEpisode();
+    return stepExploringStarts.episodeIndex();
   }
 
   /** @param monteCarloInterface
@@ -71,18 +65,15 @@ public enum ExploringStarts {
    * @return */
   public static int batch( //
       MonteCarloInterface monteCarloInterface, Policy policy, int nstep, DequeDigest... dequeDigest) {
-    ExploringStartsStream exploringStartsStream = //
-        new ExploringStartsStream(monteCarloInterface, nstep, dequeDigest) {
+    DequeExploringStarts dequeExploringStarts = //
+        new DequeExploringStarts(monteCarloInterface, nstep, dequeDigest) {
           @Override
           public Policy batchPolicy() {
             return policy;
           }
         };
-    System.out.println("batch " + exploringStartsStream.batchIndex());
-    while (exploringStartsStream.batchIndex() == 0) {
-      // System.out.println("nextEpi " + exploringStartsStream.episodeIndex());
-      exploringStartsStream.nextEpisode();
-    }
-    return exploringStartsStream.episodeIndex();
+    while (dequeExploringStarts.batchIndex() == 0)
+      dequeExploringStarts.nextEpisode();
+    return dequeExploringStarts.episodeIndex();
   }
 }

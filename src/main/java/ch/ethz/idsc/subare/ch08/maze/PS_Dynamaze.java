@@ -9,8 +9,8 @@ import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.StepExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -23,32 +23,46 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 class PS_Dynamaze {
   static void handle(SarsaType sarsaType, int batches) throws Exception {
     System.out.println(sarsaType);
-    String name = "maze5";
-    Dynamaze dynamaze = DynamazeHelper.create5(3);
+    String name = "maze2";
+    Dynamaze dynamaze;
+    // dynamaze = DynamazeHelper.original(name);
+    dynamaze = DynamazeHelper.create5(3);
     DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
     final DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(5, 0.51);
-    PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping(
-        // TabularDynaQ tabularDynaQ = new TabularDynaQ( //
+    PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsaType.supply(dynamaze, qsa, learningRate), 10, RealScalar.ZERO);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 200);
+    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250);
+    // ---
+    Infoline infoline = null;
     for (int index = 0; index < batches; ++index) {
-      // if (EPISODES - 10 < index)
-      Infoline.print(dynamaze, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(index));
-      prioritizedSweeping.setPolicy(policy);
-      // for (int count = 0; count < 5; ++count)
-      ExploringStarts.batch(dynamaze, policy, prioritizedSweeping);
-      gsw.append(ImageFormat.of(StateRasters.vs_rescale(dynamazeRaster, qsa)));
+      StepExploringStarts stepExploringStarts = //
+          new StepExploringStarts(dynamaze, prioritizedSweeping) {
+            @Override
+            public Policy batchPolicy() {
+              return policy;
+            }
+          };
+      while (stepExploringStarts.batchIndex() == 0) {
+        infoline = Infoline.print(dynamaze, index, ref, qsa);
+        prioritizedSweeping.setPolicy(policy);
+        stepExploringStarts.nextEpisode();
+        gsw.append(ImageFormat.of(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref)));
+        if (infoline.isLossfree())
+          break;
+      }
+      if (infoline.isLossfree())
+        break;
     }
     gsw.close();
   }
 
   public static void main(String[] args) throws Exception {
-    // handle(SarsaType.original, 3, 50);
-    // handle(SarsaType.expected, 2, 50);
-    handle(SarsaType.qlearning, 50);
+    handle(SarsaType.original, 50);
+    // handle(SarsaType.expected, 50);
+    // handle(SarsaType.qlearning, 50);
   }
 }

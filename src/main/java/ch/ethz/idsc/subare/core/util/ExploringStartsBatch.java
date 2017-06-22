@@ -26,10 +26,14 @@ import ch.ethz.idsc.tensor.Tensor;
     Collections.shuffle(list);
   }
 
+  /** @return true if call to nextEpisode is valid */
   public boolean hasNext() {
     return index < list.size();
   }
 
+  /** @param policy
+   * @return
+   * @throws Exception if hasNext() == false */
   public EpisodeInterface nextEpisode(Policy policy) {
     Tensor key = list.get(index);
     Tensor state = key.get(0); // first state
