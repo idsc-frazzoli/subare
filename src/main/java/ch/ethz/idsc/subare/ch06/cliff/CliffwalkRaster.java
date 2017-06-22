@@ -26,7 +26,7 @@ class CliffwalkRaster implements StateActionRaster {
   }
 
   @Override
-  public Dimension dimension() {
+  public Dimension dimensionStateActionRaster() {
     return new Dimension(cliffwalk.NX, (cliffwalk.NY + 1) * 4 - 1);
   }
 

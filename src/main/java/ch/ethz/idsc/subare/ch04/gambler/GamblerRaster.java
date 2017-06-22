@@ -25,7 +25,7 @@ class GamblerRaster implements StateActionRaster {
   }
 
   @Override
-  public Dimension dimension() {
+  public Dimension dimensionStateActionRaster() {
     int length = gambler.states().length();
     return new Dimension(length, (length + 1) / 2);
   }

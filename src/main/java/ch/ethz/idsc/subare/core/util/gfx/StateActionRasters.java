@@ -34,7 +34,7 @@ public enum StateActionRasters {
    * @return */
   public static Tensor render(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
     DiscreteModel discreteModel = stateActionRaster.discreteModel();
-    Dimension dimension = stateActionRaster.dimension();
+    Dimension dimension = stateActionRaster.dimensionStateActionRaster();
     final Tensor tensor = Array.zeros(dimension.width, dimension.height, 4);
     for (Tensor state : discreteModel.states())
       for (Tensor action : discreteModel.actions(state)) {
@@ -47,12 +47,13 @@ public enum StateActionRasters {
     return tensor;
   }
 
-  public static Tensor qsa(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
-    return ImageResize.of(render(stateActionRaster, qsa), stateActionRaster.magify());
+  private static Tensor render(StateActionRaster stateActionRaster, Policy policy) {
+    return render(stateActionRaster, Policies.toQsa(stateActionRaster.discreteModel(), policy));
   }
 
-  public static Tensor render(StateActionRaster stateActionRaster, Policy policy) {
-    return render(stateActionRaster, Policies.toQsa(stateActionRaster.discreteModel(), policy));
+  /***************************************************/
+  public static Tensor qsa(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
+    return ImageResize.of(render(stateActionRaster, qsa), stateActionRaster.magify());
   }
 
   public static Tensor qsaPolicy(StateActionRaster stateActionRaster, DiscreteQsa qsa) {

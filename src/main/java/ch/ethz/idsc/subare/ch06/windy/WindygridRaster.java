@@ -26,7 +26,7 @@ class WindygridRaster implements StateActionRaster {
   }
 
   @Override
-  public Dimension dimension() {
+  public Dimension dimensionStateActionRaster() {
     return new Dimension(Windygrid.NX, (Windygrid.NY + 1) * 4 - 1);
   }
 

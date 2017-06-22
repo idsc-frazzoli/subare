@@ -4,8 +4,10 @@ package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.io.Export;
@@ -35,11 +37,14 @@ import ch.ethz.idsc.tensor.io.Export;
 class VI_Gridworld {
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
+    GridworldRaster gridworldStateRaster = new GridworldRaster(gridworld);
     ValueIteration vi = new ValueIteration(gridworld, gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     vi.vs().print();
     Policy policy = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
     Policies.print(policy, gridworld.states());
-    Export.of(UserHome.Pictures("gridworld_vs_vi.png"), GridworldHelper.render(gridworld, vi.vs()));
+    Export.of(UserHome.Pictures("gridworld_vs_vi.png"), //
+        StateRasters.vs(gridworldStateRaster, DiscreteValueFunctions.rescaled(vi.vs())));
+    // GridworldHelper.render(gridworld, vi.vs())
   }
 }

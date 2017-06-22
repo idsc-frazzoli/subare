@@ -35,7 +35,7 @@ enum BlackjackHelper {
 
   public static Tensor render(Blackjack blackjack, Policy policy) {
     BlackjackRaster blackjackRaster = new BlackjackRaster(blackjack);
-    Dimension dimension = blackjackRaster.dimension();
+    Dimension dimension = blackjackRaster.dimensionStateRaster();
     Tensor tensor = Array.zeros(dimension.width, dimension.height, 4);
     for (Tensor state : blackjack.states()) {
       Point point = blackjackRaster.point(state);

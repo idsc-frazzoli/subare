@@ -8,6 +8,7 @@ import java.util.List;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.tensor.Tensor;
 
+@Deprecated
 public abstract class DefaultStateRaster implements StateRaster {
   protected final DiscreteModel discreteModel;
   private final Dimension dimension;
@@ -23,14 +24,12 @@ public abstract class DefaultStateRaster implements StateRaster {
   }
 
   @Override
-  public final Dimension dimension() {
+  public final Dimension dimensionStateRaster() {
     return dimension;
   }
 
   @Override
   public Point point(Tensor state) { // TODO remove final after testing
-    return new Point( //
-        state.Get(0).number().intValue(), //
-        state.Get(1).number().intValue());
+    return StateRasters.canonicPoint(state);
   }
 }

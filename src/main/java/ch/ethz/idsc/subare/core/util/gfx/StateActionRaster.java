@@ -1,11 +1,15 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util.gfx;
 
+import java.awt.Dimension;
 import java.awt.Point;
 
 import ch.ethz.idsc.tensor.Tensor;
 
 public interface StateActionRaster extends Raster {
+  /** @return dimension of raster */
+  Dimension dimensionStateActionRaster();
+
   /** @param state
    * @param action
    * @return point with x, y as coordinates of state-action pair in raster,
