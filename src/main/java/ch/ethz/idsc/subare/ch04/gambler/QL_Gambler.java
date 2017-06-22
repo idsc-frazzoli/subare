@@ -28,7 +28,7 @@ class QL_Gambler {
   static void handle() throws Exception {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    int EPISODES = 100;
+    int batches = 100;
     // Tensor epsilon = Subdivide.of(.2, .001, EPISODES);
     Policy policy = new EquiprobablePolicy(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
@@ -37,7 +37,7 @@ class QL_Gambler {
     ExplorationRateDeque lr_scheduler = new ExplorationRateDeque(0.1);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
     Sarsa stepDigest = new QLearning(gambler, qsa, learningRate);
-    for (int index = 0; index < EPISODES; ++index) {
+    for (int index = 0; index < batches; ++index) {
       Infoline.print(gambler, index, ref, qsa);
       Scalar error = DiscreteValueFunctions.distance(qsa, ref);
       lr_scheduler.notifyError(error);

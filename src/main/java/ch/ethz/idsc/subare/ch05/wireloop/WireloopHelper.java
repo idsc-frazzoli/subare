@@ -8,12 +8,9 @@ import java.util.function.Function;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.RobustArgMax;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -27,14 +24,6 @@ import ch.ethz.idsc.tensor.sca.Clip;
 
 enum WireloopHelper {
   ;
-  // @Deprecated
-  // public static StateRaster createRaster(Wireloop wireloop) {
-  // List<Integer> list = Dimensions.of(wireloop.image());
-  // return StateRasters.create(wireloop, new Dimension(list.get(0), list.get(1)), 2);
-  // }
-  @Deprecated
-  private static final int MAGNIFY = 2; // 3
-
   static Wireloop create(String trackName, Function<Tensor, Scalar> function, WireloopReward wireloopReward) throws Exception {
     String path = "".getClass().getResource("/ch05/" + trackName + ".png").getPath();
     Tensor image = Import.of(new File(path)).unmodifiable();
@@ -49,44 +38,27 @@ enum WireloopHelper {
     return ActionValueIterations.solve(wireloop, DecimalScalar.of(.0001));
   }
 
-  public static Tensor render(Wireloop wireloop, DiscreteQsa qsa) {
-    return render(wireloop, DiscreteUtils.createVs(wireloop, qsa));
-  }
-
-  public static Tensor renderActions(Wireloop wireloop, QsaInterface qsa) {
+  private static Tensor renderActions(Wireloop wireloop, QsaInterface qsa) {
+    WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteVs vs = DiscreteVs.build(wireloop);
     for (Tensor state : wireloop.startStates()) {
       Tensor tensor = Tensor.of(wireloop.actions(state).flatten(0).map(action -> qsa.value(state, action)));
       int index = RobustArgMax.of(tensor);
       vs.assign(state, RealScalar.of(index * 0.25 + 0.185));
     }
-    return render_asIs(wireloop, vs);
+    return StateRasters.vs(wireloopRaster, vs);
   }
 
-  public static Tensor render(Wireloop wireloop, DiscreteQsa ref, DiscreteQsa qsa) {
-    Tensor im1 = render(wireloop, DiscreteUtils.createVs(wireloop, qsa));
-    DiscreteVs loss = Loss.perState(wireloop, ref, qsa);
+  public static Tensor render(WireloopRaster wireloopRaster, DiscreteQsa ref, DiscreteQsa qsa) {
+    Tensor image1 = StateRasters.vs_rescale(wireloopRaster, qsa);
+    DiscreteVs loss = Loss.perState(wireloopRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().flatten(0) //
-        .map(tensor -> tensor.multiply(RealScalar.of(100))) // TODO magic const
+        .map(tensor -> tensor.multiply(wireloopRaster.scaleLoss())) //
         .map(Clip.UNIT::of));
-    Tensor im2 = render_asIs(wireloop, loss);
-    Tensor im3 = renderActions(wireloop, qsa);
-    List<Integer> dimensions = Dimensions.of(im1);
-    dimensions.set(0, MAGNIFY);
-    return Join.of(im1, Array.zeros(dimensions), im2, Array.zeros(dimensions), im3);
-  }
-
-  public static Tensor render(Wireloop wireloop, DiscreteVs vs) {
-    return render_asIs(wireloop, DiscreteValueFunctions.rescaled(vs));
-  }
-
-  public static Tensor render_asIs(Wireloop wireloop, DiscreteVs vs) {
-    return ImageResize.of(StateRasters.render( //
-        new WireloopRaster(wireloop), vs), new WireloopRaster(wireloop).magify()); // TODO
-  }
-
-  /***************************************************/
-  static Scalar id_x(Tensor state) {
-    return state.Get(0);
+    Tensor image2 = StateRasters.vs(wireloopRaster, loss);
+    Tensor image3 = renderActions((Wireloop) wireloopRaster.discreteModel(), qsa);
+    List<Integer> dimensions = Dimensions.of(image1);
+    dimensions.set(wireloopRaster.joinAlongDimension(), wireloopRaster.magify());
+    return Join.of(image1, Array.zeros(dimensions), image2, Array.zeros(dimensions), image3);
   }
 }

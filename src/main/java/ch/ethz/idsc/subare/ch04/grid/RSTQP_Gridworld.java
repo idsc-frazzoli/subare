@@ -20,8 +20,8 @@ class RSTQP_Gridworld {
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         gridworld, qsa, ConstantLearningRate.one());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_qsa_rstqp.gif"), 250);
-    int EPISODES = 10;
-    for (int index = 0; index < EPISODES; ++index) {
+    int batches = 10;
+    for (int index = 0; index < batches; ++index) {
       gsw.append(ImageFormat.of( //
           StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref)));
       Infoline.print(gridworld, index, ref, qsa);

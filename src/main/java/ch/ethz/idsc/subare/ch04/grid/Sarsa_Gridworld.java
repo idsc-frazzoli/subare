@@ -34,13 +34,13 @@ class Sarsa_Gridworld {
     System.out.println(sarsaType);
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    int EPISODES = 10;
-    Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
+    int batches = 10;
+    Tensor epsilon = Subdivide.of(.1, .01, batches); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
-    for (int index = 0; index < EPISODES; ++index) {
+    for (int index = 0; index < batches; ++index) {
       gsw.append(ImageFormat.of( //
           StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref)));
       Infoline.print(gridworld, index, ref, qsa);

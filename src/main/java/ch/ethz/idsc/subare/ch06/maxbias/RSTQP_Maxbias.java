@@ -20,10 +20,10 @@ class RSTQP_Maxbias {
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         maxbias, qsa, DefaultLearningRate.of(3, 0.51));
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
-    int EPISODES = 5000;
+    int batches = 5000;
     for (int index = 0; index < 500; ++index)
       TabularSteps.batch(maxbias, maxbias, rstqp, avs);
-    Infoline.print(maxbias, EPISODES, ref, qsa);
+    Infoline.print(maxbias, batches, ref, qsa);
     System.out.println("---");
     ActionValueIteration avi = new ActionValueIteration(maxbias, avs);
     avi.untilBelow(RealScalar.of(.0001));

@@ -22,14 +22,14 @@ class Sarsa_Maxbias {
     System.out.println(sarsaType);
     Maxbias maxbias = new Maxbias(3);
     final DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias);
-    int EPISODES = 100;
-    Tensor epsilon = Subdivide.of(.7, .1, EPISODES);
+    int batches = 100;
+    Tensor epsilon = Subdivide.of(.7, .1, batches);
     DiscreteQsa qsa = DiscreteQsa.build(maxbias);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = sarsaType.supply(maxbias, qsa, learningRate);
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
-    for (int index = 0; index < EPISODES; ++index) {
-      if (EPISODES - 10 < index)
+    for (int index = 0; index < batches; ++index) {
+      if (batches - 10 < index)
         Infoline.print(maxbias, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(maxbias, qsa, epsilon.Get(index));
       sarsa.supplyPolicy(() -> policy);

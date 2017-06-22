@@ -22,7 +22,8 @@ class SES_Wireloop {
     String name = "wire5";
     WireloopReward wireloopReward = WireloopReward.freeSteps();
     wireloopReward = WireloopReward.constantCost();
-    Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x, wireloopReward);
+    Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x, wireloopReward);
+    WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
@@ -44,8 +45,10 @@ class SES_Wireloop {
     while (exploringStartsStream.batchIndex() < batches) {
       exploringStartsStream.nextEpisode();
       if (index % 50 == 0) {
-        Infoline.print(wireloop, index, ref, qsa);
-        gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ref, qsa)));
+        Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
+        gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, qsa)));
+        if (infoline.isLossfree())
+          break;
       }
       ++index;
     }

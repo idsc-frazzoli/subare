@@ -24,9 +24,9 @@ class CAMC_Gridworld {
     ConstantAlphaMonteCarloVs camc = new ConstantAlphaMonteCarloVs( //
         gridworld, DefaultLearningRate.of(3, .51));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_vs_camc.gif"), 100);
-    final int EPISODES = 50;
-    Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
-    for (int index = 0; index < EPISODES; ++index) {
+    final int batches = 50;
+    Tensor epsilon = Subdivide.of(.2, .05, batches);
+    for (int index = 0; index < batches; ++index) {
       System.out.println(index);
       for (int count = 0; count < 20; ++count) {
         Policy policy = //

@@ -23,13 +23,13 @@ class AVS_Blackjack {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_avs.gif"), 250);
-    int EPISODES = 3; // 40
-    Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
+    int batches = 3; // 40
+    Tensor epsilon = Subdivide.of(.2, .05, batches);
     int episodes = 0;
     ActionValueStatistics avs = new ActionValueStatistics(blackjack);
-    for (int index = 0; index < EPISODES; ++index) {
+    for (int index = 0; index < batches; ++index) {
       System.out.println(index + " " + epsilon.Get(index));
-      for (int count = 0; count < EPISODES; ++count) {
+      for (int count = 0; count < batches; ++count) {
         Policy policy = EGreedyPolicy.bestEquiprobable(blackjack, mces.qsa(), epsilon.Get(index));
         episodes += //
             ExploringStarts.batchWithReplay(blackjack, policy, mces, avs);

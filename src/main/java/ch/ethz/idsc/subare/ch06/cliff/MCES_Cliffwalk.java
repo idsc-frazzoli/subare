@@ -22,8 +22,8 @@ class MCES_Cliffwalk {
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(cliffwalk);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_mces.gif"), 100);
-    int EPISODES = 100;
-    for (int index = 0; index < EPISODES; ++index) {
+    int batches = 100;
+    for (int index = 0; index < batches; ++index) {
       Infoline.print(cliffwalk, index, ref, mces.qsa());
       for (int count = 0; count < 10; ++count) {
         Policy policy = //

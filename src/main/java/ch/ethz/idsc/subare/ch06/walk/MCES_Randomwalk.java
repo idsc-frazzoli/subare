@@ -22,8 +22,8 @@ class MCES_Randomwalk {
   public static void main(String[] args) throws Exception {
     Randomwalk randomwalk = new Randomwalk();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(randomwalk);
-    int EPISODES = 1000;
-    for (int count = 0; count < EPISODES; ++count) {
+    int batches = 1000;
+    for (int count = 0; count < batches; ++count) {
       Policy policy = EGreedyPolicy.bestEquiprobable(randomwalk, mces.qsa(), RealScalar.of(.1));
       if (count == 0) {
         boolean equals = Policies.equals(randomwalk, policy, new EquiprobablePolicy(randomwalk));

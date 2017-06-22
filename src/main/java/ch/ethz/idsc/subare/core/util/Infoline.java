@@ -2,8 +2,8 @@
 package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.sca.Chop;
 import ch.ethz.idsc.tensor.sca.Round;
 
 public class Infoline {
@@ -22,6 +22,6 @@ public class Infoline {
   }
 
   public boolean isLossfree() {
-    return loss.equals(RealScalar.ZERO);
+    return Chop.isZeros(loss);
   }
 }

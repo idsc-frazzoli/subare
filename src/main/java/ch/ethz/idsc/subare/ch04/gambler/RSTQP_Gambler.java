@@ -27,8 +27,8 @@ class RSTQP_Gambler {
     StateActionCounter sac = new StateActionCounter(gambler);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_rstqp.gif"), 100);
     GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_rstqp.gif"), 200);
-    int EPISODES = 30;
-    for (int index = 0; index < EPISODES; ++index) {
+    int batches = 30;
+    for (int index = 0; index < batches; ++index) {
       Infoline.print(gambler, index, ref, qsa);
       TabularSteps.batch(gambler, gambler, rstqp, avs, sac);
       gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref)));

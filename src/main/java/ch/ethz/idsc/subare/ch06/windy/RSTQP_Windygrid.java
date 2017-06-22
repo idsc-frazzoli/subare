@@ -21,8 +21,8 @@ class RSTQP_Windygrid {
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         windygrid, qsa, ConstantLearningRate.one());
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_rstqp.gif"), 250);
-    int EPISODES = 40;
-    for (int index = 0; index < EPISODES; ++index) {
+    int batches = 40;
+    for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
       TabularSteps.batch(windygrid, windygrid, rstqp);
       gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, qsa, ref)));

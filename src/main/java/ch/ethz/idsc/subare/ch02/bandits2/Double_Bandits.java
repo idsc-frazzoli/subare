@@ -21,18 +21,18 @@ class Double_Bandits {
     System.out.println("double " + sarsaType);
     Bandits bandits = new Bandits(20);
     final DiscreteQsa ref = BanditsHelper.getOptimalQsa(bandits);
-    int EPISODES = 100;
-    Tensor epsilon = Subdivide.of(.3, .01, EPISODES); // used in egreedy
+    int batches = 100;
+    Tensor epsilon = Subdivide.of(.3, .01, batches); // used in egreedy
     DiscreteQsa qsa1 = DiscreteQsa.build(bandits);
     DiscreteQsa qsa2 = DiscreteQsa.build(bandits);
     DoubleSarsa doubleSarsa = new DoubleSarsa(sarsaType, bandits, //
         qsa1, qsa2, //
         DefaultLearningRate.of(15, 1.31), //
         DefaultLearningRate.of(15, 1.31));
-    for (int index = 0; index < EPISODES; ++index) {
+    for (int index = 0; index < batches; ++index) {
       Scalar explore = epsilon.Get(index);
       Scalar error = Loss.accumulation(bandits, ref, qsa1);
-      if (EPISODES - 10 < index)
+      if (batches - 10 < index)
         System.out.println(index + " " + explore.map(Round._2) + " " + error.map(Round._3));
       Policy policy1 = EGreedyPolicy.bestEquiprobable(bandits, qsa1, explore);
       Policy policy2 = EGreedyPolicy.bestEquiprobable(bandits, qsa2, explore);

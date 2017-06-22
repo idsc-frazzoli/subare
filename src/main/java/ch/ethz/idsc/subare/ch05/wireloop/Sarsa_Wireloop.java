@@ -16,30 +16,35 @@ import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class Sarsa_Wireloop {
-  static void handle(SarsaType sarsaType, int nstep, int EPISODES) throws Exception {
+  static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
     System.out.println(sarsaType);
-    String name = "wire6";
+    String name = "wire5";
     WireloopReward wireloopReward = WireloopReward.freeSteps();
     wireloopReward = WireloopReward.constantCost();
-    Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x, wireloopReward);
+    Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x, wireloopReward);
+    WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
-    Tensor epsilon = Subdivide.of(.2, .01, EPISODES);
+    Tensor epsilon = Subdivide.of(.2, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     System.out.println(qsa.size());
     Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(3, 0.51));
     GifSequenceWriter gsw = GifSequenceWriter.of( //
         UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250);
-    for (int index = 0; index < EPISODES; ++index) {
-      Infoline.print(wireloop, index, ref, qsa);
+    for (int index = 0; index < batches; ++index) {
+      Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
       sarsa.supplyPolicy(() -> policy);
       ExploringStarts.batch(wireloop, policy, nstep, sarsa);
-      gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ref, qsa)));
+      gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, qsa)));
+      if (infoline.isLossfree())
+        break;
     }
     gsw.close();
+    System.out.println("---");
   }
 
   public static void main(String[] args) throws Exception {
     handle(SarsaType.qlearning, 1, 20);
+    handle(SarsaType.expected, 1, 20);
   }
 }

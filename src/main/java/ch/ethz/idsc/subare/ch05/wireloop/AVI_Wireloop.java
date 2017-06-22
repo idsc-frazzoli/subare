@@ -13,16 +13,20 @@ class AVI_Wireloop {
     String name = "wire5";
     WireloopReward wireloopReward = WireloopReward.freeSteps();
     wireloopReward = WireloopReward.constantCost();
-    Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x, wireloopReward);
+    Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x, wireloopReward);
+    WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     ActionValueIteration avi = new ActionValueIteration(wireloop);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "L_avi.gif"), 250);
-    for (int index = 0; index < 44; ++index) {
-      Infoline.print(wireloop, index, ref, avi.qsa());
-      gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ref, avi.qsa())));
+    int batches = 50;
+    for (int index = 0; index < batches; ++index) {
+      Infoline infoline = Infoline.print(wireloop, index, ref, avi.qsa());
+      gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, avi.qsa())));
       avi.step();
+      if (infoline.isLossfree())
+        break;
     }
-    gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ref, avi.qsa())));
+    gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, avi.qsa())));
     gsw.close();
   }
 }

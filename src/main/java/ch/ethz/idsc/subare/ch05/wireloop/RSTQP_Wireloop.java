@@ -14,20 +14,23 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 /** Example 4.1, p.82 */
 class RSTQP_Wireloop {
   public static void main(String[] args) throws Exception {
-    String name = "wire7";
+    String name = "wire5";
     WireloopReward wireloopReward = WireloopReward.freeSteps();
     wireloopReward = WireloopReward.constantCost();
-    Wireloop wireloop = WireloopHelper.create(name, WireloopHelper::id_x, wireloopReward);
+    Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x, wireloopReward);
+    WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         wireloop, qsa, ConstantLearningRate.of(RealScalar.ONE));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "L_qsa_rstqp.gif"), 250);
-    int EPISODES = 30;
-    for (int index = 0; index < EPISODES; ++index) {
-      Infoline.print(wireloop, index, ref, qsa);
+    int batches = 50;
+    for (int index = 0; index < batches; ++index) {
+      Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
       TabularSteps.batch(wireloop, wireloop, rstqp);
-      gsw.append(ImageFormat.of(WireloopHelper.render(wireloop, ref, qsa)));
+      gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, qsa)));
+      if (infoline.isLossfree())
+        break;
     }
     gsw.close();
   }

@@ -21,9 +21,9 @@ class MCES_Gridworld {
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_qsa_mces.gif"), 250);
-    final int EPISODES = 20;
-    Tensor epsilon = Subdivide.of(.2, .05, EPISODES);
-    for (int index = 0; index < EPISODES; ++index) {
+    final int batches = 20;
+    Tensor epsilon = Subdivide.of(.2, .05, batches);
+    for (int index = 0; index < batches; ++index) {
       Infoline.print(gridworld, index, ref, mces.qsa());
       for (int count = 0; count < 1; ++count) {
         Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, mces.qsa(), epsilon.Get(index));

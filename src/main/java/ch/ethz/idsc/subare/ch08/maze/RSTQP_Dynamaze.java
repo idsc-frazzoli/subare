@@ -23,8 +23,8 @@ class RSTQP_Dynamaze {
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         dynamaze, qsa, ConstantLearningRate.of(RealScalar.ONE));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_qsa_rstqp.gif"), 250);
-    int EPISODES = 50;
-    for (int index = 0; index < EPISODES; ++index) {
+    int batches = 50;
+    for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
       TabularSteps.batch(dynamaze, dynamaze, rstqp);
       gsw.append(ImageFormat.of(StateRasters.vs_rescale(dynamazeRaster, qsa)));

@@ -19,12 +19,12 @@ public class Sarsa_Blackjack {
   static void handle(SarsaType sarsaType) throws Exception {
     System.out.println(sarsaType);
     final Blackjack blackjack = new Blackjack();
-    int EPISODES = 40;
-    Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // only used in egreedy
+    int batches = 40;
+    Tensor epsilon = Subdivide.of(.1, .01, batches); // only used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_qsa_" + sarsaType + ".gif"), 200);
     Sarsa sarsa = sarsaType.supply(blackjack, qsa, DefaultLearningRate.of(2, 0.6));
-    for (int index = 0; index < EPISODES; ++index) {
+    for (int index = 0; index < batches; ++index) {
       // Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2));
       Policy policy = EGreedyPolicy.bestEquiprobable(blackjack, qsa, epsilon.Get(index));

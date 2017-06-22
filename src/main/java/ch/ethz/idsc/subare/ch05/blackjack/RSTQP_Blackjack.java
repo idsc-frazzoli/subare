@@ -19,8 +19,8 @@ class RSTQP_Blackjack {
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         blackjack, qsa, DefaultLearningRate.of(5, 0.51));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_rstqp.gif"), 250);
-    int EPISODES = 60;
-    for (int index = 0; index < EPISODES; ++index) {
+    int batches = 60;
+    for (int index = 0; index < batches; ++index) {
       for (int count = 0; count < 100; ++count)
         TabularSteps.batch(blackjack, blackjack, rstqp);
       gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, qsa)));

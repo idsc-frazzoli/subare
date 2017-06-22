@@ -30,8 +30,8 @@ class Double_Gridworld {
     System.out.println("double " + sarsaType);
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    int EPISODES = 40;
-    Tensor epsilon = Subdivide.of(.1, .01, EPISODES); // used in egreedy
+    int batches = 40;
+    Tensor epsilon = Subdivide.of(.1, .01, batches); // used in egreedy
     DiscreteQsa qsa1 = DiscreteQsa.build(gridworld);
     DiscreteQsa qsa2 = DiscreteQsa.build(gridworld);
     DoubleSarsa doubleSarsa = new DoubleSarsa(sarsaType, gridworld, //
@@ -39,8 +39,8 @@ class Double_Gridworld {
         DefaultLearningRate.of(5, .51), //
         DefaultLearningRate.of(5, .51));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150);
-    for (int index = 0; index < EPISODES; ++index) {
-      if (EPISODES - 10 < index)
+    for (int index = 0; index < batches; ++index) {
+      if (batches - 10 < index)
         Infoline.print(gridworld, index, ref, qsa1);
       Scalar explore = epsilon.Get(index);
       Policy policy1 = EGreedyPolicy.bestEquiprobable(gridworld, qsa1, explore);
