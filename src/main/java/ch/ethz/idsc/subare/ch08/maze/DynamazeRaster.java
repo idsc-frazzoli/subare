@@ -38,12 +38,12 @@ public class DynamazeRaster implements StateRaster {
 
   @Override
   public Scalar scaleLoss() {
-    return RealScalar.ONE;
+    return RealScalar.of(50.);
   }
 
   @Override
   public Scalar scaleQdelta() {
-    return RealScalar.ONE;
+    return RealScalar.of(50.);
   }
 
   @Override
@@ -52,7 +52,7 @@ public class DynamazeRaster implements StateRaster {
   }
 
   @Override
-  public int magify() {
+  public int magnify() {
     return 4;
   }
 }

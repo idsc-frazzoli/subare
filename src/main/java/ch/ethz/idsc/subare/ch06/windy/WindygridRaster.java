@@ -54,7 +54,7 @@ class WindygridRaster implements StateActionRaster {
   }
 
   @Override
-  public int magify() {
+  public int magnify() {
     return 3;
   }
 }

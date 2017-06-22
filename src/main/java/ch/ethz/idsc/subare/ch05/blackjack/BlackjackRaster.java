@@ -54,7 +54,7 @@ class BlackjackRaster implements StateRaster {
   }
 
   @Override
-  public int magify() {
+  public int magnify() {
     return 5;
   }
 }

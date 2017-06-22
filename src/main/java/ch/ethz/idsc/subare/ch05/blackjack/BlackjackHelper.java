@@ -7,8 +7,6 @@ import java.util.List;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.Colorscheme;
@@ -28,11 +26,7 @@ enum BlackjackHelper {
   private static final Interpolation COLORSCHEME = Colorscheme.classic();
   private static final Tensor BASE = Tensors.vector(255);
 
-  public static Tensor render(Blackjack blackjack, DiscreteQsa qsa) {
-    return StateRasters.render(new BlackjackRaster(blackjack), //
-        DiscreteValueFunctions.rescaled(DiscreteUtils.createVs(blackjack, qsa)));
-  }
-
+  // FIXME magnify irregular
   public static Tensor render(Blackjack blackjack, Policy policy) {
     BlackjackRaster blackjackRaster = new BlackjackRaster(blackjack);
     Dimension dimension = blackjackRaster.dimensionStateRaster();
@@ -46,6 +40,10 @@ enum BlackjackHelper {
       }
     }
     return tensor;
+  }
+
+  public static Tensor render(Blackjack blackjack, DiscreteQsa qsa) {
+    return StateRasters.vs_rescale(new BlackjackRaster(blackjack), qsa);
   }
 
   public static Tensor joinAll(Blackjack blackjack, DiscreteQsa qsa) {

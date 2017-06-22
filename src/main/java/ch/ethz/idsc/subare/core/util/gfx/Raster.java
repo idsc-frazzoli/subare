@@ -17,5 +17,5 @@ interface Raster extends Serializable {
 
   int joinAlongDimension();
 
-  int magify();
+  int magnify();
 }

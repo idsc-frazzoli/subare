@@ -19,23 +19,25 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** StepDigest qsa methods applied to cliff walk */
 class Sarsa_Cliffwalk {
-  static void handle(SarsaType sarsaType, int batches) throws Exception {
+  static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
     System.out.println(sarsaType);
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
-    Tensor epsilon = Subdivide.of(.5, .01, batches);
-    Sarsa sarsa = sarsaType.supply(cliffwalk, qsa, DefaultLearningRate.of(5, 0.51));
+    Tensor epsilon = Subdivide.of(.2, .01, batches);
+    Sarsa sarsa = sarsaType.supply(cliffwalk, qsa, DefaultLearningRate.of(7, 0.61));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_" + sarsaType + ".gif"), 200);
     for (int index = 0; index < batches; ++index) {
-      if (batches - 10 < index)
-        Infoline.print(cliffwalk, index, ref, qsa);
+      // if (batches - 10 < index)
+      Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, epsilon.Get(index));
       sarsa.supplyPolicy(() -> policy);
-      ExploringStarts.batch(cliffwalk, policy, sarsa);
+      ExploringStarts.batch(cliffwalk, policy, nstep, sarsa);
       gsw.append(ImageFormat.of( //
           StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref)));
+      if (infoline.isLossfree())
+        break;
     }
     gsw.close();
     // qsa.print(Digits._2);
@@ -50,8 +52,8 @@ class Sarsa_Cliffwalk {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.original, 30);
-    handle(SarsaType.expected, 30);
-    handle(SarsaType.qlearning, 30);
+    // handle(SarsaType.original, 1, 30);
+    // handle(SarsaType.expected, 1, 30);
+    handle(SarsaType.qlearning, 1, 30);
   }
 }

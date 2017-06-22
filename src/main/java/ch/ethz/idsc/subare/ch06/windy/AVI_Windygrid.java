@@ -6,11 +6,11 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -20,17 +20,20 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 class AVI_Windygrid {
   public static void main(String[] args) throws Exception {
     Windygrid windygrid = Windygrid.createFour();
+    WindygridRaster windygridRaster = new WindygridRaster(windygrid);
     DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
     Export.of(UserHome.Pictures("windygrid_qsa_avi.png"), //
-        WindygridHelper.render(windygrid, DiscreteValueFunctions.rescaled(ref)));
+        StateActionRasters.qsa_rescaled(windygridRaster, ref));
     ActionValueIteration avi = new ActionValueIteration(windygrid);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250);
     for (int index = 0; index < 20; ++index) {
-      Infoline.print(windygrid, index, ref, avi.qsa());
-      gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, avi.qsa(), ref)));
+      Infoline infoline = Infoline.print(windygrid, index, ref, avi.qsa());
+      gsw.append(ImageFormat.of( //
+          StateActionRasters.qsaLossRef(windygridRaster, avi.qsa(), ref)));
       avi.step();
+      if (infoline.isLossfree())
+        break;
     }
-    gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, avi.qsa(), ref)));
     gsw.close();
     // TODO extract code below to other file
     DiscreteVs vs = DiscreteUtils.createVs(windygrid, ref);

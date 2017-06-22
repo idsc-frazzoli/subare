@@ -3,19 +3,25 @@ package ch.ethz.idsc.subare.core.util.gfx;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.List;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
+import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.alg.Dimensions;
+import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.opt.Interpolation;
+import ch.ethz.idsc.tensor.sca.Clip;
 
 public enum StateRasters {
   ;
@@ -31,8 +37,7 @@ public enum StateRasters {
   /** @param stateActionRaster
    * @param vs scaled to contain values in the interval [0, 1]
    * @return */
-  @Deprecated // should be private!
-  public static Tensor render(StateRaster stateRaster, DiscreteVs vs) {
+  private static Tensor _render(StateRaster stateRaster, DiscreteVs vs) {
     DiscreteModel discreteModel = stateRaster.discreteModel();
     Dimension dimension = stateRaster.dimensionStateRaster();
     Tensor tensor = Array.zeros(dimension.width, dimension.height, 4);
@@ -46,18 +51,45 @@ public enum StateRasters {
     return tensor;
   }
 
+  private static Tensor _vs(StateRaster stateRaster, DiscreteQsa qsa) {
+    return _render(stateRaster, DiscreteUtils.createVs(stateRaster.discreteModel(), qsa));
+  }
+
+  private static Tensor _vs_rescale(StateRaster stateRaster, DiscreteQsa qsa) {
+    DiscreteVs vs = DiscreteUtils.createVs(stateRaster.discreteModel(), qsa);
+    return _render(stateRaster, vs.create(Rescale.of(vs.values()).flatten(0)));
+  }
+
+  /***************************************************/
   public static Tensor vs(StateRaster stateRaster, DiscreteVs vs) {
-    return ImageResize.of(render(stateRaster, vs), stateRaster.magify());
+    return ImageResize.of(_render(stateRaster, vs), stateRaster.magnify());
   }
 
   public static Tensor vs_rescale(StateRaster stateRaster, DiscreteVs vs) {
-    DiscreteVs rescale = vs.create(Rescale.of(vs.values()).flatten(0));
-    return vs(stateRaster, rescale);
+    return vs(stateRaster, vs.create(Rescale.of(vs.values()).flatten(0)));
+  }
+
+  public static Tensor vs(StateRaster stateRaster, DiscreteQsa qsa) {
+    return vs(stateRaster, DiscreteUtils.createVs(stateRaster.discreteModel(), qsa));
   }
 
   public static Tensor vs_rescale(StateRaster stateRaster, DiscreteQsa qsa) {
     DiscreteVs vs = DiscreteUtils.createVs(stateRaster.discreteModel(), qsa);
-    DiscreteVs rescale = vs.create(Rescale.of(vs.values()).flatten(0));
-    return vs(stateRaster, rescale);
+    return vs(stateRaster, vs.create(Rescale.of(vs.values()).flatten(0)));
+  }
+
+  public static Tensor qsaLossRef(StateRaster stateRaster, DiscreteQsa qsa, DiscreteQsa ref) {
+    Tensor image1 = _vs_rescale(stateRaster, DiscreteValueFunctions.rescaled(qsa));
+    DiscreteVs loss = Loss.perState(stateRaster.discreteModel(), ref, qsa);
+    loss = loss.create(loss.values().flatten(0) //
+        .map(tensor -> tensor.multiply(stateRaster.scaleLoss())) //
+        .map(Clip.UNIT::of));
+    Tensor image2 = _render(stateRaster, loss);
+    Tensor image3 = _vs(stateRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, stateRaster.scaleQdelta()));
+    List<Integer> list = Dimensions.of(image1);
+    int dim = stateRaster.joinAlongDimension();
+    list.set(dim, 1);
+    return ImageResize.of( //
+        Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateRaster.magnify());
   }
 }

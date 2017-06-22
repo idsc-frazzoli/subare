@@ -5,9 +5,9 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.util.DequeExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.ExploringStartsStream;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
@@ -29,10 +29,10 @@ class SES_Wireloop {
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     System.out.println(qsa.size());
     Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(3, 0.51));
-    ExploringStartsStream exploringStartsStream = new ExploringStartsStream(wireloop, nstep, sarsa) {
+    DequeExploringStarts exploringStartsStream = new DequeExploringStarts(wireloop, nstep, sarsa) {
       @Override
-      public Policy batchPolicy() {
-        Scalar explore = epsilon.Get(batchIndex());
+      public Policy batchPolicy(int batch) {
+        Scalar explore = epsilon.Get(batch);
         System.out.println("policy update " + batchIndex() + " " + explore);
         Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, explore);
         sarsa.supplyPolicy(() -> policy);

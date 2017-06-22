@@ -58,7 +58,7 @@ enum WireloopHelper {
     Tensor image2 = StateRasters.vs(wireloopRaster, loss);
     Tensor image3 = renderActions((Wireloop) wireloopRaster.discreteModel(), qsa);
     List<Integer> dimensions = Dimensions.of(image1);
-    dimensions.set(wireloopRaster.joinAlongDimension(), wireloopRaster.magify());
+    dimensions.set(wireloopRaster.joinAlongDimension(), wireloopRaster.magnify());
     return Join.of(image1, Array.zeros(dimensions), image2, Array.zeros(dimensions), image3);
   }
 }
