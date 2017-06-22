@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.core.util;
+package ch.ethz.idsc.subare.core.util.gfx;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -7,6 +7,11 @@ import java.util.List;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.Loss;
+import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.Scalar;
@@ -18,6 +23,7 @@ import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
 
+// TODO all non-terminal function should be package visibility
 public enum StateActionRasters {
   ;
   private static final Interpolation COLORSCHEME = Colorscheme.classic();
@@ -41,6 +47,10 @@ public enum StateActionRasters {
     return tensor;
   }
 
+  public static Tensor qsa(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
+    return ImageResize.of(render(stateActionRaster, qsa), stateActionRaster.magify());
+  }
+
   public static Tensor render(StateActionRaster stateActionRaster, Policy policy) {
     return render(stateActionRaster, Policies.toQsa(stateActionRaster.discreteModel(), policy));
   }
@@ -51,7 +61,8 @@ public enum StateActionRasters {
     Tensor image2 = render(stateActionRaster, policy);
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 3);
-    return Join.of(0, image1, Array.zeros(list), image2);
+    return ImageResize.of( //
+        Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magify());
   }
 
   public static Tensor qsaPolicyRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {

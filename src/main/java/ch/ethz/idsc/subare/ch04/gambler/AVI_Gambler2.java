@@ -4,12 +4,14 @@ package ch.ethz.idsc.subare.ch04.gambler;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.Infoline;
-import ch.ethz.idsc.subare.core.util.StateActionRasters;
+import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
-/** action value iteration for gambler's dilemma */
+/** action value iteration for gambler's dilemma
+ * 
+ * visualizes each pass of the action value iteration */
 class AVI_Gambler2 {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();

@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
-import ch.ethz.idsc.subare.core.util.DefaultStateRaster;
+import ch.ethz.idsc.subare.core.util.gfx.DefaultStateRaster;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.alg.Dimensions;

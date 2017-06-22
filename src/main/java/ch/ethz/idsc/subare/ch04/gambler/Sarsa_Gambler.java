@@ -8,13 +8,14 @@ import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.StateActionCounter;
-import ch.ethz.idsc.subare.core.util.StateActionRasters;
+import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -29,6 +30,7 @@ class Sarsa_Gambler {
   static void train(Gambler gambler, SarsaType sarsaType, //
       int batches, Scalar factor, Scalar exponent) throws Exception {
     System.out.println(sarsaType);
+    GamblerRaster gamblerRaster = new GamblerRaster(gambler);
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler); // true q-function, for error measurement
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(gambler); // q-function for training, initialized to 0
@@ -45,9 +47,9 @@ class Sarsa_Gambler {
       sarsa.supplyPolicy(() -> policy);
       ExploringStarts.batch(gambler, policy, 1, sarsa, sac);
       // ---
-      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref)));
-      gsc.append(ImageFormat.of(GamblerHelper.counts( //
-          gambler, sac.qsa(StateActionCounter.LOGARITHMIC))));
+      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref)));
+      gsc.append(ImageFormat.of(StateActionRasters.qsa( //
+          gamblerRaster, DiscreteValueFunctions.rescaled(sac.qsa(StateActionCounter.LOGARITHMIC)))));
     }
     gsw.close();
     gsc.close();

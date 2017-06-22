@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.core.util;
+package ch.ethz.idsc.subare.core.util.gfx;
 
 import java.awt.Dimension;
 import java.io.Serializable;

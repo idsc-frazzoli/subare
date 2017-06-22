@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch05.blackjack;
 import java.awt.Point;
 import java.util.Arrays;
 
-import ch.ethz.idsc.subare.core.util.DefaultStateRaster;
+import ch.ethz.idsc.subare.core.util.gfx.DefaultStateRaster;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 

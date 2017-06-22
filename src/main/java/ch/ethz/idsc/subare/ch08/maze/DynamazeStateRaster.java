@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch08.maze;
 
-import ch.ethz.idsc.subare.core.util.DefaultStateRaster;
+import ch.ethz.idsc.subare.core.util.gfx.DefaultStateRaster;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 

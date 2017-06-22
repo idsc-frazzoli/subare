@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
-import ch.ethz.idsc.subare.core.util.StateRaster;
+import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
 import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.RealScalar;

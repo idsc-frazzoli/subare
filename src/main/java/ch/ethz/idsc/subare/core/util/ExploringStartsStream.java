@@ -26,14 +26,18 @@ public abstract class ExploringStartsStream {
     this.monteCarloInterface = monteCarloInterface;
     this.nstep = nstep;
     list = Arrays.asList(dequeDigest);
+    nextBatch();
+  }
+
+  private void nextBatch() {
+    ++batchIndex; // holds subsequent batch id that won't change during the next episodes
+    exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
+    policy = batchPolicy();
   }
 
   public void nextEpisode() {
-    if (exploringStartBatch == null || !exploringStartBatch.hasNext()) {
-      ++batchIndex; // holds subsequent batch id that won't change during the next episodes
-      exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
-      policy = batchPolicy();
-    }
+    if (exploringStartBatch == null || !exploringStartBatch.hasNext())
+      nextBatch();
     // ---
     EpisodeInterface episodeInterface = exploringStartBatch.nextEpisode(policy);
     Deque<StepInterface> deque = new LinkedList<>();

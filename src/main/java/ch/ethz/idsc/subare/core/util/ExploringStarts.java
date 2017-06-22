@@ -78,8 +78,11 @@ public enum ExploringStarts {
             return policy;
           }
         };
-    while (exploringStartsStream.batchIndex() == 0)
+    System.out.println("batch " + exploringStartsStream.batchIndex());
+    while (exploringStartsStream.batchIndex() == 0) {
+      // System.out.println("nextEpi " + exploringStartsStream.episodeIndex());
       exploringStartsStream.nextEpisode();
+    }
     return exploringStartsStream.episodeIndex();
   }
 }

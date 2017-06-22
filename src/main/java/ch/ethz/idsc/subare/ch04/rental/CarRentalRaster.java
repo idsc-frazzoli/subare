@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch04.rental;
 
 import java.util.Arrays;
 
-import ch.ethz.idsc.subare.core.util.DefaultStateRaster;
+import ch.ethz.idsc.subare.core.util.gfx.DefaultStateRaster;
 import ch.ethz.idsc.tensor.Scalar;
 
 public class CarRentalRaster extends DefaultStateRaster {
