@@ -47,7 +47,7 @@ public enum StateRasters {
   }
 
   public static Tensor vs(StateRaster stateRaster, DiscreteVs vs) {
-    return ImageResize.of(render(stateRaster, vs), stateRaster.magify());
+    return ImageResize.of(render(stateRaster, vs), stateRaster.magnify());
   }
 
   public static Tensor vs_rescale(StateRaster stateRaster, DiscreteVs vs) {

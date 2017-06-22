@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -22,6 +23,7 @@ class Sarsa_Windygrid {
   static void handle(SarsaType sarsaType, int batches) throws Exception {
     System.out.println(sarsaType);
     Windygrid windygrid = Windygrid.createFour();
+    WindygridRaster windygridRaster = new WindygridRaster(windygrid);
     final DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     Tensor epsilon = Subdivide.of(.2, .01, batches);
@@ -29,19 +31,22 @@ class Sarsa_Windygrid {
     Sarsa sarsa = sarsaType.supply(windygrid, qsa, learningRate);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100);
     for (int index = 0; index < batches; ++index) {
-      Infoline.print(windygrid, index, ref, qsa);
+      Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, epsilon.Get(index));
       sarsa.supplyPolicy(() -> policy);
       for (int count = 0; count < 10; ++count) // because there is only 1 start state
         ExploringStarts.batch(windygrid, policy, sarsa);
-      gsw.append(ImageFormat.of(WindygridHelper.joinAll(windygrid, qsa, ref)));
+      gsw.append(ImageFormat.of( //
+          StateActionRasters.qsaLossRef(windygridRaster, qsa, ref)));
+      if (infoline.isLossfree())
+        break;
     }
     gsw.close();
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.original, 20);
-    handle(SarsaType.expected, 20);
+    // handle(SarsaType.original, 20);
+    // handle(SarsaType.expected, 20);
     handle(SarsaType.qlearning, 20);
   }
 }

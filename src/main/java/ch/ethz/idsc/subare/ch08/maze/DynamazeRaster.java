@@ -52,7 +52,7 @@ public class DynamazeRaster implements StateRaster {
   }
 
   @Override
-  public int magify() {
+  public int magnify() {
     return 4;
   }
 }

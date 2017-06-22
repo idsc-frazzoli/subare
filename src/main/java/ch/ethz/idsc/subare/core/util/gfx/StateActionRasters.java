@@ -53,7 +53,11 @@ public enum StateActionRasters {
 
   /***************************************************/
   public static Tensor qsa(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
-    return ImageResize.of(render(stateActionRaster, qsa), stateActionRaster.magify());
+    return ImageResize.of(render(stateActionRaster, qsa), stateActionRaster.magnify());
+  }
+
+  public static Tensor qsa_rescaled(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
+    return qsa(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
   }
 
   public static Tensor qsaPolicy(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
@@ -63,7 +67,7 @@ public enum StateActionRasters {
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 3);
     return ImageResize.of( //
-        Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magify());
+        Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magnify());
   }
 
   public static Tensor qsaPolicyRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
@@ -75,7 +79,7 @@ public enum StateActionRasters {
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 3);
     return ImageResize.of( //
-        Join.of(0, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magify());
+        Join.of(0, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magnify());
   }
 
   public static Tensor qsaLossRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
@@ -90,7 +94,7 @@ public enum StateActionRasters {
     int dim = stateActionRaster.joinAlongDimension();
     list.set(dim, 1);
     return ImageResize.of( //
-        Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magify());
+        Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magnify());
   }
 
   // not recommended, use qsaLossRef instead
@@ -102,6 +106,6 @@ public enum StateActionRasters {
     int dim = stateActionRaster.joinAlongDimension();
     list.set(dim, 3);
     return ImageResize.of( //
-        Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magify());
+        Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magnify());
   }
 }

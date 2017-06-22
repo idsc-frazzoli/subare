@@ -66,7 +66,7 @@ class GridworldRaster implements StateRaster, StateActionRaster {
   }
 
   @Override
-  public int magify() {
+  public int magnify() {
     return 6;
   }
 }

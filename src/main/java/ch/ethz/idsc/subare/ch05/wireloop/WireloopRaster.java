@@ -52,7 +52,7 @@ class WireloopRaster implements StateRaster {
   }
 
   @Override
-  public int magify() {
+  public int magnify() {
     return 2;
   }
 }
