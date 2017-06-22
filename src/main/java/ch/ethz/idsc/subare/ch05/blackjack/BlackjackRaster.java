@@ -1,16 +1,30 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.blackjack;
 
+import java.awt.Dimension;
 import java.awt.Point;
-import java.util.Arrays;
 
-import ch.ethz.idsc.subare.core.util.gfx.DefaultStateRaster;
+import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-class BlackjackRaster extends DefaultStateRaster {
+class BlackjackRaster implements StateRaster {
+  private final Blackjack blackjack;
+
   public BlackjackRaster(Blackjack blackjack) {
-    super(blackjack, Arrays.asList(20 + 2, 10));
+    this.blackjack = blackjack;
+  }
+
+  @Override
+  public DiscreteModel discreteModel() {
+    return blackjack;
+  }
+
+  @Override
+  public Dimension dimensionStateRaster() {
+    return new Dimension(20 + 2, 20);
   }
 
   @Override
@@ -26,19 +40,16 @@ class BlackjackRaster extends DefaultStateRaster {
 
   @Override
   public Scalar scaleLoss() {
-    // TODO Auto-generated method stub
-    return null;
+    return RealScalar.ONE;
   }
 
   @Override
   public Scalar scaleQdelta() {
-    // TODO Auto-generated method stub
-    return null;
+    return RealScalar.ONE;
   }
 
   @Override
   public int joinAlongDimension() {
-    // TODO Auto-generated method stub
     return 0;
   }
 

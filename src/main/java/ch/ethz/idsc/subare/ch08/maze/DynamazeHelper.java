@@ -23,7 +23,7 @@ enum DynamazeHelper {
 
   @Deprecated
   public static StateRaster createRaster(Dynamaze dynamaze) {
-    return new DynamazeStateRaster(dynamaze);
+    return new DynamazeRaster(dynamaze);
   }
 
   public static Dynamaze original(String name) throws Exception {

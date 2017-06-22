@@ -37,7 +37,7 @@ enum CliffwalkHelper {
 
   static Tensor render(Cliffwalk cliffwalk, DiscreteVs vs) {
     DiscreteVs scaled = vs.create(Rescale.of(vs.values()).flatten(0));
-    return ImageResize.of(StateRasters.render(new CliffwalkStateRaster(cliffwalk), scaled), MAGNIFY);
+    return ImageResize.of(StateRasters.render(new CliffwalkRaster(cliffwalk), scaled), MAGNIFY);
   }
 
   static Tensor render(Cliffwalk cliffwalk, DiscreteQsa scaled) {
