@@ -44,5 +44,6 @@ abstract class AbstractExploringStarts {
 
   /** @param batch = 0, 1, 2, ...
    * @return */
-  public abstract Policy batchPolicy(int batch);
+  @Deprecated
+  public abstract Policy batchPolicy(int batch); // TODO remove
 }

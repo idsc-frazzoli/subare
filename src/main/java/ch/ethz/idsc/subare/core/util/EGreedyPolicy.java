@@ -34,6 +34,21 @@ public class EGreedyPolicy implements Policy {
     return new EGreedyPolicy(map, epsilon, sizes);
   }
 
+  public static Policy bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon, Tensor state) {
+    Map<Tensor, Index> map = new HashMap<>();
+    Map<Tensor, Integer> sizes = new HashMap<>();
+    // for (Tensor state : discreteModel.states())
+    {
+      Tensor actions = discreteModel.actions(state);
+      Tensor va = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
+      FairArgMax fairArgMax = FairArgMax.of(va);
+      Tensor feasible = Extract.of(actions, fairArgMax.options());
+      map.put(state, Index.build(feasible));
+      sizes.put(state, actions.length());
+    }
+    return new EGreedyPolicy(map, epsilon, sizes);
+  }
+
   private final Map<Tensor, Index> map;
   /** probability of choosing a non-optimal action, if there is at least one non-optimal action */
   private final Scalar epsilon;

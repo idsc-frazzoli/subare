@@ -1,11 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
-import java.util.function.Supplier;
-
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -28,11 +25,6 @@ public class QLearning extends Sarsa {
    * sum of alpha's should go to infinity, sum of alpha's squared should be finite */
   public QLearning(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     super(discreteModel, qsa, learningRate);
-  }
-
-  @Override
-  public void supplyPolicy(Supplier<Policy> supplier) {
-    // do nothing, policy is not required
   }
 
   @Override

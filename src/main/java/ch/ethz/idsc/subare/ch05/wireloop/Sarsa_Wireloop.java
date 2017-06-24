@@ -33,7 +33,8 @@ class Sarsa_Wireloop {
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
-      sarsa.supplyPolicy(() -> policy);
+      // sarsa.supplyPolicy(() -> policy);
+      sarsa.setExplore(epsilon.Get(index));
       ExploringStarts.batch(wireloop, policy, nstep, sarsa);
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, qsa)));
       if (infoline.isLossfree())

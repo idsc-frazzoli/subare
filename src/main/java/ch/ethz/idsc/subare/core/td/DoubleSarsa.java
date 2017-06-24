@@ -96,7 +96,8 @@ public class DoubleSarsa extends DequeDigestAdapter {
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     Sarsa sarsa = sarsaType.supply(discreteModel, Qsa1, null); // not used for learning
-    sarsa.supplyPolicy(() -> Policy1); // e-greedy with respect to qsa == Qsa1
+    // sarsa.supplyPolicy(() -> Policy1); // e-greedy with respect to qsa == Qsa1
+    // sarsa.setExplore(epsilon.Get(index)); // FIXME check if sufficient...
     rewards.append(sarsa.crossEvaluate(deque.getLast().nextState(), Qsa2));
     // ---
     // the code below is identical to Sarsa

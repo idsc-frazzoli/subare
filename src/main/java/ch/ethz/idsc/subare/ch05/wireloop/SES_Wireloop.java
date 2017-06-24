@@ -35,7 +35,8 @@ class SES_Wireloop {
         Scalar explore = epsilon.Get(batch);
         System.out.println("policy update " + batchIndex() + " " + explore);
         Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, explore);
-        sarsa.supplyPolicy(() -> policy);
+        // sarsa.supplyPolicy(() -> policy);
+        // sarsa.setExplore(epsilon.Get(index));
         return policy;
       }
     };
@@ -43,6 +44,7 @@ class SES_Wireloop {
         UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100);
     int index = 0;
     while (exploringStartsStream.batchIndex() < batches) {
+      sarsa.setExplore(epsilon.Get(exploringStartsStream.batchIndex()));
       exploringStartsStream.nextEpisode();
       if (index % 50 == 0) {
         Infoline infoline = Infoline.print(wireloop, index, ref, qsa);

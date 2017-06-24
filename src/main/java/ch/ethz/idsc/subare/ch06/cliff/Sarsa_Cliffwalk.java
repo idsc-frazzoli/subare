@@ -32,7 +32,8 @@ class Sarsa_Cliffwalk {
       // if (batches - 10 < index)
       Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, epsilon.Get(index));
-      sarsa.supplyPolicy(() -> policy);
+      // sarsa.supplyPolicy(() -> policy);
+      sarsa.setExplore(epsilon.Get(index));
       ExploringStarts.batch(cliffwalk, policy, nstep, sarsa);
       gsw.append(ImageFormat.of( //
           StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref)));

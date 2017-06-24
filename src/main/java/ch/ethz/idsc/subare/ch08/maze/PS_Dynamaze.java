@@ -5,6 +5,7 @@ package ch.ethz.idsc.subare.ch08.maze;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.PrioritizedSweeping;
+import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -32,8 +33,9 @@ class PS_Dynamaze {
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
     Tensor epsilon = Subdivide.of(.3, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(5, 1.01);
+    Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
-        sarsaType.supply(dynamaze, qsa, learningRate), 10, RealScalar.ZERO);
+        sarsa, 10, RealScalar.ZERO);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250);
     // ---
     StepExploringStarts stepExploringStarts = //
@@ -41,12 +43,13 @@ class PS_Dynamaze {
           @Override
           public Policy batchPolicy(int batch) {
             Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(batch));
-            prioritizedSweeping.setPolicy(policy);
+            // prioritizedSweeping.setPolicy(policy);
             return policy;
           }
         };
     while (stepExploringStarts.batchIndex() < batches) {
       Infoline infoline = Infoline.print(dynamaze, stepExploringStarts.batchIndex(), ref, qsa);
+      sarsa.setExplore(epsilon.Get(stepExploringStarts.batchIndex()));
       stepExploringStarts.nextEpisode();
       gsw.append(ImageFormat.of(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref)));
       if (infoline.isLossfree())

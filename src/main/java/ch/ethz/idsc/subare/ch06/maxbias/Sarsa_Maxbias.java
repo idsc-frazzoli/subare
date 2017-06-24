@@ -32,7 +32,8 @@ class Sarsa_Maxbias {
       if (batches - 10 < index)
         Infoline.print(maxbias, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(maxbias, qsa, epsilon.Get(index));
-      sarsa.supplyPolicy(() -> policy);
+      // sarsa.supplyPolicy(() -> policy);
+      sarsa.setExplore(epsilon.Get(index));
       ExploringStarts.batch(maxbias, policy, nstep, sarsa, avs);
     }
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa);

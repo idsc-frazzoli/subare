@@ -1,7 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 
@@ -18,10 +17,6 @@ public class TabularDynaQ implements StepDigest {
   public TabularDynaQ(Sarsa sarsa, int n) {
     this.sarsa = sarsa;
     this.n = n;
-  }
-
-  public void setPolicy(Policy policy) {
-    sarsa.supplyPolicy(() -> policy);
   }
 
   @Override

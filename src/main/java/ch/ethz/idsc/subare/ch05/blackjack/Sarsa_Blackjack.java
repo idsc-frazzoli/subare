@@ -28,7 +28,8 @@ public class Sarsa_Blackjack {
       // Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2));
       Policy policy = EGreedyPolicy.bestEquiprobable(blackjack, qsa, epsilon.Get(index));
-      sarsa.supplyPolicy(() -> policy);
+      // sarsa.supplyPolicy(() -> policy);
+      sarsa.setExplore(epsilon.Get(index));
       for (int count = 0; count < 10; ++count)
         ExploringStarts.batch(blackjack, policy, sarsa);
       gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, qsa)));

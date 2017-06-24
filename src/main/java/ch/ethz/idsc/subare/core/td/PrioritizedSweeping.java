@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.core.td;
 
 import java.util.PriorityQueue;
 
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -23,7 +22,8 @@ public class PrioritizedSweeping implements StepDigest {
   private final StateOrigins stateOrigins = new StateOrigins();
 
   /** @param sarsa underlying learning
-   * @param n number of replay steps */
+   * @param n number of replay steps
+   * @param theta threshold */
   public PrioritizedSweeping(Sarsa sarsa, int n, Scalar theta) {
     if (Scalars.lessThan(theta, RealScalar.ZERO))
       throw TensorRuntimeException.of(theta);
@@ -31,11 +31,11 @@ public class PrioritizedSweeping implements StepDigest {
     this.n = n;
     this.theta = theta;
   }
+  // public void setPolicy(Policy policy) {
+  // sarsa.supplyPolicy(() -> policy);
+  // }
 
-  public void setPolicy(Policy policy) {
-    sarsa.supplyPolicy(() -> policy);
-  }
-
+  // check priority of learning experience
   private void consider(StepInterface stepInterface) {
     Scalar P = sarsa.priority(stepInterface);
     if (Scalars.lessThan(theta, P))
@@ -46,7 +46,6 @@ public class PrioritizedSweeping implements StepDigest {
   public void digest(StepInterface stepInterface) {
     deterministicEnvironment.digest(stepInterface);
     stateOrigins.digest(stepInterface);
-    // check priority of learning experience
     consider(stepInterface);
     // ---
     for (int count = 0; count < n && !priorityQueue.isEmpty(); ++count) {

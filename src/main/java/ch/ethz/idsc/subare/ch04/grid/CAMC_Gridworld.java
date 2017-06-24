@@ -10,13 +10,11 @@ import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /**  */
-class CAMC_Gridworld {
+class CAMC_Gridworld { // TODO this looks like WIP
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldRaster = new GridworldRaster(gridworld);
@@ -25,12 +23,11 @@ class CAMC_Gridworld {
         gridworld, DefaultLearningRate.of(3, .51));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_vs_camc.gif"), 100);
     final int batches = 50;
-    Tensor epsilon = Subdivide.of(.2, .05, batches);
+    // Tensor epsilon = Subdivide.of(.2, .05, batches);
     for (int index = 0; index < batches; ++index) {
       System.out.println(index);
       for (int count = 0; count < 20; ++count) {
-        Policy policy = //
-            new EquiprobablePolicy(gridworld);
+        Policy policy = new EquiprobablePolicy(gridworld);
         // EGreedyPolicy.bestEquiprobable(gridworld, camc.vs(), epsilon.Get(index));
         ExploringStarts.batch(gridworld, policy, camc);
       }

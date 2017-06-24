@@ -2,14 +2,12 @@
 package ch.ethz.idsc.subare.core.td;
 
 import java.util.Deque;
-import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
@@ -34,7 +32,8 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   private final DiscountFunction discountFunction;
   final QsaInterface qsa;
   private final LearningRate learningRate;
-  Policy policy = null;
+  // Policy policy = null;
+  Scalar epsilon = null;
 
   /** @param discreteModel
    * @param qsa
@@ -52,7 +51,12 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
    * On the other hand, {@link QLearning} does not require the knowledge of the policy.
    * 
    * @param supplier */
-  public abstract void supplyPolicy(Supplier<Policy> supplier);
+  // TODO this function may be deprecated
+  // public abstract void supplyPolicy(Supplier<Policy> supplier);
+  /** @param epsilon */
+  public void setExplore(Scalar epsilon) {
+    this.epsilon = epsilon;
+  }
 
   /** @param state
    * @return value estimation of state */

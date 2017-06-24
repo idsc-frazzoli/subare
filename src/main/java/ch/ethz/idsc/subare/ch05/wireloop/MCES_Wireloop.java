@@ -30,8 +30,8 @@ class MCES_Wireloop {
         ExploringStarts.batch(wireloop, policy, mces);
       }
       gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, mces.qsa())));
-      // if (infoline.isLossfree())
-      // break;
+      if (infoline.isLossfree())
+        break;
     }
     gsw.close();
   }
