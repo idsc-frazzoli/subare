@@ -17,22 +17,21 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 
 /** Sarsa applied to gambler for different learning rate parameters */
 class Bulk_Gambler {
-  public static void main(String[] args) throws Exception {
+  static void handle(SarsaType sarsaType, int nstep) throws Exception {
     Gambler gambler = new Gambler(20, RationalScalar.of(4, 10)); // 20, 4/10
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler); // true q-function, for error measurement
     // ---
-    SarsaType sarsaType = SarsaType.original;
-    final Scalar errorcap = RealScalar.of(15); // 15
+    final Scalar errorcap = RealScalar.of(20); // 15
     final Scalar losscap = RealScalar.of(.25); // .5
     final Tensor epsilon = Subdivide.of(.2, .01, 100); // .2, .6
     int x = 0;
     LearningCompetition learningCompetition = new LearningCompetition( //
-        ref, "gambler_Q_" + sarsaType.name() + "_E" + epsilon.Get(0), epsilon, errorcap, losscap);
-    learningCompetition.NSTEP = 1;
-    learningCompetition.MAGNIFY = 5;
-    for (Tensor factor : Subdivide.of(.1, 10, 20)) { // .5 16
+        ref, "gambler_Q_" + sarsaType.name() + "_E" + epsilon.Get(0) + "_N" + nstep, epsilon, errorcap, losscap);
+    learningCompetition.nstep = nstep;
+    learningCompetition.magnify = 5;
+    for (Tensor factor : Subdivide.of(.1, 10, 8)) { // .5 16
       int y = 0;
-      for (Tensor exponent : Subdivide.of(.51, 1.5, 13)) { // .51 2
+      for (Tensor exponent : Subdivide.of(.51, 1.3, 8)) { // .51 2
         DiscreteQsa qsa = DiscreteQsa.build(gambler);
         Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor.Get(), exponent.Get()));
         LearningContender learningContender = LearningContender.sarsa(gambler, sarsa);
@@ -43,5 +42,9 @@ class Bulk_Gambler {
     }
     // ---
     learningCompetition.doit();
+  }
+
+  public static void main(String[] args) throws Exception {
+    handle(SarsaType.qlearning, 1);
   }
 }
