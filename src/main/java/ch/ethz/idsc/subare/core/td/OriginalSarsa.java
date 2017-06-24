@@ -1,8 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
-import java.util.Random;
-
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
@@ -27,9 +25,6 @@ import ch.ethz.idsc.tensor.Tensor;
  * 
  * box on p.157 */
 public class OriginalSarsa extends Sarsa {
-  private static final Random RANDOM = new Random();
-  // ---
-
   /** @param discreteModel
    * @param qsa
    * @param learningRate */
@@ -45,7 +40,7 @@ public class OriginalSarsa extends Sarsa {
   @Override
   protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
     Policy policy = EGreedyPolicy.bestEquiprobable(discreteModel, Qsa2, epsilon, state);
-    PolicyWrap policyWrap = new PolicyWrap(policy, RANDOM);
+    PolicyWrap policyWrap = new PolicyWrap(policy);
     Tensor action = policyWrap.next(state, discreteModel.actions(state));
     return Qsa2.value(state, action);
   }

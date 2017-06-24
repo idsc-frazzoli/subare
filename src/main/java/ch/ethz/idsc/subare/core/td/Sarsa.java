@@ -32,7 +32,6 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   private final DiscountFunction discountFunction;
   final QsaInterface qsa;
   private final LearningRate learningRate;
-  // Policy policy = null;
   Scalar epsilon = null;
 
   /** @param discreteModel
@@ -45,16 +44,8 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     this.learningRate = learningRate;
   }
 
-  /** the input policy is used to generate the {@link StepInterface}.
-   * 
-   * setting the policy is required for {@link OriginalSarsa} and {@link ExpectedSarsa}.
-   * On the other hand, {@link QLearning} does not require the knowledge of the policy.
-   * 
-   * @param supplier */
-  // TODO this function may be deprecated
-  // public abstract void supplyPolicy(Supplier<Policy> supplier);
   /** @param epsilon */
-  public void setExplore(Scalar epsilon) {
+  public final void setExplore(Scalar epsilon) {
     this.epsilon = epsilon;
   }
 
@@ -67,9 +58,8 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
    * @return value from evaluations of Qsa2 via actions provided by qsa (== Qsa1) */
   protected abstract Scalar crossEvaluate(Tensor state, QsaInterface Qsa2);
 
-  // private Scalar shift;
   @Override
-  public void digest(Deque<StepInterface> deque) {
+  public final void digest(Deque<StepInterface> deque) {
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // ---
     // for terminal state in queue, "=last.next", the sarsa implementation has to provide the evaluation
@@ -91,7 +81,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
 
   /** @param stepInterface
    * @return non-negative priority rating */
-  Scalar priority(StepInterface stepInterface) {
+  final Scalar priority(StepInterface stepInterface) {
     Tensor rewards = Tensors.of(stepInterface.reward(), evaluate(stepInterface.nextState()));
     Tensor state0 = stepInterface.prevState();
     Tensor action = stepInterface.action();
@@ -100,7 +90,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   }
 
   @Override
-  public DiscreteQsa qsa() {
+  public final DiscreteQsa qsa() {
     return (DiscreteQsa) qsa;
   }
 }

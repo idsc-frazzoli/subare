@@ -1,8 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import java.util.Random;
-
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -16,11 +14,9 @@ import ch.ethz.idsc.tensor.sca.Chop;
 /** class picks action based on distribution defined by given {@link Policy} */
 public class PolicyWrap {
   private final Policy policy;
-  private final Random random;
 
-  public PolicyWrap(Policy policy, Random random) {
+  public PolicyWrap(Policy policy) {
     this.policy = policy;
-    this.random = random;
   }
 
   public Tensor next(Tensor state, Tensor actions) {
@@ -28,6 +24,6 @@ public class PolicyWrap {
     if (!Chop.isZeros(Total.of(pdf).subtract(RealScalar.ONE)))
       throw TensorRuntimeException.of(pdf);
     Distribution distribution = EmpiricalDistribution.fromUnscaledPDF(pdf);
-    return actions.get(RandomVariate.of(distribution, random).number().intValue());
+    return actions.get(RandomVariate.of(distribution).number().intValue());
   }
 }

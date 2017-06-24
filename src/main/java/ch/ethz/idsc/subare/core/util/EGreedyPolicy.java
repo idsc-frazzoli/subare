@@ -1,13 +1,11 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -15,38 +13,19 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.alg.Extract;
 
 /** p.33 */
 public class EGreedyPolicy implements Policy {
-  // this simplicity may be the reason why q(s,a) is preferred over v(s)
   public static Policy bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon) {
-    Map<Tensor, Index> map = new HashMap<>();
-    Map<Tensor, Integer> sizes = new HashMap<>();
-    for (Tensor state : discreteModel.states()) {
-      Tensor actions = discreteModel.actions(state);
-      Tensor va = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
-      FairArgMax fairArgMax = FairArgMax.of(va);
-      Tensor feasible = Extract.of(actions, fairArgMax.options());
-      map.put(state, Index.build(feasible));
-      sizes.put(state, actions.length());
-    }
-    return new EGreedyPolicy(map, epsilon, sizes);
+    EGreedyPolicyBuilder builder = new EGreedyPolicyBuilder(discreteModel, qsa);
+    discreteModel.states().forEach(builder::append);
+    return new EGreedyPolicy(builder.map, epsilon, builder.sizes);
   }
 
   public static Policy bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon, Tensor state) {
-    Map<Tensor, Index> map = new HashMap<>();
-    Map<Tensor, Integer> sizes = new HashMap<>();
-    // for (Tensor state : discreteModel.states())
-    {
-      Tensor actions = discreteModel.actions(state);
-      Tensor va = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
-      FairArgMax fairArgMax = FairArgMax.of(va);
-      Tensor feasible = Extract.of(actions, fairArgMax.options());
-      map.put(state, Index.build(feasible));
-      sizes.put(state, actions.length());
-    }
-    return new EGreedyPolicy(map, epsilon, sizes);
+    EGreedyPolicyBuilder builder = new EGreedyPolicyBuilder(discreteModel, qsa);
+    builder.append(state);
+    return new EGreedyPolicy(builder.map, epsilon, builder.sizes);
   }
 
   private final Map<Tensor, Index> map;
