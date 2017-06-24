@@ -21,7 +21,7 @@ class AVI_Gambler2 {
     for (int index = 0; index < 13; ++index) {
       DiscreteQsa qsa = avi.qsa();
       Infoline.print(gambler, index, ref, qsa);
-      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref)));
+      gsw.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
       avi.step();
     }
     gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), avi.qsa(), ref)));

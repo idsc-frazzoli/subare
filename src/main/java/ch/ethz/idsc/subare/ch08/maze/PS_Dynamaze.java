@@ -15,10 +15,10 @@ import ch.ethz.idsc.subare.core.util.StepExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 class PS_Dynamaze {
@@ -31,8 +31,8 @@ class PS_Dynamaze {
     DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
     final DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
-    Tensor epsilon = Subdivide.of(.3, .01, batches);
-    LearningRate learningRate = DefaultLearningRate.of(5, 1.01);
+    Tensor epsilon = Subdivide.of(.1, .01, batches);
+    LearningRate learningRate = DefaultLearningRate.of(7, 1.01);
     Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsa, 10, RealScalar.ZERO);
@@ -42,16 +42,15 @@ class PS_Dynamaze {
         new StepExploringStarts(dynamaze, prioritizedSweeping) {
           @Override
           public Policy batchPolicy(int batch) {
-            Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(batch));
-            // prioritizedSweeping.setPolicy(policy);
-            return policy;
+            Scalar eps = epsilon.Get(batch);
+            sarsa.setExplore(eps);
+            return EGreedyPolicy.bestEquiprobable(dynamaze, qsa, eps);
           }
         };
     while (stepExploringStarts.batchIndex() < batches) {
       Infoline infoline = Infoline.print(dynamaze, stepExploringStarts.batchIndex(), ref, qsa);
-      sarsa.setExplore(epsilon.Get(stepExploringStarts.batchIndex()));
       stepExploringStarts.nextEpisode();
-      gsw.append(ImageFormat.of(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref)));
+      gsw.append(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref));
       if (infoline.isLossfree())
         break;
     }

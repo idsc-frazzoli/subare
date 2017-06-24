@@ -7,7 +7,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** finding optimal policy to stay or hit
  * 
@@ -23,7 +22,7 @@ class RSTQP_Blackjack {
     for (int index = 0; index < batches; ++index) {
       for (int count = 0; count < 100; ++count)
         TabularSteps.batch(blackjack, blackjack, rstqp);
-      gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, qsa)));
+      gsw.append(BlackjackHelper.joinAll(blackjack, qsa));
     }
     gsw.close();
   }

@@ -15,7 +15,6 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.io.ExtractPrimitives;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class VI_RaceTrack {
   public static void main(String[] args) throws Exception {
@@ -43,7 +42,7 @@ class VI_RaceTrack {
           image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
         }
       }
-      gsw.append(ImageFormat.of(ImageResize.of(image, 6)));
+      gsw.append(ImageResize.of(image, 6));
     }
     gsw.close();
     System.out.println("gif created");

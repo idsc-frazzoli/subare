@@ -13,7 +13,6 @@ import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** action value iteration for cliff walk */
 class AVI_Dynamaze {
@@ -28,7 +27,7 @@ class AVI_Dynamaze {
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_qsa_avi.gif"), 250);
     for (int index = 0; index < 50; ++index) {
       Infoline infoline = Infoline.print(dynamaze, index, ref, avi.qsa());
-      gsw.append(ImageFormat.of(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref)));
+      gsw.append(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref));
       avi.step();
       if (infoline.isLossfree())
         break;

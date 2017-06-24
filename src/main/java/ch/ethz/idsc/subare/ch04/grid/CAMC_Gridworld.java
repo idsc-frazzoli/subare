@@ -11,7 +11,6 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /**  */
 class CAMC_Gridworld { // TODO this looks like WIP
@@ -31,8 +30,7 @@ class CAMC_Gridworld { // TODO this looks like WIP
         // EGreedyPolicy.bestEquiprobable(gridworld, camc.vs(), epsilon.Get(index));
         ExploringStarts.batch(gridworld, policy, camc);
       }
-      gsw.append(ImageFormat.of( //
-          StateRasters.vs(gridworldRaster, DiscreteValueFunctions.rescaled(camc.vs()))));
+      gsw.append(StateRasters.vs(gridworldRaster, DiscreteValueFunctions.rescaled(camc.vs())));
     }
     gsw.close();
   }

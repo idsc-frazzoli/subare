@@ -17,7 +17,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 class TDQ_Dynamaze {
@@ -40,7 +39,7 @@ class TDQ_Dynamaze {
       sarsa.setExplore(epsilon.Get(index));
       // for (int count = 0; count < 5; ++count)
       ExploringStarts.batch(dynamaze, policy, tabularDynaQ);
-      gsw.append(ImageFormat.of(StateRasters.vs_rescale(dynamazeRaster, qsa)));
+      gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
     }
     gsw.close();
   }

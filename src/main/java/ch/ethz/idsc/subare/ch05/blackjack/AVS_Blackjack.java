@@ -13,7 +13,6 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** finding optimal policy to stay or hit
  * 
@@ -36,11 +35,10 @@ class AVS_Blackjack {
       }
       ActionValueIteration avi = new ActionValueIteration(blackjack, avs);
       avi.untilBelow(DecimalScalar.of(.0001), 3);
-      gsw.append(ImageFormat.of( //
+      gsw.append( //
           Join.of( //
               BlackjackHelper.joinAll(blackjack, mces.qsa()), //
-              BlackjackHelper.joinAll(blackjack, avi.qsa())) //
-      ));
+              BlackjackHelper.joinAll(blackjack, avi.qsa())));
       System.out.println(episodes + " " + avs.coverage());
     }
     gsw.close();

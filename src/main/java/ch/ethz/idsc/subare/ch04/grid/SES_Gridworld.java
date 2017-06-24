@@ -13,10 +13,10 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
+import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
  * 
@@ -35,19 +35,17 @@ class SES_Gridworld {
     DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
       @Override
       public Policy batchPolicy(int batch) {
-        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, epsilon.Get(batch));
-        // sarsa.supplyPolicy(() -> policy);
-        return policy;
+        Scalar eps = epsilon.Get(batch);
+        sarsa.setExplore(eps);
+        return EGreedyPolicy.bestEquiprobable(gridworld, qsa, eps);
       }
     };
     int episode = 0;
     while (exploringStartsStream.batchIndex() < batches) {
-      sarsa.setExplore(epsilon.Get(exploringStartsStream.batchIndex()));
       exploringStartsStream.nextEpisode();
       if (episode % 5 == 0) {
         Infoline infoline = Infoline.print(gridworld, episode, ref, qsa);
-        gsw.append(ImageFormat.of( //
-            StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref)));
+        gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         if (infoline.isLossfree())
           break;
       }

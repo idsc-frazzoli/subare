@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 // TODO test that initialization bias is overcome!!!
 class RSTQP_Cliffwalk {
@@ -25,8 +24,7 @@ class RSTQP_Cliffwalk {
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);
       TabularSteps.batch(cliffwalk, cliffwalk, rstqp);
-      gsw.append(ImageFormat.of( //
-          StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref)));
+      gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
       if (infoline.isLossfree())
         break;
     }

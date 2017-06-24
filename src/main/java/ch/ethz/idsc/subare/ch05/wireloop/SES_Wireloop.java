@@ -14,7 +14,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class SES_Wireloop {
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
@@ -25,30 +24,27 @@ class SES_Wireloop {
     Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x, wireloopReward);
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
-    Tensor epsilon = Subdivide.of(.2, .01, batches);
+    Tensor epsilon = Subdivide.of(.1, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     System.out.println(qsa.size());
-    Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(3, 0.51));
+    Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(7, 1.11));
     DequeExploringStarts exploringStartsStream = new DequeExploringStarts(wireloop, nstep, sarsa) {
       @Override
       public Policy batchPolicy(int batch) {
-        Scalar explore = epsilon.Get(batch);
-        System.out.println("policy update " + batchIndex() + " " + explore);
-        Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, explore);
-        // sarsa.supplyPolicy(() -> policy);
-        // sarsa.setExplore(epsilon.Get(index));
-        return policy;
+        Scalar eps = epsilon.Get(batch);
+        System.out.println("policy update " + batchIndex() + " " + eps);
+        sarsa.setExplore(eps);
+        return EGreedyPolicy.bestEquiprobable(wireloop, qsa, eps);
       }
     };
     GifSequenceWriter gsw = GifSequenceWriter.of( //
         UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100);
     int index = 0;
     while (exploringStartsStream.batchIndex() < batches) {
-      sarsa.setExplore(epsilon.Get(exploringStartsStream.batchIndex()));
       exploringStartsStream.nextEpisode();
       if (index % 50 == 0) {
         Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
-        gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, qsa)));
+        gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
         if (infoline.isLossfree())
           break;
       }
@@ -58,6 +54,7 @@ class SES_Wireloop {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.qlearning, 1, 3);
+    // handle(SarsaType.qlearning, 1, 3);
+    handle(SarsaType.expected, 1, 3);
   }
 }

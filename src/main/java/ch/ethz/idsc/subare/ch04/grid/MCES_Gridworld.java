@@ -12,7 +12,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** Example 4.1, p.82 */
 class MCES_Gridworld {
@@ -29,8 +28,7 @@ class MCES_Gridworld {
         Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, mces.qsa(), epsilon.Get(index));
         ExploringStarts.batch(gridworld, policy, mces);
       }
-      gsw.append(ImageFormat.of( //
-          StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), mces.qsa(), ref)));
+      gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), mces.qsa(), ref));
     }
     gsw.close();
   }

@@ -15,7 +15,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** StepDigest qsa methods applied to cliff walk */
 class Sarsa_Cliffwalk {
@@ -35,8 +34,7 @@ class Sarsa_Cliffwalk {
       // sarsa.supplyPolicy(() -> policy);
       sarsa.setExplore(epsilon.Get(index));
       ExploringStarts.batch(cliffwalk, policy, nstep, sarsa);
-      gsw.append(ImageFormat.of( //
-          StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref)));
+      gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
       if (infoline.isLossfree())
         break;
     }

@@ -10,7 +10,6 @@ import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /**  */
 class RSTQP_Dynamaze {
@@ -27,7 +26,7 @@ class RSTQP_Dynamaze {
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
       TabularSteps.batch(dynamaze, dynamaze, rstqp);
-      gsw.append(ImageFormat.of(StateRasters.vs_rescale(dynamazeRaster, qsa)));
+      gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
       if (infoline.isLossfree())
         break;
     }

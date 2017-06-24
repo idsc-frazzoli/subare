@@ -12,7 +12,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
 public class Sarsa_Blackjack {
@@ -32,7 +31,7 @@ public class Sarsa_Blackjack {
       sarsa.setExplore(epsilon.Get(index));
       for (int count = 0; count < 10; ++count)
         ExploringStarts.batch(blackjack, policy, sarsa);
-      gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, qsa)));
+      gsw.append(BlackjackHelper.joinAll(blackjack, qsa));
     }
     gsw.close();
   }

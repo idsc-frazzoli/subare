@@ -23,7 +23,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** Sarsa applied to gambler */
 class Sarsa_Gambler {
@@ -48,9 +47,9 @@ class Sarsa_Gambler {
       sarsa.setExplore(epsilon.Get(index));
       ExploringStarts.batch(gambler, policy, 1, sarsa, sac);
       // ---
-      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref)));
-      gsc.append(ImageFormat.of(StateActionRasters.qsa( //
-          gamblerRaster, DiscreteValueFunctions.rescaled(sac.qsa(StateActionCounter.LOGARITHMIC)))));
+      gsw.append(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
+      gsc.append(StateActionRasters.qsa( //
+          gamblerRaster, DiscreteValueFunctions.rescaled(sac.qsa(StateActionCounter.LOGARITHMIC))));
     }
     gsw.close();
     gsc.close();

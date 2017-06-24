@@ -14,7 +14,6 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -61,7 +60,7 @@ public class LearningCompetition {
       processEntry(image, entry.getKey(), entry.getValue(), findex));
       long delta = System.currentTimeMillis() - tic;
       System.out.println(index + " " + RealScalar.of(delta * 1e-3).map(Round._1) + " sec");
-      gsw.append(ImageFormat.of(ImageResize.of(image, MAGNIFY)));
+      gsw.append(ImageResize.of(image, MAGNIFY));
     }
     gsw.close();
   }

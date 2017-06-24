@@ -11,7 +11,6 @@ import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** monte carlo is bad in this example, since the steep negative reward biases most episodes */
 // TODO this does not really converge at all
@@ -30,8 +29,7 @@ class MCES_Cliffwalk {
             EGreedyPolicy.bestEquiprobable(cliffwalk, mces.qsa(), RealScalar.of(.4));
         ExploringStarts.batch(cliffwalk, policy, mces);
       }
-      gsw.append(ImageFormat.of( //
-          StateActionRasters.qsaLossRef(cliffwalkRaster, mces.qsa(), ref)));
+      gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, mces.qsa(), ref));
     }
     gsw.close();
   }

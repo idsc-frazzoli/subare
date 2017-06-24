@@ -12,7 +12,6 @@ import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 // R1STQP algorithm is not suited for gambler's dilemma
 class RSTQP_Gambler {
@@ -31,9 +30,9 @@ class RSTQP_Gambler {
     for (int index = 0; index < batches; ++index) {
       Infoline.print(gambler, index, ref, qsa);
       TabularSteps.batch(gambler, gambler, rstqp, avs, sac);
-      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref)));
-      gsc.append(ImageFormat.of(StateActionRasters.qsa( //
-          gamblerRaster, DiscreteValueFunctions.rescaled(sac.qsa(StateActionCounter.LOGARITHMIC)))));
+      gsw.append(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
+      gsc.append(StateActionRasters.qsa( //
+          gamblerRaster, DiscreteValueFunctions.rescaled(sac.qsa(StateActionCounter.LOGARITHMIC))));
     }
     gsw.close();
     gsc.close();
