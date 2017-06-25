@@ -46,7 +46,12 @@ public class ConstantLearningRate implements LearningRate {
 
   @Override
   public Scalar alpha(StepInterface stepInterface) {
-    boolean visited1 = visited.contains(StateAction.key(stepInterface));
-    return visited1 ? alpha : RealScalar.ONE; // overcome initialization bias
+    return visited.contains(StateAction.key(stepInterface)) ? //
+        alpha : RealScalar.ONE; // overcome initialization bias
+  }
+
+  @Override
+  public boolean encountered(Tensor state, Tensor action) {
+    return visited.contains(StateAction.key(state, action));
   }
 }

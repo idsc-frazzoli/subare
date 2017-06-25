@@ -1,11 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
-import java.util.function.Supplier;
-
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -31,23 +28,26 @@ public class QLearning extends Sarsa {
   }
 
   @Override
-  public void supplyPolicy(Supplier<Policy> supplier) {
-    // do nothing, policy is not required
-  }
-
-  @Override
   protected Scalar evaluate(Tensor state) {
     return discreteModel.actions(state).flatten(0) //
+        .filter(action -> learningRate.encountered(state, action)) //
         .map(action -> qsa.value(state, action)) //
-        .reduce(Max::of).get();
+        .reduce(Max::of) //
+        .orElse(RealScalar.ZERO);
   }
 
   @Override
   protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
+    // TODO untested!!!
     Scalar value = RealScalar.ZERO;
-    Tensor actions = discreteModel.actions(state);
+    Tensor actions = Tensor.of( //
+        discreteModel.actions(state).flatten(0) //
+            .filter(action -> learningRate.encountered(state, action))); //
+    if (actions.length() == 0)
+      return value;
     // use qsa == Qsa1 to determine best actions
-    FairArgMax fairArgMax = FairArgMax.of(Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action))));
+    Tensor eval = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
+    FairArgMax fairArgMax = FairArgMax.of(eval);
     Scalar weight = RationalScalar.of(1, fairArgMax.optionsCount()); // uniform distribution among best actions
     for (int index : fairArgMax.options()) {
       Tensor action = actions.get(index);

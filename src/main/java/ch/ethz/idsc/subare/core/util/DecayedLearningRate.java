@@ -6,6 +6,7 @@ import java.util.Map;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.tensor.DoubleScalar;
@@ -67,6 +68,13 @@ abstract class DecayedLearningRate implements LearningRate {
   /** @return */
   public final int maxCount() { // function is not used yet...
     return MEMO.length();
+  }
+
+  @Override
+  public final boolean encountered(Tensor state, Tensor action) {
+    StepInterface stepInterface = new StepAdapter(state, action, null, Tensors.empty());
+    Tensor key = key(stepInterface);
+    return map.containsKey(key);
   }
 
   /** @param stepInterface

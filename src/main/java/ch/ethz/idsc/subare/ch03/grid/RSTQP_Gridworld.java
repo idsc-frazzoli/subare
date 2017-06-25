@@ -17,8 +17,10 @@ class RSTQP_Gridworld {
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         gridworld, qsa, ConstantLearningRate.one());
     for (int index = 0; index < 20; ++index) {
-      Infoline.print(gridworld, index, ref, qsa);
+      Infoline infoline = Infoline.print(gridworld, index, ref, qsa);
       TabularSteps.batch(gridworld, gridworld, rstqp);
+      if (infoline.isLossfree())
+        break;
     }
   }
 }

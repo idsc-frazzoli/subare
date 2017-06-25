@@ -14,6 +14,7 @@ import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.ImageResize;
+import ch.ethz.idsc.tensor.NumberQ;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -41,7 +42,8 @@ public enum StateActionRasters {
         Point point = stateActionRaster.point(state, action);
         if (point != null) {
           Scalar sca = qsa.value(state, action);
-          tensor.set(COLORSCHEME.get(BASE.multiply(sca)), point.x, point.y);
+          if (NumberQ.of(sca))
+            tensor.set(COLORSCHEME.get(BASE.multiply(sca)), point.x, point.y);
         }
       }
     return tensor;

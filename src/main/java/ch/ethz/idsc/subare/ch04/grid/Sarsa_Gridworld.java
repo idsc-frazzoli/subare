@@ -23,7 +23,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
@@ -35,18 +34,18 @@ class Sarsa_Gridworld {
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     int batches = 10;
-    Tensor epsilon = Subdivide.of(.1, .01, batches); // used in egreedy
+    Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
     for (int index = 0; index < batches; ++index) {
-      gsw.append(ImageFormat.of( //
-          StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref)));
+      gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
       Infoline.print(gridworld, index, ref, qsa);
       Scalar explore = epsilon.Get(index);
       Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
-      sarsa.supplyPolicy(() -> policy);
+      // sarsa.supplyPolicy(() -> policy);
+      sarsa.setExplore(epsilon.Get(index));
       ExploringStarts.batch(gridworld, policy, nstep, sarsa);
     }
     gsw.close();
@@ -64,7 +63,7 @@ class Sarsa_Gridworld {
   }
 
   public static void main(String[] args) throws Exception {
-    int nstep = 1;
+    int nstep = 2;
     handle(SarsaType.original, nstep);
     handle(SarsaType.expected, nstep);
     handle(SarsaType.qlearning, nstep);

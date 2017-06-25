@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
@@ -45,12 +46,21 @@ public class Random1StepTabularQPlanning implements StepDigest {
     Tensor state1 = stepInterface.nextState();
     // ---
     Scalar max = discreteModel.actions(state1).flatten(0) //
+        // ignore un-encountered state-action pairs, otherwise influenced by initial qsa value
+        .filter(action1 -> learningRate.encountered(state1, action1)) //
         .map(action1 -> qsa.value(state1, action1)) //
-        .reduce(Max::of).get();
+        .reduce(Max::of) //
+        .orElse(RealScalar.ZERO);
     Scalar value0 = qsa.value(state0, action);
     Scalar alpha = learningRate.alpha(stepInterface);
-    Scalar delta = reward.add(gamma.multiply(max)).subtract(value0).multiply(alpha);
-    qsa.assign(state0, action, value0.add(delta));
+    Scalar value1 = reward.add(gamma.multiply(max));
+    // the condition permits "Infinity" as initial qsa value
+    if (alpha.equals(RealScalar.ONE))
+      qsa.assign(state0, action, value1);
+    else {
+      Scalar delta = value1.subtract(value0).multiply(alpha);
+      qsa.assign(state0, action, value0.add(delta));
+    }
     learningRate.digest(stepInterface);
   }
 }

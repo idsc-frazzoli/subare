@@ -17,6 +17,10 @@ public enum EpisodeKickoff {
   public static EpisodeInterface single(MonteCarloInterface monteCarloInterface, Policy policy) {
     Tensor starts = monteCarloInterface.startStates();
     Tensor start = starts.get(random.nextInt(starts.length()));
+    return single(monteCarloInterface, policy, start);
+  }
+
+  public static EpisodeInterface single(MonteCarloInterface monteCarloInterface, Policy policy, Tensor start) {
     if (monteCarloInterface.isTerminal(start))
       throw new RuntimeException();
     return new MonteCarloEpisode(monteCarloInterface, policy, start, new LinkedList<>());

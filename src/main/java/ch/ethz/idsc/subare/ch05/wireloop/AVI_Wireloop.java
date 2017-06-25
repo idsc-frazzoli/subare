@@ -6,7 +6,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class AVI_Wireloop {
   public static void main(String[] args) throws Exception {
@@ -21,12 +20,12 @@ class AVI_Wireloop {
     int batches = 50;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(wireloop, index, ref, avi.qsa());
-      gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, avi.qsa())));
+      gsw.append(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
       avi.step();
       if (infoline.isLossfree())
         break;
     }
-    gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, avi.qsa())));
+    gsw.append(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
     gsw.close();
   }
 }

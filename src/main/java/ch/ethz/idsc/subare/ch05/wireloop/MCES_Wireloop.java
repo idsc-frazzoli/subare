@@ -11,7 +11,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class MCES_Wireloop {
   public static void main(String[] args) throws Exception {
@@ -29,9 +28,9 @@ class MCES_Wireloop {
         Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, mces.qsa(), epsilon.Get(index));
         ExploringStarts.batch(wireloop, policy, mces);
       }
-      gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, mces.qsa())));
-      // if (infoline.isLossfree())
-      // break;
+      gsw.append(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));
+      if (infoline.isLossfree())
+        break;
     }
     gsw.close();
   }

@@ -13,7 +13,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 class Sarsa_Wireloop {
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
@@ -33,9 +32,10 @@ class Sarsa_Wireloop {
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
-      sarsa.supplyPolicy(() -> policy);
+      // sarsa.supplyPolicy(() -> policy);
+      sarsa.setExplore(epsilon.Get(index));
       ExploringStarts.batch(wireloop, policy, nstep, sarsa);
-      gsw.append(ImageFormat.of(WireloopHelper.render(wireloopRaster, ref, qsa)));
+      gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
       if (infoline.isLossfree())
         break;
     }

@@ -28,16 +28,12 @@ public class LearningContender {
     Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa, epsilon);
     if (dequeDigest instanceof Sarsa) {
       Sarsa sarsa = (Sarsa) dequeDigest;
-      sarsa.supplyPolicy(() -> policy);
+      sarsa.setExplore(epsilon);
     }
     ExploringStarts.batch(monteCarloInterface, policy, nstep, dequeDigest);
   }
 
-  public Scalar q_difference(DiscreteQsa ref) {
-    return DiscreteValueFunctions.distance(ref, qsa);
-  }
-
-  public Scalar loss(DiscreteQsa ref) {
-    return Loss.accumulation(monteCarloInterface, ref, qsa);
+  public Infoline infoline(DiscreteQsa ref) {
+    return new Infoline(monteCarloInterface, ref, qsa);
   }
 }

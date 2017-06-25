@@ -1,14 +1,13 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
-import java.util.Random;
-import java.util.function.Supplier;
-
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
@@ -27,9 +26,6 @@ import ch.ethz.idsc.tensor.Tensor;
  * 
  * box on p.157 */
 public class OriginalSarsa extends Sarsa {
-  private static final Random RANDOM = new Random();
-  // ---
-
   /** @param discreteModel
    * @param qsa
    * @param learningRate */
@@ -37,11 +33,7 @@ public class OriginalSarsa extends Sarsa {
     super(discreteModel, qsa, learningRate);
   }
 
-  @Override
-  public void supplyPolicy(Supplier<Policy> supplier) {
-    policy = supplier.get();
-  }
-
+  // TODO can refactor between original sarsa and expected sarsa
   @Override
   protected Scalar evaluate(Tensor state) {
     return crossEvaluate(state, qsa);
@@ -49,8 +41,14 @@ public class OriginalSarsa extends Sarsa {
 
   @Override
   protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
-    PolicyWrap policyWrap = new PolicyWrap(policy, RANDOM);
-    Tensor action = policyWrap.next(state, discreteModel.actions(state));
+    Tensor actions = Tensor.of( //
+        discreteModel.actions(state).flatten(0) //
+            .filter(action -> learningRate.encountered(state, action)));
+    if (actions.length() == 0)
+      return RealScalar.ZERO;
+    // ---
+    Policy policy = EGreedyPolicy.bestEquiprobable(discreteModel, Qsa2, epsilon, state);
+    Tensor action = new PolicyWrap(policy).next(state, actions);
     return Qsa2.value(state, action);
   }
 }

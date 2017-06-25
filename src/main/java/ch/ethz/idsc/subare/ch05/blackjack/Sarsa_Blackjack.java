@@ -12,7 +12,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
 public class Sarsa_Blackjack {
@@ -28,10 +27,11 @@ public class Sarsa_Blackjack {
       // Scalar error = DiscreteQsas.distance(qsa, ref);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2));
       Policy policy = EGreedyPolicy.bestEquiprobable(blackjack, qsa, epsilon.Get(index));
-      sarsa.supplyPolicy(() -> policy);
+      // sarsa.supplyPolicy(() -> policy);
+      sarsa.setExplore(epsilon.Get(index));
       for (int count = 0; count < 10; ++count)
         ExploringStarts.batch(blackjack, policy, sarsa);
-      gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, qsa)));
+      gsw.append(BlackjackHelper.joinAll(blackjack, qsa));
     }
     gsw.close();
   }

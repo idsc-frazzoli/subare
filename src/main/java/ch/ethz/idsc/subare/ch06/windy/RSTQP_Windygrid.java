@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** the R1STQP algorithm is cheating on the Windygrid
  * because TabularSteps starts in every state-action pair
@@ -27,8 +26,7 @@ class RSTQP_Windygrid {
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
       TabularSteps.batch(windygrid, windygrid, rstqp);
-      gsw.append(ImageFormat.of( //
-          StateActionRasters.qsaLossRef(windygridRaster, qsa, ref)));
+      gsw.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
       if (infoline.isLossfree())
         break;
     }

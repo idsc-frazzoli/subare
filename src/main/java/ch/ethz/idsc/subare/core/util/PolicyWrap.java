@@ -1,42 +1,28 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import java.util.Random;
-
 import ch.ethz.idsc.subare.core.Policy;
-import ch.ethz.idsc.tensor.DoubleScalar;
-import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.TensorRuntimeException;
-import ch.ethz.idsc.tensor.alg.Accumulate;
-import ch.ethz.idsc.tensor.alg.Last;
-import ch.ethz.idsc.tensor.sca.Chop;
+import ch.ethz.idsc.tensor.pdf.Distribution;
+import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
+import ch.ethz.idsc.tensor.pdf.RandomVariate;
 
 /** class picks action based on distribution defined by given {@link Policy} */
 public class PolicyWrap {
   private final Policy policy;
-  private final Random random;
 
-  public PolicyWrap(Policy policy, Random random) {
+  public PolicyWrap(Policy policy) {
     this.policy = policy;
-    this.random = random;
   }
 
+  /** @param state
+   * @param actions non-empty subset of all possible actions from given state
+   * @return */
   public Tensor next(Tensor state, Tensor actions) {
-    Tensor prob = Accumulate.of( //
-        Tensor.of(actions.flatten(0).map(action -> policy.probability(state, action))));
-    // ---
-    if (!Chop.isZeros(Last.of(prob).subtract(RealScalar.ONE)))
-      throw TensorRuntimeException.of(prob);
-    // ---
-    // TODO use random variate, wherever java.util.Random is used in project
-    Scalar threshold = DoubleScalar.of(random.nextDouble());
-    int index = 0;
-    for (; index < prob.length(); ++index)
-      if (Scalars.lessThan(threshold, prob.Get(index)))
-        break;
-    return actions.get(index);
+    Tensor pdf = Tensor.of(actions.flatten(0).map(action -> policy.probability(state, action)));
+    // if (!Chop.isZeros(Total.of(pdf).subtract(RealScalar.ONE)))
+    // throw TensorRuntimeException.of(pdf);
+    Distribution distribution = EmpiricalDistribution.fromUnscaledPDF(pdf);
+    return actions.get(RandomVariate.of(distribution).number().intValue());
   }
 }

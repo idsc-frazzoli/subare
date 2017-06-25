@@ -20,7 +20,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** Q-Learning applied to gambler with adaptive learning rate */
@@ -46,7 +45,7 @@ class QL_Gambler {
         ExploringStarts.batch(gambler, policy, 1, stepDigest);
         policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);
       }
-      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref)));
+      gsw.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
     }
     gsw.close();
     qsa.print(Round._2);

@@ -25,8 +25,9 @@ public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializa
     return new DiscreteVs(Index.build(discreteModel.states()), values);
   }
 
-  /* package */ final Index index;
-  /* package */ final Tensor values;
+  // ---
+  private final Index index;
+  private final Tensor values;
 
   /** @param index
    * @param values */

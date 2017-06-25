@@ -16,24 +16,22 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 
 /** Sarsa applied to gambler for different learning rate parameters */
 class Bulk_Gridworld {
-  public static void main(String[] args) throws Exception {
+  static void handle(SarsaType sarsaType, int nstep) throws Exception {
     Gridworld gambler = new Gridworld(); // 20, 4/10
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gambler); // true q-function, for error measurement
     // ---
-    SarsaType sarsaType = SarsaType.expected;
-    final Scalar errorcap = RealScalar.of(30); // 15
-    final Scalar losscap = RealScalar.of(.5); // .5
-    final Tensor epsilon = Subdivide.of(.2, .01, 100); // .2, .6
+    final Scalar errorcap = RealScalar.of(20); // 15
+    final Scalar losscap = RealScalar.of(5); // .5
+    final Tensor epsilon = Subdivide.of(.1, .01, 100); // .2, .6
     int x = 0;
-    int NSTEP = 2;
     LearningCompetition learningCompetition = new LearningCompetition( //
-        ref, "gridworld_" + sarsaType.name() + "_E" + epsilon.Get(0) + "_N" + NSTEP, epsilon, errorcap, losscap);
-    learningCompetition.NSTEP = NSTEP;
-    learningCompetition.MAGNIFY = 5;
-    learningCompetition.PERIOD = 100;
+        ref, "gridworld_" + sarsaType.name() + "_E" + epsilon.Get(0) + "_N" + nstep, epsilon, errorcap, losscap);
+    learningCompetition.nstep = nstep;
+    learningCompetition.magnify = 5;
+    learningCompetition.period = 100;
     for (Tensor factor : Subdivide.of(.1, 10, 10)) { // .5 16
       int y = 0;
-      for (Tensor exponent : Subdivide.of(.51, 1, 10)) { // .51 for qlearning use upper bound == 2, else == 1
+      for (Tensor exponent : Subdivide.of(.51, 1.3, 10)) { // .51 for qlearning use upper bound == 2, else == 1
         DiscreteQsa qsa = DiscreteQsa.build(gambler);
         Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor.Get(), exponent.Get()));
         LearningContender learningContender = LearningContender.sarsa(gambler, sarsa);
@@ -44,5 +42,9 @@ class Bulk_Gridworld {
     }
     // ---
     learningCompetition.doit();
+  }
+
+  public static void main(String[] args) throws Exception {
+    handle(SarsaType.qlearning, 1);
   }
 }

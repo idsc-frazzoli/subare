@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** Example 5.3 p.108: Solving Blackjack
  * Figure 5.3 p.108
@@ -30,7 +29,7 @@ class MCES_Blackjack {
         episodes += //
             ExploringStarts.batchWithReplay(blackjack, policy, mces);
       }
-      gsw.append(ImageFormat.of(BlackjackHelper.joinAll(blackjack, mces.qsa())));
+      gsw.append(BlackjackHelper.joinAll(blackjack, mces.qsa()));
       System.out.println(episodes);
     }
     gsw.close();

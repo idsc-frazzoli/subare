@@ -16,20 +16,19 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 
 /** Sarsa applied to gambler for different learning rate parameters */
 class Bulk_Maxbias {
-  public static void main(String[] args) throws Exception {
+  static void handle(SarsaType sarsaType, int nstep) throws Exception {
     Maxbias maxbias = new Maxbias(1); // 20, 4/10
     final DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias); // true q-function, for error measurement
     // ---
-    SarsaType sarsaType = SarsaType.original;
     final Scalar errorcap = RealScalar.of(.5); // 15
     final Scalar losscap = RealScalar.of(.5); // .5
     final Tensor epsilon = Subdivide.of(.2, .01, 100); // .2, .6
     int x = 0;
     LearningCompetition learningCompetition = new LearningCompetition( //
-        ref, "maxbias_" + sarsaType.name() + "_E" + epsilon.Get(0), epsilon, errorcap, losscap);
-    learningCompetition.NSTEP = 1;
-    learningCompetition.MAGNIFY = 5;
-    learningCompetition.PERIOD = 100;
+        ref, "maxbias_" + sarsaType.name() + "_E" + epsilon.Get(0) + "_N" + nstep, epsilon, errorcap, losscap);
+    learningCompetition.nstep = nstep;
+    learningCompetition.magnify = 5;
+    learningCompetition.period = 100;
     for (Tensor factor : Subdivide.of(.1, 10, 20)) { // .5 16
       int y = 0;
       for (Tensor exponent : Subdivide.of(.51, 2, 10)) { // .51 2
@@ -43,5 +42,9 @@ class Bulk_Maxbias {
     }
     // ---
     learningCompetition.doit();
+  }
+
+  public static void main(String[] args) throws Exception {
+    handle(SarsaType.qlearning, 1);
   }
 }

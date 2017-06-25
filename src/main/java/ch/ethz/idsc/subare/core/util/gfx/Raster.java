@@ -10,12 +10,15 @@ interface Raster extends Serializable {
   /** @return underlying discrete model */
   DiscreteModel discreteModel();
 
-  // TODO functions below are EXPERIMENTAL document
+  /** @return loss function scale for visualization */
   Scalar scaleLoss();
 
+  /** @return q function error scale for visualization */
   Scalar scaleQdelta();
 
+  /** @return dimension to join q function, loss, etc. */
   int joinAlongDimension();
 
+  /** @return magnification */
   int magnify();
 }

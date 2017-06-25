@@ -10,13 +10,11 @@ import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.Put;
@@ -36,13 +34,10 @@ class Double_Maxbias {
         DefaultLearningRate.of(5, .51), //
         DefaultLearningRate.of(5, .51));
     for (int index = 0; index < batches; ++index) {
-      Scalar explore = epsilon.Get(index);
       if (batches - 10 < index)
         Infoline.print(maxbias, index, ref, qsa1);
-      Policy policy1 = EGreedyPolicy.bestEquiprobable(maxbias, qsa1, explore);
-      Policy policy2 = EGreedyPolicy.bestEquiprobable(maxbias, qsa2, explore);
-      doubleSarsa.setPolicy(policy1, policy2);
-      ExploringStarts.batch(maxbias, doubleSarsa.getEGreedy(explore), n, doubleSarsa);
+      doubleSarsa.setExplore(epsilon.Get(index));
+      ExploringStarts.batch(maxbias, doubleSarsa.getEGreedy(), n, doubleSarsa);
     }
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");

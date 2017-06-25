@@ -16,7 +16,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 class Sarsa_Windygrid {
@@ -33,11 +32,11 @@ class Sarsa_Windygrid {
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, epsilon.Get(index));
-      sarsa.supplyPolicy(() -> policy);
+      // sarsa.supplyPolicy(() -> policy);
+      sarsa.setExplore(epsilon.Get(index));
       for (int count = 0; count < 10; ++count) // because there is only 1 start state
         ExploringStarts.batch(windygrid, policy, sarsa);
-      gsw.append(ImageFormat.of( //
-          StateActionRasters.qsaLossRef(windygridRaster, qsa, ref)));
+      gsw.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
       if (infoline.isLossfree())
         break;
     }

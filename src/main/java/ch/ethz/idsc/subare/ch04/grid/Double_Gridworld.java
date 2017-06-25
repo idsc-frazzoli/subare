@@ -10,18 +10,15 @@ import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** Double Sarsa for gridworld */
@@ -42,13 +39,9 @@ class Double_Gridworld {
     for (int index = 0; index < batches; ++index) {
       if (batches - 10 < index)
         Infoline.print(gridworld, index, ref, qsa1);
-      Scalar explore = epsilon.Get(index);
-      Policy policy1 = EGreedyPolicy.bestEquiprobable(gridworld, qsa1, explore);
-      Policy policy2 = EGreedyPolicy.bestEquiprobable(gridworld, qsa2, explore);
-      doubleSarsa.setPolicy(policy1, policy2);
-      ExploringStarts.batch(gridworld, doubleSarsa.getEGreedy(explore), nstep, doubleSarsa);
-      gsw.append(ImageFormat.of( //
-          StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref)));
+      doubleSarsa.setExplore(epsilon.Get(index));
+      ExploringStarts.batch(gridworld, doubleSarsa.getEGreedy(), nstep, doubleSarsa);
+      gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
     }
     gsw.close();
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
