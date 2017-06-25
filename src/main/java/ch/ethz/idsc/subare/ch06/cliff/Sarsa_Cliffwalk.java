@@ -12,9 +12,11 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /** StepDigest qsa methods applied to cliff walk */
 class Sarsa_Cliffwalk {
@@ -23,7 +25,7 @@ class Sarsa_Cliffwalk {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
-    DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
+    DiscreteQsa qsa = DiscreteQsa.build(cliffwalk, RealScalar.POSITIVE_INFINITY);
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     Sarsa sarsa = sarsaType.supply(cliffwalk, qsa, DefaultLearningRate.of(7, 0.61));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_" + sarsaType + ".gif"), 200);
@@ -39,7 +41,7 @@ class Sarsa_Cliffwalk {
         break;
     }
     gsw.close();
-    // qsa.print(Digits._2);
+    qsa.print(Round._2);
     // System.out.println("---");
     // Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, qsa);
     // EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policy);
@@ -53,6 +55,6 @@ class Sarsa_Cliffwalk {
   public static void main(String[] args) throws Exception {
     // handle(SarsaType.original, 1, 30);
     // handle(SarsaType.expected, 1, 30);
-    handle(SarsaType.qlearning, 1, 30);
+    handle(SarsaType.qlearning, 1, 10);
   }
 }

@@ -12,6 +12,10 @@ public final class StepAdapter implements StepInterface {
   private final Scalar reward;
   private final Tensor next;
 
+  /** @param prev non-null
+   * @param action non-null
+   * @param reward
+   * @param next non-null */
   public StepAdapter(Tensor prev, Tensor action, Scalar reward, Tensor next) {
     this.prev = prev.unmodifiable();
     this.action = action.unmodifiable();

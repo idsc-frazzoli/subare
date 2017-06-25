@@ -20,9 +20,15 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
     return new DiscreteQsa(index, Array.zeros(index.size()));
   }
 
+  public static DiscreteQsa build(DiscreteModel discreteModel, Scalar init) {
+    // TODO check for terminal states... should all have value == 0
+    Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
+    return new DiscreteQsa(index, Array.of(list -> init, index.size()));
+  }
+
   // ---
-  final Index index;
-  final Tensor values;
+  private final Index index;
+  private final Tensor values;
 
   private DiscreteQsa(Index index, Tensor values) {
     if (index.size() != values.length())

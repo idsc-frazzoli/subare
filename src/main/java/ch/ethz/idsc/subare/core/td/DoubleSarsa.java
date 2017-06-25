@@ -91,7 +91,8 @@ public class DoubleSarsa extends DequeDigestAdapter {
     LearningRate LearningRate1 = flip ? learningRate2 : learningRate1; // for updating
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
-    Sarsa sarsa = sarsaType.supply(discreteModel, Qsa1, null); // not used for learning
+    // TODO test if input LearningRate1 is correct
+    Sarsa sarsa = sarsaType.supply(discreteModel, Qsa1, LearningRate1); // not used for learning
     sarsa.setExplore(epsilon);
     rewards.append(sarsa.crossEvaluate(deque.getLast().nextState(), Qsa2));
     // ---

@@ -13,6 +13,7 @@ import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -31,7 +32,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;
   final QsaInterface qsa;
-  private final LearningRate learningRate;
+  final LearningRate learningRate;
   Scalar epsilon = null;
 
   /** @param discreteModel
@@ -71,8 +72,13 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     // ---
     Scalar value0 = qsa.value(state0, action);
     Scalar alpha = learningRate.alpha(stepInterface);
-    Scalar delta = discountFunction.apply(rewards).subtract(value0).multiply(alpha);
-    qsa.assign(state0, action, value0.add(delta));
+    Scalar value1 = discountFunction.apply(rewards);
+    if (alpha.equals(RealScalar.ONE))
+      qsa.assign(state0, action, value1);
+    else {
+      Scalar delta = value1.subtract(value0).multiply(alpha);
+      qsa.assign(state0, action, value0.add(delta));
+    }
     // ---
     // since qsa was update for the state-action pair
     // the learning rate interface as well as the usb policy are notified about the state-action pair

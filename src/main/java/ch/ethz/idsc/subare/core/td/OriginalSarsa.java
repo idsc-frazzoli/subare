@@ -7,6 +7,7 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
@@ -32,6 +33,7 @@ public class OriginalSarsa extends Sarsa {
     super(discreteModel, qsa, learningRate);
   }
 
+  // TODO can refactor between original sarsa and expected sarsa
   @Override
   protected Scalar evaluate(Tensor state) {
     return crossEvaluate(state, qsa);
@@ -39,9 +41,14 @@ public class OriginalSarsa extends Sarsa {
 
   @Override
   protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
+    Tensor actions = Tensor.of( //
+        discreteModel.actions(state).flatten(0) //
+            .filter(action -> learningRate.encountered(state, action)));
+    if (actions.length() == 0)
+      return RealScalar.ZERO;
+    // ---
     Policy policy = EGreedyPolicy.bestEquiprobable(discreteModel, Qsa2, epsilon, state);
-    PolicyWrap policyWrap = new PolicyWrap(policy);
-    Tensor action = policyWrap.next(state, discreteModel.actions(state));
+    Tensor action = new PolicyWrap(policy).next(state, actions);
     return Qsa2.value(state, action);
   }
 }
