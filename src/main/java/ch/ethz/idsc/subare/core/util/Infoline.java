@@ -33,4 +33,8 @@ public class Infoline {
   public boolean isLossfree() {
     return Chop.isZeros(loss);
   }
+
+  public boolean isErrorFree() {
+    return Chop.isZeros(error);
+  }
 }
