@@ -12,7 +12,7 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -25,7 +25,7 @@ class Sarsa_Fishfarm {
     Fishfarm fishfarm = new Fishfarm(20, 20);
     FishfarmRaster fishfarmRaster = new FishfarmRaster(fishfarm);
     final DiscreteQsa ref = FishfarmHelper.getOptimalQsa(fishfarm);
-    DiscreteQsa qsa = DiscreteQsa.build(fishfarm, RealScalar.POSITIVE_INFINITY);
+    DiscreteQsa qsa = DiscreteQsa.build(fishfarm, DoubleScalar.POSITIVE_INFINITY);
     Tensor epsilon = Subdivide.of(.5, .01, batches);
     Sarsa sarsa = sarsaType.supply(fishfarm, qsa, DefaultLearningRate.of(7, 0.61));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200);

@@ -26,10 +26,10 @@ class Bandits {
     Tensor data = RandomVariate.of(STANDARD, n);
     Scalar mean = (Scalar) Mean.of(data);
     Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
-    prep = temp.multiply(Sqrt.function.apply((Scalar) Variance.ofVector(temp)).invert());
-    GlobalAssert.of(Scalars.isZero((Scalar) Chop.of(Mean.of(prep))));
+    prep = temp.multiply(Sqrt.of((Scalar) Variance.ofVector(temp)).invert());
+    GlobalAssert.of(Scalars.isZero((Scalar) Chop._10.of(Mean.of(prep))));
     GlobalAssert.of( //
-        Scalars.isZero((Scalar) Chop.of(Variance.ofVector(prep).subtract(RealScalar.of(1)))));
+        Scalars.isZero((Scalar) Chop._10.of(Variance.ofVector(prep).subtract(RealScalar.of(1)))));
   }
 
   Scalar min = RealScalar.ZERO;

@@ -12,7 +12,7 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
@@ -25,7 +25,7 @@ class Sarsa_Cliffwalk {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
-    DiscreteQsa qsa = DiscreteQsa.build(cliffwalk, RealScalar.POSITIVE_INFINITY);
+    DiscreteQsa qsa = DiscreteQsa.build(cliffwalk, DoubleScalar.POSITIVE_INFINITY);
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     Sarsa sarsa = sarsaType.supply(cliffwalk, qsa, DefaultLearningRate.of(7, 0.61));
     GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_" + sarsaType + ".gif"), 200);
