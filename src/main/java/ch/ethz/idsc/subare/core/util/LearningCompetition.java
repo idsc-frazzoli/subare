@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.red.Min;
@@ -61,7 +61,7 @@ public class LearningCompetition {
       long delta = System.currentTimeMillis() - tic;
       System.out.println( //
           String.format("%3d %s sec", index, RealScalar.of(delta * 1e-3).map(Round._1)));
-      gsw.append(ImageResize.of(image, magnify));
+      gsw.append(ImageResize.nearest(image, magnify));
     }
     gsw.close();
   }

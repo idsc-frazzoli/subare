@@ -8,7 +8,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -17,6 +16,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Rescale;
+import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum CarRentalHelper {
@@ -34,7 +34,7 @@ enum CarRentalHelper {
       int y = state.Get(1).number().intValue();
       tensor.set(colorscheme.get(BASE.multiply(sca)), x, y);
     }
-    return ImageResize.of(tensor, 4);
+    return ImageResize.nearest(tensor, 4);
   }
 
   public static Tensor render(CarRental carRental, Policy policy) {
@@ -48,7 +48,7 @@ enum CarRentalHelper {
       Scalar sca = action.Get().add(RealScalar.of(5)).divide(RealScalar.of(10));
       tensor.set(colorscheme.get(BASE.multiply(sca)), x, y);
     }
-    return ImageResize.of(tensor, 4);
+    return ImageResize.nearest(tensor, 4);
   }
 
   public static Tensor joinAll(CarRental carRental, DiscreteVs vs) {

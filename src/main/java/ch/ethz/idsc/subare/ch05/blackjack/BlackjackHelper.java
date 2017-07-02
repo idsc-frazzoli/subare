@@ -10,7 +10,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -18,6 +17,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
+import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum BlackjackHelper {
@@ -52,6 +52,6 @@ enum BlackjackHelper {
     Tensor im2 = render(blackjack, policy);
     List<Integer> list = Dimensions.of(im1);
     list.set(1, 2);
-    return ImageResize.of(Join.of(1, im1, Array.zeros(list), im2), MAGNIFY);
+    return ImageResize.nearest(Join.of(1, im1, Array.zeros(list), im2), MAGNIFY);
   }
 }
