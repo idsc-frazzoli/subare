@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.OptimistAgent;
 import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -17,6 +16,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.alg.Subdivide;
+import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.Put;
 import ch.ethz.idsc.tensor.opt.Interpolation;
@@ -70,7 +70,7 @@ class OptimistsExact extends AbstractExact {
       Tensor rescale = Rescale.of(expectedRewards.get(Tensor.ALL, Tensor.ALL, 0));
       Interpolation colorscheme = Colorscheme.classic();
       rescale = rescale.map(scalar -> colorscheme.get(BASE.multiply(scalar)));
-      Export.of(UserHome.Pictures("opts.png"), ImageResize.of(rescale, 2));
+      Export.of(UserHome.Pictures("opts.png"), ImageResize.nearest(rescale, 2));
     }
     Put.of(UserHome.file("optimist"), res);
   }

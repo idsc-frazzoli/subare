@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -62,7 +63,7 @@ public class UcbPolicy implements Policy, StepDigest {
     final Scalar bias;
     if (Scalars.isZero(Nta))
       // if an action hasn't been taken yet, bias towards this action is infinite
-      bias = RealScalar.POSITIVE_INFINITY;
+      bias = DoubleScalar.POSITIVE_INFINITY;
     else
       bias = c.multiply(Sqrt.of(Log.of(t).divide(Nta))); // p.37 equation (2.8)
     return qsa.value(state, action).add(bias);

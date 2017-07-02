@@ -5,13 +5,13 @@ import java.io.File;
 
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Rescale;
+import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.Import;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 
@@ -42,6 +42,6 @@ enum RacetrackHelper {
             // ---
           }
       }
-    return ImageResize.of(image, 8);
+    return ImageResize.nearest(image, 8);
   }
 }

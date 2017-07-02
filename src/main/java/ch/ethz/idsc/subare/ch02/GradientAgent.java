@@ -31,7 +31,7 @@ public class GradientAgent extends Agent {
       if (rnd < sum && a == null)
         a = k;
     }
-    Scalar zer = Chop.function.apply(RealScalar.of(1 - sum));
+    Scalar zer = Chop._10.of(RealScalar.of(1 - sum));
     if (!zer.equals(RealScalar.ZERO))
       throw new RuntimeException();
     return a;

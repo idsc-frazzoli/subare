@@ -16,7 +16,7 @@ public class AverageTest extends TestCase {
     avg.track(RealScalar.of(1));
     assertEquals(avg.Get(), RealScalar.of(2));
     avg.track(RealScalar.of(1));
-    assertTrue(Chop.isZeros(avg.Get().subtract(RealScalar.of(5. / 3))));
+    assertTrue(Chop._10.allZero(avg.Get().subtract(RealScalar.of(5. / 3))));
   }
 
   public void testMean() {

@@ -16,7 +16,7 @@ public class BanditsTest extends TestCase {
     int num = 10;
     Bandits bandits = new Bandits(num);
     Tensor means = Tensors.vector(k -> bandits.expectedReward(Bandits.START, RealScalar.of(k)), num);
-    assertTrue(Chop.isZeros(Mean.of(means)));
+    assertTrue(Chop._10.allZero(Mean.of(means)));
   }
 
   public void testExact() {
@@ -25,8 +25,8 @@ public class BanditsTest extends TestCase {
     DiscreteQsa ref = BanditsHelper.getOptimalQsa(bandits);
     Tensor expected = Tensors.vector(i -> ref.value(Bandits.START, RealScalar.of(i)), num);
     Scalar mean = Mean.of(expected).Get();
-    assertTrue(Chop.isZeros(mean));
+    assertTrue(Chop._10.allZero(mean));
     Scalar var = Variance.ofVector(expected).Get();
-    assertTrue(Chop.isZeros(var.subtract(RealScalar.ONE)));
+    assertTrue(Chop._10.allZero(var.subtract(RealScalar.ONE)));
   }
 }

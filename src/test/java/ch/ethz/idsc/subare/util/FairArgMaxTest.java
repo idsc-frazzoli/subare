@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -32,8 +33,8 @@ public class FairArgMaxTest extends TestCase {
 
   public void testInfty() {
     Tensor d = Tensors.of( //
-        RealScalar.POSITIVE_INFINITY, RealScalar.ONE, //
-        RealScalar.POSITIVE_INFINITY, RealScalar.POSITIVE_INFINITY);
+        DoubleScalar.POSITIVE_INFINITY, RealScalar.ONE, //
+        DoubleScalar.POSITIVE_INFINITY, DoubleScalar.POSITIVE_INFINITY);
     FairArgMax fairArgMax = FairArgMax.of(d);
     assertEquals(fairArgMax.optionsCount(), 3);
     List<Integer> list = fairArgMax.options();

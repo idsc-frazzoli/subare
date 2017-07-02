@@ -8,11 +8,11 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
-import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
 import ch.ethz.idsc.tensor.io.Primitives;
 
@@ -42,7 +42,7 @@ class VI_RaceTrack {
           image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
         }
       }
-      gsw.append(ImageResize.of(image, 6));
+      gsw.append(ImageResize.nearest(image, 6));
     }
     gsw.close();
     System.out.println("gif created");

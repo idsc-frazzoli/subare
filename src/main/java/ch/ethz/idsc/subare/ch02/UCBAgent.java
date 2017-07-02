@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.ch02;
 
 import ch.ethz.idsc.subare.util.GlobalAssert;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -36,13 +37,12 @@ public class UCBAgent extends FairMaxAgent {
       Scalar Nta = Na.Get(a);
       if (Scalars.isZero(Nta))
         // if an action hasn't been taken yet, bias towards this action is infinite
-        bias = RealScalar.POSITIVE_INFINITY;
+        bias = DoubleScalar.POSITIVE_INFINITY;
       else {
         Scalar count = Total.of(Na).Get();
         GlobalAssert.of(0 < (Integer) count.number());
-        Scalar logt = Log.function.apply(count);
-        bias = c.multiply( //
-            Sqrt.function.apply(logt.divide(Nta)));
+        Scalar logt = Log.of(count);
+        bias = c.multiply(Sqrt.of(logt.divide(Nta)));
       }
       dec.set(QA -> QA.add(bias), a);
     }

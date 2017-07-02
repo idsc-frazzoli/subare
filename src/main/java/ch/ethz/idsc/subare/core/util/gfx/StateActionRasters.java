@@ -13,7 +13,6 @@ import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.subare.util.ImageResize;
 import ch.ethz.idsc.tensor.NumberQ;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -21,6 +20,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
+import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
 
@@ -55,7 +55,7 @@ public enum StateActionRasters {
 
   /***************************************************/
   public static Tensor qsa(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
-    return ImageResize.of(_render(stateActionRaster, qsa), stateActionRaster.magnify());
+    return ImageResize.nearest(_render(stateActionRaster, qsa), stateActionRaster.magnify());
   }
 
   public static Tensor qsa_rescaled(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
@@ -68,7 +68,7 @@ public enum StateActionRasters {
     Tensor image2 = _render(stateActionRaster, policy);
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 3);
-    return ImageResize.of( //
+    return ImageResize.nearest( //
         Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magnify());
   }
 
@@ -80,7 +80,7 @@ public enum StateActionRasters {
     Tensor image3 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta));
     List<Integer> list = Dimensions.of(image1);
     list.set(0, 3);
-    return ImageResize.of( //
+    return ImageResize.nearest( //
         Join.of(0, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magnify());
   }
 
@@ -95,7 +95,7 @@ public enum StateActionRasters {
     List<Integer> list = Dimensions.of(image1);
     int dim = stateActionRaster.joinAlongDimension();
     list.set(dim, 1);
-    return ImageResize.of( //
+    return ImageResize.nearest( //
         Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magnify());
   }
 
@@ -107,7 +107,7 @@ public enum StateActionRasters {
     List<Integer> list = Dimensions.of(image1);
     int dim = stateActionRaster.joinAlongDimension();
     list.set(dim, 3);
-    return ImageResize.of( //
+    return ImageResize.nearest( //
         Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magnify());
   }
 }

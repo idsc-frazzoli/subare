@@ -12,7 +12,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.subare.util.ImageResize;
+import ch.ethz.idsc.tensor.NumberQ;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -20,6 +20,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Rescale;
+import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
 
@@ -45,7 +46,8 @@ public enum StateRasters {
       Point point = stateRaster.point(state);
       if (point != null) {
         Scalar sca = vs.value(state);
-        tensor.set(COLORSCHEME.get(BASE.multiply(sca)), point.x, point.y);
+        if (NumberQ.of(sca))
+          tensor.set(COLORSCHEME.get(BASE.multiply(sca)), point.x, point.y);
       }
     }
     return tensor;
@@ -62,7 +64,7 @@ public enum StateRasters {
 
   /***************************************************/
   public static Tensor vs(StateRaster stateRaster, DiscreteVs vs) {
-    return ImageResize.of(_render(stateRaster, vs), stateRaster.magnify());
+    return ImageResize.nearest(_render(stateRaster, vs), stateRaster.magnify());
   }
 
   public static Tensor vs_rescale(StateRaster stateRaster, DiscreteVs vs) {
@@ -89,7 +91,7 @@ public enum StateRasters {
     List<Integer> list = Dimensions.of(image1);
     int dim = stateRaster.joinAlongDimension();
     list.set(dim, 1);
-    return ImageResize.of( //
+    return ImageResize.nearest( //
         Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateRaster.magnify());
   }
 }
