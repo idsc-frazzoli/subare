@@ -17,6 +17,7 @@ import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.alg.ArrayQ;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -96,8 +97,8 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     statesIndex = Index.build(states);
     statesStartIndex = Index.build(statesStart);
     statesTerminalIndex = Index.build(statesTerminal);
-    GlobalAssert.of(Dimensions.isArray(states));
-    GlobalAssert.of(Dimensions.isArray(actions));
+    GlobalAssert.of(ArrayQ.of(states));
+    GlobalAssert.of(ArrayQ.of(actions));
     stateActionMap = StateActionMap.build(this, actions, this);
     this.image = image;
   }
