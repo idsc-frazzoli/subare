@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 public class ColorschemeTest extends TestCase {
   public void testSimple() {
-    Interpolation interpolation = Colorscheme.classic();
+    Interpolation interpolation = Colorscheme.CLASSIC;
     assertTrue(interpolation.get(Tensors.vector(200, 1)).isScalar());
   }
 }

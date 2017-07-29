@@ -24,7 +24,7 @@ enum CarRentalHelper {
   private static final Tensor BASE = Tensors.vector(255);
 
   public static Tensor render(CarRental carRental, DiscreteVs vs) {
-    Interpolation colorscheme = Colorscheme.classic();
+    Interpolation colorscheme = Colorscheme.CLASSIC;
     // TODO use createRaster
     final Tensor tensor = Array.zeros(21, 21, 4);
     DiscreteVs scaled = vs.create(Rescale.of(vs.values()).flatten(0));
@@ -38,7 +38,7 @@ enum CarRentalHelper {
   }
 
   public static Tensor render(CarRental carRental, Policy policy) {
-    Interpolation colorscheme = Colorscheme.classic();
+    Interpolation colorscheme = Colorscheme.CLASSIC;
     final Tensor tensor = Array.zeros(21, 21, 4);
     PolicyWrap policyWrap = new PolicyWrap(policy);
     for (Tensor state : carRental.states()) {

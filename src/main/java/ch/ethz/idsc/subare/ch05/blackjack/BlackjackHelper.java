@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.opt.Interpolation;
 enum BlackjackHelper {
   ;
   private static final int MAGNIFY = 5;
-  private static final Interpolation COLORSCHEME = Colorscheme.classic();
+  private static final Interpolation COLORSCHEME = Colorscheme.CLASSIC;
   private static final Tensor BASE = Tensors.vector(255);
 
   // FIXME magnify irregular

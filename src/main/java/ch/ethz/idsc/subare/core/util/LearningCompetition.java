@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 
 public class LearningCompetition {
   private final Map<Point, LearningContender> map = new HashMap<>();
-  private final Interpolation interpolation = Colorscheme.classic();
+  private final Interpolation interpolation = Colorscheme.CLASSIC;
   private final Tensor BASE = Tensors.vector(255);
   // ---
   private final DiscreteQsa ref;

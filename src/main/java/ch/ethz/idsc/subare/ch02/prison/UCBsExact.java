@@ -64,7 +64,7 @@ class UCBsExact extends AbstractExact {
     }
     {
       Tensor rescale = Rescale.of(expectedRewards.get(Tensor.ALL, Tensor.ALL, 0));
-      Interpolation colorscheme = Colorscheme.classic();
+      Interpolation colorscheme = Colorscheme.CLASSIC;
       rescale = rescale.map(scalar -> colorscheme.get(BASE.multiply(scalar)));
       Export.of(UserHome.Pictures("ucbs.png"), ImageResize.nearest(rescale, 2));
     }

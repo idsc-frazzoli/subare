@@ -26,7 +26,7 @@ enum RacetrackHelper {
   private static final Tensor BASE = Tensors.vector(255);
 
   static Tensor render(Racetrack racetrack, DiscreteQsa qsa, Tensor speed, Tensor action) {
-    Interpolation colorscheme = Colorscheme.classic();
+    Interpolation colorscheme = Colorscheme.CLASSIC;
     Tensor image = racetrack.image().multiply(RealScalar.ZERO);
     DiscreteQsa scaled = qsa.create(Rescale.of(qsa.values()).flatten(0));
     for (Tensor state : racetrack.states())

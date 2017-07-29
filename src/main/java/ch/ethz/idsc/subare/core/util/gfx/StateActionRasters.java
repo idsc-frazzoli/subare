@@ -12,41 +12,34 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.Policies;
-import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.tensor.NumberQ;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
+import ch.ethz.idsc.tensor.img.ArrayPlot;
+import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
-import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 // TODO all non-terminal function should be package visibility
 public enum StateActionRasters {
   ;
-  private static final Interpolation COLORSCHEME = Colorscheme.classic();
-  private static final Tensor BASE = Tensors.vector(255);
-
   /** @param stateActionRaster
    * @param qsa scaled to contain values in the interval [0, 1]
    * @return */
   private static Tensor _render(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
     DiscreteModel discreteModel = stateActionRaster.discreteModel();
     Dimension dimension = stateActionRaster.dimensionStateActionRaster();
-    final Tensor tensor = Array.zeros(dimension.width, dimension.height, 4);
+    Tensor tensor = Array.zeros(dimension.width, dimension.height).map(scalar -> DoubleScalar.INDETERMINATE);
     for (Tensor state : discreteModel.states())
       for (Tensor action : discreteModel.actions(state)) {
         Point point = stateActionRaster.point(state, action);
-        if (point != null) {
-          Scalar sca = qsa.value(state, action);
-          if (NumberQ.of(sca))
-            tensor.set(COLORSCHEME.get(BASE.multiply(sca)), point.x, point.y);
-        }
+        if (point != null)
+          tensor.set(qsa.value(state, action), point.x, point.y);
       }
-    return tensor;
+    return ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);
   }
 
   private static Tensor _render(StateActionRaster stateActionRaster, Policy policy) {

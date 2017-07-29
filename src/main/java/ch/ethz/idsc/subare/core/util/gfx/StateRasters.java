@@ -11,17 +11,15 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.Loss;
-import ch.ethz.idsc.subare.util.Colorscheme;
-import ch.ethz.idsc.tensor.NumberQ;
-import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Rescale;
+import ch.ethz.idsc.tensor.img.ArrayPlot;
+import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
-import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 public enum StateRasters {
@@ -32,25 +30,19 @@ public enum StateRasters {
         state.Get(1).number().intValue());
   }
 
-  private static final Interpolation COLORSCHEME = Colorscheme.classic();
-  private static final Tensor BASE = Tensors.vector(255);
-
   /** @param stateActionRaster
    * @param vs scaled to contain values in the interval [0, 1]
    * @return */
   private static Tensor _render(StateRaster stateRaster, DiscreteVs vs) {
     DiscreteModel discreteModel = stateRaster.discreteModel();
     Dimension dimension = stateRaster.dimensionStateRaster();
-    Tensor tensor = Array.zeros(dimension.width, dimension.height, 4);
+    Tensor tensor = Array.zeros(dimension.width, dimension.height).map(scalar -> DoubleScalar.INDETERMINATE);
     for (Tensor state : discreteModel.states()) {
       Point point = stateRaster.point(state);
-      if (point != null) {
-        Scalar sca = vs.value(state);
-        if (NumberQ.of(sca))
-          tensor.set(COLORSCHEME.get(BASE.multiply(sca)), point.x, point.y);
-      }
+      if (point != null)
+        tensor.set(vs.value(state), point.x, point.y);
     }
-    return tensor;
+    return ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);
   }
 
   private static Tensor _vs(StateRaster stateRaster, DiscreteQsa qsa) {
