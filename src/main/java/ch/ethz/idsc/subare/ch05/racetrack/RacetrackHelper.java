@@ -4,16 +4,15 @@ package ch.ethz.idsc.subare.ch05.racetrack;
 import java.io.File;
 
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.Index;
-import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Rescale;
+import ch.ethz.idsc.tensor.img.ArrayPlot;
+import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.Import;
-import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum RacetrackHelper {
   ;
@@ -23,11 +22,8 @@ enum RacetrackHelper {
     return new Racetrack(image, maxSpeed);
   }
 
-  private static final Tensor BASE = Tensors.vector(255);
-
   static Tensor render(Racetrack racetrack, DiscreteQsa qsa, Tensor speed, Tensor action) {
-    Interpolation colorscheme = Colorscheme.CLASSIC;
-    Tensor image = racetrack.image().multiply(RealScalar.ZERO);
+    Tensor tensor = racetrack.image().get(Tensor.ALL, Tensor.ALL, 0).map(scalar -> DoubleScalar.INDETERMINATE);
     DiscreteQsa scaled = qsa.create(Rescale.of(qsa.values()).flatten(0));
     for (Tensor state : racetrack.states())
       if (state.extract(2, 4).equals(speed)) {
@@ -37,11 +33,12 @@ enum RacetrackHelper {
             Scalar sca = scaled.value(state, action);
             int px = state.Get(0).number().intValue();
             int py = state.Get(1).number().intValue();
-            image.set(colorscheme.get(BASE.multiply(sca)), px, py);
+            tensor.set(sca, px, py);
           } catch (Exception exception) {
             // ---
           }
       }
+    Tensor image = ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);
     return ImageResize.nearest(image, 8);
   }
 }
