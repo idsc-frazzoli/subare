@@ -5,23 +5,21 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.ethz.idsc.subare.util.Colorscheme;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.img.ColorDataFunction;
+import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.GifSequenceWriter;
-import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.sca.Round;
 
 public class LearningCompetition {
   private final Map<Point, LearningContender> map = new HashMap<>();
-  private final Interpolation interpolation = Colorscheme.classic();
-  private final Tensor BASE = Tensors.vector(255);
+  private final ColorDataFunction colorDataFunction = ColorDataGradients.CLASSIC;
   // ---
   private final DiscreteQsa ref;
   private final String name;
@@ -72,12 +70,12 @@ public class LearningCompetition {
     {
       Scalar error = infoline.q_error();
       error = Min.of(error.divide(errorcap), RealScalar.ONE);
-      image.set(interpolation.get(BASE.multiply(error)), point.x, point.y);
+      image.set(colorDataFunction.apply(error), point.x, point.y);
     }
     {
       Scalar error = infoline.loss();
       error = Min.of(error.divide(errorcap2), RealScalar.ONE);
-      image.set(interpolation.get(BASE.multiply(error)), RESX + 1 + point.x, point.y);
+      image.set(colorDataFunction.apply(error), RESX + 1 + point.x, point.y);
     }
   }
 }

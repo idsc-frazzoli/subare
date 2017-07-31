@@ -9,37 +9,33 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.subare.util.Colorscheme;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
+import ch.ethz.idsc.tensor.img.ArrayPlot;
+import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
-import ch.ethz.idsc.tensor.opt.Interpolation;
 
 enum BlackjackHelper {
   ;
   private static final int MAGNIFY = 5;
-  private static final Interpolation COLORSCHEME = Colorscheme.classic();
-  private static final Tensor BASE = Tensors.vector(255);
 
   // FIXME magnify irregular
   public static Tensor render(Blackjack blackjack, Policy policy) {
     BlackjackRaster blackjackRaster = new BlackjackRaster(blackjack);
     Dimension dimension = blackjackRaster.dimensionStateRaster();
-    Tensor tensor = Array.zeros(dimension.width, dimension.height, 4);
+    Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.width, dimension.height);
     for (Tensor state : blackjack.states()) {
       Point point = blackjackRaster.point(state);
       if (point != null) {
         Tensor action = RealScalar.ZERO;
-        Scalar sca = policy.probability(state, action);
-        tensor.set(COLORSCHEME.get(BASE.multiply(sca)), point.x, point.y);
+        tensor.set(policy.probability(state, action), point.x, point.y);
       }
     }
-    return tensor;
+    return ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);
   }
 
   public static Tensor render(Blackjack blackjack, DiscreteQsa qsa) {
