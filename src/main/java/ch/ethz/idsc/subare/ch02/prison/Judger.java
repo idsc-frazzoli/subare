@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.ch02.prison;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.util.GlobalAssert;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
@@ -28,7 +27,6 @@ class Judger {
   /** @return tensor of rewards averaged over number of actions */
   Tensor ranking() {
     GlobalAssert.of(a1.getCount().equals(a2.getCount()));
-    final Scalar div = a1.getCount().invert();
-    return Tensors.of(a1.getRewardTotal(), a2.getRewardTotal()).multiply(div);
+    return Tensors.of(a1.getRewardTotal(), a2.getRewardTotal()).divide(a1.getCount());
   }
 }
