@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** action value iteration for cliff walk */
 class AVI_Fishfarm {
@@ -18,7 +18,7 @@ class AVI_Fishfarm {
     // Export.of(UserHome.Pictures("cliffwalk_qsa_avi.png"), //
     // StateActionRasters.qsa(new CliffwalkRaster(cliffwalk), DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = new ActionValueIteration(fishfarm);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("fishfarm_qsa_avi.gif"), 200);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_avi.gif"), 200);
     for (int index = 0; index < 20; ++index) {
       Infoline infoline = Infoline.print(fishfarm, index, ref, avi.qsa());
       gsw.append(StateRasters.qsaLossRef(fishfarmRaster, avi.qsa(), ref));

@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** solving grid world
  * gives the value function for the optimal policy equivalent to
@@ -37,7 +37,7 @@ class AVI_Gridworld {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldRaster = new GridworldRaster(gridworld);
     ActionValueIteration avi = new ActionValueIteration(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_qsa_avi.gif"), 250);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_qsa_avi.gif"), 250);
     for (int count = 0; count < 7; ++count) {
       gsw.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
       avi.step();

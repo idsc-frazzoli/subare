@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.img.ImageResize;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.Primitives;
 
 class VI_RaceTrack {
@@ -24,7 +24,7 @@ class VI_RaceTrack {
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     Policy policy = GreedyPolicy.bestEquiprobable(racetrack, vi.vs());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + ".gif"), 400);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + ".gif"), 400);
     for (Tensor start : racetrack.statesStart) {
       Tensor image = racetrack.image();
       MonteCarloEpisode mce = new MonteCarloEpisode( //

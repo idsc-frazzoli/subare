@@ -15,7 +15,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 class Sarsa_Windygrid {
@@ -28,7 +28,7 @@ class Sarsa_Windygrid {
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(3, 0.51);
     Sarsa sarsa = sarsaType.supply(windygrid, qsa, learningRate);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100);
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
       Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, epsilon.Get(index));

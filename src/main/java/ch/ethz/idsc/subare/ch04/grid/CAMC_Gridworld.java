@@ -10,7 +10,7 @@ import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /**  */
 class CAMC_Gridworld { // TODO this looks like WIP
@@ -20,7 +20,7 @@ class CAMC_Gridworld { // TODO this looks like WIP
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     ConstantAlphaMonteCarloVs camc = new ConstantAlphaMonteCarloVs( //
         gridworld, DefaultLearningRate.of(3, .51));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_vs_camc.gif"), 100);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_vs_camc.gif"), 100);
     final int batches = 50;
     // Tensor epsilon = Subdivide.of(.2, .05, batches);
     for (int index = 0; index < batches; ++index) {

@@ -18,7 +18,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** Double Sarsa for gridworld */
@@ -35,7 +35,7 @@ class Double_Gridworld {
         qsa1, qsa2, //
         DefaultLearningRate.of(5, .51), //
         DefaultLearningRate.of(5, .51));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150);
     for (int index = 0; index < batches; ++index) {
       if (batches - 10 < index)
         Infoline.print(gridworld, index, ref, qsa1);

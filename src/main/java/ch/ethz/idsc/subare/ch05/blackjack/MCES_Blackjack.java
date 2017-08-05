@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** Example 5.3 p.108: Solving Blackjack
  * Figure 5.3 p.108
@@ -18,7 +18,7 @@ class MCES_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_mces.gif"), 250);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("blackjack_mces.gif"), 250);
     int batches = 10; // 40
     Tensor epsilon = Subdivide.of(.2, .05, batches);
     int episodes = 0;

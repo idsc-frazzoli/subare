@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 class AVI_Wireloop {
   public static void main(String[] args) throws Exception {
@@ -16,7 +16,7 @@ class AVI_Wireloop {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     ActionValueIteration avi = new ActionValueIteration(wireloop);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "L_avi.gif"), 250);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "L_avi.gif"), 250);
     int batches = 50;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(wireloop, index, ref, avi.qsa());

@@ -9,7 +9,7 @@ import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /**  */
 class RSTQP_Dynamaze {
@@ -21,7 +21,7 @@ class RSTQP_Dynamaze {
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         dynamaze, qsa, ConstantLearningRate.of(RealScalar.ONE));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_qsa_rstqp.gif"), 250);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_qsa_rstqp.gif"), 250);
     int batches = 50;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);

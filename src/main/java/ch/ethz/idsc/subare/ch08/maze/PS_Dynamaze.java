@@ -18,7 +18,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 class PS_Dynamaze {
@@ -36,7 +36,7 @@ class PS_Dynamaze {
     Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsa, 10, RealScalar.ZERO);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250);
     // ---
     StepExploringStarts stepExploringStarts = //
         new StepExploringStarts(dynamaze, prioritizedSweeping) {

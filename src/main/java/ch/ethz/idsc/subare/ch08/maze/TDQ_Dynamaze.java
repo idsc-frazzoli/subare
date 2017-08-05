@@ -16,7 +16,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 class TDQ_Dynamaze {
@@ -31,7 +31,7 @@ class TDQ_Dynamaze {
     LearningRate learningRate = DefaultLearningRate.of(5, 0.51);
     Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
     TabularDynaQ tabularDynaQ = new TabularDynaQ(sarsa, 10);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200);
     for (int index = 0; index < batches; ++index) {
       // if (EPISODES - 10 < index)
       Infoline.print(dynamaze, index, ref, qsa);

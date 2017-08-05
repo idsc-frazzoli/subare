@@ -18,7 +18,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** Sarsa applied to gambler */
 class Sarsa_Gambler {
@@ -31,8 +31,8 @@ class Sarsa_Gambler {
     DiscreteQsa qsa = DiscreteQsa.build(gambler); // q-function for training, initialized to 0
     // ---
     StateActionCounter sac = new StateActionCounter(gambler);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
-    GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
+    AnimationWriter gsc = AnimationWriter.of(UserHome.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
     // ---
     final Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor, exponent));
     // ---

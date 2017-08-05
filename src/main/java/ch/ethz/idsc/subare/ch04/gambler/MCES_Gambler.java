@@ -12,7 +12,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
 class MCES_Gambler {
@@ -21,7 +21,7 @@ class MCES_Gambler {
     GamblerRaster gamblerRaster = new GamblerRaster(gambler);
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gambler);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_mces.gif"), 200);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_mces.gif"), 200);
     int batches = 20;
     for (int index = 0; index < batches; ++index) {
       Infoline.print(gambler, index, ref, mces.qsa());

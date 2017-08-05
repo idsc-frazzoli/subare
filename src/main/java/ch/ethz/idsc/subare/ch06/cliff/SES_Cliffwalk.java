@@ -16,7 +16,7 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
  * 
@@ -30,7 +30,7 @@ class SES_Cliffwalk {
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
-    GifSequenceWriter gsw = GifSequenceWriter.of( //
+    AnimationWriter gsw = AnimationWriter.of( //
         UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250);
     LearningRate learningRate = DefaultLearningRate.of(7, 0.61);
     Sarsa sarsa = new OriginalSarsa(cliffwalk, qsa, learningRate);

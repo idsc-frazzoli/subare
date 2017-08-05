@@ -9,7 +9,7 @@ import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DoubleScalar;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
 class RSTQP_Fishfarm {
@@ -20,7 +20,7 @@ class RSTQP_Fishfarm {
     DiscreteQsa qsa = DiscreteQsa.build(fishfarm, DoubleScalar.POSITIVE_INFINITY);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         fishfarm, qsa, ConstantLearningRate.one());
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("fishfarm_qsa_rstqp.gif"), 200);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_rstqp.gif"), 200);
     int batches = 20;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
