@@ -12,7 +12,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 class Sarsa_Wireloop {
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
@@ -27,7 +27,7 @@ class Sarsa_Wireloop {
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     System.out.println(qsa.size());
     Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(3, 0.51));
-    GifSequenceWriter gsw = GifSequenceWriter.of( //
+    AnimationWriter gsw = AnimationWriter.of( //
         UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250);
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(wireloop, index, ref, qsa);

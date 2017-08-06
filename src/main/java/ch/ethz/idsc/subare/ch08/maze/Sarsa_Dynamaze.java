@@ -15,7 +15,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 class Sarsa_Dynamaze {
@@ -29,7 +29,7 @@ class Sarsa_Dynamaze {
     Tensor epsilon = Subdivide.of(.3, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(15, 0.51);
     Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200);
     for (int index = 0; index < batches; ++index) {
       // if (EPISODES - 10 < index)
       Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);

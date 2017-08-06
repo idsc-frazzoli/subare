@@ -15,7 +15,7 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** StepDigest qsa methods applied to cliff walk */
@@ -28,7 +28,7 @@ class Sarsa_Fishfarm {
     DiscreteQsa qsa = DiscreteQsa.build(fishfarm, DoubleScalar.POSITIVE_INFINITY);
     Tensor epsilon = Subdivide.of(.5, .01, batches);
     Sarsa sarsa = sarsaType.supply(fishfarm, qsa, DefaultLearningRate.of(7, 0.61));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200);
     for (int index = 0; index < batches; ++index) {
       // if (batches - 10 < index)
       Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);

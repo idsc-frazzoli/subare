@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.img.ColorDataFunction;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -50,7 +50,7 @@ public class LearningCompetition {
     RESX = map.keySet().stream().mapToInt(point -> point.x).reduce(Math::max).getAsInt() + 1;
     int RESY = map.keySet().stream().mapToInt(point -> point.y).reduce(Math::max).getAsInt() + 1;
     Tensor image = Array.zeros(RESX + 1 + RESX, RESY, 4);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("bulk_" + name + ".gif"), period);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("bulk_" + name + ".gif"), period);
     for (int index = 0; index < epsilon.length(); ++index) {
       final int findex = index;
       long tic = System.currentTimeMillis();

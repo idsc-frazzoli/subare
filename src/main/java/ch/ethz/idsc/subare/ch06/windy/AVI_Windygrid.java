@@ -13,7 +13,7 @@ import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.Export;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** action value iteration for cliff walk */
 class AVI_Windygrid {
@@ -24,7 +24,7 @@ class AVI_Windygrid {
     Export.of(UserHome.Pictures("windygrid_qsa_avi.png"), //
         StateActionRasters.qsa_rescaled(windygridRaster, ref));
     ActionValueIteration avi = new ActionValueIteration(windygrid);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250);
     for (int index = 0; index < 20; ++index) {
       Infoline infoline = Infoline.print(windygrid, index, ref, avi.qsa());
       gsw.append(StateActionRasters.qsaLossRef(windygridRaster, avi.qsa(), ref));

@@ -11,7 +11,7 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
 public class Sarsa_Blackjack {
@@ -21,7 +21,7 @@ public class Sarsa_Blackjack {
     int batches = 40;
     Tensor epsilon = Subdivide.of(.1, .01, batches); // only used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_qsa_" + sarsaType + ".gif"), 200);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("blackjack_qsa_" + sarsaType + ".gif"), 200);
     Sarsa sarsa = sarsaType.supply(blackjack, qsa, DefaultLearningRate.of(2, 0.6));
     for (int index = 0; index < batches; ++index) {
       // Scalar error = DiscreteQsas.distance(qsa, ref);

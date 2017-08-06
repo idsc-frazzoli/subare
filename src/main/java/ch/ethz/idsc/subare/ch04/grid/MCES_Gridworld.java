@@ -11,7 +11,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** Example 4.1, p.82 */
 class MCES_Gridworld {
@@ -19,7 +19,7 @@ class MCES_Gridworld {
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gridworld);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gridworld_qsa_mces.gif"), 250);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_qsa_mces.gif"), 250);
     final int batches = 20;
     Tensor epsilon = Subdivide.of(.2, .05, batches);
     for (int index = 0; index < batches; ++index) {

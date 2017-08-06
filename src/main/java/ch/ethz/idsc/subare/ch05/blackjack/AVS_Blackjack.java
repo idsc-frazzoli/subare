@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** finding optimal policy to stay or hit
  * 
@@ -21,7 +21,7 @@ class AVS_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("blackjack_avs.gif"), 250);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("blackjack_avs.gif"), 250);
     int batches = 3; // 40
     Tensor epsilon = Subdivide.of(.2, .05, batches);
     int episodes = 0;

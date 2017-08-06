@@ -28,7 +28,7 @@ abstract class AbstractExact {
 
   protected final void contribute(Integer[] a1open, Integer[] a2open) {
     int n = a1open.length + a2open.length;
-    Scalar prob = RealScalar.of(1 << n).invert();
+    Scalar prob = RealScalar.of(1 << n).reciprocal();
     Tensor rew = exactRewards(a1open, a2open);
     expected = expected.add(rew.multiply(prob));
   }

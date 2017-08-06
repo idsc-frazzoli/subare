@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** Example 4.1, p.82 */
 class RSTQP_Wireloop {
@@ -22,7 +22,7 @@ class RSTQP_Wireloop {
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         wireloop, qsa, ConstantLearningRate.of(RealScalar.ONE));
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "L_qsa_rstqp.gif"), 250);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "L_qsa_rstqp.gif"), 250);
     int batches = 50;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(wireloop, index, ref, qsa);

@@ -34,7 +34,7 @@ class Bandits implements StandardModel, MonteCarloInterface {
     Tensor data = RandomVariate.of(STANDARD, k);
     Scalar mean = (Scalar) Mean.of(data);
     Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
-    Tensor prep = temp.multiply(Sqrt.of((Scalar) Variance.ofVector(temp)).invert());
+    Tensor prep = temp.divide(Sqrt.of((Scalar) Variance.ofVector(temp)));
     for (int index = 0; index < k; ++index)
       distributions.add(NormalDistribution.of(prep.Get(index), RealScalar.ONE));
   }

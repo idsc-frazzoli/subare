@@ -13,7 +13,7 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 class SES_Wireloop {
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
@@ -37,7 +37,7 @@ class SES_Wireloop {
         return EGreedyPolicy.bestEquiprobable(wireloop, qsa, eps);
       }
     };
-    GifSequenceWriter gsw = GifSequenceWriter.of( //
+    AnimationWriter gsw = AnimationWriter.of( //
         UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100);
     int index = 0;
     while (exploringStartsStream.batchIndex() < batches) {

@@ -10,7 +10,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 class MCES_Wireloop {
   public static void main(String[] args) throws Exception {
@@ -19,7 +19,7 @@ class MCES_Wireloop {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(wireloop);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures(name + "L_mces.gif"), 100);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "L_mces.gif"), 100);
     int batches = 10;
     Tensor epsilon = Subdivide.of(.2, .05, batches);
     for (int index = 0; index < batches; ++index) {

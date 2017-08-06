@@ -17,9 +17,10 @@ public class Average {
       average = tensor.copy();
     } else {
       count = count.add(RealScalar.ONE);
-      Scalar weight = count.invert();
-      average = average.multiply(RealScalar.ONE.subtract(weight)) //
-          .add(tensor.multiply(weight));
+      Scalar weight = count.reciprocal();
+      average = average //
+          .multiply(RealScalar.ONE.subtract(weight)) //
+          .add(tensor.divide(count));
     }
   }
 

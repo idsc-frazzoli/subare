@@ -12,7 +12,7 @@ import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 // R1STQP algorithm is not suited for gambler's dilemma
 class RSTQP_Gambler {
@@ -25,8 +25,8 @@ class RSTQP_Gambler {
         DefaultLearningRate.of(4, 0.71));
     ActionValueStatistics avs = new ActionValueStatistics(gambler);
     StateActionCounter sac = new StateActionCounter(gambler);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("gambler_qsa_rstqp.gif"), 100);
-    GifSequenceWriter gsc = GifSequenceWriter.of(UserHome.Pictures("gambler_sac_rstqp.gif"), 200);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_rstqp.gif"), 100);
+    AnimationWriter gsc = AnimationWriter.of(UserHome.Pictures("gambler_sac_rstqp.gif"), 200);
     int batches = 200;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(gambler, index, ref, qsa);

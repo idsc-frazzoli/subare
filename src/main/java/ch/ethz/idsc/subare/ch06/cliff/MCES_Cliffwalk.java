@@ -10,7 +10,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.io.GifSequenceWriter;
+import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** monte carlo is bad in this example, since the steep negative reward biases most episodes */
 // TODO this does not really converge at all
@@ -20,7 +20,7 @@ class MCES_Cliffwalk {
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(cliffwalk);
-    GifSequenceWriter gsw = GifSequenceWriter.of(UserHome.Pictures("cliffwalk_qsa_mces.gif"), 100);
+    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("cliffwalk_qsa_mces.gif"), 100);
     int batches = 100;
     for (int index = 0; index < batches; ++index) {
       Infoline.print(cliffwalk, index, ref, mces.qsa());
