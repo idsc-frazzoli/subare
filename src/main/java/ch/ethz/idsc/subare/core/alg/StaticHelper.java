@@ -19,6 +19,6 @@ enum StaticHelper {
         .map(next -> actionValueInterface.transitionProbability(state, action, next)) //
         .reduce(Scalar::add).get();
     if (!norm.equals(RealScalar.ONE))
-      throw new RuntimeException(); // probabilities have to sum up to 1
+      throw new RuntimeException("sum prob=" + norm); // probabilities have to sum up to 1
   }
 }

@@ -26,16 +26,14 @@ class AVI_Racetrack {
     System.out.println(qsa.size());
     Racetrack racetrack = RacetrackHelper.create(name, 5);
     int c = 0;
-    for (Tensor state : racetrack.states()) {
-      for (Tensor action : racetrack.actions(state)) {
+    for (Tensor state : racetrack.states())
+      for (Tensor action : racetrack.actions(state))
         try {
           qsa.value(state, action);
           ++c;
         } catch (Exception exception) {
           // ---
         }
-      }
-    }
     System.out.println(c + " / " + qsa.size());
     Export.of(UserHome.Pictures("racetrack_qsa_avi_21_11.png"), //
         RacetrackHelper.render(racetrack, qsa, Tensors.vector(2, 1), Tensors.vector(1, 1)));
