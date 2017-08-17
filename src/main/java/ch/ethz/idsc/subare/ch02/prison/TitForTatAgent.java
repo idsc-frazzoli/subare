@@ -31,7 +31,7 @@ class TitForTatAgent extends Agent {
       nextAction = 1;
       return;
     }
-    GlobalAssert.of(false);
+    GlobalAssert.that(false);
   }
 
   @Override

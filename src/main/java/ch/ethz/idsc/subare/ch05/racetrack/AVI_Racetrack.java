@@ -9,19 +9,22 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.Import;
+import ch.ethz.idsc.tensor.red.Tally;
 
 /** action value iteration for gambler's dilemma */
 class AVI_Racetrack {
   static void precompute(String name) throws Exception {
     Racetrack racetrack = RacetrackHelper.create(name, 5);
     ActionValueIteration avi = new ActionValueIteration(racetrack);
-    avi.untilBelow(RealScalar.of(1e-1), 2);
+    avi.untilBelow(RealScalar.of(1e-3), 2);
+    // avi.qsa().print();
+    System.out.println(Tally.sorted(avi.qsa().values()));
     Export.object(UserHome.file(name + ".object"), avi.qsa());
   }
 
   public static void main(String[] args) throws Exception {
     String name = "track2";
-    precompute(name);
+    // precompute(name);
     DiscreteQsa qsa = Import.object(UserHome.file(name + ".object"));
     System.out.println(qsa.size());
     Racetrack racetrack = RacetrackHelper.create(name, 5);

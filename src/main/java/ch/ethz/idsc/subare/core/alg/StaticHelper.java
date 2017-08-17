@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 
 enum StaticHelper {
   ;
@@ -18,7 +19,16 @@ enum StaticHelper {
     Scalar norm = actionValueInterface.transitions(state, action).flatten(0) //
         .map(next -> actionValueInterface.transitionProbability(state, action, next)) //
         .reduce(Scalar::add).get();
-    if (!norm.equals(RealScalar.ONE))
-      throw new RuntimeException("sum prob=" + norm); // probabilities have to sum up to 1
+    if (!norm.equals(RealScalar.ONE)) {
+      System.out.println("state =" + state);
+      System.out.println("action=" + action);
+      actionValueInterface.transitions(state, action).flatten(0).forEach(next -> {
+        Scalar prob = actionValueInterface.transitionProbability(state, action, next);
+        System.out.println(next + " " + prob);
+      });
+      System.exit(0);
+      // probabilities have to sum up to 1
+      throw TensorRuntimeException.of("sum prob=" + norm, state, action);
+    }
   }
 }

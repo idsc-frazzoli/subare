@@ -43,7 +43,7 @@ public abstract class Agent {
   protected abstract void protected_feedback(int a, Scalar value);
 
   public final void feedback(int a, Scalar value) {
-    GlobalAssert.of(a == actionReminder);
+    GlobalAssert.that(a == actionReminder);
     total = total.add(value);
     actions.append(RealScalar.of(a));
     ++count;

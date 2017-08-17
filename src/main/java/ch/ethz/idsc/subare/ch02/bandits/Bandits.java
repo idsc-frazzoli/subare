@@ -27,8 +27,8 @@ class Bandits {
     Scalar mean = (Scalar) Mean.of(data);
     Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
     prep = temp.divide(Sqrt.of((Scalar) Variance.ofVector(temp)));
-    GlobalAssert.of(Scalars.isZero((Scalar) Chop._10.of(Mean.of(prep))));
-    GlobalAssert.of( //
+    GlobalAssert.that(Scalars.isZero((Scalar) Chop._10.of(Mean.of(prep))));
+    GlobalAssert.that( //
         Scalars.isZero((Scalar) Chop._10.of(Variance.ofVector(prep).subtract(RealScalar.of(1)))));
   }
 

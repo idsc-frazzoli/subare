@@ -40,11 +40,11 @@ abstract class AbstractExact {
     a2.setOpeningSequence(a2open);
     Tensor tensor = Training.train(a1, a2, epochs);
     // assert that no randomness was involved in the training
-    GlobalAssert.of(a1.getRandomizedDecisionCount() == 0);
+    GlobalAssert.that(a1.getRandomizedDecisionCount() == 0);
     if (a2.getRandomizedDecisionCount() != 0) {
       System.out.println(SummaryString.of(a2));
     }
-    GlobalAssert.of(a2.getRandomizedDecisionCount() == 0);
+    GlobalAssert.that(a2.getRandomizedDecisionCount() == 0);
     return tensor;
   }
 }

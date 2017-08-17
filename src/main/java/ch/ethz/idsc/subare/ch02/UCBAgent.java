@@ -40,7 +40,7 @@ public class UCBAgent extends FairMaxAgent {
         bias = DoubleScalar.POSITIVE_INFINITY;
       else {
         Scalar count = Total.of(Na).Get();
-        GlobalAssert.of(0 < (Integer) count.number());
+        GlobalAssert.that(0 < (Integer) count.number());
         Scalar logt = Log.of(count);
         bias = c.multiply(Sqrt.of(logt.divide(Nta)));
       }
