@@ -25,7 +25,8 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
  * 1 -0.1
  * 2 0
  * 3 0 */
-class AVI_Maxbias {
+enum AVI_Maxbias {
+  ;
   public static void main(String[] args) {
     Maxbias maxbias = new Maxbias(5);
     DiscreteQsa qsa = MaxbiasHelper.getOptimalQsa(maxbias);

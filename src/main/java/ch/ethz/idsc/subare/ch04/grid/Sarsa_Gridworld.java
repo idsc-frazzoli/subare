@@ -28,7 +28,8 @@ import ch.ethz.idsc.tensor.io.Put;
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
  * 
  * covers Example 4.1, p.82 */
-class Sarsa_Gridworld {
+enum Sarsa_Gridworld {
+  ;
   static void handle(SarsaType sarsaType, int nstep) throws Exception {
     System.out.println(sarsaType);
     Gridworld gridworld = new Gridworld();

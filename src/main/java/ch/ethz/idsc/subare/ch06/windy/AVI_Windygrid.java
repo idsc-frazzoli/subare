@@ -16,7 +16,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.Export;
 
 /** action value iteration for cliff walk */
-class AVI_Windygrid {
+enum AVI_Windygrid {
+  ;
   public static void main(String[] args) throws Exception {
     Windygrid windygrid = Windygrid.createFour();
     WindygridRaster windygridRaster = new WindygridRaster(windygrid);

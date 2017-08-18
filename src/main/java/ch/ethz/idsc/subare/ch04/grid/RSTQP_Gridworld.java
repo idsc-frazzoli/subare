@@ -11,7 +11,8 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** Example 4.1, p.82 */
-class RSTQP_Gridworld {
+enum RSTQP_Gridworld {
+  ;
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);

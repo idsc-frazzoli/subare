@@ -12,7 +12,8 @@ import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 
-class RSTQP_Maxbias {
+enum RSTQP_Maxbias {
+  ;
   public static void main(String[] args) {
     Maxbias maxbias = new Maxbias(3);
     DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias);

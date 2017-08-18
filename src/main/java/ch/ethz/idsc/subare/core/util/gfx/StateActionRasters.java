@@ -32,13 +32,14 @@ public enum StateActionRasters {
   private static Tensor _render(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
     DiscreteModel discreteModel = stateActionRaster.discreteModel();
     Dimension dimension = stateActionRaster.dimensionStateActionRaster();
-    Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.width, dimension.height);
+    Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.height, dimension.width);
     for (Tensor state : discreteModel.states())
       for (Tensor action : discreteModel.actions(state)) {
         Point point = stateActionRaster.point(state, action);
         if (point != null)
-          tensor.set(qsa.value(state, action), point.x, point.y);
+          tensor.set(qsa.value(state, action), point.y, point.x);
       }
+    // Clip.UNIT.apply(scalar)
     return ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);
   }
 
@@ -60,9 +61,9 @@ public enum StateActionRasters {
     Policy policy = GreedyPolicy.bestEquiprobable(stateActionRaster.discreteModel(), qsa);
     Tensor image2 = _render(stateActionRaster, policy);
     List<Integer> list = Dimensions.of(image1);
-    list.set(0, 3);
+    list.set(1, 3);
     return ImageResize.nearest( //
-        Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magnify());
+        Join.of(1, image1, Array.zeros(list), image2), stateActionRaster.magnify());
   }
 
   public static Tensor qsaPolicyRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
@@ -82,7 +83,7 @@ public enum StateActionRasters {
     DiscreteQsa loss = Loss.asQsa(stateActionRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().flatten(0) //
         .map(tensor -> tensor.multiply(stateActionRaster.scaleLoss())) //
-        .map(Clip.UNIT::of));
+        .map(Clip.unit()::of));
     Tensor image2 = _render(stateActionRaster, loss);
     Tensor image3 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(image1);

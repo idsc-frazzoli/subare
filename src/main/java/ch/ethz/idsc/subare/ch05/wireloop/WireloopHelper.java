@@ -54,7 +54,7 @@ enum WireloopHelper {
     DiscreteVs loss = Loss.perState(wireloopRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().flatten(0) //
         .map(tensor -> tensor.multiply(wireloopRaster.scaleLoss())) //
-        .map(Clip.UNIT::of));
+        .map(Clip.unit()::of));
     Tensor image2 = StateRasters.vs(wireloopRaster, loss);
     Tensor image3 = renderActions((Wireloop) wireloopRaster.discreteModel(), qsa);
     List<Integer> dimensions = Dimensions.of(image1);

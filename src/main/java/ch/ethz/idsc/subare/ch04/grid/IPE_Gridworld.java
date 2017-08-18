@@ -28,7 +28,8 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 1} -20.0
  * {3, 2} -14.0
  * {3, 3} 0 */
-class IPE_Gridworld {
+enum IPE_Gridworld {
+  ;
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //

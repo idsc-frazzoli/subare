@@ -27,7 +27,8 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 1} -19.68
  * {3, 2} -18.52
  * {3, 3} 0 */
-public class TTD0_Gridworld {
+enum TTD0_Gridworld {
+  ;
   public static void main(String[] args) {
     Gridworld gridWorld = new Gridworld();
     DiscreteVs vs = DiscreteVs.build(gridWorld);

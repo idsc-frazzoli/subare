@@ -9,7 +9,8 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.tensor.DecimalScalar;
 
-class RSTQP_Gridworld {
+enum RSTQP_Gridworld {
+  ;
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
     DiscreteQsa ref = ActionValueIterations.solve(gridworld, DecimalScalar.of(0.0001));

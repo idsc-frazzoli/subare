@@ -12,7 +12,8 @@ import ch.ethz.idsc.tensor.io.Put;
 /** action value iteration for gambler's dilemma
  * 
  * visualizes the exact optimal policy */
-class AVI_Gambler {
+enum AVI_Gambler {
+  ;
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     GamblerRaster gamblerRaster = new GamblerRaster(gambler);

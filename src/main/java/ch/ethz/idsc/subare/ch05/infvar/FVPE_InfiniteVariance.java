@@ -8,7 +8,8 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.sca.N;
 
 // TODO check again
-class FVPE_InfiniteVariance {
+enum FVPE_InfiniteVariance {
+  ;
   public static void main(String[] args) {
     InfiniteVariance infiniteVariance = new InfiniteVariance();
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //

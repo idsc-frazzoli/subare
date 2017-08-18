@@ -11,7 +11,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 /** finding optimal policy to stay or hit
  * 
  * Random1StepTabularQPlanning does not seem to work on blackjack */
-class RSTQP_Blackjack {
+enum RSTQP_Blackjack {
+  ;
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);

@@ -19,7 +19,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** StepDigest qsa methods applied to cliff walk */
-class Sarsa_Fishfarm {
+enum Sarsa_Fishfarm {
+  ;
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
     System.out.println(sarsaType);
     Fishfarm fishfarm = new Fishfarm(20, 20);

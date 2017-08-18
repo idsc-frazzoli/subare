@@ -15,7 +15,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 
 /** Sarsa applied to gambler for different learning rate parameters */
-class Bulk_Wireloop {
+enum Bulk_Wireloop {
+  ;
   static void handle(SarsaType sarsaType, int nstep) throws Exception {
     String name = "wire4";
     Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x); // 20, 4/10

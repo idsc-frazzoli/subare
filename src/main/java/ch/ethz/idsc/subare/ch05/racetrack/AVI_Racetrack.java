@@ -12,7 +12,8 @@ import ch.ethz.idsc.tensor.io.Import;
 import ch.ethz.idsc.tensor.red.Tally;
 
 /** action value iteration for gambler's dilemma */
-class AVI_Racetrack {
+enum AVI_Racetrack {
+  ;
   static void precompute(String name) throws Exception {
     Racetrack racetrack = RacetrackHelper.create(name, 5);
     ActionValueIteration avi = new ActionValueIteration(racetrack);

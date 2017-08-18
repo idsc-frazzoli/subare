@@ -15,7 +15,8 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
-class MCES_Gambler {
+enum MCES_Gambler {
+  ;
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     GamblerRaster gamblerRaster = new GamblerRaster(gambler);

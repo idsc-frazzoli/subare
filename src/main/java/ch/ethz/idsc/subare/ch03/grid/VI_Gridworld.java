@@ -38,7 +38,8 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {4, 2} 14.4
  * {4, 3} 13.0
  * {4, 4} 11.7 */
-class VI_Gridworld {
+enum VI_Gridworld {
+  ;
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
     ValueIteration vi = new ValueIteration(gridworld, gridworld);

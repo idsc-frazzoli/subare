@@ -12,7 +12,8 @@ import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
-class RSTQP_Fishfarm {
+enum RSTQP_Fishfarm {
+  ;
   public static void main(String[] args) throws Exception {
     Fishfarm fishfarm = new Fishfarm(20, 20);
     FishfarmRaster cliffwalkRaster = new FishfarmRaster(fishfarm);

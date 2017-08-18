@@ -18,7 +18,8 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {4, 0} 0.74
  * {5, 0} 0.87
  * {6, 0} 0 */
-class MCES_Randomwalk {
+enum MCES_Randomwalk {
+  ;
   public static void main(String[] args) throws Exception {
     Randomwalk randomwalk = new Randomwalk();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(randomwalk);

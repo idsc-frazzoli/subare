@@ -16,7 +16,8 @@ import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.Primitives;
 
-class VI_RaceTrack {
+enum VI_RaceTrack {
+  ;
   public static void main(String[] args) throws Exception {
     final String name = "track2";
     Racetrack racetrack = RacetrackHelper.create(name, 5);

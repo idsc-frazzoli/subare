@@ -11,7 +11,8 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** Example 4.1, p.82 */
-class RSTQP_Wireloop {
+enum RSTQP_Wireloop {
+  ;
   public static void main(String[] args) throws Exception {
     String name = "wire5";
     WireloopReward wireloopReward = WireloopReward.freeSteps();

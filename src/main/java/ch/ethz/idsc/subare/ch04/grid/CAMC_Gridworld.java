@@ -13,7 +13,8 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /**  */
-class CAMC_Gridworld { // TODO this looks like WIP
+enum CAMC_Gridworld { // TODO this looks like WIP
+  ;
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldRaster = new GridworldRaster(gridworld);

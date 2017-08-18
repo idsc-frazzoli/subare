@@ -12,7 +12,8 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /**  */
-class RSTQP_Dynamaze {
+enum RSTQP_Dynamaze {
+  ;
   public static void main(String[] args) throws Exception {
     String name = "maze5";
     Dynamaze dynamaze = DynamazeHelper.create5(3);

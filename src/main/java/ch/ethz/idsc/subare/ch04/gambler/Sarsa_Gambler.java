@@ -21,7 +21,8 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** Sarsa applied to gambler */
-class Sarsa_Gambler {
+enum Sarsa_Gambler {
+  ;
   static void train(Gambler gambler, SarsaType sarsaType, //
       int batches, Scalar factor, Scalar exponent) throws Exception {
     System.out.println(sarsaType);

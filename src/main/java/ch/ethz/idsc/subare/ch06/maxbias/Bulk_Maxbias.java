@@ -15,7 +15,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 
 /** Sarsa applied to gambler for different learning rate parameters */
-class Bulk_Maxbias {
+enum Bulk_Maxbias {
+  ;
   static void handle(SarsaType sarsaType, int nstep) throws Exception {
     Maxbias maxbias = new Maxbias(1); // 20, 4/10
     final DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias); // true q-function, for error measurement

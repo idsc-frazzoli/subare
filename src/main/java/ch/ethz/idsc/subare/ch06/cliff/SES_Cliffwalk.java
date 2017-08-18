@@ -21,7 +21,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
  * 
  * covers Example 4.1, p.82 */
-class SES_Cliffwalk {
+enum SES_Cliffwalk {
+  ;
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
     System.out.println(sarsaType);
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);

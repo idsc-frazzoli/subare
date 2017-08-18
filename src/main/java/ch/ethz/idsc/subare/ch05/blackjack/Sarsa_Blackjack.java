@@ -14,7 +14,8 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
-public class Sarsa_Blackjack {
+enum Sarsa_Blackjack {
+  ;
   static void handle(SarsaType sarsaType) throws Exception {
     System.out.println(sarsaType);
     final Blackjack blackjack = new Blackjack();

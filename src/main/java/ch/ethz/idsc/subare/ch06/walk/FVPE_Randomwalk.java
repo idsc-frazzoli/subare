@@ -17,7 +17,8 @@ import ch.ethz.idsc.tensor.sca.Round;
  * 4 0.64
  * 5 0.84
  * 6 0 */
-class FVPE_Randomwalk {
+enum FVPE_Randomwalk {
+  ;
   public static void main(String[] args) {
     Randomwalk randomwalk = new Randomwalk();
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //

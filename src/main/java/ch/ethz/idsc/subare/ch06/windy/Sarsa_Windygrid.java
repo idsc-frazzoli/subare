@@ -18,7 +18,8 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** determines q(s,a) function for equiprobable "random" policy */
-class Sarsa_Windygrid {
+enum Sarsa_Windygrid {
+  ;
   static void handle(SarsaType sarsaType, int batches) throws Exception {
     System.out.println(sarsaType);
     Windygrid windygrid = Windygrid.createFour();

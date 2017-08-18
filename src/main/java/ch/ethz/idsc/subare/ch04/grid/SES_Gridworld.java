@@ -21,7 +21,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
  * 
  * covers Example 4.1, p.82 */
-class SES_Gridworld {
+enum SES_Gridworld {
+  ;
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
     System.out.println(sarsaType);
     Gridworld gridworld = new Gridworld();

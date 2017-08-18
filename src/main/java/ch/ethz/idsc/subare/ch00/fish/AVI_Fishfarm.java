@@ -10,7 +10,8 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** action value iteration for cliff walk */
-class AVI_Fishfarm {
+enum AVI_Fishfarm {
+  ;
   public static void main(String[] args) throws Exception {
     Fishfarm fishfarm = new Fishfarm(20, 20);
     FishfarmRaster fishfarmRaster = new FishfarmRaster(fishfarm);
