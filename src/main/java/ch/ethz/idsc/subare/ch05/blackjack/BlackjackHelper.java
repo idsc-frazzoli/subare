@@ -27,7 +27,7 @@ enum BlackjackHelper {
   public static Tensor render(Blackjack blackjack, Policy policy) {
     BlackjackRaster blackjackRaster = new BlackjackRaster(blackjack);
     Dimension dimension = blackjackRaster.dimensionStateRaster();
-    Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.width, dimension.height);
+    Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.height, dimension.width);
     for (Tensor state : blackjack.states()) {
       Point point = blackjackRaster.point(state);
       if (point != null) {

@@ -49,7 +49,7 @@ class GamblerRaster implements StateActionRaster {
 
   @Override
   public int joinAlongDimension() {
-    return 0;
+    return 1;
   }
 
   @Override

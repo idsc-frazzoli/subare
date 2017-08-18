@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.io.Import;
 enum DynamazeHelper {
   ;
   private static final Tensor STARTS = Tensors.matrixInt(new int[][] { //
-      { 15, 31 }, { 15, 9 }, { 12, 18 } });
+      { 31, 15 }, { 9, 15 }, { 18, 12 } });
 
   @Deprecated
   public static StateRaster createRaster(Dynamaze dynamaze) {
@@ -40,7 +40,7 @@ enum DynamazeHelper {
     return new Dynamaze(image.unmodifiable());
   }
 
-  private static Tensor load(String name) throws Exception {
+  /* package */ static Tensor load(String name) throws Exception {
     String path = "".getClass().getResource("/ch08/" + name + ".png").getPath();
     return Import.of(new File(path));
   }

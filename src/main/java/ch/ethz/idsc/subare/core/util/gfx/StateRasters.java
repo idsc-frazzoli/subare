@@ -36,11 +36,11 @@ public enum StateRasters {
   private static Tensor _render(StateRaster stateRaster, DiscreteVs vs) {
     DiscreteModel discreteModel = stateRaster.discreteModel();
     Dimension dimension = stateRaster.dimensionStateRaster();
-    Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.width, dimension.height);
+    Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.height, dimension.width);
     for (Tensor state : discreteModel.states()) {
       Point point = stateRaster.point(state);
       if (point != null)
-        tensor.set(vs.value(state), point.x, point.y);
+        tensor.set(vs.value(state), point.y, point.x);
     }
     return ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);
   }

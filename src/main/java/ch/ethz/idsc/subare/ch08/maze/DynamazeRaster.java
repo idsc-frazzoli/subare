@@ -28,7 +28,7 @@ public class DynamazeRaster implements StateRaster {
   @Override
   public Dimension dimensionStateRaster() {
     List<Integer> dimensions = Dimensions.of(dynamaze.image());
-    return new Dimension(dimensions.get(0), dimensions.get(1));
+    return new Dimension(dimensions.get(1), dimensions.get(0));
   }
 
   @Override
@@ -48,7 +48,7 @@ public class DynamazeRaster implements StateRaster {
 
   @Override
   public int joinAlongDimension() {
-    return 0;
+    return 1;
   }
 
   @Override
