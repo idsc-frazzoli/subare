@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 enum AVI_Wireloop {
   ;
   public static void main(String[] args) throws Exception {
-    String name = "wire5";
+    String name = "wirec";
     WireloopReward wireloopReward = WireloopReward.freeSteps();
     wireloopReward = WireloopReward.constantCost();
     Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x, wireloopReward);

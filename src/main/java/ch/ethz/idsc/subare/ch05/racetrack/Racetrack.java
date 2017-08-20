@@ -21,6 +21,7 @@ import ch.ethz.idsc.tensor.alg.ArrayQ;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Subdivide;
+import ch.ethz.idsc.tensor.alg.Transpose;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.opt.NearestInterpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -66,14 +67,14 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   private final Tensor actionsTerminal = Tensors.vector(0); // do nothing
 
   Racetrack(Tensor image, int maxSpeed) {
-    interpolation = NearestInterpolation.of(image.get(Tensor.ALL, Tensor.ALL, 2));
+    interpolation = NearestInterpolation.of(Transpose.of(image.get(Tensor.ALL, Tensor.ALL, 2)));
     List<Integer> list = Dimensions.of(image);
-    dimensions = Tensors.vector(list.subList(0, 2)).map(Decrement.ONE);
+    dimensions = Tensors.vector(list.get(1), list.get(0)).map(Decrement.ONE);
     clipPositionY = Clip.function(RealScalar.ZERO, dimensions.Get(1));
     clipSpeed = Clip.function(0, maxSpeed);
-    for (int x = 0; x < list.get(0); ++x)
-      for (int y = 0; y < list.get(1); ++y) {
-        final Tensor rgba = image.get(x, y).unmodifiable();
+    for (int y = 0; y < list.get(0); ++y)
+      for (int x = 0; x < list.get(1); ++x) {
+        final Tensor rgba = image.get(y, x).unmodifiable();
         if (!rgba.equals(WHITE)) {
           final Tensor pstate = Tensors.vector(x, y);
           if (rgba.equals(BLACK))

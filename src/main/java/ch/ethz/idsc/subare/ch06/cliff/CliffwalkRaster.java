@@ -62,7 +62,7 @@ class CliffwalkRaster implements StateRaster, StateActionRaster {
 
   @Override
   public int joinAlongDimension() {
-    return 0;
+    return 1;
   }
 
   @Override

@@ -25,7 +25,7 @@ enum AVI_Racetrack {
 
   public static void main(String[] args) throws Exception {
     String name = "track2";
-    // precompute(name);
+    precompute(name);
     DiscreteQsa qsa = Import.object(UserHome.file(name + ".object"));
     System.out.println(qsa.size());
     Racetrack racetrack = RacetrackHelper.create(name, 5);
