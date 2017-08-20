@@ -8,7 +8,8 @@ import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
-class IPE_Wireloop {
+enum IPE_Wireloop {
+  ;
   public static void main(String[] args) throws Exception {
     String name = "wire5";
     Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x);

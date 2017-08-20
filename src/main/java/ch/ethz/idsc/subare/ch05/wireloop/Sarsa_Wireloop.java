@@ -14,7 +14,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
-class Sarsa_Wireloop {
+enum Sarsa_Wireloop {
+  ;
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
     System.out.println(sarsaType);
     String name = "wire5";

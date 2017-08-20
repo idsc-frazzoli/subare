@@ -1,10 +1,11 @@
 // code by jph
 package ch.ethz.idsc.subare.util;
 
-public class GlobalAssert {
-  public static void of(boolean myBoolean) {
+public enum GlobalAssert {
+  ;
+  public static void that(boolean myBoolean) {
     assert myBoolean;
     if (!myBoolean)
-      new Exception().printStackTrace();
+      throw new RuntimeException();
   }
 }

@@ -11,7 +11,8 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.N;
 
 /** FirstVisitPolicyEvaluation of optimal greedy policy */
-class FVPE_Gambler {
+enum FVPE_Gambler {
+  ;
   public static void main(String[] args) {
     final Gambler gambler = Gambler.createDefault();
     final DiscreteVs ref = GamblerHelper.getOptimalVs(gambler);

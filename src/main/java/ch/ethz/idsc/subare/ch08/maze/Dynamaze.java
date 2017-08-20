@@ -37,9 +37,9 @@ class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface
     this.image = image;
     List<Integer> list = Dimensions.of(image);
     Tensor terminal = Tensors.empty();
-    for (int x = 0; x < list.get(0); ++x)
-      for (int y = 0; y < list.get(1); ++y) {
-        Tensor color = image.get(x, y);
+    for (int x = 0; x < list.get(1); ++x)
+      for (int y = 0; y < list.get(0); ++y) {
+        Tensor color = image.get(y, x);
         if (!color.equals(WHITE)) {
           Tensor state = Tensors.vector(x, y);
           states.append(state);

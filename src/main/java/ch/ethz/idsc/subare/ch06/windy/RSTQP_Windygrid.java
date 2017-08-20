@@ -13,7 +13,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 /** the R1STQP algorithm is cheating on the Windygrid
  * because TabularSteps starts in every state-action pair
  * instead of only the 1 start state of Windygrid */
-class RSTQP_Windygrid {
+enum RSTQP_Windygrid {
+  ;
   public static void main(String[] args) throws Exception {
     Windygrid windygrid = Windygrid.createFour();
     WindygridRaster windygridRaster = new WindygridRaster(windygrid);

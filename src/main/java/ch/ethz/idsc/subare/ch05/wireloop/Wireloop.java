@@ -48,9 +48,9 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
     this.wireloopReward = wireloopReward;
     System.out.println(Dimensions.of(image));
     List<Integer> dims = Dimensions.of(image);
-    for (int x = 0; x < dims.get(0); ++x)
-      for (int y = 0; y < dims.get(1); ++y) {
-        Tensor rgba = image.get(x, y);
+    for (int y = 0; y < dims.get(0); ++y)
+      for (int x = 0; x < dims.get(1); ++x) {
+        final Tensor rgba = image.get(y, x);
         if (rgba.equals(GREEN)) {
           Tensor row = Tensors.vector(x, y);
           startStates.add(row);

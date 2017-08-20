@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.util.gfx;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
@@ -12,13 +13,14 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.util.UnitClip;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
-import ch.ethz.idsc.tensor.img.ArrayPlot;
+import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -29,17 +31,35 @@ public enum StateActionRasters {
   /** @param stateActionRaster
    * @param qsa scaled to contain values in the interval [0, 1]
    * @return */
-  private static Tensor _render(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
+  private static Tensor _render1(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
     DiscreteModel discreteModel = stateActionRaster.discreteModel();
     Dimension dimension = stateActionRaster.dimensionStateActionRaster();
-    Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.width, dimension.height);
+    Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.height, dimension.width);
     for (Tensor state : discreteModel.states())
       for (Tensor action : discreteModel.actions(state)) {
         Point point = stateActionRaster.point(state, action);
         if (point != null)
-          tensor.set(qsa.value(state, action), point.x, point.y);
+          tensor.set(qsa.value(state, action), point.y, point.x);
       }
-    return ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);
+    // Clip.UNIT.apply(scalar)
+    // System.out.println(Pretty.of(tensor));
+    // System.exit(0);
+    return tensor;
+  }
+
+  /** @param stateActionRaster
+   * @param qsa scaled to contain values in the interval [0, 1]
+   * @return */
+  private static Tensor _render(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
+    return _render(stateActionRaster, qsa, Rescale::of);
+  }
+
+  private static Tensor _render(StateActionRaster stateActionRaster, DiscreteQsa qsa, UnaryOperator<Tensor> uo) {
+    Tensor tensor = _render1(stateActionRaster, qsa);
+    tensor = uo.apply(tensor);
+    // System.out.println(Pretty.of(tensor));
+    // System.exit(0);
+    return tensor.map(ColorDataGradients.CLASSIC);
   }
 
   private static Tensor _render(StateActionRaster stateActionRaster, Policy policy) {
@@ -60,21 +80,25 @@ public enum StateActionRasters {
     Policy policy = GreedyPolicy.bestEquiprobable(stateActionRaster.discreteModel(), qsa);
     Tensor image2 = _render(stateActionRaster, policy);
     List<Integer> list = Dimensions.of(image1);
-    list.set(0, 3);
+    int dim = stateActionRaster.joinAlongDimension();
+    list.set(dim, 3);
     return ImageResize.nearest( //
-        Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magnify());
+        Join.of(dim, image1, Array.zeros(list), image2), stateActionRaster.magnify());
   }
 
   public static Tensor qsaPolicyRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor image1 = _render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
+    // return ImageResize.nearest(image1, stateActionRaster.magnify());
+    // System.out.println(image1.block(Arrays.asList(0,0), Arrays.asList(2,2)));
     Policy policy = GreedyPolicy.bestEquiprobable(stateActionRaster.discreteModel(), qsa);
     Tensor image2 = _render(stateActionRaster, policy);
     Scalar qdelta = stateActionRaster.scaleQdelta();
-    Tensor image3 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta));
+    Tensor image3 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta), UnitClip::of);
     List<Integer> list = Dimensions.of(image1);
-    list.set(0, 3);
+    int dim = stateActionRaster.joinAlongDimension();
+    list.set(dim, 3);
     return ImageResize.nearest( //
-        Join.of(0, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magnify());
+        Join.of(dim, image1, Array.zeros(list), image2, Array.zeros(list), image3), stateActionRaster.magnify());
   }
 
   public static Tensor qsaLossRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
@@ -82,7 +106,7 @@ public enum StateActionRasters {
     DiscreteQsa loss = Loss.asQsa(stateActionRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().flatten(0) //
         .map(tensor -> tensor.multiply(stateActionRaster.scaleLoss())) //
-        .map(Clip.UNIT::of));
+        .map(Clip.unit()::of));
     Tensor image2 = _render(stateActionRaster, loss);
     Tensor image3 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(image1);
@@ -101,6 +125,6 @@ public enum StateActionRasters {
     int dim = stateActionRaster.joinAlongDimension();
     list.set(dim, 3);
     return ImageResize.nearest( //
-        Join.of(0, image1, Array.zeros(list), image2), stateActionRaster.magnify());
+        Join.of(dim, image1, Array.zeros(list), image2), stateActionRaster.magnify());
   }
 }

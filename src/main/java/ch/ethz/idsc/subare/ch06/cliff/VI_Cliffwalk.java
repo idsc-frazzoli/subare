@@ -20,7 +20,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.Export;
 
 /** value iteration for cliffwalk */
-class VI_Cliffwalk {
+enum VI_Cliffwalk {
+  ;
   public static void main(String[] args) throws Exception {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);

@@ -34,7 +34,8 @@ import ch.ethz.idsc.tensor.io.Export;
  * {3, 1} -2
  * {3, 2} -1
  * {3, 3} 0 */
-class VI_Gridworld {
+enum VI_Gridworld {
+  ;
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldStateRaster = new GridworldRaster(gridworld);

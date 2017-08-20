@@ -22,7 +22,8 @@ import ch.ethz.idsc.tensor.sca.N;
  * all other optimal actions
  * 
  * chapter 4, example 3 */
-class VI_Gambler {
+enum VI_Gambler {
+  ;
   public static void main(String[] args) {
     Gambler gambler = Gambler.createDefault();
     DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);

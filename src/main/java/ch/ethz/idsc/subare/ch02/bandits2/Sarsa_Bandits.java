@@ -17,7 +17,8 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** Sarsa applied to bandits */
-class Sarsa_Bandits {
+enum Sarsa_Bandits {
+  ;
   static void train(Bandits bandits, SarsaType sarsaType, //
       int batches, Scalar factor, Scalar exponent) throws Exception {
     System.out.println(sarsaType);

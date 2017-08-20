@@ -18,7 +18,8 @@ import ch.ethz.idsc.tensor.sca.Round;
  * 4 0.67
  * 5 0.90
  * 6 0 */
-class TTD0_Randomwalk {
+enum TTD0_Randomwalk {
+  ;
   public static void main(String[] args) {
     Randomwalk randomwalk = new Randomwalk();
     DiscreteVs vs = DiscreteVs.build(randomwalk);

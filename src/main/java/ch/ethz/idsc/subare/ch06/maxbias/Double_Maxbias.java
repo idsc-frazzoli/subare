@@ -20,7 +20,8 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** Double Sarsa for maximization bias */
-class Double_Maxbias {
+enum Double_Maxbias {
+  ;
   static void handle(SarsaType sarsaType, int n) throws Exception {
     System.out.println("double " + sarsaType);
     Maxbias maxbias = new Maxbias(10);

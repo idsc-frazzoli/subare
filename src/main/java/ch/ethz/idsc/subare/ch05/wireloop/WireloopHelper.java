@@ -1,7 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
-import java.io.File;
 import java.util.List;
 import java.util.function.Function;
 
@@ -19,15 +18,13 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
-import ch.ethz.idsc.tensor.io.Import;
+import ch.ethz.idsc.tensor.io.ResourceData;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 enum WireloopHelper {
   ;
   static Wireloop create(String trackName, Function<Tensor, Scalar> function, WireloopReward wireloopReward) throws Exception {
-    String path = "".getClass().getResource("/ch05/" + trackName + ".png").getPath();
-    Tensor image = Import.of(new File(path)).unmodifiable();
-    return new Wireloop(image, function, wireloopReward);
+    return new Wireloop(ResourceData.of("/ch05/" + trackName + ".png"), function, wireloopReward);
   }
 
   static Wireloop create(String trackName, Function<Tensor, Scalar> function) throws Exception {
@@ -54,11 +51,12 @@ enum WireloopHelper {
     DiscreteVs loss = Loss.perState(wireloopRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().flatten(0) //
         .map(tensor -> tensor.multiply(wireloopRaster.scaleLoss())) //
-        .map(Clip.UNIT::of));
+        .map(Clip.unit()::of));
     Tensor image2 = StateRasters.vs(wireloopRaster, loss);
     Tensor image3 = renderActions((Wireloop) wireloopRaster.discreteModel(), qsa);
     List<Integer> dimensions = Dimensions.of(image1);
-    dimensions.set(wireloopRaster.joinAlongDimension(), wireloopRaster.magnify());
-    return Join.of(image1, Array.zeros(dimensions), image2, Array.zeros(dimensions), image3);
+    int dim = wireloopRaster.joinAlongDimension();
+    dimensions.set(dim, wireloopRaster.magnify());
+    return Join.of(dim, image1, Array.zeros(dimensions), image2, Array.zeros(dimensions), image3);
   }
 }

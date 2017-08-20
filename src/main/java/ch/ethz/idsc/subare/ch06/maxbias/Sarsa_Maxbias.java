@@ -17,7 +17,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.sca.Round;
 
-class Sarsa_Maxbias {
+enum Sarsa_Maxbias {
+  ;
   static void handle(SarsaType sarsaType, int nstep) throws Exception {
     System.out.println(sarsaType);
     Maxbias maxbias = new Maxbias(3);

@@ -1,20 +1,18 @@
 // code by jph
 package ch.ethz.idsc.subare.ch08.maze;
 
-import java.io.File;
-
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.io.Import;
+import ch.ethz.idsc.tensor.io.ResourceData;
 
 enum DynamazeHelper {
   ;
   private static final Tensor STARTS = Tensors.matrixInt(new int[][] { //
-      { 15, 31 }, { 15, 9 }, { 12, 18 } });
+      { 31, 15 }, { 9, 15 }, { 18, 12 } });
 
   @Deprecated
   public static StateRaster createRaster(Dynamaze dynamaze) {
@@ -40,9 +38,8 @@ enum DynamazeHelper {
     return new Dynamaze(image.unmodifiable());
   }
 
-  private static Tensor load(String name) throws Exception {
-    String path = "".getClass().getResource("/ch08/" + name + ".png").getPath();
-    return Import.of(new File(path));
+  /* package */ static Tensor load(String name) throws Exception {
+    return ResourceData.of("/ch08/" + name + ".png");
   }
 
   static DiscreteQsa getOptimalQsa(Dynamaze dynamaze) {

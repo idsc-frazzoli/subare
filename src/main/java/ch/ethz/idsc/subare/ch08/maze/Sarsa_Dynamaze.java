@@ -18,7 +18,8 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** determines q(s,a) function for equiprobable "random" policy */
-class Sarsa_Dynamaze {
+enum Sarsa_Dynamaze {
+  ;
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {
     System.out.println(sarsaType);
     String name = "maze5";

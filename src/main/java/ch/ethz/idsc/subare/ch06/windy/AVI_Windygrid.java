@@ -12,11 +12,12 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.Export;
 
 /** action value iteration for cliff walk */
-class AVI_Windygrid {
+enum AVI_Windygrid {
+  ;
   public static void main(String[] args) throws Exception {
     Windygrid windygrid = Windygrid.createFour();
     WindygridRaster windygridRaster = new WindygridRaster(windygrid);

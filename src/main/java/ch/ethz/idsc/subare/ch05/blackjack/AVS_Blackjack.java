@@ -17,7 +17,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 /** finding optimal policy to stay or hit
  * 
  * Figure 5.3 p.108 */
-class AVS_Blackjack {
+enum AVS_Blackjack {
+  ;
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);

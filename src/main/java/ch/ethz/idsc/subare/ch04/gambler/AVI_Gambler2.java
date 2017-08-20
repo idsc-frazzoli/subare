@@ -6,13 +6,14 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.io.ImageFormat;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.ImageFormat;
 
 /** action value iteration for gambler's dilemma
  * 
  * visualizes each pass of the action value iteration */
-class AVI_Gambler2 {
+enum AVI_Gambler2 {
+  ;
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);

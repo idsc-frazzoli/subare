@@ -14,7 +14,8 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** Double Sarsa for maximization bias */
-class Double_Bandits {
+enum Double_Bandits {
+  ;
   static void handle(SarsaType sarsaType, int n) throws Exception {
     System.out.println("double " + sarsaType);
     Bandits bandits = new Bandits(20);

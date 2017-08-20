@@ -13,7 +13,8 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.tensor.io.Import;
 import ch.ethz.idsc.tensor.sca.Round;
 
-class FVPE_RaceTrack {
+enum FVPE_RaceTrack {
+  ;
   public static void main(String[] args) throws ClassNotFoundException, DataFormatException, IOException {
     String path = "".getClass().getResource("/ch05/track0.png").getPath();
     Racetrack racetrack = new Racetrack(Import.of(new File(path)), 3);

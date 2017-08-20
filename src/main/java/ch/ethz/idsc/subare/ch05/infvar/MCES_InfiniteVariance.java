@@ -7,7 +7,8 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 
-class MCES_InfiniteVariance {
+enum MCES_InfiniteVariance {
+  ;
   public static void main(String[] args) {
     InfiniteVariance infiniteVariance = new InfiniteVariance();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(infiniteVariance);

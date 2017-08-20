@@ -26,7 +26,7 @@ class Judger {
 
   /** @return tensor of rewards averaged over number of actions */
   Tensor ranking() {
-    GlobalAssert.of(a1.getCount().equals(a2.getCount()));
+    GlobalAssert.that(a1.getCount().equals(a2.getCount()));
     return Tensors.of(a1.getRewardTotal(), a2.getRewardTotal()).divide(a1.getCount());
   }
 }

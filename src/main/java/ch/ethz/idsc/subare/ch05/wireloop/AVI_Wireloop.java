@@ -7,9 +7,10 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
-class AVI_Wireloop {
+enum AVI_Wireloop {
+  ;
   public static void main(String[] args) throws Exception {
-    String name = "wire5";
+    String name = "wirec";
     WireloopReward wireloopReward = WireloopReward.freeSteps();
     wireloopReward = WireloopReward.constantCost();
     Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x, wireloopReward);

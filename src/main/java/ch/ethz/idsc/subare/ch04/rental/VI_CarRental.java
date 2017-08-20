@@ -9,7 +9,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
  * Figure 4.2
  * 
  * p.87-88 */
-class VI_CarRental {
+enum VI_CarRental {
+  ;
   public static void main(String[] args) throws Exception {
     CarRental carRental = new CarRental(20);
     ValueIteration vi = new ValueIteration(carRental);

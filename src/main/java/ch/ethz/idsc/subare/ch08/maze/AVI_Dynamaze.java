@@ -15,7 +15,8 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** action value iteration for cliff walk */
-class AVI_Dynamaze {
+enum AVI_Dynamaze {
+  ;
   public static void main(String[] args) throws Exception {
     String name = "maze5";
     Dynamaze dynamaze = DynamazeHelper.create5(3);

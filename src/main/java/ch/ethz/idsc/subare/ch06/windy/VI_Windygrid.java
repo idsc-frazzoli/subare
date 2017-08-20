@@ -11,7 +11,8 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** reproduces Figure 6.4 on p.139 */
-class VI_Windygrid {
+enum VI_Windygrid {
+  ;
   public static void simulate(Windygrid windygrid) {
     ValueIteration vi = new ValueIteration(windygrid, windygrid);
     vi.untilBelow(DecimalScalar.of(.001));

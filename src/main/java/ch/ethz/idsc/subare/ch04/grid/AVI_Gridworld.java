@@ -32,7 +32,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
  * {3, 1} -2
  * {3, 2} -1
  * {3, 3} 0 */
-class AVI_Gridworld {
+enum AVI_Gridworld {
+  ;
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldRaster = new GridworldRaster(gridworld);

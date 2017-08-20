@@ -22,7 +22,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** Double Sarsa for gridworld */
-class Double_Gridworld {
+enum Double_Gridworld {
+  ;
   static void handle(SarsaType sarsaType, int nstep) throws Exception {
     System.out.println("double " + sarsaType);
     Gridworld gridworld = new Gridworld();

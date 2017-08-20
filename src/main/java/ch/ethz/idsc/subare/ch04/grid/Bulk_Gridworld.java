@@ -15,7 +15,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 
 /** Sarsa applied to gambler for different learning rate parameters */
-class Bulk_Gridworld {
+enum Bulk_Gridworld {
+  ;
   static void handle(SarsaType sarsaType, int nstep) throws Exception {
     Gridworld gambler = new Gridworld(); // 20, 4/10
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gambler); // true q-function, for error measurement

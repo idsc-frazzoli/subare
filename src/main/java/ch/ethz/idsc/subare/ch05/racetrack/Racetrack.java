@@ -21,6 +21,7 @@ import ch.ethz.idsc.tensor.alg.ArrayQ;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Subdivide;
+import ch.ethz.idsc.tensor.alg.Transpose;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.opt.NearestInterpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -45,6 +46,8 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   static final Tensor BLACK = Tensors.vector(0, 0, 0, 255);
   static final Scalar MINUS_ONE = RealScalar.ONE.negate();
   // ---
+  private static final Tensor STATE_COLLISION = Tensors.vector(9999);
+  // ---
   private final Clip clipPositionY;
   private final Clip clipSpeed;
   private final Tensor dimensions;
@@ -58,18 +61,20 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   Random random = new Random();
   private final StateActionMap stateActionMap;
   private final Interpolation interpolation;
-  private final Map<Tensor, Boolean> collisions = new HashMap<>();
+  /** memo map is populated and reused in {@link #move(Tensor, Tensor)} */
+  private final Map<Tensor, Boolean> memo_collisions = new HashMap<>();
   private final Tensor image;
+  private final Tensor actionsTerminal = Tensors.vector(0); // do nothing
 
   Racetrack(Tensor image, int maxSpeed) {
-    interpolation = NearestInterpolation.of(image.get(Tensor.ALL, Tensor.ALL, 2));
+    interpolation = NearestInterpolation.of(Transpose.of(image.get(Tensor.ALL, Tensor.ALL, 2)));
     List<Integer> list = Dimensions.of(image);
-    dimensions = Tensors.vector(list.subList(0, 2)).map(Decrement.ONE);
+    dimensions = Tensors.vector(list.get(1), list.get(0)).map(Decrement.ONE);
     clipPositionY = Clip.function(RealScalar.ZERO, dimensions.Get(1));
     clipSpeed = Clip.function(0, maxSpeed);
-    for (int x = 0; x < list.get(0); ++x)
-      for (int y = 0; y < list.get(1); ++y) {
-        final Tensor rgba = image.get(x, y).unmodifiable();
+    for (int y = 0; y < list.get(0); ++y)
+      for (int x = 0; x < list.get(1); ++x) {
+        final Tensor rgba = image.get(y, x).unmodifiable();
         if (!rgba.equals(WHITE)) {
           final Tensor pstate = Tensors.vector(x, y);
           if (rgba.equals(BLACK))
@@ -94,11 +99,13 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
                 }
         }
       }
+    states.append(STATE_COLLISION);
+    statesTerminal.append(STATE_COLLISION);
+    // ---
     statesIndex = Index.build(states);
     statesStartIndex = Index.build(statesStart);
     statesTerminalIndex = Index.build(statesTerminal);
-    GlobalAssert.of(ArrayQ.of(states));
-    GlobalAssert.of(ArrayQ.of(actions));
+    GlobalAssert.that(ArrayQ.of(actions));
     stateActionMap = StateActionMap.build(this, actions, this);
     this.image = image;
   }
@@ -110,7 +117,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
 
   @Override
   public Tensor actions(Tensor state) {
-    return stateActionMap.actions(state);
+    return isTerminal(state) ? actionsTerminal : stateActionMap.actions(state);
   }
 
   private static Tensor shift(Tensor state, Tensor action) {
@@ -130,7 +137,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
 
   @Override
   public Scalar gamma() {
-    return RealScalar.of(1.); // numerical one
+    return RealScalar.of(1.); // numerical one TODO why not exact?
   }
 
   /**************************************************/
@@ -143,7 +150,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
       Tensor pos0 = state.extract(0, 2);
       Tensor pos1 = next.extract(0, 2);
       Tensor key = Tensors.of(pos0, pos1);
-      if (!collisions.containsKey(key)) {
+      if (!memo_collisions.containsKey(key)) {
         boolean value = true;
         for (Tensor _lambda : Subdivide.of(0, 1, 5)) {
           Scalar lambda = _lambda.Get();
@@ -151,25 +158,24 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
               pos0.multiply(lambda).add(pos1.multiply(RealScalar.ONE.subtract(lambda))));
           value &= Scalars.isZero(scalar);
         }
-        collisions.put(key, value);
+        memo_collisions.put(key, value);
       }
-      if (collisions.get(key))
-        return next;
+      if (memo_collisions.get(key))
+        return STATE_COLLISION;
+      return next;
     }
-    // TODO use discrete uniform distrib
-    return statesStart.get(random.nextInt(statesStart.length()));
+    return STATE_COLLISION;
   }
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (!isTerminal(state) && isTerminal(next))
-      return RealScalar.ONE;
+      if (next.equals(STATE_COLLISION))
+        return RealScalar.of(-10); // cost of collision, required for value iteration
     if (isTerminal(next))
       return RealScalar.ZERO;
-    if (integrate(state, action).equals(next))
-      return MINUS_ONE;
-    // cost of collision, required for value iteration
-    return RealScalar.of(-10);
+    // if (integrate(state, action).equals(next))
+    return MINUS_ONE;
   }
 
   boolean isStart(Tensor state) {

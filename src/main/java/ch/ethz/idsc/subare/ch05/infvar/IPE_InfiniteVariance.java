@@ -9,7 +9,8 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
 // TODO check again
-class IPE_InfiniteVariance {
+enum IPE_InfiniteVariance {
+  ;
   public static void main(String[] args) {
     StandardModel standardModel = new InfiniteVariance();
     Policy policy = new ConstantPolicy(RationalScalar.of(9, 10));

@@ -14,7 +14,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** monte carlo is bad in this example, since the steep negative reward biases most episodes */
 // TODO this does not really converge at all
-class MCES_Cliffwalk {
+enum MCES_Cliffwalk {
+  ;
   public static void main(String[] args) throws Exception {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);

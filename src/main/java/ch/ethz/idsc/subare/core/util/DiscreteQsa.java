@@ -56,10 +56,10 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
     return new DiscreteQsa(index, values.copy());
   }
 
-  public void print(Function<Scalar, Scalar> ROUND) {
+  public void print(Function<Scalar, Scalar> round) {
     for (Tensor key : index.keys()) {
       Scalar value = values.Get(index.of(key));
-      System.out.println(key + " " + value.map(ROUND));
+      System.out.println(key + " " + value.map(round));
     }
   }
 

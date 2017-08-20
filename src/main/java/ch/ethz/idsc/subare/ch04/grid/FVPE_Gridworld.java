@@ -27,7 +27,8 @@ import ch.ethz.idsc.tensor.sca.Round;
  * {3, 1} -21.5
  * {3, 2} -13.1
  * {3, 3} 0 */
-class FVPE_Gridworld {
+enum FVPE_Gridworld {
+  ;
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
