@@ -61,6 +61,6 @@ public enum Loss {
    * @param qsa
    * @return non-negative number which should be subtracted from the optimal gains */
   public static Scalar accumulation(DiscreteModel discreteModel, DiscreteQsa ref, DiscreteQsa qsa) {
-    return Norm._1.of(perState(discreteModel, ref, qsa).values());
+    return Norm._1.ofVector(perState(discreteModel, ref, qsa).values());
   }
 }

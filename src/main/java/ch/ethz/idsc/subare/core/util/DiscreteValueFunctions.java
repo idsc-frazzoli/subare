@@ -28,7 +28,7 @@ public enum DiscreteValueFunctions {
   // return (T) tvi.create(operator.apply(tvi.values()).flatten(0));
   // }
   public static Scalar distance(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
-    return Norm._1.of(_difference(tvi1, tvi2));
+    return Norm._1.ofVector(_difference(tvi1, tvi2));
   }
 
   @SuppressWarnings("unchecked")

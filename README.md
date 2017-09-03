@@ -283,3 +283,5 @@ Exact expected reward of two adversarial Upper-Confidence-Bound agents depending
 ## Dependencies
 
 `subare` requires the library `ch.ethz.idsc.tensor`
+
+The repository has over `60` unit tests.

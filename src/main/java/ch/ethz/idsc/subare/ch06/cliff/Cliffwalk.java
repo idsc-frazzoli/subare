@@ -74,7 +74,7 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
     if (isTerminal(next))
       return isTerminal(state) ? RealScalar.ZERO : RealScalar.ONE;
     if (next.equals(START) && Scalars.lessThan( //
-        RealScalar.ONE, Norm._1.of(state.subtract(next))))
+        RealScalar.ONE, Norm._1.ofVector(state.subtract(next))))
       return PRICE_CLIFF; // walked off cliff
     return PRICE_MOVE; // -1 until goal is reached
   }
