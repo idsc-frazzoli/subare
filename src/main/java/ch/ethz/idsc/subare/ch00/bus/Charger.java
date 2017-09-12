@@ -16,24 +16,17 @@ import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Increment;
 
 public class Charger extends DeterministicStandardModel implements TerminalInterface {
-  public final int action_length = 4;
-  private final int times;
-  // public final int Capacity;
+  private final TripProfile tripProfile;
   private final Clip clipCapacity;
   private final Tensor states;
-  private final Tensor actions = Tensors.vector(i -> Tensors.vector(1, i), action_length).unmodifiable();
-  private final Tensor gains;
-  private final Tensor draw = Tensors.vector( //
-      2, 2, 2, 3, 3, 2, 2, 3, 1, 1, 4, 4, 1, 2, 4, 3, 2, 1, 1, 3, 3, 3, 2, 1, 0, 0, 0);
+  private final Tensor actions = Range.of(0, 5).unmodifiable();
   public final Dimension dimension;
 
-  public Charger(int times, int capacity) {
-    this.times = times;
-    states = Flatten.of(Array.of(Tensors::vector, times, capacity), 1).unmodifiable();
-    Sawtooth sawtooth = new Sawtooth(3);
-    gains = Range.of(0, times).map(sawtooth).map(Increment.ONE).negate();
+  public Charger(TripProfile tripProfile, int capacity) {
+    this.tripProfile = tripProfile;
+    states = Flatten.of(Array.of(Tensors::vector, tripProfile.length(), capacity), 1).unmodifiable();
     clipCapacity = Clip.function(0, capacity - 1);
-    dimension = new Dimension(times, capacity);
+    dimension = new Dimension(tripProfile.length(), capacity);
   }
 
   @Override
@@ -56,8 +49,10 @@ public class Charger extends DeterministicStandardModel implements TerminalInter
     if (isTerminal(state))
       return state;
     final int time = state.Get(0).number().intValue();
-    Tensor next = state.add(action);
-    next.set(s -> s.subtract(draw.Get(time)), 1);
+    Tensor next = state.copy();
+    next.set(Increment.ONE, 0);
+    Scalar drawn = tripProfile.unitsDrawn(time);
+    next.set(capacity -> capacity.add(action).subtract(drawn), 1);
     next.set(clipCapacity, 1);
     return next;
   }
@@ -71,13 +66,14 @@ public class Charger extends DeterministicStandardModel implements TerminalInter
         return RealScalar.ZERO;
       return RealScalar.of(0 == capacity ? -10 : 0);
     }
+    Scalar total = tripProfile.costPerUnit(time).multiply(action.Get()).negate();
     if (capacity == 0)
-      return RealScalar.of(-10); // TODO possibly make terminal
-    return gains.Get(time).multiply(action.Get(1));
+      total = total.add(RealScalar.of(-20)); // TODO possibly make terminal
+    return total;
   }
 
   @Override
   public boolean isTerminal(Tensor state) {
-    return state.Get(0).number().intValue() == times - 1;
+    return state.Get(0).number().intValue() == tripProfile.length() - 1;
   }
 }

@@ -48,15 +48,15 @@ public class ChargerRaster implements StateActionRaster {
   public Dimension dimensionStateActionRaster() {
     Dimension dimension = new Dimension();
     dimension.width = charger.dimension.width;
-    dimension.height = charger.action_length * SPACE_Y;
+    dimension.height = charger.actions(null).length() * SPACE_Y - 1;
     return dimension;
   }
 
   @Override
   public Point point(Tensor state, Tensor action) {
     int x = state.Get(0).number().intValue();
-    int y = SPACE_Y - state.Get(1).number().intValue() - 1;
-    int load = action.Get(1).number().intValue();
+    int y = SPACE_Y - state.Get(1).number().intValue() - 2;
+    int load = 4 - action.Get().number().intValue();
     load *= SPACE_Y;
     return new Point(x, y + load);
   }

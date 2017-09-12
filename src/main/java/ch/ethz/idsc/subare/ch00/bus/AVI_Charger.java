@@ -13,7 +13,8 @@ import ch.ethz.idsc.tensor.io.Export;
 enum AVI_Charger {
   ;
   public static void main(String[] args) throws IOException {
-    Charger charger = new Charger(16, 6);
+    TripProfile tripProfile = new ConstantDrawTrip(24, 3);
+    Charger charger = new Charger(tripProfile, 6);
     DiscreteQsa ref = ActionValueIterations.solve(charger, DecimalScalar.of(.0001));
     ChargerRaster chargerRaster = new ChargerRaster(charger);
     Export.of(UserHome.Pictures("charger_qsa_avi.png"), //
