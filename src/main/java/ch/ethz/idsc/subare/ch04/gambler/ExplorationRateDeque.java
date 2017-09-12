@@ -1,8 +1,8 @@
 // code by jz
 package ch.ethz.idsc.subare.ch04.gambler;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.LinkedList;
 
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.red.Min;
 @Deprecated
 class ExplorationRateDeque {
   private double epsilon;
-  private final Deque<Scalar> errors = new LinkedList<>();
+  private final Deque<Scalar> errors = new ArrayDeque<>();
 
   public ExplorationRateDeque(double epsilon) {
     this.epsilon = epsilon;

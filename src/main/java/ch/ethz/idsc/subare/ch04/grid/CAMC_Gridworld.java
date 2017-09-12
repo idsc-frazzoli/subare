@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.ch04.grid;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.ConstantAlphaMonteCarloVs;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
-import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
@@ -18,7 +17,7 @@ enum CAMC_Gridworld { // TODO this looks like WIP
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldRaster = new GridworldRaster(gridworld);
-    final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
+    // final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     ConstantAlphaMonteCarloVs camc = new ConstantAlphaMonteCarloVs( //
         gridworld, DefaultLearningRate.of(3, .51));
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_vs_camc.gif"), 100);

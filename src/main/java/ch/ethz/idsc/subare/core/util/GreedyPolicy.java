@@ -13,7 +13,6 @@ import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Extract;
 
 public enum GreedyPolicy {
   ;
@@ -38,7 +37,8 @@ public enum GreedyPolicy {
       Tensor va = Tensor.of(actions.flatten(0) //
           .map(action -> actionValueAdapter.qsa(state, action, vs)));
       FairArgMax fairArgMax = FairArgMax.of(va);
-      Tensor feasible = Extract.of(actions, fairArgMax.options());
+      Tensor feasible = Tensor.of(fairArgMax.options().stream().map(actions::get));
+      // Tensor feasible = Extract.of(actions, fairArgMax.options());
       map.put(state, Index.build(feasible));
     }
     return new EGreedyPolicy(map, RealScalar.ZERO, null);
@@ -51,7 +51,8 @@ public enum GreedyPolicy {
       Tensor actions = discreteModel.actions(state);
       Tensor va = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
       FairArgMax fairArgMax = FairArgMax.of(va);
-      Tensor feasible = Extract.of(actions, fairArgMax.options());
+      Tensor feasible = Tensor.of(fairArgMax.options().stream().map(actions::get));
+      // Tensor feasible = Extract.of(actions, fairArgMax.options());
       map.put(state, Index.build(feasible));
     }
     return new EGreedyPolicy(map, RealScalar.ZERO, null);

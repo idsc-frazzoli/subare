@@ -18,11 +18,11 @@ public class BlackjackTest extends TestCase {
     Blackjack blackjack = new Blackjack();
     {
       Tensor next = blackjack.move(Tensors.vector(0, 18, 7), RealScalar.ONE);
-      // System.out.println(next);
+      assertEquals(next, Tensors.vector(-1));
     }
     {
       Tensor next = blackjack.move(Tensors.vector(0, 21, 7), RealScalar.ZERO);
-      // System.out.println(next);
+      assertEquals(next, Tensors.vector(1));
     }
   }
 
