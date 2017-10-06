@@ -17,6 +17,6 @@ enum FVPE_InfiniteVariance {
     Policy policy = new ConstantPolicy(RationalScalar.of(5, 10));
     for (int count = 0; count < 100; ++count)
       ExploringStarts.batch(infiniteVariance, policy, fvpe);
-    System.out.println(N.of(fvpe.vs().values()));
+    System.out.println(N.DOUBLE.of(fvpe.vs().values()));
   }
 }

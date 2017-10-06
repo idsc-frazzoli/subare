@@ -15,7 +15,7 @@ public enum DiscreteValueFunctions {
 
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T numeric(T tvi) {
-    return (T) tvi.create(N.of(tvi.values()).flatten(0));
+    return (T) tvi.create(N.DOUBLE.of(tvi.values()).flatten(0));
   }
 
   @SuppressWarnings("unchecked")

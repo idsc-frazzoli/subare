@@ -6,7 +6,6 @@ import ch.ethz.idsc.subare.core.SampleModel;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
@@ -19,6 +18,7 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Sign;
 
 /** Example 4.2: Jack's Car Rental
  * Figure 4.2
@@ -78,9 +78,9 @@ class CarRental implements StandardModel, SampleModel {
 
   Tensor night_move(Tensor state, Tensor action) {
     Tensor next = state.add(Tensors.of(action, action.negate()));
-    if (Scalars.lessThan(next.Get(0), RealScalar.ZERO))
+    if (Sign.isNegative(next.Get(0)))
       throw new RuntimeException();
-    if (Scalars.lessThan(next.Get(1), RealScalar.ZERO))
+    if (Sign.isNegative(next.Get(1)))
       throw new RuntimeException();
     return next;
   }

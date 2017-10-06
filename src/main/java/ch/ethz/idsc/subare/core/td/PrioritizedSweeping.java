@@ -5,10 +5,10 @@ import java.util.PriorityQueue;
 
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.TensorRuntimeException;
+import ch.ethz.idsc.tensor.sca.Sign;
 
 /** Prioritized Sweeping for a deterministic environment
  * 
@@ -25,7 +25,7 @@ public class PrioritizedSweeping implements StepDigest {
    * @param n number of replay steps
    * @param theta threshold */
   public PrioritizedSweeping(Sarsa sarsa, int n, Scalar theta) {
-    if (Scalars.lessThan(theta, RealScalar.ZERO))
+    if (Sign.isNegative(theta))
       throw TensorRuntimeException.of(theta);
     this.sarsa = sarsa;
     this.n = n;

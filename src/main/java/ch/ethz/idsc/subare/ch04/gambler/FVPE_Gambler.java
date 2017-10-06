@@ -23,7 +23,7 @@ enum FVPE_Gambler {
       ExploringStarts.batch(gambler, policy, fvpe);
       DiscreteVs vs = fvpe.vs();
       Scalar diff = DiscreteValueFunctions.distance(vs, ref);
-      System.out.println(count + " " + N.of(diff));
+      System.out.println(count + " " + N.DOUBLE.of(diff));
     }
   }
 }

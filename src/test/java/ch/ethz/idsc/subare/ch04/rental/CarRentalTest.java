@@ -29,6 +29,7 @@ public class CarRentalTest extends TestCase {
     Tensor state = Tensors.vector(2, 3);
     Tensor action = RealScalar.of(-1);
     Tensor next = Tensors.vector(3, 2);
+    @SuppressWarnings("unused")
     Scalar prob = carRental.transitionProbability(state, action, next);
     // System.out.println(prob);
   }
@@ -38,6 +39,7 @@ public class CarRentalTest extends TestCase {
     Tensor state = Tensors.vector(2, 3);
     Tensor action = RealScalar.of(-1);
     Tensor next = Tensors.vector(10, 10);
+    @SuppressWarnings("unused")
     Scalar prob = carRental.transitionProbability(state, action, next);
     // System.out.println(prob);
   }
@@ -59,6 +61,7 @@ public class CarRentalTest extends TestCase {
     CarRental carRental = new CarRental(10);
     Tensor state = Tensors.vector(3, 2);
     Tensor action = RealScalar.of(0);
+    @SuppressWarnings("unused")
     Scalar reward = carRental.expectedReward(state, action);
     // System.out.println("rewardTotal=" + reward);
   }
@@ -68,6 +71,7 @@ public class CarRentalTest extends TestCase {
     Tensor state = Tensors.vector(3, 2);
     Tensor action = RealScalar.of(0);
     Tensor next = Tensors.vector(6, 6);
+    @SuppressWarnings("unused")
     Scalar reward = carRental.expectedReward(state, action, next);
     // System.out.println("reward=" + reward);
   }
@@ -88,6 +92,7 @@ public class CarRentalTest extends TestCase {
     CarRental carRental = new CarRental(20);
     Tensor state = Tensors.vector(10, 10);
     Tensor action = RealScalar.of(2);
+    @SuppressWarnings("unused")
     Scalar reward = carRental.reward(state, action, Tensors.vector(12, 8));
     // System.out.println("reward = " + reward);
   }

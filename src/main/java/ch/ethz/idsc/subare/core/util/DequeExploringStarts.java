@@ -1,9 +1,9 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
@@ -25,7 +25,7 @@ public abstract class DequeExploringStarts extends AbstractExploringStarts {
 
   @Override
   public void protected_nextEpisode(EpisodeInterface episodeInterface) {
-    Deque<StepInterface> deque = new LinkedList<>();
+    Deque<StepInterface> deque = new ArrayDeque<>();
     while (episodeInterface.hasNext()) {
       final StepInterface stepInterface = episodeInterface.step();
       deque.add(stepInterface);

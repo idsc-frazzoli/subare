@@ -14,15 +14,17 @@ import ch.ethz.idsc.tensor.red.Tally;
 import junit.framework.TestCase;
 
 public class BlackjackTest extends TestCase {
+  @SuppressWarnings("unused")
   public void testSimple() {
     Blackjack blackjack = new Blackjack();
+    // TODO fail sometimes, correct or wrong?
     {
       Tensor next = blackjack.move(Tensors.vector(0, 18, 7), RealScalar.ONE);
-      // System.out.println(next);
+      // assertEquals(next, Tensors.vector(-1));
     }
     {
       Tensor next = blackjack.move(Tensors.vector(0, 21, 7), RealScalar.ZERO);
-      // System.out.println(next);
+      // assertEquals(next, Tensors.vector(1));
     }
   }
 

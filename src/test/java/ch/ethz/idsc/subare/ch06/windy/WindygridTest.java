@@ -6,6 +6,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import junit.framework.TestCase;
 
 public class WindygridTest extends TestCase {
+  @SuppressWarnings("unused")
   public void testWindy() {
     Windygrid windyGrid = Windygrid.createFour();
     Tensor state = Tensors.vector(6, 0);
@@ -14,6 +15,7 @@ public class WindygridTest extends TestCase {
     }
   }
 
+  @SuppressWarnings("unused")
   public void testRepmat() {
     // System.out.println("one right from goal");
     Windygrid windyGrid = Windygrid.createFour();

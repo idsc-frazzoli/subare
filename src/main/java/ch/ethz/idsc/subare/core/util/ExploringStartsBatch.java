@@ -1,8 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.util.ArrayDeque;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ import ch.ethz.idsc.tensor.Tensor;
     Tensor action = key.get(1); // first action
     if (monteCarloInterface.isTerminal(state)) // consistency check
       throw new RuntimeException();
-    Queue<Tensor> queue = new LinkedList<>();
+    Queue<Tensor> queue = new ArrayDeque<>();
     queue.add(action);
     ++index;
     return new MonteCarloEpisode(monteCarloInterface, policy, state, queue);
