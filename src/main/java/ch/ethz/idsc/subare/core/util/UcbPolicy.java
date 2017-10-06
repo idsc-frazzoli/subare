@@ -20,6 +20,7 @@ import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.sca.Log;
+import ch.ethz.idsc.tensor.sca.Sign;
 import ch.ethz.idsc.tensor.sca.Sqrt;
 
 /** upper confidence bound is greedy except that it encourages
@@ -51,7 +52,7 @@ public class UcbPolicy implements Policy, StepDigest {
 
   /** @param t positive */
   public void setTime(Scalar t) {
-    if (Scalars.lessEquals(t, RealScalar.ZERO))
+    if (!Sign.isPositive(t))
       throw TensorRuntimeException.of(t);
     this.t = t;
   }

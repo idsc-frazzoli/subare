@@ -12,6 +12,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Sign;
 
 /** Example 6.6 cliff walking */
 class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterface {
@@ -94,7 +95,7 @@ class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterfac
   boolean isCliff(Tensor coord) {
     Scalar x = coord.Get(0);
     return coord.get(1).equals(RealScalar.of(MY)) && //
-        Scalars.lessThan(RealScalar.ZERO, x) && Scalars.lessThan(x, RealScalar.of(MX));
+        Sign.isPositive(x) && Scalars.lessThan(x, RealScalar.of(MX));
   }
 
   /**************************************************/
