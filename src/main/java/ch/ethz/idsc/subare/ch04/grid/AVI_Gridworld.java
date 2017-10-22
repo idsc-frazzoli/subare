@@ -46,8 +46,8 @@ enum AVI_Gridworld {
     gsw.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
     gsw.close();
     // ---
-    avi.qsa().print();
+    DiscreteUtils.print(avi.qsa());
     DiscreteVs dvs = DiscreteUtils.createVs(gridworld, avi.qsa());
-    dvs.print();
+    DiscreteUtils.print(dvs);
   }
 }

@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch06.walk;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
@@ -28,6 +29,6 @@ enum TTD0_Randomwalk {
     Policy policy = new EquiprobablePolicy(randomwalk);
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policy, ttd0);
-    vs.print(Round._2);
+    DiscreteUtils.print(vs, Round._2);
   }
 }

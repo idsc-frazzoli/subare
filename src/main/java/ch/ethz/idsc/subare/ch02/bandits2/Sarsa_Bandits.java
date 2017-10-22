@@ -38,9 +38,9 @@ enum Sarsa_Bandits {
     }
     System.out.println("---");
     System.out.println("true state values:");
-    DiscreteUtils.createVs(bandits, ref).print(Round._3);
+    DiscreteUtils.print(DiscreteUtils.createVs(bandits, ref), Round._3);
     System.out.println("estimated state values:");
-    DiscreteUtils.createVs(bandits, qsa).print(Round._3);
+    DiscreteUtils.print(DiscreteUtils.createVs(bandits, qsa), Round._3);
   }
 
   public static void main(String[] args) throws Exception {

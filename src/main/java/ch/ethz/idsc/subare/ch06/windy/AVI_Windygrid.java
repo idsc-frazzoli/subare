@@ -36,7 +36,7 @@ enum AVI_Windygrid {
     gsw.close();
     // TODO extract code below to other file
     DiscreteVs vs = DiscreteUtils.createVs(windygrid, ref);
-    vs.print();
+    DiscreteUtils.print(vs);
     Policy policy = GreedyPolicy.bestEquiprobable(windygrid, ref);
     Policies.print(policy, windygrid.states());
   }

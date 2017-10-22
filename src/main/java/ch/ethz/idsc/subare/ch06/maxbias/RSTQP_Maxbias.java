@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
@@ -28,7 +29,7 @@ enum RSTQP_Maxbias {
     System.out.println("---");
     ActionValueIteration avi = new ActionValueIteration(maxbias, avs);
     avi.untilBelow(RealScalar.of(.0001));
-    avi.qsa().print();
+    DiscreteUtils.print(avi.qsa());
     {
       Scalar error = DiscreteValueFunctions.distance(ref, avi.qsa());
       System.out.println("avs error=" + error);

@@ -38,7 +38,7 @@ enum Sarsa_Maxbias {
       ExploringStarts.batch(maxbias, policy, nstep, sarsa, avs);
     }
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa);
-    vs.print(Round._3);
+    DiscreteUtils.print(vs, Round._3);
   }
 
   public static void main(String[] args) throws Exception {

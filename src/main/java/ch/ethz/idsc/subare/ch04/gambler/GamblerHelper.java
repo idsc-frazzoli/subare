@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.alg.ValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
@@ -34,7 +35,7 @@ enum GamblerHelper {
   }
 
   public static void play(Gambler gambler, DiscreteQsa qsa) {
-    qsa.print(Round._2);
+    DiscreteUtils.print(qsa, Round._2);
     System.out.println("---");
     Policy policy = GreedyPolicy.bestEquiprobable(gambler, qsa);
     EpisodeInterface mce = EpisodeKickoff.single(gambler, policy, //

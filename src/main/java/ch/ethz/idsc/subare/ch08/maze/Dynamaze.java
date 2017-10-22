@@ -97,7 +97,7 @@ class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface
   public Tensor image() {
     return image.copy();
   }
-  
+
   public Index terminalIndex() {
     return terminalIndex;
   }

@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.io.Serializable;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
@@ -49,22 +48,20 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
     values.set(value, index.of(StateAction.key(state, action)));
   }
 
-  public void print() {
-    print(Function.identity());
-  }
-
+  // public void print() {
+  // print(Function.identity());
+  // }
   @Override
   public DiscreteQsa copy() {
     return new DiscreteQsa(index, values.copy());
   }
 
-  public void print(Function<Scalar, Scalar> round) {
-    for (Tensor key : index.keys()) {
-      Scalar value = values.Get(index.of(key));
-      System.out.println(key + " " + value.map(round));
-    }
-  }
-
+  // public void print(Function<Scalar, Scalar> round) {
+  // for (Tensor key : keys()) {
+  // Scalar value = values.Get(index.of(key));
+  // System.out.println(key + " " + value.map(round));
+  // }
+  // }
   /**************************************************/
   @Override
   public Tensor keys() {

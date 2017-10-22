@@ -7,6 +7,7 @@ import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
@@ -42,7 +43,7 @@ enum Sarsa_Fishfarm {
         break;
     }
     gsw.close();
-    qsa.print(Round._2);
+    DiscreteUtils.print(qsa, Round._2);
     // System.out.println("---");
     // Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, qsa);
     // EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policy);

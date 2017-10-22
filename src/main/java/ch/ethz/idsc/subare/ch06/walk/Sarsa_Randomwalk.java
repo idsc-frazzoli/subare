@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -35,7 +36,7 @@ enum Sarsa_Randomwalk {
     sarsa.setExplore(RealScalar.of(.2));
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policy, nstep, sarsa);
-    qsa.print(Round._2);
+    DiscreteUtils.print(qsa, Round._2);
   }
 
   public static void main(String[] args) {

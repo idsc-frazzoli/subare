@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
@@ -49,7 +50,7 @@ enum QL_Gambler {
       gsw.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
     }
     gsw.close();
-    qsa.print(Round._2);
+    DiscreteUtils.print(qsa, Round._2);
     System.out.println("---");
     EpisodeInterface mce = EpisodeKickoff.single(gambler, policy);
     while (mce.hasNext()) {

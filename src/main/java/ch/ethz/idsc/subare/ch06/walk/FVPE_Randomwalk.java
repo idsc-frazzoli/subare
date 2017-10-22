@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
@@ -27,6 +28,6 @@ enum FVPE_Randomwalk {
     for (int count = 0; count < 100; ++count)
       ExploringStarts.batch(randomwalk, policy, fvpe);
     DiscreteVs vs = fvpe.vs();
-    vs.print(Round._2);
+    DiscreteUtils.print(vs, Round._2);
   }
 }

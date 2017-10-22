@@ -22,7 +22,6 @@ class Estimation implements Serializable {
    * representing a guess that we have a 50% chance of winning. */
   public void init(int symbol) {
     for (State state : AllStates.instance.getEquivalenceSet()) {
-      
       if (Objects.isNull(state.winner)) {
         map.put(state, 0.5);
       } else

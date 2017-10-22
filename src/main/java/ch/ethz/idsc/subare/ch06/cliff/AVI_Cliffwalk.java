@@ -37,7 +37,7 @@ enum AVI_Cliffwalk {
     gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
     gsw.close();
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
-    vs.print();
+    DiscreteUtils.print(vs);
     Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, ref);
     Policies.print(policy, cliffwalk.states());
   }

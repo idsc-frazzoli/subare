@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch05.infvar;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -18,6 +19,6 @@ enum IPE_InfiniteVariance {
         standardModel, policy);
     a.until(RealScalar.of(.0001));
     System.out.println(a.iterations());
-    a.vs().print(Round._2);
+    DiscreteUtils.print(a.vs(), Round._2);
   }
 }

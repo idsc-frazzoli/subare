@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
@@ -44,5 +45,29 @@ public enum DiscreteUtils {
    * @return state values */
   public static DiscreteVs createVs(DiscreteModel discreteModel, QsaInterface qsa) {
     return reduce(discreteModel, qsa, Max::of);
+  }
+
+  /**************************************************/
+  public static void print(DiscreteQsa qsa, Function<Scalar, Scalar> round) {
+    for (Tensor key : qsa.keys()) {
+      Scalar value = qsa.value(key.get(0), key.get(1));
+      System.out.println(key + " " + value.map(round));
+    }
+  }
+
+  public static void print(DiscreteQsa qsa) {
+    print(qsa, Function.identity());
+  }
+
+  /**************************************************/
+  public static void print(DiscreteVs vs, Function<Scalar, Scalar> round) {
+    for (Tensor key : vs.keys()) {
+      Scalar value = vs.value(key);
+      System.out.println(key + " " + value.map(round));
+    }
+  }
+
+  public static void print(DiscreteVs vs) {
+    print(vs, Function.identity());
   }
 }

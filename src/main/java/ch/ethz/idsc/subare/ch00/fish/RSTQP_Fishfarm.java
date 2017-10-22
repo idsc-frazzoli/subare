@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch00.fish;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
@@ -31,6 +32,6 @@ enum RSTQP_Fishfarm {
         break;
     }
     gsw.close();
-    qsa.print(Round._2);
+    DiscreteUtils.print(qsa, Round._2);
   }
 }

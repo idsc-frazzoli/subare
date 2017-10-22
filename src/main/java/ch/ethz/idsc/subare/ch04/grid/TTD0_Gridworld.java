@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch04.grid;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
@@ -37,6 +38,6 @@ enum TTD0_Gridworld {
     Policy policy = new EquiprobablePolicy(gridWorld);
     for (int count = 0; count < 300; ++count)
       ExploringStarts.batch(gridWorld, policy, ttd0);
-    vs.print(Round._2);
+    DiscreteUtils.print(vs, Round._2);
   }
 }
