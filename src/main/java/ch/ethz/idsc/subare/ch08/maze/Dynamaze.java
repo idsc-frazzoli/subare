@@ -27,6 +27,7 @@ class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface
       { 0, +1 } //
   }).unmodifiable();
   static final Tensor ACTIONS_TERMINAL = Array.zeros(1, 2).unmodifiable();
+  // ---
   private final Tensor image;
   private final Tensor states = Tensors.empty();
   private final Index statesIndex;
@@ -95,5 +96,9 @@ class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface
   /**************************************************/
   public Tensor image() {
     return image.copy();
+  }
+  
+  public Index terminalIndex() {
+    return terminalIndex;
   }
 }

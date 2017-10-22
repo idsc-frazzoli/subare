@@ -15,6 +15,8 @@ import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
 
 public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Serializable {
+  /** @param discreteModel
+   * @return qsa with q(s,a) == 0 for all state-action pairs */
   public static DiscreteQsa build(DiscreteModel discreteModel) {
     Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
     return new DiscreteQsa(index, Array.zeros(index.size()));
@@ -81,14 +83,23 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
 
   /**************************************************/
   public Scalar getMin() {
-    return values.flatten(-1).map(Scalar.class::cast).reduce(Min::of).get();
+    return values.flatten(-1).reduce(Min::of).get().Get();
   }
 
   public Scalar getMax() {
-    return values.flatten(-1).map(Scalar.class::cast).reduce(Max::of).get();
+    return values.flatten(-1).reduce(Max::of).get().Get();
   }
 
   public int size() {
     return index.size();
+  }
+
+  /**************************************************/
+  public String toInfoString() {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append("#{q(s,a)}=" + index.size() + "\n");
+    stringBuilder.append("   min(q)=" + getMin() + "\n");
+    stringBuilder.append("   max(q)=" + getMax() + "\n");
+    return stringBuilder.toString();
   }
 }

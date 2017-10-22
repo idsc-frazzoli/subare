@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.core.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
@@ -23,7 +24,7 @@ public class EquiprobablePolicy implements Policy {
   @Override
   public synchronized Scalar probability(Tensor state, Tensor action) {
     Index index = map.get(state);
-    if (index == null) {
+    if (Objects.isNull(index)) {
       index = Index.build(discreteModel.actions(state));
       map.put(state, index);
     }

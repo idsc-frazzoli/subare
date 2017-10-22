@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.util.Map;
+import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
@@ -37,7 +38,7 @@ public class EGreedyPolicy implements Policy {
     this.map = map;
     this.epsilon = epsilon;
     this.sizes = sizes;
-    if (sizes == null && Scalars.nonZero(epsilon))
+    if (Objects.isNull(sizes) && Scalars.nonZero(epsilon))
       throw new RuntimeException("sizes invalid for " + epsilon);
   }
 
@@ -45,7 +46,7 @@ public class EGreedyPolicy implements Policy {
   public Scalar probability(Tensor state, Tensor action) {
     Index index = map.get(state);
     final int optimalCount = index.size();
-    if (sizes == null) // greedy
+    if (Objects.isNull(sizes)) // greedy
       return index.containsKey(action) ? RationalScalar.of(1, optimalCount) : RealScalar.ZERO;
     // ---
     final int nonOptimalCount = sizes.get(state) - optimalCount;

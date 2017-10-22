@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /** A value function specifies what is good in the long run.
  * Roughly speaking, the value of a state is the total amount of reward
@@ -21,7 +22,8 @@ class Estimation implements Serializable {
    * representing a guess that we have a 50% chance of winning. */
   public void init(int symbol) {
     for (State state : AllStates.instance.getEquivalenceSet()) {
-      if (state.winner == null) {
+      
+      if (Objects.isNull(state.winner)) {
         map.put(state, 0.5);
       } else
         switch (state.winner) {
