@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.util;
 
+import java.util.Objects;
+
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -28,6 +30,6 @@ public class AverageTest extends TestCase {
 
   public void testEmpty() {
     Average avg = new Average();
-    assertTrue(avg.get() == null);
+    assertTrue(Objects.isNull(avg.get()));
   }
 }

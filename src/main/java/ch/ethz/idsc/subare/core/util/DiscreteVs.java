@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.io.Serializable;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
@@ -72,17 +71,5 @@ public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializa
   @Override
   public DiscreteVs create(Stream<? extends Tensor> stream) {
     return new DiscreteVs(index, Tensor.of(stream));
-  }
-
-  /**************************************************/
-  public void print() {
-    print(Function.identity());
-  }
-
-  public void print(Function<Scalar, Scalar> ROUND) {
-    for (Tensor key : index.keys()) {
-      Scalar value = values.Get(index.of(key));
-      System.out.println(key + " " + value.map(ROUND));
-    }
   }
 }

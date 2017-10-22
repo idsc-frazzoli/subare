@@ -11,9 +11,15 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
+import ch.ethz.idsc.tensor.pdf.Distribution;
+import ch.ethz.idsc.tensor.pdf.RandomVariate;
+
 class Agent {
   double stepSize;
-  double exploreRate;
+  // double exploreRate;
+  Distribution distribution;
   List<State> states = new ArrayList<>();
   final int symbol;
   Estimation estimation = new Estimation();
@@ -25,7 +31,8 @@ class Agent {
 
   public void setRates(double stepSize, double exploreRate) {
     this.stepSize = stepSize;
-    this.exploreRate = exploreRate;
+    // this.exploreRate = exploreRate;
+    distribution = BernoulliDistribution.of(RealScalar.of(exploreRate));
   }
 
   // accept a state
@@ -45,17 +52,6 @@ class Agent {
     }
   }
 
-  // code from
-  // http://stackoverflow.com/questions/1241555/algorithm-to-generate-poisson-and-binomial-random-numbers
-  // not efficient for large n
-  public static int numpyRandomBinomial(int n, double p) {
-    int x = 0;
-    for (int k = 0; k < n; ++k)
-      if (Math.random() < p)
-        ++x;
-    return x;
-  }
-
   // a policy is a mapping from perceived states of the environment to actions to
   // be taken when in those states.
   public Action takeAction() {
@@ -67,7 +63,8 @@ class Agent {
       }
     // ---
     // exploration
-    if (numpyRandomBinomial(1, exploreRate) == 1) {
+    // parameter p denotes the probability of the outcome 1
+    if (RandomVariate.of(distribution).equals(RealScalar.ONE)) {
       List<Entry<Integer, State>> list = new ArrayList<>(nextStates.entrySet());
       Collections.shuffle(list);
       return new Action(list.get(0).getKey(), symbol);

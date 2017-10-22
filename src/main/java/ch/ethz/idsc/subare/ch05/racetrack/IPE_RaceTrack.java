@@ -7,6 +7,7 @@ import java.util.zip.DataFormatException;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Import;
@@ -20,6 +21,6 @@ enum IPE_RaceTrack {
     Policy policy = new EquiprobablePolicy(racetrack);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(racetrack, policy);
     ipe.until(RealScalar.of(.1));
-    ipe.vs().print(Round._1);
+    DiscreteUtils.print(ipe.vs(), Round._1);
   }
 }

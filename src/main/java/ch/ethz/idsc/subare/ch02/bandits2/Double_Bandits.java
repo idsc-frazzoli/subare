@@ -37,9 +37,9 @@ enum Double_Bandits {
     }
     System.out.println("---");
     System.out.println("true state values:");
-    DiscreteUtils.createVs(bandits, ref).print(Round._3);
+    DiscreteUtils.print(DiscreteUtils.createVs(bandits, ref), Round._3);
     System.out.println("estimated state values:");
-    DiscreteUtils.createVs(bandits, qsa1).print(Round._3);
+    DiscreteUtils.print(DiscreteUtils.createVs(bandits, qsa1), Round._3);
   }
 
   public static void main(String[] args) throws Exception {

@@ -11,7 +11,7 @@ import ch.ethz.idsc.tensor.io.ResourceData;
 
 enum DynamazeHelper {
   ;
-  private static final Tensor STARTS = Tensors.matrixInt(new int[][] { //
+  private static final Tensor STARTS_5 = Tensors.matrixInt(new int[][] { //
       { 31, 15 }, { 9, 15 }, { 18, 12 } });
 
   @Deprecated
@@ -19,14 +19,16 @@ enum DynamazeHelper {
     return new DynamazeRaster(dynamaze);
   }
 
-  public static Dynamaze original(String name) throws Exception {
+  /** @param name, for instance "maze2"
+   * @return */
+  public static Dynamaze original(String name) {
     return fromImage(load(name));
   }
 
-  public static Dynamaze create5(int starts) throws Exception {
+  public static Dynamaze create5(int starts) {
     Tensor image = load("maze5");
     for (int count = 0; count < starts; ++count) {
-      Tensor vec = STARTS.get(count);
+      Tensor vec = STARTS_5.get(count);
       image.set(Dynamaze.GREEN, //
           vec.Get(0).number().intValue(), //
           vec.Get(1).number().intValue());
@@ -38,7 +40,7 @@ enum DynamazeHelper {
     return new Dynamaze(image.unmodifiable());
   }
 
-  /* package */ static Tensor load(String name) throws Exception {
+  /* package */ static Tensor load(String name) {
     return ResourceData.of("/ch08/" + name + ".png");
   }
 

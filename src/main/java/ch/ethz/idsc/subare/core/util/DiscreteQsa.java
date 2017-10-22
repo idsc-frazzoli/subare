@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.core.util;
 
 import java.io.Serializable;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
@@ -15,6 +14,8 @@ import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
 
 public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Serializable {
+  /** @param discreteModel
+   * @return qsa with q(s,a) == 0 for all state-action pairs */
   public static DiscreteQsa build(DiscreteModel discreteModel) {
     Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
     return new DiscreteQsa(index, Array.zeros(index.size()));
@@ -47,20 +48,9 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
     values.set(value, index.of(StateAction.key(state, action)));
   }
 
-  public void print() {
-    print(Function.identity());
-  }
-
   @Override
   public DiscreteQsa copy() {
     return new DiscreteQsa(index, values.copy());
-  }
-
-  public void print(Function<Scalar, Scalar> round) {
-    for (Tensor key : index.keys()) {
-      Scalar value = values.Get(index.of(key));
-      System.out.println(key + " " + value.map(round));
-    }
   }
 
   /**************************************************/
@@ -81,11 +71,11 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
 
   /**************************************************/
   public Scalar getMin() {
-    return values.flatten(-1).map(Scalar.class::cast).reduce(Min::of).get();
+    return values.flatten(-1).reduce(Min::of).get().Get();
   }
 
   public Scalar getMax() {
-    return values.flatten(-1).map(Scalar.class::cast).reduce(Max::of).get();
+    return values.flatten(-1).reduce(Max::of).get().Get();
   }
 
   public int size() {

@@ -46,6 +46,7 @@ public enum DiscreteValueFunctions {
     return (T) tvi1.create(LogisticSigmoid.of(_difference(tvi1, tvi2).multiply(factor)).flatten(0));
   }
 
+  /**************************************************/
   // helper function
   private static boolean _isCompatible(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
     return tvi1.keys().equals(tvi2.keys());

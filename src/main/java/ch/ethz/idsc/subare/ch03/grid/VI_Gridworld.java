@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch03.grid;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -45,7 +46,7 @@ enum VI_Gridworld {
     ValueIteration vi = new ValueIteration(gridworld, gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
-    vi.vs().print(Round._1);
+    DiscreteUtils.print(vi.vs(), Round._1);
     Policy policy = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
     Policies.print(policy, gridworld.states());
   }

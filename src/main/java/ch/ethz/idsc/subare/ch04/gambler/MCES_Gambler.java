@@ -33,6 +33,6 @@ enum MCES_Gambler {
     }
     gsw.close();
     DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, mces.qsa());
-    discreteVs.print(Round._2);
+    DiscreteUtils.print(discreteVs, Round._2);
   }
 }

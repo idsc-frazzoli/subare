@@ -30,9 +30,9 @@ enum AVI_Maxbias {
   public static void main(String[] args) {
     Maxbias maxbias = new Maxbias(5);
     DiscreteQsa qsa = MaxbiasHelper.getOptimalQsa(maxbias);
-    qsa.print();
+    DiscreteUtils.print(qsa);
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa);
-    vs.print();
+    DiscreteUtils.print(vs);
   }
 }

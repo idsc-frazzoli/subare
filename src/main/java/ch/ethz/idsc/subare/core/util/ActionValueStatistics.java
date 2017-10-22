@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.util;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.DequeDigest;
@@ -63,7 +64,7 @@ public class ActionValueStatistics implements DequeDigest, EpisodeDigest, Action
       stepInterface = episodeInterface.step();
       digest(stepInterface);
     }
-    if (stepInterface == null)
+    if (Objects.isNull(stepInterface))
       throw new RuntimeException(); // episode start should not be terminal
     // digestTerminal(stepInterface.nextState()); // terminal state, already handled in constructor
   }

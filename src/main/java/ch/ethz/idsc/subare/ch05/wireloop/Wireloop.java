@@ -46,7 +46,7 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
     this.image = image;
     this.function = function;
     this.wireloopReward = wireloopReward;
-    System.out.println(Dimensions.of(image));
+    // System.out.println(Dimensions.of(image));
     List<Integer> dims = Dimensions.of(image);
     for (int y = 0; y < dims.get(0); ++y)
       for (int x = 0; x < dims.get(1); ++x) {

@@ -3,6 +3,7 @@
 package ch.ethz.idsc.subare.ch03.grid;
 
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -41,6 +42,6 @@ enum IPE_Gridworld {
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         gridworld, new EquiprobablePolicy(gridworld));
     ipe.until(DecimalScalar.of(.0001));
-    ipe.vs().print(Round._1);
+    DiscreteUtils.print(ipe.vs(), Round._1);
   }
 }

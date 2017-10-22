@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
+import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
@@ -41,7 +42,7 @@ enum VI_Gridworld {
     GridworldRaster gridworldStateRaster = new GridworldRaster(gridworld);
     ValueIteration vi = new ValueIteration(gridworld, gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
-    vi.vs().print();
+    DiscreteUtils.print(vi.vs());
     Policy policy = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
     Policies.print(policy, gridworld.states());
     Export.of(UserHome.Pictures("gridworld_vs_vi.png"), //
