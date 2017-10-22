@@ -58,6 +58,16 @@ public enum DiscreteUtils {
   public static void print(DiscreteQsa qsa) {
     print(qsa, Function.identity());
   }
+  
+  /**************************************************/
+  public static String infoString(DiscreteQsa qsa) {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append("#{q(s,a)}=" + qsa.size() + "\n");
+    stringBuilder.append("   min(q)=" + qsa.getMin() + "\n");
+    stringBuilder.append("   max(q)=" + qsa.getMax() + "\n");
+    return stringBuilder.toString().trim();
+  }
+
 
   /**************************************************/
   public static void print(DiscreteVs vs, Function<Scalar, Scalar> round) {

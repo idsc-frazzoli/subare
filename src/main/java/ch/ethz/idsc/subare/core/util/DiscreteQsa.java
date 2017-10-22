@@ -48,20 +48,11 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
     values.set(value, index.of(StateAction.key(state, action)));
   }
 
-  // public void print() {
-  // print(Function.identity());
-  // }
   @Override
   public DiscreteQsa copy() {
     return new DiscreteQsa(index, values.copy());
   }
 
-  // public void print(Function<Scalar, Scalar> round) {
-  // for (Tensor key : keys()) {
-  // Scalar value = values.Get(index.of(key));
-  // System.out.println(key + " " + value.map(round));
-  // }
-  // }
   /**************************************************/
   @Override
   public Tensor keys() {
@@ -89,14 +80,5 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
 
   public int size() {
     return index.size();
-  }
-
-  /**************************************************/
-  public String toInfoString() {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("#{q(s,a)}=" + index.size() + "\n");
-    stringBuilder.append("   min(q)=" + getMin() + "\n");
-    stringBuilder.append("   max(q)=" + getMax() + "\n");
-    return stringBuilder.toString();
   }
 }

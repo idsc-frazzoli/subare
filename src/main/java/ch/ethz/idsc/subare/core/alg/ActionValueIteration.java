@@ -36,14 +36,21 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
     this(standardModel, standardModel);
   }
 
+  public ActionValueIteration(StandardModel standardModel, DiscreteQsa qsa_new) {
+    this(standardModel, standardModel, qsa_new);
+  }
+
   /** @param discreteModel
    * @param actionValueInterface */
   public ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface) {
+    this(discreteModel, actionValueInterface, DiscreteQsa.build(discreteModel));
+  }
+
+  public ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface, DiscreteQsa qsa_new) {
     this.discreteModel = discreteModel;
     this.actionValueInterface = actionValueInterface;
     this.gamma = discreteModel.gamma();
-    qsa_new = DiscreteQsa.build(discreteModel);
-    // ---
+    this.qsa_new = qsa_new;
     StaticHelper.assertConsistent(qsa_new.keys(), actionValueInterface);
   }
 
