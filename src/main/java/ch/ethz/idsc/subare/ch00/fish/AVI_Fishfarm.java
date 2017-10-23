@@ -18,7 +18,7 @@ enum AVI_Fishfarm {
     DiscreteQsa ref = FishfarmHelper.getOptimalQsa(fishfarm);
     // Export.of(UserHome.Pictures("cliffwalk_qsa_avi.png"), //
     // StateActionRasters.qsa(new CliffwalkRaster(cliffwalk), DiscreteValueFunctions.rescaled(ref)));
-    ActionValueIteration avi = new ActionValueIteration(fishfarm);
+    ActionValueIteration avi = ActionValueIteration.of(fishfarm);
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_avi.gif"), 200);
     for (int index = 0; index < 20; ++index) {
       Infoline infoline = Infoline.print(fishfarm, index, ref, avi.qsa());

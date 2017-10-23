@@ -23,6 +23,22 @@ import ch.ethz.idsc.tensor.sca.N;
  * initial values are set to zeros
  * Jacobi style, i.e. updates take effect only in the next iteration */
 public class ActionValueIteration implements DiscreteQsaSupplier {
+  /** @param standardModel */
+  public static ActionValueIteration of(StandardModel standardModel) {
+    return of(standardModel, standardModel);
+  }
+
+  public static ActionValueIteration of(StandardModel standardModel, DiscreteQsa qsa_new) {
+    return new ActionValueIteration(standardModel, standardModel, qsa_new);
+  }
+
+  /** @param discreteModel
+   * @param actionValueInterface */
+  public static ActionValueIteration of(DiscreteModel discreteModel, ActionValueInterface actionValueInterface) {
+    return new ActionValueIteration(discreteModel, actionValueInterface, DiscreteQsa.build(discreteModel));
+  }
+
+  // ---
   private final DiscreteModel discreteModel;
   private final ActionValueInterface actionValueInterface;
   private Scalar gamma;
@@ -31,22 +47,7 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
   private int iterations = 0;
   private int alternate = 0;
 
-  /** @param standardModel */
-  public ActionValueIteration(StandardModel standardModel) {
-    this(standardModel, standardModel);
-  }
-
-  public ActionValueIteration(StandardModel standardModel, DiscreteQsa qsa_new) {
-    this(standardModel, standardModel, qsa_new);
-  }
-
-  /** @param discreteModel
-   * @param actionValueInterface */
-  public ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface) {
-    this(discreteModel, actionValueInterface, DiscreteQsa.build(discreteModel));
-  }
-
-  public ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface, DiscreteQsa qsa_new) {
+  private ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface, DiscreteQsa qsa_new) {
     this.discreteModel = discreteModel;
     this.actionValueInterface = actionValueInterface;
     this.gamma = discreteModel.gamma();

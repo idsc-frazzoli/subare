@@ -37,7 +37,7 @@ enum AVI_Gridworld {
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldRaster = new GridworldRaster(gridworld);
-    ActionValueIteration avi = new ActionValueIteration(gridworld);
+    ActionValueIteration avi = ActionValueIteration.of(gridworld);
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_qsa_avi.gif"), 250);
     for (int count = 0; count < 7; ++count) {
       gsw.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));

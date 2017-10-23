@@ -24,7 +24,7 @@ enum AVI_Windygrid {
     DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
     Export.of(UserHome.Pictures("windygrid_qsa_avi.png"), //
         StateActionRasters.qsa_rescaled(windygridRaster, ref));
-    ActionValueIteration avi = new ActionValueIteration(windygrid);
+    ActionValueIteration avi = ActionValueIteration.of(windygrid);
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250);
     for (int index = 0; index < 20; ++index) {
       Infoline infoline = Infoline.print(windygrid, index, ref, avi.qsa());

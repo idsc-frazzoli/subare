@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 public class InfiniteVarianceTest extends TestCase {
   public void testActionValueIteration() {
     InfiniteVariance infiniteVariance = new InfiniteVariance();
-    ActionValueIteration avi = new ActionValueIteration(infiniteVariance);
+    ActionValueIteration avi = ActionValueIteration.of(infiniteVariance);
     avi.untilBelow(RealScalar.of(.00001));
     DiscreteQsa qsa = avi.qsa();
     Scalar diff = qsa.value(InfiniteVariance.BACK, InfiniteVariance.BACK).subtract(RealScalar.ONE);
