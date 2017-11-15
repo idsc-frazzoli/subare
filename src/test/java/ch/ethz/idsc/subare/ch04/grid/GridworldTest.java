@@ -25,7 +25,7 @@ public class GridworldTest extends TestCase {
 
   public void testAVI() {
     Gridworld gridworld = new Gridworld();
-    ActionValueIteration avi = new ActionValueIteration(gridworld);
+    ActionValueIteration avi = ActionValueIteration.of(gridworld);
     avi.untilBelow(RealScalar.of(.0001));
     // ---
     DiscreteQsa qsa = avi.qsa();

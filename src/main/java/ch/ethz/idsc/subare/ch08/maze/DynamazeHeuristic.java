@@ -20,7 +20,7 @@ enum DynamazeHeuristic {
     for (Tensor key : qsa.keys()) {
       final Tensor state = key.get(0);
       final Tensor action = key.get(1);
-      Scalar dist = Norm._1.ofVector(state.add(action).subtract(endPos));
+      Scalar dist = Norm._1.between(state.add(action), endPos);
       // Scalar dist = Norm._1.ofVector(state.subtract(endPos));
       Scalar value = Power.of(dynamaze.gamma(), dist);
       qsa.assign(state, action, value);

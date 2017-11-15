@@ -24,7 +24,7 @@ enum AVI_Dynamaze {
     DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     // Export.of(UserHome.Pictures("dynamaze_qsa_avi.png"), //
     // DynamazeHelper.render(windygrid, DiscreteValueFunctions.rescaled(ref)));
-    ActionValueIteration avi = new ActionValueIteration(dynamaze);
+    ActionValueIteration avi = ActionValueIteration.of(dynamaze);
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_qsa_avi.gif"), 250);
     for (int index = 0; index < 50; ++index) {
       Infoline infoline = Infoline.print(dynamaze, index, ref, avi.qsa());

@@ -41,7 +41,7 @@ enum AVI_Gridworld {
   ;
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
-    ActionValueIteration avi = new ActionValueIteration(gridworld);
+    ActionValueIteration avi = ActionValueIteration.of(gridworld);
     avi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + avi.iterations());
     DiscreteUtils.print(avi.qsa(), Round._1);

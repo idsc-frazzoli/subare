@@ -16,7 +16,7 @@ enum AVI_Racetrack {
   ;
   static void precompute(String name) throws Exception {
     Racetrack racetrack = RacetrackHelper.create(name, 5);
-    ActionValueIteration avi = new ActionValueIteration(racetrack);
+    ActionValueIteration avi = ActionValueIteration.of(racetrack);
     avi.untilBelow(RealScalar.of(1e-3), 2);
     // avi.qsa().print();
     System.out.println(Tally.sorted(avi.qsa().values()));

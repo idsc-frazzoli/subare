@@ -16,7 +16,7 @@ enum AVI_Wireloop {
     Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x, wireloopReward);
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
-    ActionValueIteration avi = new ActionValueIteration(wireloop);
+    ActionValueIteration avi = ActionValueIteration.of(wireloop);
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "L_avi.gif"), 250);
     int batches = 50;
     for (int index = 0; index < batches; ++index) {

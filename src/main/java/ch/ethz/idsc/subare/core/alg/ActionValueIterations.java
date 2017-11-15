@@ -9,7 +9,7 @@ import ch.ethz.idsc.tensor.Scalar;
 public enum ActionValueIterations {
   ;
   public static DiscreteQsa solve(StandardModel standardModel, Scalar threshold) {
-    ActionValueIteration actionValueIteration = new ActionValueIteration(standardModel);
+    ActionValueIteration actionValueIteration = ActionValueIteration.of(standardModel);
     actionValueIteration.untilBelow(threshold);
     return actionValueIteration.qsa();
   }

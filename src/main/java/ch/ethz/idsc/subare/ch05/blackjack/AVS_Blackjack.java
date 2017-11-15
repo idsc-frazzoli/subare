@@ -34,7 +34,7 @@ enum AVS_Blackjack {
         episodes += //
             ExploringStarts.batchWithReplay(blackjack, policy, mces, avs);
       }
-      ActionValueIteration avi = new ActionValueIteration(blackjack, avs);
+      ActionValueIteration avi = ActionValueIteration.of(blackjack, avs);
       avi.untilBelow(DecimalScalar.of(.0001), 3);
       gsw.append( //
           Join.of( //

@@ -15,7 +15,7 @@ enum AVH_Dynamaze {
   public static void create(String name, Dynamaze dynamaze) throws Exception {
     DiscreteQsa est = DynamazeHeuristic.create(dynamaze);
     // est = DiscreteQsa.build(dynamaze);
-    ActionValueIteration avi = new ActionValueIteration(dynamaze, est);
+    ActionValueIteration avi = ActionValueIteration.of(dynamaze, est);
     // ---
     DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_qsa_avi.gif"), 500);
