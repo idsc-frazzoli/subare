@@ -58,8 +58,6 @@ Monte Carlo
 
 ![gridworld_qsa_mces](https://cloud.githubusercontent.com/assets/4012178/26762469/36af0784-4943-11e7-91ce-89f86afff7a2.gif)
 
-<td>
-
 </tr><tr>
 
 <td>
@@ -196,7 +194,7 @@ track 1
 
 ![track1](https://cloud.githubusercontent.com/assets/4012178/26668651/01d5ff76-46ab-11e7-9332-7aadecd5923e.gif)
 
-<td><td><td valign="top">
+<td valign="top">
 
 track 2
 
