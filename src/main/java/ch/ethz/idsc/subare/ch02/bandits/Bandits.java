@@ -4,16 +4,15 @@ package ch.ethz.idsc.subare.ch02.bandits;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Sort;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.NormalDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.Mean;
+import ch.ethz.idsc.tensor.red.StandardDeviation;
 import ch.ethz.idsc.tensor.red.Variance;
 import ch.ethz.idsc.tensor.sca.Chop;
-import ch.ethz.idsc.tensor.sca.Sqrt;
 
 /** implementation corresponds to Figure 2.1, p. 30 */
 class Bandits {
@@ -26,10 +25,9 @@ class Bandits {
     Tensor data = RandomVariate.of(STANDARD, n);
     Scalar mean = (Scalar) Mean.of(data);
     Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
-    prep = temp.divide(Sqrt.of((Scalar) Variance.ofVector(temp)));
-    GlobalAssert.that(Scalars.isZero((Scalar) Chop._10.of(Mean.of(prep))));
-    GlobalAssert.that( //
-        Scalars.isZero((Scalar) Chop._10.of(Variance.ofVector(prep).subtract(RealScalar.of(1)))));
+    prep = temp.divide(StandardDeviation.ofVector(temp));
+    GlobalAssert.that(Chop._10.allZero(Mean.of(prep)));
+    GlobalAssert.that(Chop._10.close(Variance.ofVector(prep), RealScalar.ONE));
   }
 
   Scalar min = RealScalar.ZERO;

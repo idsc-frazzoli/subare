@@ -20,8 +20,6 @@ public class PolicyWrap {
    * @return */
   public Tensor next(Tensor state, Tensor actions) {
     Tensor pdf = Tensor.of(actions.flatten(0).map(action -> policy.probability(state, action)));
-    // if (!Chop.isZeros(Total.of(pdf).subtract(RealScalar.ONE)))
-    // throw TensorRuntimeException.of(pdf);
     Distribution distribution = EmpiricalDistribution.fromUnscaledPDF(pdf);
     return actions.get(RandomVariate.of(distribution).number().intValue());
   }

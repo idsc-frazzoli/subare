@@ -27,6 +27,6 @@ public class BanditsTest extends TestCase {
     Scalar mean = Mean.of(expected).Get();
     assertTrue(Chop._10.allZero(mean));
     Scalar var = Variance.ofVector(expected).Get();
-    assertTrue(Chop._10.allZero(var.subtract(RealScalar.ONE)));
+    assertTrue(Chop._10.close(var, RealScalar.ONE));
   }
 }

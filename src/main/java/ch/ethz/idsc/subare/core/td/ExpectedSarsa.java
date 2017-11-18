@@ -21,12 +21,12 @@ public class ExpectedSarsa extends Sarsa {
     super(discreteModel, qsa, learningRate);
   }
 
-  @Override
+  @Override // from Sarsa
   protected Scalar evaluate(Tensor state) {
     return crossEvaluate(state, qsa);
   }
 
-  @Override
+  @Override // from Sarsa
   protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
     Tensor actions = Tensor.of( //
         discreteModel.actions(state).flatten(0) //

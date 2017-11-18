@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 
 public abstract class DequeDigestAdapter implements DequeDigest {
-  @Override
+  @Override // from StepDigest
   public final void digest(StepInterface stepInterface) {
     Deque<StepInterface> deque = new ArrayDeque<>();
     deque.add(stepInterface); // deque holds a single step

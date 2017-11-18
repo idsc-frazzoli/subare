@@ -59,7 +59,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
    * @return value from evaluations of Qsa2 via actions provided by qsa (== Qsa1) */
   protected abstract Scalar crossEvaluate(Tensor state, QsaInterface Qsa2);
 
-  @Override
+  @Override // from DequeDigest
   public final void digest(Deque<StepInterface> deque) {
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // ---
@@ -95,7 +95,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     return discountFunction.apply(rewards).subtract(value0).abs();
   }
 
-  @Override
+  @Override // from DiscreteQsaSupplier
   public final DiscreteQsa qsa() {
     return (DiscreteQsa) qsa;
   }
