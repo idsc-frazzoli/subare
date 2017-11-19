@@ -19,6 +19,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.io.ResourceData;
+import ch.ethz.idsc.tensor.sca.Chop;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 enum WireloopHelper {
@@ -38,9 +39,10 @@ enum WireloopHelper {
   private static Tensor renderActions(Wireloop wireloop, QsaInterface qsa) {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteVs vs = DiscreteVs.build(wireloop);
+    RobustArgMax ram = new RobustArgMax(Chop._06);
     for (Tensor state : wireloop.startStates()) {
       Tensor tensor = Tensor.of(wireloop.actions(state).flatten(0).map(action -> qsa.value(state, action)));
-      int index = RobustArgMax.of(tensor);
+      int index = ram.of(tensor);
       vs.assign(state, RealScalar.of(index * 0.25 + 0.185));
     }
     return StateRasters.vs(wireloopRaster, vs);

@@ -25,4 +25,13 @@ public class DiscountFunctionTest extends TestCase {
     Scalar gain2 = Multinomial.horner(coeffs, alpha);
     assertEquals(gain1, gain2);
   }
+
+  public void testFail() {
+    try {
+      DiscountFunction.of(RealScalar.of(1.1));
+      assertTrue(false);
+    } catch (Exception exception) {
+      // ---
+    }
+  }
 }
