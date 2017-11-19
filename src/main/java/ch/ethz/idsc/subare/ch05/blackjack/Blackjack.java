@@ -41,23 +41,23 @@ class Blackjack implements MonteCarloInterface {
     states.append(END_LOSS);
   }
 
-  @Override
+  @Override // from DiscreteModel
   public Tensor states() {
     return states;
   }
 
-  @Override
+  @Override // from DiscreteModel
   public Tensor actions(Tensor state) {
     return isTerminal(state) ? actionsTerminal : actions;
   }
 
-  @Override
+  @Override // from DiscountInterface
   public Scalar gamma() {
     return RealScalar.ONE;
   }
 
   /**************************************************/
-  @Override
+  @Override // from MoveInterface
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
@@ -102,7 +102,7 @@ class Blackjack implements MonteCarloInterface {
     return next;
   }
 
-  @Override
+  @Override // from RewardInterface
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (!isTerminal(state) && isTerminal(next))
       return next.Get(0); // transition into terminal state
@@ -110,12 +110,12 @@ class Blackjack implements MonteCarloInterface {
   }
 
   /**************************************************/
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return startStates;
   }
 
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return state.length() == 1;
   }

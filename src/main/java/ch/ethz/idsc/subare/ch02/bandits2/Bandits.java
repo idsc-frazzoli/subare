@@ -17,8 +17,7 @@ import ch.ethz.idsc.tensor.pdf.NormalDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 import ch.ethz.idsc.tensor.red.Mean;
-import ch.ethz.idsc.tensor.red.Variance;
-import ch.ethz.idsc.tensor.sca.Sqrt;
+import ch.ethz.idsc.tensor.red.StandardDeviation;
 
 /** "A k-armed Bandit Problem"
  * Section 2.1 p.28 */
@@ -34,7 +33,7 @@ class Bandits implements StandardModel, MonteCarloInterface {
     Tensor data = RandomVariate.of(STANDARD, k);
     Scalar mean = (Scalar) Mean.of(data);
     Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
-    Tensor prep = temp.divide(Sqrt.of((Scalar) Variance.ofVector(temp)));
+    Tensor prep = temp.divide(StandardDeviation.ofVector(temp));
     for (int index = 0; index < k; ++index)
       distributions.add(NormalDistribution.of(prep.Get(index), RealScalar.ONE));
   }
