@@ -45,6 +45,6 @@ enum Sarsa_Bandits {
 
   public static void main(String[] args) throws Exception {
     Bandits bandits = new Bandits(20);
-    train(bandits, SarsaType.original, 100, RealScalar.of(16), RealScalar.of(1.15));
+    train(bandits, SarsaType.ORIGINAL, 100, RealScalar.of(16), RealScalar.of(1.15));
   }
 }

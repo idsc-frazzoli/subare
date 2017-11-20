@@ -63,6 +63,6 @@ enum SES_Cliffwalk {
     int nstep = 1;
     // handle(SarsaType.original, nstep, 3);
     // handle(SarsaType.expected, nstep, 3);
-    handle(SarsaType.qlearning, nstep, 10);
+    handle(SarsaType.QLEARNING, nstep, 10);
   }
 }

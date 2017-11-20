@@ -42,8 +42,8 @@ enum Sarsa_Maxbias {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.original, 3);
-    handle(SarsaType.expected, 3);
-    handle(SarsaType.qlearning, 3);
+    handle(SarsaType.ORIGINAL, 3);
+    handle(SarsaType.EXPECTED, 3);
+    handle(SarsaType.QLEARNING, 3);
   }
 }

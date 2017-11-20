@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.core.adapter;
 
+import java.util.Objects;
+
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -12,11 +14,15 @@ public final class StepAdapter implements StepInterface {
   private final Scalar reward;
   private final Tensor next;
 
-  /** @param prev non-null
-   * @param action non-null
-   * @param reward
-   * @param next non-null */
+  /** none of the input parameters must be null
+   * 
+   * @param prev state
+   * @param action from prev state
+   * @param reward obtained subsequent to taking action
+   * @param next state */
   public StepAdapter(Tensor prev, Tensor action, Scalar reward, Tensor next) {
+    if (Objects.isNull(reward))
+      throw new NullPointerException();
     this.prev = prev.unmodifiable();
     this.action = action.unmodifiable();
     this.reward = reward; // Scalar is immutable

@@ -56,6 +56,6 @@ enum SES_Wireloop {
 
   public static void main(String[] args) throws Exception {
     // handle(SarsaType.qlearning, 1, 3);
-    handle(SarsaType.expected, 1, 3);
+    handle(SarsaType.EXPECTED, 1, 3);
   }
 }
