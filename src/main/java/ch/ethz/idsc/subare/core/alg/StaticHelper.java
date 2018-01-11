@@ -27,8 +27,7 @@ enum StaticHelper {
         System.out.println(next + " " + prob);
       });
       System.exit(0);
-      // probabilities have to sum up to 1
-      throw TensorRuntimeException.of("sum prob=" + norm, state, action);
+      throw TensorRuntimeException.of(norm, state, action); // probabilities have to sum up to 1
     }
   }
 }
