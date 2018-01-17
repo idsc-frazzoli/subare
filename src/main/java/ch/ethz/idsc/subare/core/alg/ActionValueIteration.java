@@ -47,7 +47,8 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
   private int iterations = 0;
   private int alternate = 0;
 
-  private ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface, DiscreteQsa qsa_new) {
+  private ActionValueIteration( //
+      DiscreteModel discreteModel, ActionValueInterface actionValueInterface, DiscreteQsa qsa_new) {
     this.discreteModel = discreteModel;
     this.actionValueInterface = actionValueInterface;
     this.gamma = discreteModel.gamma();

@@ -17,8 +17,7 @@ import ch.ethz.idsc.subare.core.StepDigest;
 public enum ExploringStarts {
   ;
   public static int batch( //
-      MonteCarloInterface monteCarloInterface, Policy policy, //
-      EpisodeDigest episodeDigest) {
+      MonteCarloInterface monteCarloInterface, Policy policy, EpisodeDigest episodeDigest) {
     ExploringStartsBatch exploringStartBatch = new ExploringStartsBatch(monteCarloInterface);
     int episodes = 0;
     while (exploringStartBatch.hasNext()) {

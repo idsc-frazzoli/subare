@@ -4,10 +4,10 @@ package ch.ethz.idsc.subare.ch05.wireloop;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.adapter.DeterministicStandardModel;
+import ch.ethz.idsc.subare.util.TensorScalarFunction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -35,14 +35,14 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
   static final Tensor ACTIONS_TERMINAL = Array.zeros(1, 2).unmodifiable();
   // ---
   private final Tensor image;
-  private final Function<Tensor, Scalar> function;
+  private final TensorScalarFunction function;
   private final WireloopReward wireloopReward;
   private final Tensor states = Tensors.empty();
   private final Set<Tensor> startStates = new HashSet<>();
   private final Set<Tensor> endStates = new HashSet<>();
   // private final StateActionMap stateActionMap = StateActionMap.empty();
 
-  Wireloop(Tensor image, Function<Tensor, Scalar> function, WireloopReward wireloopReward) {
+  Wireloop(Tensor image, TensorScalarFunction function, WireloopReward wireloopReward) {
     this.image = image;
     this.function = function;
     this.wireloopReward = wireloopReward;

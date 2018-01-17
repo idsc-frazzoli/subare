@@ -24,7 +24,7 @@ public abstract class DequeExploringStarts extends AbstractExploringStarts {
   }
 
   @Override
-  public void protected_nextEpisode(EpisodeInterface episodeInterface) {
+  public final void protected_nextEpisode(EpisodeInterface episodeInterface) {
     Deque<StepInterface> deque = new ArrayDeque<>();
     while (episodeInterface.hasNext()) {
       final StepInterface stepInterface = episodeInterface.step();

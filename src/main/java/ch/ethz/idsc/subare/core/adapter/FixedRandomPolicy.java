@@ -25,7 +25,7 @@ public class FixedRandomPolicy implements Policy {
   }
 
   @Override // from Policy
-  public Scalar probability(Tensor state, Tensor action) {
+  public final Scalar probability(Tensor state, Tensor action) {
     return set.contains(Tensors.of(state, action)) ? RealScalar.ONE : RealScalar.ZERO;
   }
 }

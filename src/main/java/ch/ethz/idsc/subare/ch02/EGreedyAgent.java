@@ -1,23 +1,22 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import java.util.function.Function;
-
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
 /** The e-greedy agent is described in
  * Section 2.2 "Action-Value Methods" */
 public class EGreedyAgent extends Agent {
   final Tensor Na;
   final Tensor Qt;
-  final Function<Scalar, Scalar> eps;
+  final ScalarUnaryOperator eps;
   final String string;
 
-  public EGreedyAgent(int n, Function<Scalar, Scalar> eps, String string) {
+  public EGreedyAgent(int n, ScalarUnaryOperator eps, String string) {
     Na = Array.zeros(n);
     Qt = Array.zeros(n);
     this.eps = eps;

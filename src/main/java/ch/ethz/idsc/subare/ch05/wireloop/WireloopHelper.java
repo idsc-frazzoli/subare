@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.ch05.wireloop;
 
 import java.util.List;
-import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
@@ -11,9 +10,9 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.RobustArgMax;
+import ch.ethz.idsc.subare.util.TensorScalarFunction;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
@@ -24,11 +23,11 @@ import ch.ethz.idsc.tensor.sca.Clip;
 
 enum WireloopHelper {
   ;
-  static Wireloop create(String trackName, Function<Tensor, Scalar> function, WireloopReward wireloopReward) throws Exception {
+  static Wireloop create(String trackName, TensorScalarFunction function, WireloopReward wireloopReward) throws Exception {
     return new Wireloop(ResourceData.of("/ch05/" + trackName + ".png"), function, wireloopReward);
   }
 
-  static Wireloop create(String trackName, Function<Tensor, Scalar> function) throws Exception {
+  static Wireloop create(String trackName, TensorScalarFunction function) throws Exception {
     return create(trackName, function, WireloopReward.freeSteps());
   }
 

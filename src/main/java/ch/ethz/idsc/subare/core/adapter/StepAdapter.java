@@ -21,11 +21,9 @@ public final class StepAdapter implements StepInterface {
    * @param reward obtained subsequent to taking action
    * @param next state */
   public StepAdapter(Tensor prev, Tensor action, Scalar reward, Tensor next) {
-    if (Objects.isNull(reward))
-      throw new NullPointerException();
     this.prev = prev.unmodifiable();
     this.action = action.unmodifiable();
-    this.reward = reward; // Scalar is immutable
+    this.reward = Objects.requireNonNull(reward); // Scalar is immutable
     this.next = next.unmodifiable();
   }
 
