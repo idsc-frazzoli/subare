@@ -7,6 +7,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
 import ch.ethz.idsc.tensor.pdf.Distribution;
@@ -17,9 +18,19 @@ class Randomwalk implements MonteCarloInterface {
   private static final Distribution COINFLIPPING = BernoulliDistribution.of(RationalScalar.of(1, 2));
   // ---
   private static final Tensor TERMINATE1 = RealScalar.ZERO; // A
-  private static final Tensor TERMINATE2 = RealScalar.of(6); // A'
   // ---
-  private final Tensor states = Range.of(0, 7).unmodifiable();
+  private final Tensor states;
+  private final Tensor terminate2; // A'
+
+  /** Context:
+   * Example 6.2 uses 5 non-terminating states
+   * Example 7.1 uses 19 non-terminating states
+   * 
+   * @param numel number of non-terminating states */
+  public Randomwalk(int numel) {
+    states = Range.of(0, numel + 2).unmodifiable();
+    terminate2 = Last.of(states);
+  }
 
   @Override
   public Tensor states() {
@@ -39,7 +50,7 @@ class Randomwalk implements MonteCarloInterface {
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    if (!isTerminal(state) && next.equals(TERMINATE2))
+    if (!isTerminal(state) && next.equals(terminate2))
       return RealScalar.ONE;
     return RealScalar.ZERO;
   }
@@ -55,11 +66,11 @@ class Randomwalk implements MonteCarloInterface {
   /**************************************************/
   @Override
   public Tensor startStates() {
-    return Tensors.vector(3);
+    return Tensors.vector(states().length() / 2);
   }
 
   @Override
   public boolean isTerminal(Tensor state) {
-    return state.equals(TERMINATE1) || state.equals(TERMINATE2);
+    return state.equals(TERMINATE1) || state.equals(terminate2);
   }
 }

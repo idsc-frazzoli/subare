@@ -17,6 +17,6 @@ public enum StateAction {
   /** @param stepInterface
    * @return */
   public static Tensor key(StepInterface stepInterface) {
-    return Tensors.of(stepInterface.prevState(), stepInterface.action());
+    return key(stepInterface.prevState(), stepInterface.action());
   }
 }

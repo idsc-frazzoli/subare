@@ -12,17 +12,19 @@ import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
-/** {0, 0} 0
+/** <pre>
+ * {0, 0} 0
  * {1, 0} 0.24
  * {2, 0} 0.41
  * {3, 0} 0.54
  * {4, 0} 0.74
  * {5, 0} 0.87
- * {6, 0} 0 */
+ * {6, 0} 0
+ * </pre> */
 enum MCES_Randomwalk {
   ;
   public static void main(String[] args) throws Exception {
-    Randomwalk randomwalk = new Randomwalk();
+    Randomwalk randomwalk = new Randomwalk(5);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(randomwalk);
     int batches = 1000;
     for (int count = 0; count < batches; ++count) {

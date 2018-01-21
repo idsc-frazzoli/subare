@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -30,7 +29,7 @@ public class DefaultLearningRate extends DecayedLearningRate {
   }
 
   @Override
-  protected Tensor key(StepInterface stepInterface) {
-    return StateAction.key(stepInterface);
+  protected Tensor key(Tensor prev, Tensor action) {
+    return StateAction.key(prev, action);
   }
 }
