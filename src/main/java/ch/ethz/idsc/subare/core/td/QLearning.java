@@ -29,7 +29,7 @@ public class QLearning extends Sarsa {
 
   @Override
   protected Scalar evaluate(Tensor state) {
-    return discreteModel.actions(state).flatten(0) //
+    return discreteModel.actions(state).stream() //
         .filter(action -> learningRate.encountered(state, action)) //
         .map(action -> qsa.value(state, action)) //
         .reduce(Max::of) //
@@ -41,12 +41,12 @@ public class QLearning extends Sarsa {
     // TODO untested!!!
     Scalar value = RealScalar.ZERO;
     Tensor actions = Tensor.of( //
-        discreteModel.actions(state).flatten(0) //
+        discreteModel.actions(state).stream() //
             .filter(action -> learningRate.encountered(state, action))); //
     if (actions.length() == 0)
       return value;
     // use qsa == Qsa1 to determine best actions
-    Tensor eval = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
+    Tensor eval = Tensor.of(actions.stream().map(action -> qsa.value(state, action)));
     FairArgMax fairArgMax = FairArgMax.of(eval);
     Scalar weight = RationalScalar.of(1, fairArgMax.optionsCount()); // uniform distribution among best actions
     for (int index : fairArgMax.options()) {

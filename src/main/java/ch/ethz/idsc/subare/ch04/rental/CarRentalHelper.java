@@ -24,7 +24,7 @@ enum CarRentalHelper {
   public static Tensor render(CarRental carRental, DiscreteVs vs) {
     // TODO use createRaster
     final Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, 21, 21);
-    DiscreteVs scaled = vs.create(Rescale.of(vs.values()).flatten(0));
+    DiscreteVs scaled = vs.create(Rescale.of(vs.values()).stream());
     for (Tensor state : carRental.states()) {
       Scalar sca = scaled.value(state);
       int x = state.Get(0).number().intValue();

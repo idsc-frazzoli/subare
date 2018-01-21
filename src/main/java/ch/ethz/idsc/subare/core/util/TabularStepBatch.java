@@ -24,7 +24,7 @@ class TabularStepBatch {
   public TabularStepBatch(DiscreteModel discreteModel, SampleModel sampleModel) {
     this.sampleModel = sampleModel;
     Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
-    list = index.keys().flatten(0).collect(Collectors.toList());
+    list = index.keys().stream().collect(Collectors.toList());
     Collections.shuffle(list);
   }
 

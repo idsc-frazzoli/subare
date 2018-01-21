@@ -51,7 +51,7 @@ public enum StateRasters {
 
   private static Tensor _vs_rescale(StateRaster stateRaster, DiscreteQsa qsa) {
     DiscreteVs vs = DiscreteUtils.createVs(stateRaster.discreteModel(), qsa);
-    return _render(stateRaster, vs.create(Rescale.of(vs.values()).flatten(0)));
+    return _render(stateRaster, vs.create(Rescale.of(vs.values()).stream()));
   }
 
   /***************************************************/
@@ -60,7 +60,7 @@ public enum StateRasters {
   }
 
   public static Tensor vs_rescale(StateRaster stateRaster, DiscreteVs vs) {
-    return vs(stateRaster, vs.create(Rescale.of(vs.values()).flatten(0)));
+    return vs(stateRaster, vs.create(Rescale.of(vs.values()).stream()));
   }
 
   public static Tensor vs(StateRaster stateRaster, DiscreteQsa qsa) {
@@ -69,13 +69,13 @@ public enum StateRasters {
 
   public static Tensor vs_rescale(StateRaster stateRaster, DiscreteQsa qsa) {
     DiscreteVs vs = DiscreteUtils.createVs(stateRaster.discreteModel(), qsa);
-    return vs(stateRaster, vs.create(Rescale.of(vs.values()).flatten(0)));
+    return vs(stateRaster, vs.create(Rescale.of(vs.values()).stream()));
   }
 
   public static Tensor qsaLossRef(StateRaster stateRaster, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor image1 = _vs_rescale(stateRaster, DiscreteValueFunctions.rescaled(qsa));
     DiscreteVs loss = Loss.perState(stateRaster.discreteModel(), ref, qsa);
-    loss = loss.create(loss.values().flatten(0) //
+    loss = loss.create(loss.values().stream() //
         .map(tensor -> tensor.multiply(stateRaster.scaleLoss())) //
         .map(Clip.unit()::of));
     Tensor image2 = _render(stateRaster, loss);

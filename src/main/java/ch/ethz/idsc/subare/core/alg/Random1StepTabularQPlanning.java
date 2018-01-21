@@ -45,7 +45,7 @@ public class Random1StepTabularQPlanning implements StepDigest {
     Scalar reward = stepInterface.reward();
     Tensor state1 = stepInterface.nextState();
     // ---
-    Scalar max = discreteModel.actions(state1).flatten(0) //
+    Scalar max = discreteModel.actions(state1).stream() //
         // ignore un-encountered state-action pairs, otherwise influenced by initial qsa value
         .filter(action1 -> learningRate.encountered(state1, action1)) //
         .map(action1 -> qsa.value(state1, action1)) //

@@ -34,7 +34,7 @@ public enum GreedyPolicy {
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : standardModel.states()) {
       Tensor actions = standardModel.actions(state);
-      Tensor va = Tensor.of(actions.flatten(0) //
+      Tensor va = Tensor.of(actions.stream() //
           .map(action -> actionValueAdapter.qsa(state, action, vs)));
       FairArgMax fairArgMax = FairArgMax.of(va);
       Tensor feasible = Tensor.of(fairArgMax.options().stream().map(actions::get));
@@ -49,7 +49,7 @@ public enum GreedyPolicy {
     Map<Tensor, Index> map = new HashMap<>();
     for (Tensor state : discreteModel.states()) {
       Tensor actions = discreteModel.actions(state);
-      Tensor va = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
+      Tensor va = Tensor.of(actions.stream().map(action -> qsa.value(state, action)));
       FairArgMax fairArgMax = FairArgMax.of(va);
       Tensor feasible = Tensor.of(fairArgMax.options().stream().map(actions::get));
       // Tensor feasible = Extract.of(actions, fairArgMax.options());

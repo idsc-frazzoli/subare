@@ -73,7 +73,7 @@ public class UcbPolicy implements Policy, StepDigest {
   @Override // from PolicyInterface
   public Scalar probability(Tensor state, Tensor action) {
     Tensor actions = discreteModel.actions(state);
-    Tensor values = Tensor.of(actions.flatten(0).map(a -> valueWithBias(state, a)));
+    Tensor values = Tensor.of(actions.stream().map(a -> valueWithBias(state, a)));
     FairArgMax fairArgMax = FairArgMax.of(values);
     List<Integer> options = fairArgMax.options();
     Index index = Index.build(actions);

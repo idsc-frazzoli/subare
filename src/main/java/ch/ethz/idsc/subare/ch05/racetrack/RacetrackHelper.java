@@ -20,7 +20,7 @@ enum RacetrackHelper {
 
   static Tensor render(Racetrack racetrack, DiscreteQsa qsa, Tensor speed, Tensor action) {
     Tensor tensor = racetrack.image().get(Tensor.ALL, Tensor.ALL, 0).map(scalar -> DoubleScalar.INDETERMINATE);
-    DiscreteQsa scaled = qsa.create(Rescale.of(qsa.values()).flatten(0));
+    DiscreteQsa scaled = qsa.create(Rescale.of(qsa.values()).stream());
     for (Tensor state : racetrack.states())
       if (state.length() == 4 && state.extract(2, 4).equals(speed)) {
         Index index = Index.build(racetrack.actions(state));

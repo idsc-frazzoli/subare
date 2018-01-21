@@ -22,7 +22,7 @@ import ch.ethz.idsc.tensor.Tensor;
   /* package */ ExploringStartsBatch(MonteCarloInterface monteCarloInterface) {
     this.monteCarloInterface = monteCarloInterface;
     Index index = DiscreteUtils.build(monteCarloInterface, monteCarloInterface.startStates());
-    list = index.keys().flatten(0).collect(Collectors.toList());
+    list = index.keys().stream().collect(Collectors.toList());
     Collections.shuffle(list);
   }
 

@@ -90,7 +90,7 @@ public class Fishfarm extends DeterministicStandardModel implements MonteCarloIn
 
   @Override
   public Tensor startStates() {
-    return Tensor.of(states().flatten(0) //
+    return Tensor.of(states().stream() //
         .filter(state -> Scalars.isZero(state.Get(0))));
   }
 }

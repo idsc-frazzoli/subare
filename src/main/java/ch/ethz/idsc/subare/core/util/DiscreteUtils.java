@@ -32,8 +32,8 @@ public enum DiscreteUtils {
   public static DiscreteVs reduce( //
       DiscreteModel discreteModel, QsaInterface qsa, BinaryOperator<Scalar> binaryOperator) {
     return DiscreteVs.build(discreteModel, //
-        Tensor.of(discreteModel.states().flatten(0) //
-            .map(state -> discreteModel.actions(state).flatten(0) //
+        Tensor.of(discreteModel.states().stream() //
+            .map(state -> discreteModel.actions(state).stream() //
                 .map(action -> qsa.value(state, action)) //
                 .reduce(binaryOperator).get()))); // <- assumes greedy policy
   }

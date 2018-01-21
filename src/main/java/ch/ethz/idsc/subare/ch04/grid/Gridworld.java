@@ -57,7 +57,7 @@ class Gridworld extends DeterministicStandardModel implements MonteCarloInterfac
   /**************************************************/
   @Override
   public Tensor startStates() {
-    return Tensor.of(states.flatten(0).filter(state -> !isTerminal(state)));
+    return Tensor.of(states.stream().filter(state -> !isTerminal(state)));
   }
 
   @Override

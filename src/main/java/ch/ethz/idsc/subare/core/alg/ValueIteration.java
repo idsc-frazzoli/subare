@@ -81,14 +81,14 @@ public class ValueIteration implements DiscreteVsSupplier {
   public void step() {
     vs_old = vs_new.copy();
     VsInterface discounted = vs_new.discounted(gamma);
-    vs_new = vs_new.create(vs_new.keys().flatten(0) //
+    vs_new = vs_new.create(vs_new.keys().stream() //
         .parallel() //
         .map(state -> jacobiMax(state, discounted)));
     ++iterations;
   }
 
   private Scalar jacobiMax(Tensor state, VsInterface gvalues) {
-    return discreteModel.actions(state).flatten(0) //
+    return discreteModel.actions(state).stream() //
         .map(action -> actionValueAdapter.qsa(state, action, gvalues)) //
         .reduce(Max::of).get();
   }
