@@ -83,12 +83,12 @@ public class Fishfarm extends DeterministicStandardModel implements MonteCarloIn
   }
 
   /**************************************************/
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return state.Get(0).equals(RealScalar.of(period));
   }
 
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return Tensor.of(states().stream() //
         .filter(state -> Scalars.isZero(state.Get(0))));

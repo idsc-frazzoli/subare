@@ -39,11 +39,11 @@ public class LinearApproximationVs implements VsInterface, Serializable {
 
   @Override // from VsInterface
   public VsInterface copy() {
-    throw new RuntimeException();
+    return new LinearApproximationVs(represent, weight.copy());
   }
 
   @Override // from VsInterface
   public VsInterface discounted(Scalar gamma) {
-    throw new RuntimeException();
+    return new LinearApproximationVs(represent, weight.multiply(gamma));
   }
 }

@@ -97,12 +97,12 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
   }
 
   /**************************************************/
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return Tensor.of(startStates.stream());
   }
 
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return endStates.contains(state);
   }

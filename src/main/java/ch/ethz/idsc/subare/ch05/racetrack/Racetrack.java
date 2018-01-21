@@ -181,12 +181,12 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   }
 
   /**************************************************/
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return statesStart;
   }
 
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return statesTerminalIndex.containsKey(state);
   }

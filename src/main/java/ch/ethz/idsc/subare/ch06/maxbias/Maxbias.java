@@ -67,13 +67,13 @@ class Maxbias implements StandardModel, MonteCarloInterface {
   }
 
   /**************************************************/
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return !state.equals(STATE_A) && !state.equals(STATE_B);
   }
 
   /**************************************************/
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return Tensors.of(STATE_A);
   }

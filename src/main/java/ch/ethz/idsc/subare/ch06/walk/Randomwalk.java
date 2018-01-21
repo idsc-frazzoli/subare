@@ -64,12 +64,12 @@ class Randomwalk implements MonteCarloInterface {
   }
 
   /**************************************************/
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return Tensors.vector(states().length() / 2);
   }
 
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return state.equals(TERMINATE1) || state.equals(terminate2);
   }

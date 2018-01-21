@@ -55,12 +55,12 @@ class Gridworld extends DeterministicStandardModel implements MonteCarloInterfac
   }
 
   /**************************************************/
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return Tensor.of(states.stream().filter(state -> !isTerminal(state)));
   }
 
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return state.equals(TERMINATE1) || state.equals(TERMINATE2);
   }

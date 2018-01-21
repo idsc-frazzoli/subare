@@ -72,7 +72,7 @@ public class Charger extends DeterministicStandardModel implements TerminalInter
     return total;
   }
 
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return state.Get(0).number().intValue() == tripProfile.length() - 1;
   }

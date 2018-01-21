@@ -4,15 +4,9 @@ package ch.ethz.idsc.subare.core;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-public interface ActionValueInterface extends ExpectedRewardInterface {
+public interface ActionValueInterface extends TransitionInterface {
   /** @param state
    * @param action
-   * @return all states that are a possible result of taking action in given state */
-  Tensor transitions(Tensor state, Tensor action);
-
-  /** @param state
-   * @param action
-   * @param next
-   * @return probability to reach next as a result of taking action in given state */
-  Scalar transitionProbability(Tensor state, Tensor action, Tensor next);
+   * @return expected reward when action is taken in state */
+  Scalar expectedReward(Tensor state, Tensor action);
 }

@@ -16,9 +16,9 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
 
 /** value iteration: "policy evaluation is stopped after just one sweep"
- * (3.17) on p.69
- * (4.10) on p.89
- * see box on p.90
+ * eq (3.14) in 3.5, p.46
+ * eq (4.10) in 4.4, p.65
+ * see box in 4.4, on p.65
  * 
  * approximately equivalent to iterating with {@link GreedyPolicy}
  * 
