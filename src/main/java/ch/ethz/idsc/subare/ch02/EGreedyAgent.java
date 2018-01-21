@@ -26,9 +26,9 @@ public class EGreedyAgent extends Agent {
   @Override
   public int protected_takeAction() {
     // as described in the algorithm box on p.33
-    if (random.nextDouble() < eps.apply(getCount()).number().doubleValue()) {
+    if (RANDOM.nextDouble() < eps.apply(getCount()).number().doubleValue()) {
       notifyAboutRandomizedDecision();
-      return random.nextInt(Qt.length());
+      return RANDOM.nextInt(Qt.length());
     }
     FairArgMax fairArgMax = FairArgMax.of(Qt);
     if (!fairArgMax.isUnique())

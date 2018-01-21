@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.ch05.racetrack;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.adapter.DeterministicStandardModel;
@@ -58,7 +57,6 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   final Index statesIndex;
   final Index statesStartIndex;
   final Index statesTerminalIndex;
-  Random random = new Random();
   private final StateActionMap stateActionMap;
   private final Interpolation interpolation;
   /** memo map is populated and reused in {@link #move(Tensor, Tensor)} */

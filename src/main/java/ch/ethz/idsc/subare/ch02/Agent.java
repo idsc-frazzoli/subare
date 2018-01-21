@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 public abstract class Agent {
-  protected static final Random random = new Random();
+  protected static final Random RANDOM = new Random();
   // ---
   private Scalar total = RealScalar.ZERO;
   private Integer count = 0;
