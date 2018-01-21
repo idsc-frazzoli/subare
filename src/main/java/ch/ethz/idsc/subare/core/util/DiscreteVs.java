@@ -47,9 +47,7 @@ public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializa
     values.set(value -> value.add(delta), index.of(state));
   }
 
-  @Override // from VsInterface
   public void assign(Tensor state, Scalar value) {
-    // TODO make function only available for DiscreteVs
     values.set(value, index.of(state));
   }
 

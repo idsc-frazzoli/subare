@@ -38,11 +38,6 @@ public class LinearApproximationVs implements VsInterface, Serializable {
   }
 
   @Override // from VsInterface
-  public void assign(Tensor state, Scalar value) {
-    throw new RuntimeException();
-  }
-
-  @Override // from VsInterface
   public VsInterface copy() {
     throw new RuntimeException();
   }

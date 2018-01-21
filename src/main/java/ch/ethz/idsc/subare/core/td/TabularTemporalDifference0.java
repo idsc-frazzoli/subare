@@ -8,17 +8,23 @@ import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/** for estimating value of policy
- * using eq (6.2) on p.128
- * 
+/** Tabular TD(0) for estimating value of policy
+ * using eq (6.2) on p.95
+ * <pre>
  * V(S) = V(S) + alpha * [R + gamma * V(S') - V(S)]
+ * </pre>
  * 
- * see box on p.128 */
+ * Implementation also covers
+ * Semi-gradient TD(0) for estimating an approximate value function
+ * in 9.3, p. 164 */
 public class TabularTemporalDifference0 implements StepDigest {
   private final VsInterface vs;
   private final Scalar gamma;
   private final LearningRate learningRate;
 
+  /** @param vs
+   * @param gamma discount factor
+   * @param learningRate */
   public TabularTemporalDifference0( //
       VsInterface vs, Scalar gamma, LearningRate learningRate) {
     this.vs = vs;
