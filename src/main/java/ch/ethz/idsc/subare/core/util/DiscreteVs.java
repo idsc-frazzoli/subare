@@ -37,38 +37,44 @@ public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializa
     this.values = values;
   }
 
-  @Override
+  @Override // from VsInterface
   public Scalar value(Tensor state) {
     return values.Get(index.of(state));
   }
 
-  @Override
+  @Override // from VsInterface
+  public void increment(Tensor state, Scalar delta) {
+    values.set(value -> value.add(delta), index.of(state));
+  }
+
+  @Override // from VsInterface
   public void assign(Tensor state, Scalar value) {
+    // TODO make function only available for DiscreteVs
     values.set(value, index.of(state));
   }
 
-  @Override
+  @Override // from VsInterface
   public DiscreteVs copy() {
     return new DiscreteVs(index, values.copy());
   }
 
-  @Override
+  @Override // from VsInterface
   public DiscreteVs discounted(Scalar gamma) {
     return new DiscreteVs(index, values.multiply(gamma));
   }
 
   /**************************************************/
-  @Override
+  @Override // from DiscreteValueFunction
   public Tensor keys() {
     return index.keys();
   }
 
-  @Override
+  @Override // from DiscreteValueFunction
   public Tensor values() {
     return values.unmodifiable();
   }
 
-  @Override
+  @Override // from DiscreteValueFunction
   public DiscreteVs create(Stream<? extends Tensor> stream) {
     return new DiscreteVs(index, Tensor.of(stream));
   }

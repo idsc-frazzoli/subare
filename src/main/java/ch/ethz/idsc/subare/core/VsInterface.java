@@ -9,13 +9,15 @@ public interface VsInterface {
    * @return value of state */
   Scalar value(Tensor state);
 
+  void increment(Tensor state, Scalar delta);
+
   /** map state to value
    * 
    * @param state
    * @param value */
   void assign(Tensor state, Scalar value);
 
-  /** @return */
+  /** @return modifiable duplicate of this instance */
   VsInterface copy();
 
   /** @param gamma

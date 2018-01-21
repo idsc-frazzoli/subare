@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -69,6 +70,13 @@ public enum DiscreteUtils {
   }
 
   /**************************************************/
+  public static void print(DiscreteModel discreteModel, VsInterface vs, Function<Scalar, Scalar> round) {
+    for (Tensor key : discreteModel.states()) {
+      Scalar value = vs.value(key);
+      System.out.println(key + " " + value.map(round));
+    }
+  }
+
   public static void print(DiscreteVs vs, Function<Scalar, Scalar> round) {
     for (Tensor key : vs.keys()) {
       Scalar value = vs.value(key);

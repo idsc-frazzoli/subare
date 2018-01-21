@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import ch.ethz.idsc.tensor.Tensor;
 
 public interface DiscreteValueFunction {
+  /** @return */
   Tensor keys();
 
   /** @return unmodifiable tensor of (state)-, or (state, action)-values */
