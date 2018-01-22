@@ -2,9 +2,11 @@
 
 <a href="https://travis-ci.org/idsc-frazzoli/subare"><img src="https://travis-ci.org/idsc-frazzoli/subare.svg?branch=master" alt="Build Status"></a>
 
-Java 8 implementation of algorithms, examples, and exercises from the 2nd edition (2016 draft) of
+Java 8 implementation of algorithms, examples, and exercises from the 2nd edition of
 
-[Sutton and Barto: Reinforcement Learning](http://incompleteideas.net/sutton/book/the-book-2nd.html)
+[Sutton and Barto: Reinforcement Learning](http://incompleteideas.net/book/the-book-2nd.html)
+
+Version `0.1.2`
 
 Our implementation is inspired by the 
 [python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction)
@@ -17,22 +19,23 @@ Our implementation is different from the reference in two aspects:
 
 List of algorithms:
 
-* Iterative Policy Evaluation (parallel, from p.81)
-* *Value Iteration* to determine V*(s) (parallel, from p.90)
+* Iterative Policy Evaluation (parallel, in 4.1, p.59)
+* *Value Iteration* to determine V*(s) (parallel, in 4.4, p.65)
 * *Action-Value Iteration* to determine Q*(s,a) (parallel)
-* First Visit Policy Evaluation (from p.100)
-* Monte Carlo Exploring Starts (from p.107)
-* Contant-alpha Monte Carlo (from p.127)
-* Tabular Temporal Difference (from p.128)
-* *Sarsa*: An on-policy TD control algorithm (from p.138)
-* *Q-learning*: An off-policy TD control algorithm (from p.140)
-* Expected Sarsa (from p.142)
-* Double Sarsa, Double Expected Sarsa, Double Q-Learning (from p.145)
-* n-step Temporal Difference for estimating V(s) (from p.154)
-* n-step Sarsa, n-step Expected Sarsa, n-step Q-Learning (from p.157)
-* Random-sample one-step tabular Q-planning (parallel, from p.169)
-* Tabular Dyna-Q (from p.172)
-* Prioritized Sweeping (from p.178)
+* First Visit Policy Evaluation (in 5.1, p.74)
+* Monte Carlo Exploring Starts (in 5.3, p.79)
+* Contant-alpha Monte Carlo
+* Tabular Temporal Difference (in 6.1, p.96)
+* *Sarsa*: An on-policy TD control algorithm (in 6.4, p.104)
+* *Q-learning*: An off-policy TD control algorithm (in 6.5, p.105)
+* Expected Sarsa (in 6.6, p.107)
+* Double Sarsa, Double Expected Sarsa, Double Q-Learning (in 6.7, p.109)
+* n-step Temporal Difference for estimating V(s) (in 7.1, p.115)
+* n-step Sarsa, n-step Expected Sarsa, n-step Q-Learning (in 7.2, p.118)
+* Random-sample one-step tabular Q-planning (parallel, in 8.1, p.131)
+* Tabular Dyna-Q (in 8.2, p.133)
+* Prioritized Sweeping (in 8.4, p.137)
+* Semi-gradient Tabular Temporal Difference (in 9.3, p.164)
 
 ## Examples from the book
 
@@ -282,4 +285,4 @@ Exact expected reward of two adversarial Upper-Confidence-Bound agents depending
 
 `subare` requires the library `ch.ethz.idsc.tensor`
 
-The repository has over `60` unit tests.
+The repository has over `70` unit tests.

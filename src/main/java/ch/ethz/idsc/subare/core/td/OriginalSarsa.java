@@ -42,7 +42,7 @@ public class OriginalSarsa extends Sarsa {
   @Override
   protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
     Tensor actions = Tensor.of( //
-        discreteModel.actions(state).flatten(0) //
+        discreteModel.actions(state).stream() //
             .filter(action -> learningRate.encountered(state, action)));
     if (actions.length() == 0)
       return RealScalar.ZERO;

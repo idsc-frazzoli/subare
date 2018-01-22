@@ -15,12 +15,12 @@ public enum DiscreteValueFunctions {
 
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T numeric(T tvi) {
-    return (T) tvi.create(N.DOUBLE.of(tvi.values()).flatten(0));
+    return (T) tvi.create(N.DOUBLE.of(tvi.values()).stream());
   }
 
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T rescaled(T tvi) {
-    return (T) tvi.create(Rescale.of(tvi.values()).flatten(0));
+    return (T) tvi.create(Rescale.of(tvi.values()).stream());
   }
 
   // @SuppressWarnings("unchecked")
@@ -33,17 +33,17 @@ public enum DiscreteValueFunctions {
 
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T average(T tvi1, T tvi2) {
-    return (T) tvi1.create(tvi1.values().add(tvi2.values()).multiply(HALF).flatten(0));
+    return (T) tvi1.create(tvi1.values().add(tvi2.values()).multiply(HALF).stream());
   }
 
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T logisticDifference(T tvi1, T tvi2) {
-    return (T) tvi1.create(LogisticSigmoid.of(_difference(tvi1, tvi2)).flatten(0));
+    return (T) tvi1.create(LogisticSigmoid.of(_difference(tvi1, tvi2)).stream());
   }
 
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T logisticDifference(T tvi1, T tvi2, Scalar factor) {
-    return (T) tvi1.create(LogisticSigmoid.of(_difference(tvi1, tvi2).multiply(factor)).flatten(0));
+    return (T) tvi1.create(LogisticSigmoid.of(_difference(tvi1, tvi2).multiply(factor)).stream());
   }
 
   /**************************************************/

@@ -24,7 +24,7 @@ class EGreedyPolicyBuilder {
   // this simplicity may be the reason why q(s,a) is preferred over v(s)
   public void append(Tensor state) {
     Tensor actions = discreteModel.actions(state);
-    Tensor va = Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action)));
+    Tensor va = Tensor.of(actions.stream().map(action -> qsa.value(state, action)));
     FairArgMax fairArgMax = FairArgMax.of(va);
     Tensor feasible = Tensor.of(fairArgMax.options().stream().map(actions::get));
     // Tensor feasible = Extract.of(actions, fairArgMax.options());

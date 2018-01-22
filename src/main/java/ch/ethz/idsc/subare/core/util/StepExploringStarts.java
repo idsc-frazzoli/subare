@@ -19,7 +19,7 @@ public abstract class StepExploringStarts extends AbstractExploringStarts {
   }
 
   @Override
-  public void protected_nextEpisode(EpisodeInterface episodeInterface) {
+  public final void protected_nextEpisode(EpisodeInterface episodeInterface) {
     while (episodeInterface.hasNext()) {
       StepInterface stepInterface = episodeInterface.step();
       list.stream().parallel() //

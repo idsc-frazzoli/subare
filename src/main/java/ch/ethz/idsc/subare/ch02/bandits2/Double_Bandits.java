@@ -43,8 +43,8 @@ enum Double_Bandits {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.qlearning, 1);
-    handle(SarsaType.expected, 3);
-    handle(SarsaType.qlearning, 2);
+    handle(SarsaType.QLEARNING, 1);
+    handle(SarsaType.EXPECTED, 3);
+    handle(SarsaType.QLEARNING, 2);
   }
 }

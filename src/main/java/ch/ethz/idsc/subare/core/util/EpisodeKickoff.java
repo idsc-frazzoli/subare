@@ -12,11 +12,11 @@ import ch.ethz.idsc.tensor.Tensor;
 
 public enum EpisodeKickoff {
   ;
-  private static Random random = new Random();
+  private static final Random RANDOM = new Random();
 
   public static EpisodeInterface single(MonteCarloInterface monteCarloInterface, Policy policy) {
     Tensor starts = monteCarloInterface.startStates();
-    Tensor start = starts.get(random.nextInt(starts.length()));
+    Tensor start = starts.get(RANDOM.nextInt(starts.length()));
     return single(monteCarloInterface, policy, start);
   }
 

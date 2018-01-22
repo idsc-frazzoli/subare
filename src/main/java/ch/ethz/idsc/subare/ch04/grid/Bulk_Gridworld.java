@@ -46,6 +46,6 @@ enum Bulk_Gridworld {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.qlearning, 1);
+    handle(SarsaType.QLEARNING, 1);
   }
 }

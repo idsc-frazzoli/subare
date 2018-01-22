@@ -98,12 +98,12 @@ class Windygrid extends DeterministicStandardModel implements MonteCarloInterfac
   }
 
   /**************************************************/
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return Tensors.of(START);
   }
 
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return state.equals(GOAL);
   }

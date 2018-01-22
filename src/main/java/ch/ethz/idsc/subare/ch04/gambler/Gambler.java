@@ -79,12 +79,12 @@ class Gambler implements StandardModel, MonteCarloInterface {
   }
 
   /**************************************************/
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return states.extract(1, states.length() - 1);
   }
 
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return state.equals(RealScalar.ZERO) || state.equals(TERMINAL_W);
   }

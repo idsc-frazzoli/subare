@@ -104,7 +104,7 @@ public enum StateActionRasters {
   public static Tensor qsaLossRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor image1 = _render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
     DiscreteQsa loss = Loss.asQsa(stateActionRaster.discreteModel(), ref, qsa);
-    loss = loss.create(loss.values().flatten(0) //
+    loss = loss.create(loss.values().stream() //
         .map(tensor -> tensor.multiply(stateActionRaster.scaleLoss())) //
         .map(Clip.unit()::of));
     Tensor image2 = _render(stateActionRaster, loss);

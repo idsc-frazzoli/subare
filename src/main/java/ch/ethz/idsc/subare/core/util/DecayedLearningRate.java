@@ -6,7 +6,6 @@ import java.util.Map;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.tensor.DoubleScalar;
@@ -51,7 +50,7 @@ abstract class DecayedLearningRate implements LearningRate {
 
   @Override // from LearningRate
   public synchronized final Scalar alpha(StepInterface stepInterface) {
-    Tensor key = key(stepInterface);
+    Tensor key = key(stepInterface.prevState(), stepInterface.action());
     int index = map.containsKey(key) ? map.get(key) : 0;
     while (MEMO.length() <= index)
       MEMO.append(Min.of( // TODO the "+1" in the denominator may not be ideal... perhaps +0.5, or +0 ?
@@ -62,7 +61,7 @@ abstract class DecayedLearningRate implements LearningRate {
 
   @Override // from StepDigest
   public synchronized final void digest(StepInterface stepInterface) {
-    Tensor key = key(stepInterface);
+    Tensor key = key(stepInterface.prevState(), stepInterface.action());
     map.put(key, map.containsKey(key) ? map.get(key) + 1 : 1);
   }
 
@@ -73,12 +72,11 @@ abstract class DecayedLearningRate implements LearningRate {
 
   @Override
   public final boolean encountered(Tensor state, Tensor action) {
-    StepInterface stepInterface = new StepAdapter(state, action, null, Tensors.empty());
-    Tensor key = key(stepInterface);
+    Tensor key = key(state, action);
     return map.containsKey(key);
   }
 
   /** @param stepInterface
    * @return key for identifying steps that are considered identical for counting */
-  protected abstract Tensor key(StepInterface stepInterface);
+  protected abstract Tensor key(Tensor prev, Tensor action);
 }

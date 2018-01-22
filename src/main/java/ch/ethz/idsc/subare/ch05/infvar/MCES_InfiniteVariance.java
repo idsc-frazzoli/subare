@@ -13,7 +13,7 @@ enum MCES_InfiniteVariance {
   public static void main(String[] args) {
     InfiniteVariance infiniteVariance = new InfiniteVariance();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(infiniteVariance);
-    Policy policy = new EquiprobablePolicy(infiniteVariance);
+    Policy policy = EquiprobablePolicy.create(infiniteVariance);
     for (int c = 0; c < 100; ++c)
       ExploringStarts.batch(infiniteVariance, policy, mces);
     DiscreteQsa qsa = mces.qsa();

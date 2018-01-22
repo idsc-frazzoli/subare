@@ -65,8 +65,8 @@ enum Sarsa_Gridworld {
 
   public static void main(String[] args) throws Exception {
     int nstep = 2;
-    handle(SarsaType.original, nstep);
-    handle(SarsaType.expected, nstep);
-    handle(SarsaType.qlearning, nstep);
+    handle(SarsaType.ORIGINAL, nstep);
+    handle(SarsaType.EXPECTED, nstep);
+    handle(SarsaType.QLEARNING, nstep);
   }
 }

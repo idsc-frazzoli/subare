@@ -43,7 +43,7 @@ public class IterativePolicyEvaluation {
     actionValueAdapter = new ActionValueAdapter(standardModel);
     this.policy = policy;
     this.gamma = standardModel.gamma();
-    vs_new = DiscreteVs.build(standardModel);
+    vs_new = DiscreteVs.build(standardModel.states());
   }
 
   /** @param gamma
@@ -76,7 +76,7 @@ public class IterativePolicyEvaluation {
   public void step() {
     vs_old = vs_new.copy();
     VsInterface discounted = vs_new.discounted(gamma);
-    vs_new = vs_new.create(standardModel.states().flatten(0) //
+    vs_new = vs_new.create(standardModel.states().stream() //
         .parallel() //
         .map(state -> jacobiAdd(state, discounted)));
     ++iterations;
@@ -84,7 +84,7 @@ public class IterativePolicyEvaluation {
 
   // helper function
   private Scalar jacobiAdd(Tensor state, VsInterface gvalues) {
-    return standardModel.actions(state).flatten(0) //
+    return standardModel.actions(state).stream() //
         .map(action -> policy.probability(state, action).multiply( //
             actionValueAdapter.qsa(state, action, gvalues))) //
         .reduce(Scalar::add).get();

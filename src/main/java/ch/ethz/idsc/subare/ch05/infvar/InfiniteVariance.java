@@ -56,13 +56,13 @@ class InfiniteVariance implements StandardModel, MonteCarloInterface {
   }
 
   /**************************************************/
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return Tensors.vector(0);
   }
 
   /**************************************************/
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return state.equals(END); // END is used as state
   }

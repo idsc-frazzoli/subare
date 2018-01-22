@@ -18,7 +18,7 @@ enum IPE_RaceTrack {
   public static void main(String[] args) throws ClassNotFoundException, DataFormatException, IOException {
     String path = "".getClass().getResource("/ch05/track0.png").getPath();
     Racetrack racetrack = new Racetrack(Import.of(new File(path)), 3);
-    Policy policy = new EquiprobablePolicy(racetrack);
+    Policy policy = EquiprobablePolicy.create(racetrack);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation(racetrack, policy);
     ipe.until(RealScalar.of(.1));
     DiscreteUtils.print(ipe.vs(), Round._1);

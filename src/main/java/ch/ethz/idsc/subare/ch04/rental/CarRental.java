@@ -16,7 +16,7 @@ import ch.ethz.idsc.tensor.pdf.PDF;
 import ch.ethz.idsc.tensor.pdf.PoissonDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.Min;
-import ch.ethz.idsc.tensor.red.Total;
+import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Sign;
 
@@ -164,12 +164,12 @@ class CarRental implements StandardModel, SampleModel {
         if (returns1 - request1 != d1)
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
-        Scalar prob = Total.prod(Tensors.of( //
+        Scalar prob = Times.of( //
             p1_in.at(RealScalar.of(returns0)), // returns (added)
             p1out.at(RealScalar.of(request0)), // rental requests (subtracted)
             p2_in.at(RealScalar.of(returns1)), // returns (added)
             p2out.at(RealScalar.of(request1)) // rental requests (subtracted)
-        )).Get();
+        );
         sum = sum.add(prob.multiply(RealScalar.of(request0 + request1).multiply(RENTAL_CREDIT)));
       }
     }
@@ -201,12 +201,12 @@ class CarRental implements StandardModel, SampleModel {
         if (returns1 - request1 != d1)
           throw new RuntimeException();
         // System.out.println(Tensors.vector(returns0, -request0, returns1, -request1));
-        prob = prob.add(Total.prod(Tensors.of( //
+        prob = prob.add(Times.of( //
             p1_in.at(RealScalar.of(returns0)), // returns (added)
             p1out.at(RealScalar.of(request0)), // rental requests (subtracted)
             p2_in.at(RealScalar.of(returns1)), // returns (added)
             p2out.at(RealScalar.of(request1)) // rental requests (subtracted)
-        )));
+        ));
       }
     }
     return prob;

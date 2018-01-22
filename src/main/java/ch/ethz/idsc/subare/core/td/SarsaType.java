@@ -6,21 +6,25 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.QsaInterface;
 
 public enum SarsaType {
-  original, //
-  expected, //
-  qlearning, //
-  ;
-  // ---
-  public Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate //
-  ) {
-    switch (this) {
-    case original:
+  ORIGINAL() {
+    @Override
+    public Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
       return new OriginalSarsa(discreteModel, qsa, learningRate);
-    case expected:
+    }
+  }, //
+  EXPECTED() {
+    @Override
+    public Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
       return new ExpectedSarsa(discreteModel, qsa, learningRate);
-    case qlearning:
+    }
+  }, //
+  QLEARNING() {
+    @Override
+    public Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
       return new QLearning(discreteModel, qsa, learningRate);
     }
-    throw new RuntimeException();
-  }
+  }, //
+  ;
+  // ---
+  public abstract Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate);
 }

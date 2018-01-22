@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -17,15 +17,15 @@ public class FixedRandomPolicy implements Policy {
   // ---
   private final Set<Tensor> set = new HashSet<>();
 
-  public FixedRandomPolicy(DiscreteModel discreteModel) {
-    for (Tensor state : discreteModel.states()) {
-      Tensor actions = discreteModel.actions(state);
+  public FixedRandomPolicy(StateActionModel stateActionModel) {
+    for (Tensor state : stateActionModel.states()) {
+      Tensor actions = stateActionModel.actions(state);
       set.add(Tensors.of(state, actions.get(RANDOM.nextInt(actions.length()))));
     }
   }
 
   @Override // from Policy
-  public Scalar probability(Tensor state, Tensor action) {
+  public final Scalar probability(Tensor state, Tensor action) {
     return set.contains(Tensors.of(state, action)) ? RealScalar.ONE : RealScalar.ZERO;
   }
 }

@@ -14,7 +14,7 @@ enum IPE_Wireloop {
     String name = "wire5";
     Wireloop wireloop = WireloopHelper.create(name, WireloopReward::id_x);
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
-    Policy policy = new EquiprobablePolicy(wireloop);
+    Policy policy = EquiprobablePolicy.create(wireloop);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         wireloop, policy);
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ipe_iteration.gif"), 200);

@@ -31,7 +31,7 @@ enum QL_Gambler {
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     int batches = 100;
     // Tensor epsilon = Subdivide.of(.2, .001, EPISODES);
-    Policy policy = new EquiprobablePolicy(gambler);
+    Policy policy = EquiprobablePolicy.create(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
     System.out.println(qsa.size());
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_ql.gif"), 100);

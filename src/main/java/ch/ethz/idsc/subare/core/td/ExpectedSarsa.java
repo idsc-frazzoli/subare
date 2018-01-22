@@ -29,13 +29,13 @@ public class ExpectedSarsa extends Sarsa {
   @Override // from Sarsa
   protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
     Tensor actions = Tensor.of( //
-        discreteModel.actions(state).flatten(0) //
+        discreteModel.actions(state).stream() //
             .filter(action -> learningRate.encountered(state, action)));
     if (actions.length() == 0)
       return RealScalar.ZERO;
     // ---
     Policy policy = EGreedyPolicy.bestEquiprobable(discreteModel, Qsa2, epsilon, state);
-    return actions.flatten(0) //
+    return actions.stream() //
         .map(action -> policy.probability(state, action).multiply(Qsa2.value(state, action))) //
         .reduce(Scalar::add).get();
   }

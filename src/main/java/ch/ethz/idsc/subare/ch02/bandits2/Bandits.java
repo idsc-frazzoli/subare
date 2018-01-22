@@ -70,12 +70,12 @@ class Bandits implements StandardModel, MonteCarloInterface {
   }
 
   /**************************************************/
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return state.equals(END);
   }
 
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return Tensors.of(START);
   }

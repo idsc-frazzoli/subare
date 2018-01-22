@@ -54,8 +54,8 @@ enum Double_Maxbias {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.original, 1);
-    handle(SarsaType.expected, 1);
-    handle(SarsaType.qlearning, 1);
+    handle(SarsaType.ORIGINAL, 1);
+    handle(SarsaType.EXPECTED, 1);
+    handle(SarsaType.QLEARNING, 1);
   }
 }

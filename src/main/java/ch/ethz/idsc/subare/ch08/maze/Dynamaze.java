@@ -83,12 +83,12 @@ class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface
   }
 
   /**************************************************/
-  @Override
+  @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
     return terminalIndex.containsKey(state);
   }
 
-  @Override
+  @Override // from MonteCarloInterface
   public Tensor startStates() {
     return startStates;
   }

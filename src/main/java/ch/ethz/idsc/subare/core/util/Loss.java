@@ -29,11 +29,11 @@ public enum Loss {
     DiscreteQsa loss = DiscreteQsa.build(discreteModel);
     for (Tensor state : discreteModel.states()) {
       Tensor actions = discreteModel.actions(state);
-      Scalar max = actions.flatten(0) //
+      Scalar max = actions.stream() //
           .map(action -> ref.value(state, action)) //
           .reduce(Max::of).get();
       // ---
-      FairArgMax fairArgMax = FairArgMax.of(Tensor.of(actions.flatten(0).map(action -> qsa.value(state, action))));
+      FairArgMax fairArgMax = FairArgMax.of(Tensor.of(actions.stream().map(action -> qsa.value(state, action))));
       Scalar weight = RationalScalar.of(1, fairArgMax.optionsCount());
       for (int index : fairArgMax.options()) {
         Tensor action = actions.get(index);

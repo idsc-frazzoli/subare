@@ -57,6 +57,6 @@ enum Sarsa_Cliffwalk {
   public static void main(String[] args) throws Exception {
     // handle(SarsaType.original, 1, 30);
     // handle(SarsaType.expected, 1, 30);
-    handle(SarsaType.qlearning, 1, 10);
+    handle(SarsaType.QLEARNING, 1, 10);
   }
 }

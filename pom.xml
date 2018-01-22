@@ -4,7 +4,7 @@
 
 	<groupId>ch.ethz.idsc</groupId>
 	<artifactId>subare</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 	<packaging>jar</packaging>
 
 	<name>subare</name>
@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>ch.ethz.idsc</groupId>
 			<artifactId>tensor</artifactId>
-			<version>0.4.3</version>
+			<version>0.4.7</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -104,8 +104,6 @@
 					<repositoryOwner>idsc-frazzoli</repositoryOwner>
 				</configuration>
 				<executions>
-					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
-						'deploy' phase -->
 					<execution>
 						<goals>
 							<goal>site</goal>

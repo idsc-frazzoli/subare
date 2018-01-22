@@ -21,7 +21,7 @@ enum FVPE_RaceTrack {
     Racetrack racetrack = new Racetrack(Import.of(new File(path)), 3);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         racetrack, null);
-    Policy policy = new EquiprobablePolicy(racetrack);
+    Policy policy = EquiprobablePolicy.create(racetrack);
     for (int count = 0; count < 10; ++count)
       ExploringStarts.batch(racetrack, policy, fvpe);
     DiscreteVs vs = fvpe.vs();

@@ -56,6 +56,6 @@ enum Sarsa_Gambler {
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();
     gambler = new Gambler(20, RationalScalar.of(4, 10));
-    train(gambler, SarsaType.qlearning, 20, RealScalar.of(3), RealScalar.of(0.81));
+    train(gambler, SarsaType.QLEARNING, 20, RealScalar.of(3), RealScalar.of(0.81));
   }
 }

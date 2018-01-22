@@ -1,12 +1,10 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util.gfx;
 
-import java.io.Serializable;
-
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.tensor.Scalar;
 
-interface Raster extends Serializable {
+interface Raster {
   /** @return underlying discrete model */
   DiscreteModel discreteModel();
 

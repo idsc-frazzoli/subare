@@ -17,22 +17,24 @@ import ch.ethz.idsc.tensor.sca.Round;
 /** determines state action value function q(s,a).
  * initial policy is irrelevant because each state allows only one action.
  * 
+ * <pre>
  * {0, 0} 0
  * {1, 0} 0.16
  * {2, 0} 0.35
  * {3, 0} 0.47
  * {4, 0} 0.59
  * {5, 0} 0.79
- * {6, 0} 0 */
+ * {6, 0} 0
+ * </pre> */
 enum Sarsa_Randomwalk {
   ;
   static void handle(SarsaType sarsaType, int nstep) {
     System.out.println(sarsaType);
-    Randomwalk randomwalk = new Randomwalk();
+    Randomwalk randomwalk = new Randomwalk(5);
     DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     Sarsa sarsa = sarsaType.supply(randomwalk, qsa, learningRate);
-    Policy policy = new EquiprobablePolicy(randomwalk);
+    Policy policy = EquiprobablePolicy.create(randomwalk);
     sarsa.setExplore(RealScalar.of(.2));
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policy, nstep, sarsa);

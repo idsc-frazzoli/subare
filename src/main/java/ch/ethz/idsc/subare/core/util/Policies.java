@@ -29,7 +29,7 @@ public enum Policies {
    * @return */
   public static DiscreteQsa toQsa(DiscreteModel discreteModel, Policy policy) {
     DiscreteQsa qsa = DiscreteQsa.build(discreteModel);
-    return qsa.create(qsa.keys().flatten(0) //
+    return qsa.create(qsa.keys().stream() //
         .map(sap -> policy.probability(sap.get(0), sap.get(1))));
   }
 

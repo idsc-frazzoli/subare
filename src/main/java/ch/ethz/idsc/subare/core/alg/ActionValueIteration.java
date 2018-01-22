@@ -47,7 +47,8 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
   private int iterations = 0;
   private int alternate = 0;
 
-  private ActionValueIteration(DiscreteModel discreteModel, ActionValueInterface actionValueInterface, DiscreteQsa qsa_new) {
+  private ActionValueIteration( //
+      DiscreteModel discreteModel, ActionValueInterface actionValueInterface, DiscreteQsa qsa_new) {
     this.discreteModel = discreteModel;
     this.actionValueInterface = actionValueInterface;
     this.gamma = discreteModel.gamma();
@@ -93,7 +94,7 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
    * @return */
   public void step() {
     qsa_old = qsa_new.copy();
-    qsa_new = qsa_new.create(qsa_new.keys().flatten(0) //
+    qsa_new = qsa_new.create(qsa_new.keys().stream() //
         .parallel() //
         .map(pair -> jacobiMax(pair.get(0), pair.get(1))));
     ++iterations;
@@ -105,7 +106,7 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
     Scalar eqsa = RealScalar.ZERO;
     for (Tensor next : actionValueInterface.transitions(state, action)) {
       Scalar prob = actionValueInterface.transitionProbability(state, action, next);
-      Scalar max = discreteModel.actions(next).flatten(0) //
+      Scalar max = discreteModel.actions(next).stream() //
           .map(actionN -> qsa_new.value(next, actionN)) //
           .reduce(Max::of).get();
       eqsa = eqsa.add(prob.multiply(max));

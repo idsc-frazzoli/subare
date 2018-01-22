@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
+import ch.ethz.idsc.subare.core.EpisodeVsEstimator;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.ConstantAlphaMonteCarloVs;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -18,7 +19,7 @@ enum CAMC_Gridworld { // TODO this looks like WIP
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldRaster = new GridworldRaster(gridworld);
     // final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    ConstantAlphaMonteCarloVs camc = new ConstantAlphaMonteCarloVs( //
+    EpisodeVsEstimator camc = ConstantAlphaMonteCarloVs.create( //
         gridworld, DefaultLearningRate.of(3, .51));
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_vs_camc.gif"), 100);
     final int batches = 50;
@@ -26,7 +27,7 @@ enum CAMC_Gridworld { // TODO this looks like WIP
     for (int index = 0; index < batches; ++index) {
       System.out.println(index);
       for (int count = 0; count < 20; ++count) {
-        Policy policy = new EquiprobablePolicy(gridworld);
+        Policy policy = EquiprobablePolicy.create(gridworld);
         // EGreedyPolicy.bestEquiprobable(gridworld, camc.vs(), epsilon.Get(index));
         ExploringStarts.batch(gridworld, policy, camc);
       }

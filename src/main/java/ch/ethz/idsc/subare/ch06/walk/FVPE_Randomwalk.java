@@ -11,20 +11,22 @@ import ch.ethz.idsc.tensor.sca.Round;
 
 /** first visit policy evaluation determines state values v(s)
  * 
+ * <pre>
  * 0 0
  * 1 0.16
  * 2 0.30
  * 3 0.47
  * 4 0.64
  * 5 0.84
- * 6 0 */
+ * 6 0
+ * </pre> */
 enum FVPE_Randomwalk {
   ;
   public static void main(String[] args) {
-    Randomwalk randomwalk = new Randomwalk();
+    Randomwalk randomwalk = new Randomwalk(5);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         randomwalk, null);
-    Policy policy = new EquiprobablePolicy(randomwalk);
+    Policy policy = EquiprobablePolicy.create(randomwalk);
     for (int count = 0; count < 100; ++count)
       ExploringStarts.batch(randomwalk, policy, fvpe);
     DiscreteVs vs = fvpe.vs();

@@ -32,10 +32,10 @@ enum TTD0_Gridworld {
   ;
   public static void main(String[] args) {
     Gridworld gridWorld = new Gridworld();
-    DiscreteVs vs = DiscreteVs.build(gridWorld);
+    DiscreteVs vs = DiscreteVs.build(gridWorld.states());
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
         vs, gridWorld.gamma(), DefaultLearningRate.of(3, .6));
-    Policy policy = new EquiprobablePolicy(gridWorld);
+    Policy policy = EquiprobablePolicy.create(gridWorld);
     for (int count = 0; count < 300; ++count)
       ExploringStarts.batch(gridWorld, policy, ttd0);
     DiscreteUtils.print(vs, Round._2);

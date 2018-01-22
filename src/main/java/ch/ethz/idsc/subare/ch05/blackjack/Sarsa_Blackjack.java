@@ -38,6 +38,6 @@ enum Sarsa_Blackjack {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.qlearning);
+    handle(SarsaType.QLEARNING);
   }
 }

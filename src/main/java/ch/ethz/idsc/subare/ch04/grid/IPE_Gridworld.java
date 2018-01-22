@@ -34,7 +34,7 @@ enum IPE_Gridworld {
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
-        gridworld, new EquiprobablePolicy(gridworld));
+        gridworld, EquiprobablePolicy.create(gridworld));
     ipe.until(DecimalScalar.of(.0001));
     DiscreteUtils.print(ipe.vs(), Round._1);
   }
