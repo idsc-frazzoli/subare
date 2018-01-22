@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.core.util;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
-import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
@@ -16,12 +15,12 @@ public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializa
    * 
    * @param discreteModel
    * @return */
-  public static DiscreteVs build(DiscreteModel discreteModel) {
-    return build(discreteModel, Array.zeros(discreteModel.states().length()));
+  public static DiscreteVs build(Tensor states) {
+    return build(states, Array.zeros(states.length()));
   }
 
-  public static DiscreteVs build(DiscreteModel discreteModel, Tensor values) {
-    return new DiscreteVs(Index.build(discreteModel.states()), values);
+  public static DiscreteVs build(Tensor states, Tensor values) {
+    return new DiscreteVs(Index.build(states), values);
   }
 
   // ---

@@ -26,7 +26,7 @@ enum FVPE_Randomwalk {
     Randomwalk randomwalk = new Randomwalk(5);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         randomwalk, null);
-    Policy policy = new EquiprobablePolicy(randomwalk);
+    Policy policy = EquiprobablePolicy.create(randomwalk);
     for (int count = 0; count < 100; ++count)
       ExploringStarts.batch(randomwalk, policy, fvpe);
     DiscreteVs vs = fvpe.vs();

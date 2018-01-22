@@ -34,7 +34,7 @@ enum FVPE_Gridworld {
     Gridworld gridworld = new Gridworld();
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gridworld, null);
-    Policy policy = new EquiprobablePolicy(gridworld);
+    Policy policy = EquiprobablePolicy.create(gridworld);
     ExploringStarts.batch(gridworld, policy, fvpe);
     DiscreteVs vs = fvpe.vs();
     DiscreteUtils.print(vs, Round._1);

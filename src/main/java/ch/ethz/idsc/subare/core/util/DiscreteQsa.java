@@ -4,8 +4,8 @@ package ch.ethz.idsc.subare.core.util;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
-import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -14,16 +14,16 @@ import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
 
 public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Serializable {
-  /** @param discreteModel
+  /** @param stateActionModel
    * @return qsa with q(s,a) == 0 for all state-action pairs */
-  public static DiscreteQsa build(DiscreteModel discreteModel) {
-    Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
+  public static DiscreteQsa build(StateActionModel stateActionModel) {
+    Index index = DiscreteUtils.build(stateActionModel, stateActionModel.states());
     return new DiscreteQsa(index, Array.zeros(index.size()));
   }
 
-  public static DiscreteQsa build(DiscreteModel discreteModel, Scalar init) {
+  public static DiscreteQsa build(StateActionModel stateActionModel, Scalar init) {
     // TODO check for terminal states... should all have value == 0
-    Index index = DiscreteUtils.build(discreteModel, discreteModel.states());
+    Index index = DiscreteUtils.build(stateActionModel, stateActionModel.states());
     return new DiscreteQsa(index, Array.of(list -> init, index.size()));
   }
 

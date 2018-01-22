@@ -2,7 +2,7 @@
 
 <a href="https://travis-ci.org/idsc-frazzoli/subare"><img src="https://travis-ci.org/idsc-frazzoli/subare.svg?branch=master" alt="Build Status"></a>
 
-Java 8 implementation of algorithms, examples, and exercises from the 2nd edition (2016 draft) of
+Java 8 implementation of algorithms, examples, and exercises from the 2nd edition of
 
 [Sutton and Barto: Reinforcement Learning](http://incompleteideas.net/book/the-book-2nd.html)
 

@@ -30,7 +30,7 @@ enum MCES_Randomwalk {
     for (int count = 0; count < batches; ++count) {
       Policy policy = EGreedyPolicy.bestEquiprobable(randomwalk, mces.qsa(), RealScalar.of(.1));
       if (count == 0) {
-        boolean equals = Policies.equals(randomwalk, policy, new EquiprobablePolicy(randomwalk));
+        boolean equals = Policies.equals(randomwalk, policy, EquiprobablePolicy.create(randomwalk));
         if (!equals)
           throw new RuntimeException();
       }

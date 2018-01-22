@@ -23,7 +23,7 @@ public class ConstantAlphaMonteCarloVs implements EpisodeVsEstimator {
   public static EpisodeVsEstimator create(DiscreteModel discreteModel, LearningRate learningRate) {
     return new ConstantAlphaMonteCarloVs( //
         DiscountFunction.of(discreteModel.gamma()), //
-        DiscreteVs.build(discreteModel), //
+        DiscreteVs.build(discreteModel.states()), //
         learningRate);
   }
 

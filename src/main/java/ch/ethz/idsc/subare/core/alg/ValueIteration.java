@@ -44,7 +44,7 @@ public class ValueIteration implements DiscreteVsSupplier {
     this.discreteModel = discreteModel;
     actionValueAdapter = new ActionValueAdapter(actionValueInterface);
     this.gamma = discreteModel.gamma();
-    vs_new = DiscreteVs.build(discreteModel);
+    vs_new = DiscreteVs.build(discreteModel.states());
   }
 
   /** perform iteration until values don't change more than threshold

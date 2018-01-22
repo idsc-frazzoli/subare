@@ -43,7 +43,7 @@ public class IterativePolicyEvaluation {
     actionValueAdapter = new ActionValueAdapter(standardModel);
     this.policy = policy;
     this.gamma = standardModel.gamma();
-    vs_new = DiscreteVs.build(standardModel);
+    vs_new = DiscreteVs.build(standardModel.states());
   }
 
   /** @param gamma

@@ -31,7 +31,7 @@ enum TTD0_Randomwalk {
   static void some(Randomwalk randomwalk, VsInterface vs) {
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
         vs, randomwalk.gamma(), DefaultLearningRate.of(3, .6));
-    Policy policy = new EquiprobablePolicy(randomwalk);
+    Policy policy = EquiprobablePolicy.create(randomwalk);
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policy, ttd0);
     DiscreteUtils.print(randomwalk, vs, Round._2);
@@ -39,7 +39,7 @@ enum TTD0_Randomwalk {
 
   public static void main(String[] args) {
     Randomwalk randomwalk = new Randomwalk(5);
-    some(randomwalk, DiscreteVs.build(randomwalk));
+    some(randomwalk, DiscreteVs.build(randomwalk.states()));
     int order = 2;
     some(randomwalk, //
         LinearApproximationVs.create(PolynomialBasis.create(order, Clip.function(0, 6)), Array.zeros(order)));

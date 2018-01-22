@@ -37,7 +37,7 @@ enum WireloopHelper {
 
   private static Tensor renderActions(Wireloop wireloop, QsaInterface qsa) {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
-    DiscreteVs vs = DiscreteVs.build(wireloop);
+    DiscreteVs vs = DiscreteVs.build(wireloop.states());
     RobustArgMax ram = new RobustArgMax(Chop._06);
     for (Tensor state : wireloop.startStates()) {
       Tensor tensor = Tensor.of(wireloop.actions(state).stream().map(action -> qsa.value(state, action)));

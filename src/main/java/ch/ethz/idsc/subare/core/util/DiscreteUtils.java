@@ -4,8 +4,8 @@ package ch.ethz.idsc.subare.core.util;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
-import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
@@ -15,37 +15,37 @@ import ch.ethz.idsc.tensor.red.Max;
 
 public enum DiscreteUtils {
   ;
-  /** @param discreteModel
+  /** @param stateActionModel
    * @return index for state-action */
-  public static Index build(DiscreteModel discreteModel, Tensor states) {
+  public static Index build(StateActionModel stateActionModel, Tensor states) {
     Tensor tensor = Tensors.empty();
     for (Tensor state : states)
-      for (Tensor action : discreteModel.actions(state))
+      for (Tensor action : stateActionModel.actions(state))
         tensor.append(Tensors.of(state, action));
     return Index.build(tensor);
   }
 
   // ---
-  /** @param discreteModel
+  /** @param stateActionModel
    * @param qsa
    * @param binaryOperator
    * @return */
   public static DiscreteVs reduce( //
-      DiscreteModel discreteModel, QsaInterface qsa, BinaryOperator<Scalar> binaryOperator) {
-    return DiscreteVs.build(discreteModel, //
-        Tensor.of(discreteModel.states().stream() //
-            .map(state -> discreteModel.actions(state).stream() //
+      StateActionModel stateActionModel, QsaInterface qsa, BinaryOperator<Scalar> binaryOperator) {
+    return DiscreteVs.build(stateActionModel.states(), //
+        Tensor.of(stateActionModel.states().stream() //
+            .map(state -> stateActionModel.actions(state).stream() //
                 .map(action -> qsa.value(state, action)) //
                 .reduce(binaryOperator).get()))); // <- assumes greedy policy
   }
 
   /** compute state value function v(s) based on given action-value function q(s,a)
    * 
-   * @param discreteModel
+   * @param stateActionModel
    * @param qsa
    * @return state values */
-  public static DiscreteVs createVs(DiscreteModel discreteModel, QsaInterface qsa) {
-    return reduce(discreteModel, qsa, Max::of);
+  public static DiscreteVs createVs(StateActionModel stateActionModel, QsaInterface qsa) {
+    return reduce(stateActionModel, qsa, Max::of);
   }
 
   /**************************************************/
@@ -70,8 +70,8 @@ public enum DiscreteUtils {
   }
 
   /**************************************************/
-  public static void print(DiscreteModel discreteModel, VsInterface vs, Function<Scalar, Scalar> round) {
-    for (Tensor key : discreteModel.states()) {
+  public static void print(StateActionModel stateActionModel, VsInterface vs, Function<Scalar, Scalar> round) {
+    for (Tensor key : stateActionModel.states()) {
       Scalar value = vs.value(key);
       System.out.println(key + " " + value.map(round));
     }

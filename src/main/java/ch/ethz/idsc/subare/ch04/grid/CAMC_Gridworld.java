@@ -27,7 +27,7 @@ enum CAMC_Gridworld { // TODO this looks like WIP
     for (int index = 0; index < batches; ++index) {
       System.out.println(index);
       for (int count = 0; count < 20; ++count) {
-        Policy policy = new EquiprobablePolicy(gridworld);
+        Policy policy = EquiprobablePolicy.create(gridworld);
         // EGreedyPolicy.bestEquiprobable(gridworld, camc.vs(), epsilon.Get(index));
         ExploringStarts.batch(gridworld, policy, camc);
       }
