@@ -7,7 +7,6 @@ import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
-import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.sca.Sign;
 
 /** Prioritized Sweeping for a deterministic environment
@@ -23,13 +22,11 @@ public class PrioritizedSweeping implements StepDigest {
 
   /** @param sarsa underlying learning
    * @param n number of replay steps
-   * @param theta threshold */
+   * @param theta non-negative threshold */
   public PrioritizedSweeping(Sarsa sarsa, int n, Scalar theta) {
-    if (Sign.isNegative(theta))
-      throw TensorRuntimeException.of(theta);
     this.sarsa = sarsa;
     this.n = n;
-    this.theta = theta;
+    this.theta = Sign.requirePositiveOrZero(theta);
   }
   // public void setPolicy(Policy policy) {
   // sarsa.supplyPolicy(() -> policy);
