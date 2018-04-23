@@ -40,11 +40,9 @@ abstract class DecayedLearningRate implements LearningRate {
   private final Tensor MEMO = Tensors.vector(1.0); // index == 0 => learning rate == 1
 
   DecayedLearningRate(Scalar factor, Scalar exponent) {
-    if (!Sign.isPositive(factor))
+    if (Scalars.lessEquals(exponent, RationalScalar.HALF))
       throw TensorRuntimeException.of(factor, exponent);
-    if (Scalars.lessEquals(exponent, RationalScalar.of(1, 2)))
-      throw TensorRuntimeException.of(factor, exponent);
-    this.factor = factor;
+    this.factor = Sign.requirePositive(factor);
     this.exponent = exponent;
   }
 

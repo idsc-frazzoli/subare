@@ -6,7 +6,6 @@ import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.sca.Sign;
@@ -38,8 +37,7 @@ public enum Loss {
       for (int index : fairArgMax.options()) {
         Tensor action = actions.get(index);
         Scalar delta = max.subtract(ref.value(state, action));
-        if (Sign.isNegative(delta))
-          throw TensorRuntimeException.of(delta);
+        Sign.requirePositiveOrZero(delta);
         loss.assign(state, action, delta.multiply(weight));
       }
     }

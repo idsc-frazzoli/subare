@@ -6,6 +6,8 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 
+/** consumes Tensor/Scalar and tracks average
+ * without the overhead of storing all input. */
 public class Average {
   private Tensor average = null;
   private Scalar count = RealScalar.ZERO;
@@ -24,7 +26,7 @@ public class Average {
     }
   }
 
-  /** @return average of {@link Tensor}s trackked by {@link #track(Tensor)},
+  /** @return average of {@link Tensor}s tracked by {@link #track(Tensor)},
    * or null if function {@link #track(Tensor)} has not been called. */
   public Tensor get() {
     return average;

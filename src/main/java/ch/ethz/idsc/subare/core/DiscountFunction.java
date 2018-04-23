@@ -1,10 +1,10 @@
 // code by jph
 package ch.ethz.idsc.subare.core;
 
-import ch.ethz.idsc.subare.util.TensorScalarFunction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.alg.Multinomial;
+import ch.ethz.idsc.tensor.opt.TensorScalarFunction;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Clip;
 
@@ -18,7 +18,7 @@ public interface DiscountFunction extends TensorScalarFunction {
   static DiscountFunction of(Scalar gamma) {
     if (gamma.equals(RealScalar.ONE))
       return TOTAL;
-    Clip.unit().isInsideElseThrow(gamma);
+    Clip.unit().requireInside(gamma);
     return rewards -> Multinomial.horner(rewards, gamma);
   }
 }

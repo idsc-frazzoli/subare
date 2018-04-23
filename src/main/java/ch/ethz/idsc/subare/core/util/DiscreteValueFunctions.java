@@ -11,8 +11,6 @@ import ch.ethz.idsc.tensor.sca.N;
 
 public enum DiscreteValueFunctions {
   ;
-  private static final Scalar HALF = RationalScalar.of(1, 2);
-
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T numeric(T tvi) {
     return (T) tvi.create(N.DOUBLE.of(tvi.values()).stream());
@@ -33,7 +31,7 @@ public enum DiscreteValueFunctions {
 
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T average(T tvi1, T tvi2) {
-    return (T) tvi1.create(tvi1.values().add(tvi2.values()).multiply(HALF).stream());
+    return (T) tvi1.create(tvi1.values().add(tvi2.values()).multiply(RationalScalar.HALF).stream());
   }
 
   @SuppressWarnings("unchecked")

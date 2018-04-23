@@ -18,7 +18,6 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.sca.Log;
 import ch.ethz.idsc.tensor.sca.Sign;
 import ch.ethz.idsc.tensor.sca.Sqrt;
@@ -52,9 +51,7 @@ public class UcbPolicy implements Policy, StepDigest {
 
   /** @param t positive */
   public void setTime(Scalar t) {
-    if (!Sign.isPositive(t))
-      throw TensorRuntimeException.of(t);
-    this.t = t;
+    this.t = Sign.requirePositive(t);
   }
 
   // TODO very private and not very efficient -> precompute!!!
