@@ -30,8 +30,7 @@ public class CosineBasis implements TensorUnaryOperator {
 
   @Override // from UnaryOperator
   public Tensor apply(Tensor tensor) {
-    Scalar param = tensor.Get();
-    clip.isInsideElseThrow(param);
+    Scalar param = clip.requireInside(tensor.Get());
     Scalar value = clip.rescale(param);
     return Tensors.vector(i -> Cos.FUNCTION.apply(DoubleScalar.of(i * Math.PI).multiply(value)), order);
   }

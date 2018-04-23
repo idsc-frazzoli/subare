@@ -29,8 +29,7 @@ public class TabularTemporalDifference0 implements StepDigest {
   public TabularTemporalDifference0( //
       VsInterface vs, Scalar gamma, LearningRate learningRate) {
     this.vs = vs;
-    Clip.unit().isInsideElseThrow(gamma);
-    this.gamma = gamma;
+    this.gamma = Clip.unit().requireInside(gamma);
     this.learningRate = learningRate;
   }
 

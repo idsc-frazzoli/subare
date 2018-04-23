@@ -1,6 +1,4 @@
-# ch.ethz.idsc.subare
-
-<a href="https://travis-ci.org/idsc-frazzoli/subare"><img src="https://travis-ci.org/idsc-frazzoli/subare.svg?branch=master" alt="Build Status"></a>
+# ch.ethz.idsc.subare <a href="https://travis-ci.org/idsc-frazzoli/subare"><img src="https://travis-ci.org/idsc-frazzoli/subare.svg?branch=master" alt="Build Status"></a>
 
 Java 8 implementation of algorithms, examples, and exercises from the 2nd edition of
 

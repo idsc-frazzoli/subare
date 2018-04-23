@@ -18,7 +18,7 @@ public interface DiscountFunction extends TensorScalarFunction {
   static DiscountFunction of(Scalar gamma) {
     if (gamma.equals(RealScalar.ONE))
       return TOTAL;
-    Clip.unit().isInsideElseThrow(gamma);
+    Clip.unit().requireInside(gamma);
     return rewards -> Multinomial.horner(rewards, gamma);
   }
 }

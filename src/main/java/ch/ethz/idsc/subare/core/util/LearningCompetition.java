@@ -10,16 +10,16 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.img.ColorDataFunction;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.opt.ScalarTensorFunction;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.sca.Round;
 
 public class LearningCompetition {
   private final Map<Point, LearningContender> map = new HashMap<>();
-  private final ColorDataFunction colorDataFunction = ColorDataGradients.CLASSIC;
+  private final ScalarTensorFunction colorDataFunction = ColorDataGradients.CLASSIC;
   // ---
   private final DiscreteQsa ref;
   private final String name;
