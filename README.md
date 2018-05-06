@@ -4,7 +4,7 @@ Java 8 implementation of algorithms, examples, and exercises from the 2nd editio
 
 [Sutton and Barto: Reinforcement Learning](http://incompleteideas.net/book/the-book-2nd.html)
 
-Version `0.1.2`
+Version `0.1.3`
 
 Our implementation is inspired by the 
 [python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction)

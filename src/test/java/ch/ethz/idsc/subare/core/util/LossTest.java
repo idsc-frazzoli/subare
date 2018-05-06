@@ -31,32 +31,32 @@ public class LossTest extends TestCase {
 
   public void testAccumulation0() {
     DiscreteModel discreteModel = create14();
-    DiscreteQsa ref = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 0, 0).flatten(0));
-    DiscreteQsa qsa = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 0, 0).flatten(0));
+    DiscreteQsa ref = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 0, 0).stream());
+    DiscreteQsa qsa = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 0, 0).stream());
     Scalar scalar = Loss.accumulation(discreteModel, ref, qsa);
     assertEquals(scalar, RealScalar.ZERO);
   }
 
   public void testAccumulation1() {
     DiscreteModel discreteModel = create14();
-    DiscreteQsa ref = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 1, 0).flatten(0));
-    DiscreteQsa qsa = DiscreteQsa.build(discreteModel).create(Tensors.vector(1, 0, 2, -2).flatten(0));
+    DiscreteQsa ref = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 1, 0).stream());
+    DiscreteQsa qsa = DiscreteQsa.build(discreteModel).create(Tensors.vector(1, 0, 2, -2).stream());
     Scalar scalar = Loss.accumulation(discreteModel, ref, qsa);
     assertEquals(scalar, RealScalar.ZERO);
   }
 
   public void testAccumulation2() {
     DiscreteModel discreteModel = create14();
-    DiscreteQsa ref = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 1, 0).flatten(0));
-    DiscreteQsa qsa = DiscreteQsa.build(discreteModel).create(Tensors.vector(2, 0, 2, -2).flatten(0));
+    DiscreteQsa ref = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 1, 0).stream());
+    DiscreteQsa qsa = DiscreteQsa.build(discreteModel).create(Tensors.vector(2, 0, 2, -2).stream());
     Scalar scalar = Loss.accumulation(discreteModel, ref, qsa);
     assertEquals(scalar, RationalScalar.of(1, 2));
   }
 
   public void testAccumulation3() {
     DiscreteModel discreteModel = create14();
-    DiscreteQsa ref = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 1, 0).flatten(0));
-    DiscreteQsa qsa = DiscreteQsa.build(discreteModel).create(Tensors.vector(2, 2, 1.5, 2).flatten(0));
+    DiscreteQsa ref = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 1, 0).stream());
+    DiscreteQsa qsa = DiscreteQsa.build(discreteModel).create(Tensors.vector(2, 2, 1.5, 2).stream());
     Scalar scalar = Loss.accumulation(discreteModel, ref, qsa);
     assertEquals(scalar, RealScalar.ONE);
   }

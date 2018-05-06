@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 public class EveryVisitPolicyEvaluation implements EpisodeDigest {
   @Override
   public void digest(EpisodeInterface episodeInterface) {
-    // TODO implement
+    // LONGTERM implement
     // average gain at every visit of s
   }
 }

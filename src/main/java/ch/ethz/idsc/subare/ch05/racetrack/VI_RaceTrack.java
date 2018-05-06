@@ -34,12 +34,12 @@ enum VI_RaceTrack {
         StepInterface stepInterface = mce.step();
         {
           Tensor state = stepInterface.prevState();
-          int[] index = Primitives.toArrayInt(state);
+          int[] index = Primitives.toIntArray(state);
           image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
         }
         {
           Tensor state = stepInterface.nextState();
-          int[] index = Primitives.toArrayInt(state);
+          int[] index = Primitives.toIntArray(state);
           image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
         }
       }
