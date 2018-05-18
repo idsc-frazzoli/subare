@@ -10,9 +10,8 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
-import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.red.Max;
+import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Total;
 
 /** A two node problem with an airport and a center. Passengers arrive at the airport and can be driven to
@@ -21,14 +20,14 @@ import ch.ethz.idsc.tensor.red.Total;
  * the airport to the center with a customers gives 30CHF reward instead. Parking at the airport for one
  * time step at the airport costs 5CHF. */
 class Airport implements StandardModel, MonteCarloInterface {
-  private static final int LASTT = 3;
-  private static final int VEHICLES = 5;
-  private static final Scalar REBALANCE_COST = RealScalar.of(10);
-  private static final Scalar AIRPORT_WAIT_COST = RealScalar.of(5);
+  static final int LASTT = 4;
+  static final int VEHICLES = 5;
+  private static final Scalar REBALANCE_COST = RealScalar.of(-10);
+  private static final Scalar AIRPORT_WAIT_COST = RealScalar.of(-5);
   private static final Scalar CUSTOMER_REWARD = RealScalar.of(30);
   private final Tensor states;
   private Random random = new Random();
-  private static final Tensor CUSTOMER_PROB = Tensors.vectorDouble(0.4, 0.2, 0.1, 0.3); // i.e. CUSTOMER_PROB.Get(0) is the probability that no customer is
+  private static final Tensor CUSTOMER_PROB = Tensors.vectorDouble(0.1, 0.2, 0.4, 0.3); // i.e. CUSTOMER_PROB.Get(0) is the probability that 0 customers are
                                                                                         // waiting
 
   public Airport() {
@@ -80,7 +79,23 @@ class Airport implements StandardModel, MonteCarloInterface {
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) { // deterministic
-    return isTerminal(state) ? RealScalar.ZERO : RealScalar.ZERO; // TODO
+    if (isTerminal(state))
+      return RealScalar.ZERO;
+    // get the random variate of the number of customers
+    double outcome = random.nextDouble();
+    int customers = -1;
+    while (outcome > 0.0) {
+      customers++;
+      outcome -= CUSTOMER_PROB.Get(customers).number().doubleValue();
+    }
+    // deal with rebalancing costs
+    Scalar reward = action.Get(0).multiply(REBALANCE_COST);
+    reward = reward.add(Max.of(RealScalar.ZERO, action.Get(1).subtract(RealScalar.of(customers))).multiply(REBALANCE_COST));
+    // deal with parking cost of airport
+    reward = reward.add(move(state, action).Get(2).multiply(AIRPORT_WAIT_COST));
+    // deal with customer reward
+    reward = reward.add(Min.of(RealScalar.of(customers), action.Get(1)).multiply(CUSTOMER_REWARD));
+    return reward;
   }
 
   /**************************************************/
@@ -99,10 +114,18 @@ class Airport implements StandardModel, MonteCarloInterface {
   public Scalar expectedReward(Tensor state, Tensor action) {
     if (isTerminal(state))
       return RealScalar.ZERO;
-
-    if (state.Get(0).equals(RealScalar.of(2)) && state.Get(2).equals(RealScalar.of(3)))
-      return RealScalar.ONE;
-    return RealScalar.ZERO; // TODO
+    // deal with rebalancing costs
+    Scalar reward = action.Get(0).multiply(REBALANCE_COST);
+    for (int i = 0; i < CUSTOMER_PROB.length(); i++) {
+      reward = reward.add(Max.of(RealScalar.ZERO, action.Get(1).subtract(RealScalar.of(i))).multiply(REBALANCE_COST).multiply(CUSTOMER_PROB.Get(i)));
+    }
+    // deal with parking cost of airport
+    reward = reward.add(move(state, action).Get(2).multiply(AIRPORT_WAIT_COST));
+    // deal with customer reward
+    for (int i = 0; i < CUSTOMER_PROB.length(); i++) {
+      reward = reward.add(Min.of(RealScalar.of(i), action.Get(1)).multiply(CUSTOMER_REWARD).multiply(CUSTOMER_PROB.Get(i)));
+    }
+    return reward;
   }
 
   @Override
