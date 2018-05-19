@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.util;
 import java.util.Objects;
 
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.red.Mean;
@@ -24,7 +25,14 @@ public class AverageTest extends TestCase {
   public void testMean() {
     Tensor vec = Tensors.vector(3, 2, 9, 19, 99, 29, 30);
     Average avg = new Average();
-    vec.flatten(0).forEach(scalar -> avg.track(scalar));
+    vec.stream().forEach(scalar -> avg.track(scalar));
+    assertEquals(avg.Get(), Mean.of(vec));
+  }
+
+  public void testMean2() {
+    Tensor vec = Tensors.vector(3, 2, 9, 19, 99, 29, 30);
+    Average avg = new Average();
+    vec.stream().map(Scalar.class::cast).forEach(avg::track);
     assertEquals(avg.Get(), Mean.of(vec));
   }
 

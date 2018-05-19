@@ -6,7 +6,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Chop;
 import ch.ethz.idsc.tensor.sca.Round;
 
-// TODO not the final name... but how to name it?
 public class Infoline {
   public static Infoline print(DiscreteModel discreteModel, int index, DiscreteQsa ref, DiscreteQsa qsa) {
     Infoline infoline = new Infoline(discreteModel, ref, qsa);
