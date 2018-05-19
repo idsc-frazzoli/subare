@@ -8,7 +8,6 @@ import java.util.Map;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.adapter.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -16,7 +15,6 @@ import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.alg.ArrayQ;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -53,7 +51,8 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   private final Tensor states = Tensors.empty(); // (px, py, vx, vy)
   final Tensor statesStart = Tensors.empty();
   final Tensor statesTerminal = Tensors.empty();
-  private final Tensor actions = Tensor.of(Array.of(Tensors::vector, 3, 3).flatten(1)).map(Decrement.ONE).unmodifiable();
+  final Tensor actions = //
+      Tensor.of(Array.of(Tensors::vector, 3, 3).flatten(1)).map(Decrement.ONE).unmodifiable();
   final Index statesIndex;
   final Index statesStartIndex;
   final Index statesTerminalIndex;
@@ -103,7 +102,6 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     statesIndex = Index.build(states);
     statesStartIndex = Index.build(statesStart);
     statesTerminalIndex = Index.build(statesTerminal);
-    GlobalAssert.that(ArrayQ.of(actions));
     stateActionMap = StateActionMap.build(this, actions, this);
     this.image = image;
   }

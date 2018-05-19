@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.ch05.racetrack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.zip.DataFormatException;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
@@ -16,7 +15,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 
 enum FVPE_RaceTrack {
   ;
-  public static void main(String[] args) throws ClassNotFoundException, DataFormatException, IOException {
+  public static void main(String[] args) throws IOException {
     String path = "".getClass().getResource("/ch05/track0.png").getPath();
     Racetrack racetrack = new Racetrack(Import.of(new File(path)), 3);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
