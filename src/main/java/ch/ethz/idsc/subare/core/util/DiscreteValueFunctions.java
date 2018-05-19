@@ -21,10 +21,6 @@ public enum DiscreteValueFunctions {
     return (T) tvi.create(Rescale.of(tvi.values()).stream());
   }
 
-  // @SuppressWarnings("unchecked")
-  // public static <T extends TensorValuesInterface> T apply(T tvi, UnaryOperator<Tensor> operator) {
-  // return (T) tvi.create(operator.apply(tvi.values()).flatten(0));
-  // }
   public static Scalar distance(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
     return Norm._1.ofVector(_difference(tvi1, tvi2));
   }

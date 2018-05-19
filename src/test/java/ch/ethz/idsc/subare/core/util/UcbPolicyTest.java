@@ -5,6 +5,6 @@ import junit.framework.TestCase;
 
 public class UcbPolicyTest extends TestCase {
   public void testSimple() {
-    // TODO implement
+    // LONGTERM implement
   }
 }

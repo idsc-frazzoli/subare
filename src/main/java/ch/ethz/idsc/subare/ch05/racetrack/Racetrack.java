@@ -135,7 +135,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
 
   @Override
   public Scalar gamma() {
-    return RealScalar.of(1.); // numerical one TODO why not exact?
+    return RealScalar.ONE;
   }
 
   /**************************************************/

@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.util;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -9,9 +10,9 @@ import java.util.stream.IntStream;
 
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.red.ArgMax;
+import ch.ethz.idsc.tensor.red.Max;
 
-public class FairArgMax {
+public class FairArgMax implements Serializable {
   private static final Random RANDOM = new Random();
 
   /** @param tensor
@@ -25,11 +26,10 @@ public class FairArgMax {
   private final List<Integer> list;
 
   private FairArgMax(Tensor tensor) {
-    final int argmax = ArgMax.of(tensor);
-    Scalar max = tensor.Get(argmax);
+    Scalar max = tensor.stream().reduce(Max::of).get().Get();
     list = IntStream.range(0, tensor.length()) //
-        .boxed() //
         .filter(index -> tensor.Get(index).equals(max)) //
+        .boxed() //
         .collect(Collectors.toList());
   }
 
