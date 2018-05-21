@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch05.racetrack;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.alg.ArrayQ;
 import ch.ethz.idsc.tensor.io.ResourceData;
 import junit.framework.TestCase;
 
@@ -23,5 +24,10 @@ public class RacetrackTest extends TestCase {
     Racetrack racetrack = new Racetrack(ResourceData.of("/ch05/track0.png"), 3);
     for (Tensor state : racetrack.states())
       racetrack.actions(state);
+  }
+
+  public void testArray() {
+    Racetrack racetrack = new Racetrack(ResourceData.of("/ch05/track0.png"), 3);
+    ArrayQ.require(racetrack.actions);
   }
 }
