@@ -29,7 +29,6 @@ class Airport implements StandardModel, MonteCarloInterface {
   private static final Scalar REBALANCE_COST = RealScalar.of(-10);
   private static final Scalar AIRPORT_WAIT_COST = RealScalar.of(-5);
   private static final Scalar CUSTOMER_REWARD = RealScalar.of(30);
-  // private Random random = new Random();
   // i.e. CUSTOMER_PROB.Get(0) is the probability that 0 customers are waiting
   private final Tensor CUSTOMER_HIST = Tensors.vector(1, 2, 4, 3);
   private final Tensor CUSTOMER_PROB = Normalize.of(CUSTOMER_HIST, Norm._1);
@@ -46,7 +45,6 @@ class Airport implements StandardModel, MonteCarloInterface {
         states.append(Tensors.vector(t, v, VEHICLES - v));
       }
     }
-    GlobalAssert.that(Total.of(CUSTOMER_PROB).equals(RealScalar.of(1.0)));
     GlobalAssert.that(Total.of(states.get(0)).equals(RealScalar.of(VEHICLES)));
     this.states = states.unmodifiable();
   }
@@ -85,23 +83,12 @@ class Airport implements StandardModel, MonteCarloInterface {
     Scalar delta = action.Get(0).subtract(action.Get(1));
     Tensor shift = Tensors.of(RealScalar.ONE, delta.negate(), delta);
     return state.add(shift);
-    // Tensors.of( //
-    // state.Get(0).add(RealScalar.ONE), //
-    // state.Get(1).subtract(action.Get(0)).add(action.Get(1)), //
-    // state.Get(2).subtract(action.Get(1)).add(action.Get(0)));
   }
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) { // deterministic
     if (isTerminal(state))
       return RealScalar.ZERO;
-    // get the random variate of the number of customers
-    // double outcome = random.nextDouble();
-    // int customers = -1;
-    // while (outcome > 0.0) {
-    // customers++;
-    // outcome -= CUSTOMER_PROB.Get(customers).number().doubleValue();
-    // }
     Scalar customers = RandomVariate.of(distribution); // either 0, 1, 2, 3
     // deal with rebalancing costs
     Scalar reward = action.Get(0).multiply(REBALANCE_COST);
@@ -142,9 +129,6 @@ class Airport implements StandardModel, MonteCarloInterface {
         .dot(CUSTOMER_PROB).Get() //
         .multiply(CUSTOMER_REWARD);
     reward = reward.add(rewardCustomers);
-    // for (int i = 0; i < CUSTOMER_PROB.length(); i++) {
-    // reward = reward.add(Min.of(RealScalar.of(i), action.Get(1)).multiply(CUSTOMER_REWARD).multiply(CUSTOMER_PROB.Get(i)));
-    // }
     return reward;
   }
 
