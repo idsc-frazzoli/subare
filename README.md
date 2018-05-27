@@ -278,9 +278,3 @@ Exact expected reward of two adversarial optimistic agents depending on their in
 Exact expected reward of two adversarial Upper-Confidence-Bound agents depending on their initial configuration:
 
 ![ucbs](https://cloud.githubusercontent.com/assets/4012178/26301526/c738ad1c-3ee1-11e7-9438-e928fc349868.png)
-
-## Dependencies
-
-`subare` requires the library `ch.ethz.idsc.tensor`
-
-The repository has over `70` unit tests.
