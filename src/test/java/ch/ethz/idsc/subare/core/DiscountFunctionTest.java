@@ -5,7 +5,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.alg.Multinomial;
+import ch.ethz.idsc.tensor.alg.Series;
 import junit.framework.TestCase;
 
 public class DiscountFunctionTest extends TestCase {
@@ -13,7 +13,7 @@ public class DiscountFunctionTest extends TestCase {
     Tensor coeffs = Tensors.vector(3, 2, -3, 2, .3);
     DiscountFunction discountFunction = DiscountFunction.of(RealScalar.ONE);
     Scalar gain1 = discountFunction.apply(coeffs);
-    Scalar gain2 = Multinomial.horner(coeffs, RealScalar.ONE);
+    Scalar gain2 = Series.of(coeffs).apply(RealScalar.ONE);
     assertEquals(gain1, gain2);
   }
 
@@ -22,7 +22,7 @@ public class DiscountFunctionTest extends TestCase {
     Scalar alpha = RealScalar.of(.2);
     DiscountFunction discountFunction = DiscountFunction.of(alpha);
     Scalar gain1 = discountFunction.apply(coeffs);
-    Scalar gain2 = Multinomial.horner(coeffs, alpha);
+    Scalar gain2 = Series.of(coeffs).apply(alpha);
     assertEquals(gain1, gain2);
   }
 

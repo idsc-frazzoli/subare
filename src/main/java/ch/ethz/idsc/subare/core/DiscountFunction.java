@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.core;
 
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.alg.Multinomial;
+import ch.ethz.idsc.tensor.alg.Series;
 import ch.ethz.idsc.tensor.opt.TensorScalarFunction;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -19,6 +19,6 @@ public interface DiscountFunction extends TensorScalarFunction {
     if (gamma.equals(RealScalar.ONE))
       return TOTAL;
     Clip.unit().requireInside(gamma);
-    return rewards -> Multinomial.horner(rewards, gamma);
+    return rewards -> Series.of(rewards).apply(gamma);
   }
 }

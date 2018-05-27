@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Accumulate;
 import ch.ethz.idsc.tensor.alg.Last;
-import ch.ethz.idsc.tensor.alg.Multinomial;
+import ch.ethz.idsc.tensor.alg.Series;
 
 /** Monte Carlo exploring starts improves an initial policy
  * based on average returns from complete episodes.
@@ -68,7 +68,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator {
       for (Entry<Tensor, Integer> entry : first.entrySet()) {
         Tensor key = entry.getKey();
         final int fromIndex = entry.getValue();
-        Scalar gain = Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma);
+        Scalar gain = Series.of(rewards.extract(fromIndex, rewards.length())).apply(gamma);
         gains.put(key, gain);
       }
     }
