@@ -16,7 +16,7 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /* apckage */ class ExploringStartsBatch {
   private final MonteCarloInterface monteCarloInterface;
-  private final List<Tensor> list;
+  private final List<Tensor> list; /** contains all starting start-action pairs, shuffled randomly*/
   private int index = 0;
 
   /* package */ ExploringStartsBatch(MonteCarloInterface monteCarloInterface) {
