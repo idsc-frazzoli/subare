@@ -58,7 +58,7 @@ class Airport implements StandardModel, MonteCarloInterface {
   @Override
   public Tensor actions(Tensor state) {
     if (isTerminal(state))
-      return Tensors.of(RealScalar.ZERO);
+      return Tensors.of(Tensors.of(RealScalar.ZERO));
     Tensor actions = Tensors.empty();
     for (int i = 0; i <= state.Get(1).number().intValue(); i++) {
       for (int j = 0; j <= state.Get(2).number().intValue(); j++) {
@@ -77,7 +77,7 @@ class Airport implements StandardModel, MonteCarloInterface {
   @Override
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state)) {
-      GlobalAssert.that(action.equals(RealScalar.ZERO));
+      GlobalAssert.that(action.equals(Tensors.of(RealScalar.ZERO)));
       return state;
     }
     Scalar delta = action.Get(0).subtract(action.Get(1));
