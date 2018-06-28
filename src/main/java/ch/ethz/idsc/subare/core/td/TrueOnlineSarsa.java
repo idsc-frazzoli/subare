@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.td;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -48,7 +49,6 @@ public class TrueOnlineSarsa {
    * @throws Exception if any parameter is outside valid range */
   public TrueOnlineSarsa(MonteCarloInterface mcInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
     this.mcInterface = mcInterface;
-    // this.lambda =
     Clip.unit().requireInside(lambda);
     this.alpha = Sign.requirePositive(alpha);
     this.gamma = gamma;
@@ -62,7 +62,7 @@ public class TrueOnlineSarsa {
     w = Array.zeros(featureSize); // remark: other initialization choices are possible
   }
 
-  public void update(Scalar reward, Tensor s_prime, Tensor a_prime) {
+  private void update(Scalar reward, Tensor s_prime, Tensor a_prime) {
     x_prime = mapper.getFeature(Join.of(s_prime, a_prime));
     q = w.dot(x).Get();
     q_prime = w.dot(x_prime).Get();
@@ -77,7 +77,7 @@ public class TrueOnlineSarsa {
     x = x_prime;
   }
 
-  public Tensor getEGreedyAction(Tensor state, Scalar epsilon) {
+  private Tensor getEGreedyAction(Tensor state, Scalar epsilon) {
     if (rand.nextFloat() > epsilon.number().doubleValue()) {
       return getGreedyAction(state);
     }
@@ -85,7 +85,7 @@ public class TrueOnlineSarsa {
     return mcInterface.actions(state).get(index);
   }
 
-  public Tensor getGreedyAction(Tensor state) {
+  private Tensor getGreedyAction(Tensor state) {
     double max = Double.NEGATIVE_INFINITY;
     Tensor bestAction = Tensors.empty();
     for (Tensor action : mcInterface.actions(state)) {
@@ -129,6 +129,18 @@ public class TrueOnlineSarsa {
         System.out.println(state + " -> " + action + " " + mapper.getFeature(Join.of(state, action)).dot(w));
       }
     }
+  }
+
+  /** Returns the Qsa according to the current feature weights.
+   * Only use this function, when the state-action space is small enough. */
+  public DiscreteQsa getQsa() {
+    DiscreteQsa qsa = DiscreteQsa.build(mcInterface);
+    for (Tensor state : mcInterface.states()) {
+      for (Tensor action : mcInterface.actions(state)) {
+        qsa.assign(state, action, mapper.getFeature(Join.of(state, action)).dot(w).Get());
+      }
+    }
+    return qsa;
   }
 
   public void printPolicy() {
