@@ -1,31 +1,16 @@
+// code by fluric
 package ch.ethz.idsc.subare.core.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.tensor.Tensor;
 
-public abstract class FeatureMapper {
-  protected Map<Tensor, Tensor> stateToFeature = new HashMap<>();
-  protected int stateActionSize;
-  protected int featureSize;
+public interface FeatureMapper {
+  /** Example of key is Join.of(state, action)
+   * 
+   * @param key
+   * @return */
+  Tensor getFeature(Tensor key);
 
-  public FeatureMapper(MonteCarloInterface mcInterface) {
-    initMap(mcInterface);
-  }
+  int getStateActionSize();
 
-  protected abstract void initMap(MonteCarloInterface mcInterface);
-
-  public Tensor getFeature(Tensor state) {
-    return stateToFeature.get(state);
-  }
-
-  public int getStateActionSize() {
-    return stateActionSize;
-  }
-
-  public int getFeatureSize() {
-    return featureSize;
-  }
+  int getFeatureSize();
 }

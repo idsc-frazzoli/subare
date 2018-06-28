@@ -7,13 +7,14 @@ import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.subare.core.util.ExactMapper;
+import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 
+/** uses TrueOnlineSarsa */
 enum Airport_Demo {
   ;
   public static void main(String[] args) throws Exception {
@@ -38,15 +39,13 @@ enum Airport_Demo {
     // ExploringStarts.batch(airport, policy, 1, sarsa, sac);
     // }
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, sarsa.qsa()), airport.states());c));
-    FeatureMapper mapper = new ExactMapper(airport);
+    FeatureMapper mapper = new ExactFeatureMapper(airport);
     TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(airport, RealScalar.of(0.5), RealScalar.of(0.2), RealScalar.of(1), mapper);
     for (int index = 0; index < batches; ++index) {
       toSarsa.executeEpisode(RealScalar.of(0.1));
     }
-    //System.out.println(toSarsa.getW());
+    // System.out.println(toSarsa.getW());
     toSarsa.printValues();
     toSarsa.printPolicy();
-    
-    
   }
 }
