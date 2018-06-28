@@ -18,11 +18,9 @@ import ch.ethz.idsc.tensor.sca.Sign;
 /** implementation of box "True Online Sarsa(lambda) for estimating w'x approx. q_pi or q_*
  * 
  * in Section 12.8, p.309 */
-// TODO reduce visibility of functions from public to private whenever possible
 public class TrueOnlineSarsa {
   private final Random rand = new Random();
   private final MonteCarloInterface mcInterface;
-  // private final Scalar lambda;
   private final Scalar alpha;
   private final Scalar gamma;
   private final FeatureMapper mapper;

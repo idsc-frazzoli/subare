@@ -12,7 +12,6 @@ import ch.ethz.idsc.tensor.alg.UnitVector;
 /** requires keys of the form Join.of(state, action)
  * 
  * the implementation initializes the features as unit vectors */
-// if needed, introduce an abstract class between ExactMapper and FeatureMapper ...
 public class ExactFeatureMapper implements FeatureMapper {
   private final Map<Tensor, Tensor> stateToFeature = new HashMap<>();
   private final int stateActionSize;
