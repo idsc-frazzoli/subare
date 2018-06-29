@@ -31,8 +31,8 @@ public class TrueOnlineSarsa {
   private final Scalar gamma_lambda;
   private final Scalar alpha_gamma_lambda;
   private final int featureSize;
-  private final int dimState;
-  private final int dimAction;
+  // private final int dimState;
+  // private final int dimAction;
   // ---
   private Scalar qOld = RealScalar.ZERO;
   private Scalar q;
@@ -57,8 +57,8 @@ public class TrueOnlineSarsa {
     this.mapper = mapper;
     gamma_lambda = Times.of(gamma, lambda);
     alpha_gamma_lambda = Times.of(alpha, gamma, lambda);
-    dimState = mcInterface.states().get(0).length();
-    dimAction = mcInterface.actions(mcInterface.states().get(0)).get(0).length();
+    // dimState = mcInterface.states().get(0).length();
+    // dimAction = mcInterface.actions(mcInterface.states().get(0)).get(0).length();
     featureSize = mapper.getFeatureSize();
     z = Array.zeros(featureSize);
     w = Array.zeros(featureSize); // remark: other initialization choices are possible

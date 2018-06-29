@@ -1,4 +1,4 @@
-//code by fluric
+// code by fluric
 package ch.ethz.idsc.subare.util;
 
 import java.awt.BasicStroke;
@@ -55,7 +55,8 @@ public class PlotUtils {
   public static void createPlot(List<Tensor> XYs, List<String> names, String path) {
     // create plot
     final XYDataset data1 = createDataset(XYs, names);
-    File outputDirectory0 = new File("plots");
+    File outputDirectory0 = UserHome.Pictures("plots");
+    outputDirectory0.mkdir();
     // return a new chart containing the overlaid plot...
     try {
       plot(path, path, "Number episodes", "Error", //

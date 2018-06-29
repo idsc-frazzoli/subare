@@ -25,7 +25,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 /** uses TrueOnlineSarsa */
-enum Airport_Demo {
+enum AirportDemo {
   ;
   public static void main(String[] args) throws Exception {
     Tensor XYmc = Tensors.empty();

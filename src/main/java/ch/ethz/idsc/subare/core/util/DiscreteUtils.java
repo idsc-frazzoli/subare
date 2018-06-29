@@ -15,7 +15,8 @@ import ch.ethz.idsc.tensor.red.Max;
 
 public enum DiscreteUtils {
   ;
-  /** Collects all possible state-action pairs that can be built with {@code states} according to the {@code stateActionModel}
+  /** collects all possible state-action pairs that can be built with {@code states} according to the {@code stateActionModel}
+   * 
    * @param stateActionModel
    * @param states
    * @return index for state-action */
