@@ -1,3 +1,4 @@
+//code by fluric
 package ch.ethz.idsc.subare.util;
 
 import java.awt.BasicStroke;
@@ -5,6 +6,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -27,11 +30,16 @@ import org.jfree.ui.RectangleInsets;
 import ch.ethz.idsc.tensor.Tensor;
 
 public class PlotUtils {
-  private static final Color[] COLORS = { new Color(128, 0, 128), //
-      new Color(255, 51, 0), //
-      new Color(0, 153, 255), //
-      new Color(0, 204, 0), //
-      new Color(64, 64, 64) };
+  private static final Color[] COLORS = { Color.BLUE, //
+      Color.GREEN, //
+      Color.RED, //
+      Color.YELLOW, //
+      Color.BLACK, //
+      Color.ORANGE, //
+      Color.GRAY, //
+      Color.CYAN, //
+      Color.MAGENTA, //
+      Color.DARK_GRAY };
   private static final Font FONT_TITLE = new Font("Dialog", Font.BOLD, 24);
   private static final Font FONT_AXIS = new Font("Dialog", Font.BOLD, 18);
   private static final Font FONT_TICK = new Font("Dialog", Font.PLAIN, 14);
@@ -57,6 +65,35 @@ public class PlotUtils {
       System.err.println();
       e.printStackTrace();
     }
+  }
+
+  public static void createPlot(Map<String, Tensor> map, String path) {
+    // create plot
+    final XYDataset data1 = createDataset(map);
+    File outputDirectory0 = new File("plots");
+    // return a new chart containing the overlaid plot...
+    try {
+      plot(path, path, "Number episodes", "Error", //
+          data1, outputDirectory0, //
+          false, 100, 500, false, 100, 500);
+    } catch (Exception e) {
+      System.err.println();
+      e.printStackTrace();
+    }
+  }
+
+  private static XYDataset createDataset(Map<String, Tensor> map) {
+    final XYSeriesCollection collection = new XYSeriesCollection();
+    // create dataset
+    for (Entry<String, Tensor> entry : map.entrySet()) {
+      XYSeries series = new XYSeries(entry.getKey());
+      Tensor XY = entry.getValue();
+      for (int j = 0; j < XY.length(); ++j) {
+        series.add(XY.get(j).Get(0).number(), XY.get(j).Get(1).number());
+      }
+      collection.addSeries(series);
+    }
+    return collection;
   }
 
   private static XYDataset createDataset(List<Tensor> XYs, List<String> names) {

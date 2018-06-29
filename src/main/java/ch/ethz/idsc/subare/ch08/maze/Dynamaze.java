@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 
-/** Example 8.1 p.172: Dyna Maze */
+/** Example 8.1 p.164: Dyna Maze */
 public class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface {
   static final Tensor WHITE = Tensors.vector(255, 255, 255, 255);
   static final Tensor RED = Tensors.vector(255, 0, 0, 255);

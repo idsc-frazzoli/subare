@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.demo.airport;
 
 import java.util.Arrays;
 
+import ch.ethz.idsc.subare.analysis.AnalysisUtils;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
@@ -17,7 +18,6 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.StateActionCounter;
-import ch.ethz.idsc.subare.util.AnalysisUtils;
 import ch.ethz.idsc.subare.util.PlotUtils;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -44,7 +44,7 @@ enum Airport_Demo {
       ExploringStarts.batch(airport, policyMC, mces);
       XYmc.append(Tensors.vector(RealScalar.of(index).number(), AnalysisUtils.getLinearQsaError(mces.qsa(), optimalQsa).number()));
     }
-    System.out.println("time for MonteCarlo: " + (System.currentTimeMillis()-start)/1000.0 + "s");
+    System.out.println("time for MonteCarlo: " + (System.currentTimeMillis() - start) / 1000.0 + "s");
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, mces.qsa()), airport.states());
     StateActionCounter sac = new StateActionCounter(airport);
     DiscreteQsa qsaSarsa = DiscreteQsa.build(airport); // q-function for training, initialized to 0
@@ -56,7 +56,7 @@ enum Airport_Demo {
       ExploringStarts.batch(airport, policy, 1, sarsa, sac);
       XYsarsa.append(Tensors.vector(RealScalar.of(index).number(), AnalysisUtils.getLinearQsaError(sarsa.qsa(), optimalQsa).number()));
     }
-    System.out.println("time for Sarsa: " + (System.currentTimeMillis()-start)/1000.0 + "s");
+    System.out.println("time for Sarsa: " + (System.currentTimeMillis() - start) / 1000.0 + "s");
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, sarsa.qsa()), airport.states());
     FeatureMapper mapper = new ExactFeatureMapper(airport);
     TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(airport, RealScalar.of(0.7), RealScalar.of(0.2), RealScalar.of(1), mapper);
@@ -66,8 +66,7 @@ enum Airport_Demo {
       DiscreteQsa toQsa = toSarsa.getQsa();
       XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), AnalysisUtils.getLinearQsaError(toQsa, optimalQsa).number()));
     }
-    System.out.println("time for TrueOnlineSarsa: " + (System.currentTimeMillis()-start)/1000.0 + "s");
-
+    System.out.println("time for TrueOnlineSarsa: " + (System.currentTimeMillis() - start) / 1000.0 + "s");
     DiscreteQsa toQsa = toSarsa.getQsa();
     // System.out.println(toSarsa.getW());
     // toSarsa.printValues();

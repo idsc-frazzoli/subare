@@ -17,7 +17,7 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 import ch.ethz.idsc.tensor.red.Min;
 
-/** Example 4.3 p.90: Gambler's problem
+/** Example 4.3 p.84: Gambler's problem
  * an action defines the amount of coins to bet
  * the action has to be non-zero unless the capital == 0
  * or the terminal cash has been reached
