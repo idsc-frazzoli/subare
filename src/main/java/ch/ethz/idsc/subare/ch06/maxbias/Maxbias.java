@@ -13,10 +13,10 @@ import ch.ethz.idsc.tensor.pdf.NormalDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
-/** Example 6.7 p.143: Maximization bias
+/** Example 6.7 p.134: Maximization bias
  * 
  * Credit: Hado van Hasselt (2010, 2011) */
-class Maxbias implements StandardModel, MonteCarloInterface {
+public class Maxbias implements StandardModel, MonteCarloInterface {
   static final Scalar MEAN = RealScalar.of(-0.1);
   static final Scalar STATE_A = RealScalar.of(2);
   static final Scalar STATE_B = RealScalar.of(1);

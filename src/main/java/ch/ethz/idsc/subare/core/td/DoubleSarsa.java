@@ -36,7 +36,7 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
 public class DoubleSarsa extends DequeDigestAdapter {
-  private static final Distribution COINFLIPPING = BernoulliDistribution.of(RationalScalar.of(1, 2));
+  private static final Distribution COINFLIPPING = BernoulliDistribution.of(RationalScalar.HALF);
   // ---
   private final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;

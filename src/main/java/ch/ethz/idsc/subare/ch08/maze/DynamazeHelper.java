@@ -9,7 +9,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.io.ResourceData;
 
-enum DynamazeHelper {
+public enum DynamazeHelper {
   ;
   private static final Tensor STARTS_5 = Tensors.matrixInt(new int[][] { //
       { 31, 15 }, { 9, 15 }, { 18, 12 } });

@@ -12,8 +12,8 @@ import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
-/** Example 5.5 p.114: Infinite Variance */
-class InfiniteVariance implements StandardModel, MonteCarloInterface {
+/** Example 5.5 p.106: Infinite Variance */
+public class InfiniteVariance implements StandardModel, MonteCarloInterface {
   static final Scalar BACK = RealScalar.ZERO;
   static final Scalar END = RealScalar.ONE;
   static final Scalar PROB = RealScalar.of(.1);

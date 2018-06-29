@@ -14,8 +14,9 @@ import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
 
-/* apckage */ class ExploringStartsBatch {
+/* package */ class ExploringStartsBatch {
   private final MonteCarloInterface monteCarloInterface;
+  /** list contains all starting start-action pairs, shuffled randomly */
   private final List<Tensor> list;
   private int index = 0;
 

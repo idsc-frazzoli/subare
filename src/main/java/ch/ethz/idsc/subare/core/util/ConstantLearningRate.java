@@ -39,18 +39,18 @@ public class ConstantLearningRate implements LearningRate {
     this.alpha = alpha;
   }
 
-  @Override
+  @Override // from LearningRate
   public void digest(StepInterface stepInterface) {
     visited.add(StateAction.key(stepInterface));
   }
 
-  @Override
+  @Override // from LearningRate
   public Scalar alpha(StepInterface stepInterface) {
     return visited.contains(StateAction.key(stepInterface)) ? //
         alpha : RealScalar.ONE; // overcome initialization bias
   }
 
-  @Override
+  @Override // from LearningRate
   public boolean encountered(Tensor state, Tensor action) {
     return visited.contains(StateAction.key(state, action));
   }

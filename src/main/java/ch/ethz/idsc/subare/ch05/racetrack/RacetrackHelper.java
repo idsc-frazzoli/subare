@@ -12,9 +12,13 @@ import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.ResourceData;
 
-enum RacetrackHelper {
+public enum RacetrackHelper {
   ;
-  static Racetrack create(String trackName, int maxSpeed) throws Exception {
+  /** @param trackName
+   * @param maxSpeed
+   * @return
+   * @throws Exception if resource associated to trackName does not exist */
+  public static Racetrack create(String trackName, int maxSpeed) {
     return new Racetrack(ResourceData.of("/ch05/" + trackName + ".png"), maxSpeed);
   }
 

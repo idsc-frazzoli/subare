@@ -12,10 +12,10 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-/** Example 6.5 p.138: Windy Gridworld
+/** Example 6.5 p.130: Windy Gridworld
  * 
  * Credit: Tom Kalt */
-class Windygrid extends DeterministicStandardModel implements MonteCarloInterface {
+public class Windygrid extends DeterministicStandardModel implements MonteCarloInterface {
   static final Scalar NEGATIVE_ONE = RealScalar.ONE.negate();
   static final int NX = 10;
   static final int NY = 7;

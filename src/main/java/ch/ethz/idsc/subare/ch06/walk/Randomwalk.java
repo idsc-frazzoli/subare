@@ -15,7 +15,7 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
 
 /** Example 6.2: Random Walk, p.133 */
 class Randomwalk implements MonteCarloInterface {
-  private static final Distribution COINFLIPPING = BernoulliDistribution.of(RationalScalar.of(1, 2));
+  private static final Distribution COINFLIPPING = BernoulliDistribution.of(RationalScalar.HALF);
   // ---
   private static final Tensor TERMINATE1 = RealScalar.ZERO; // A
   // ---

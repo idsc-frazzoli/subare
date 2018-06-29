@@ -24,7 +24,7 @@ import ch.ethz.idsc.tensor.opt.NearestInterpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Decrement;
 
-/** Exercise 5.8 p.119: Racetrack (programming)
+/** Exercise 5.8 p.111: Racetrack (programming)
  * Figure 5.6
  * 
  * the book states that the velocity components should be non-negative

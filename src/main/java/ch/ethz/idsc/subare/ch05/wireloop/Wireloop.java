@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.ch05.wireloop;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -15,7 +16,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.opt.TensorScalarFunction;
 
-/** Example 5.2 p.103: Soap Bubble
+/** Example 5.2 p.95: Soap Bubble
  * a classical Dirichlet problem
  * 
  * References:
@@ -43,7 +44,7 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
   // private final StateActionMap stateActionMap = StateActionMap.empty();
 
   Wireloop(Tensor image, TensorScalarFunction function, WireloopReward wireloopReward) {
-    this.image = image;
+    this.image = Objects.requireNonNull(image);
     this.function = function;
     this.wireloopReward = wireloopReward;
     // System.out.println(Dimensions.of(image));

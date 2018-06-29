@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.sca.Ramp;
  * from the airport to the center. Driving without passenger to the other node costs 10CHF. Driving from
  * the airport to the center with a customers gives 30CHF reward instead. Parking at the airport for one
  * time step at the airport costs 5CHF. */
-class Airport implements StandardModel, MonteCarloInterface {
+public class Airport implements StandardModel, MonteCarloInterface {
   static final int LASTT = 4;
   static final int VEHICLES = 5;
   private static final Scalar REBALANCE_COST = RealScalar.of(-10);
@@ -37,6 +37,7 @@ class Airport implements StandardModel, MonteCarloInterface {
   // for EmpiricalDistribution#fromUnscaledPDF the numbers don't have to add up to 1
   private final Distribution distribution = EmpiricalDistribution.fromUnscaledPDF(CUSTOMER_HIST);
 
+  // TODO defined parameters for complexity of scenario: # time steps, # taxis ...
   public Airport() {
     Tensor states = Tensors.empty();
     states.append(Tensors.vector(0, 5, 0)); // start at time 0 with 5 taxis in the city and 0 in the airport
@@ -58,7 +59,7 @@ class Airport implements StandardModel, MonteCarloInterface {
   @Override
   public Tensor actions(Tensor state) {
     if (isTerminal(state))
-      return Tensors.of(RealScalar.ZERO);
+      return Tensors.of(Tensors.of(RealScalar.ZERO));
     Tensor actions = Tensors.empty();
     for (int i = 0; i <= state.Get(1).number().intValue(); i++) {
       for (int j = 0; j <= state.Get(2).number().intValue(); j++) {
@@ -77,7 +78,7 @@ class Airport implements StandardModel, MonteCarloInterface {
   @Override
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state)) {
-      GlobalAssert.that(action.equals(RealScalar.ZERO));
+      GlobalAssert.that(action.equals(Tensors.of(RealScalar.ZERO)));
       return state;
     }
     Scalar delta = action.Get(0).subtract(action.Get(1));

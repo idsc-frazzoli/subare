@@ -11,8 +11,8 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-/** Example 4.1, p.82 */
-class Gridworld extends DeterministicStandardModel implements MonteCarloInterface {
+/** Example 4.1, p.76 */
+public class Gridworld extends DeterministicStandardModel implements MonteCarloInterface {
   private static final Scalar NEGATIVE_ONE = RealScalar.ONE.negate();
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'

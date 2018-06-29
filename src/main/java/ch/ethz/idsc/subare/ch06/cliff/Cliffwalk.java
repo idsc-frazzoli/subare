@@ -14,8 +14,8 @@ import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Sign;
 
-/** Example 6.6 cliff walking */
-class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterface {
+/** Example 6.6 p. 132, cliff walking */
+public class Cliffwalk extends DeterministicStandardModel implements MonteCarloInterface {
   static final Scalar PRICE_CLIFF = RealScalar.of(-20);
   static final Scalar PRICE_MOVE = RealScalar.ONE.negate();
   // ---

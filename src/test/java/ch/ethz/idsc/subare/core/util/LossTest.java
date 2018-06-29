@@ -50,7 +50,7 @@ public class LossTest extends TestCase {
     DiscreteQsa ref = DiscreteQsa.build(discreteModel).create(Tensors.vector(0, 0, 1, 0).stream());
     DiscreteQsa qsa = DiscreteQsa.build(discreteModel).create(Tensors.vector(2, 0, 2, -2).stream());
     Scalar scalar = Loss.accumulation(discreteModel, ref, qsa);
-    assertEquals(scalar, RationalScalar.of(1, 2));
+    assertEquals(scalar, RationalScalar.HALF);
   }
 
   public void testAccumulation3() {

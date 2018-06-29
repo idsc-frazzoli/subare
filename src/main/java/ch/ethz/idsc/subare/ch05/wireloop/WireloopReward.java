@@ -7,7 +7,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** collection of different cost functions */
-interface WireloopReward extends RewardInterface {
+public interface WireloopReward extends RewardInterface {
   /** steps don't cost anything
    * 
    * @return constant zero */
