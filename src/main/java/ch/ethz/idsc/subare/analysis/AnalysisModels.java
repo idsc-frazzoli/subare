@@ -1,4 +1,4 @@
-//code by fluric
+// code by fluric
 package ch.ethz.idsc.subare.analysis;
 
 import ch.ethz.idsc.subare.ch04.gambler.Gambler;

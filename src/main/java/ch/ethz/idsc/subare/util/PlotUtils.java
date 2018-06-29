@@ -28,25 +28,21 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.img.ColorDataLists;
 
-public class PlotUtils {
-  private static final Color[] COLORS = { Color.BLUE, //
-      Color.GREEN, //
-      Color.RED, //
-      Color.YELLOW, //
-      Color.BLACK, //
-      Color.ORANGE, //
-      Color.GRAY, //
-      Color.CYAN, //
-      Color.MAGENTA, //
-      Color.DARK_GRAY };
-  private static final Font FONT_TITLE = new Font("Dialog", Font.BOLD, 24);
-  private static final Font FONT_AXIS = new Font("Dialog", Font.BOLD, 18);
-  private static final Font FONT_TICK = new Font("Dialog", Font.PLAIN, 14);
+// TODO class contains non generic functionality, e.g. "Number episodes"
+public enum PlotUtils {
+  ;
   private static final Color COLOR_BACKGROUND_PAINT = Color.WHITE;
   private static final Color COLOR_GRIDLINE_PAINT = Color.LIGHT_GRAY;
-  private static final int WIDTH = 1000;
-  private static final int HEIGHT = 750;
+  private static final int WIDTH = 1280;
+  private static final int HEIGHT = 720;
+
+  private static File directory() {
+    File directory = UserHome.Pictures("plots");
+    directory.mkdir();
+    return directory;
+  }
 
   /** A plot can be created and is stored at {@code plot/path}. XYs contains a list of tensors (data sets) that again
    * contains tensors with x and y components. The list of names contains the data set names.
@@ -55,12 +51,10 @@ public class PlotUtils {
   public static void createPlot(List<Tensor> XYs, List<String> names, String path) {
     // create plot
     final XYDataset data1 = createDataset(XYs, names);
-    File outputDirectory0 = UserHome.Pictures("plots");
-    outputDirectory0.mkdir();
     // return a new chart containing the overlaid plot...
     try {
       plot(path, path, "Number episodes", "Error", //
-          data1, outputDirectory0, //
+          data1, directory(), //
           false, 100, 500, false, 100, 500);
     } catch (Exception e) {
       System.err.println();
@@ -71,11 +65,10 @@ public class PlotUtils {
   public static void createPlot(Map<String, Tensor> map, String path) {
     // create plot
     final XYDataset data1 = createDataset(map);
-    File outputDirectory0 = new File("plots");
     // return a new chart containing the overlaid plot...
     try {
       plot(path, path, "Number episodes", "Error", //
-          data1, outputDirectory0, //
+          data1, directory(), //
           false, 100, 500, false, 100, 500);
     } catch (Exception e) {
       System.err.println();
@@ -119,10 +112,10 @@ public class PlotUtils {
     JFreeChart chart = ChartFactory.createXYLineChart(diagramTitle, axisLabelX, axisLabelY, dataset, PlotOrientation.VERTICAL, false, false, false); //
     for (int k = 0; k < dataset.getSeriesCount(); k++) {
       chart.getXYPlot().getRenderer().setSeriesStroke(k, new BasicStroke(2.0f));
-      chart.getXYPlot().getRenderer().setSeriesPaint(k, COLORS[k]);
+      chart.getXYPlot().getRenderer().setSeriesPaint(k, ColorDataLists._097.cyclic().getColor(k));
     }
-    chart.getXYPlot().setRangeGridlinePaint(Color.lightGray);
-    chart.getXYPlot().setDomainGridlinePaint(Color.lightGray);
+    chart.getXYPlot().setRangeGridlinePaint(Color.LIGHT_GRAY);
+    chart.getXYPlot().setDomainGridlinePaint(Color.LIGHT_GRAY);
     chart.getPlot().setBackgroundPaint(COLOR_BACKGROUND_PAINT);
     chart.getXYPlot().setRangeGridlinePaint(COLOR_GRIDLINE_PAINT);
     chart.getXYPlot().getDomainAxis().setLowerMargin(0.0);

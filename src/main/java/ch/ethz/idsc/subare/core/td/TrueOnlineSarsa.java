@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
  * in Section 12.8, p.309 */
 public class TrueOnlineSarsa {
   private final Random rand = new Random();
-  private final MonteCarloInterface mcInterface;
+  private final MonteCarloInterface monteCarloInterface;
   private final Scalar alpha;
   private final Scalar gamma;
   private final FeatureMapper mapper;
@@ -43,14 +43,14 @@ public class TrueOnlineSarsa {
   private Tensor z;
   private Scalar delta;
 
-  /** @param mcInterface
+  /** @param monteCarloInterface
    * @param lambda in [0, 1]
    * @param alpha positive
    * @param gamma
    * @param mapper
    * @throws Exception if any parameter is outside valid range */
-  public TrueOnlineSarsa(MonteCarloInterface mcInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
-    this.mcInterface = mcInterface;
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
+    this.monteCarloInterface = monteCarloInterface;
     Clip.unit().requireInside(lambda);
     this.alpha = Sign.requirePositive(alpha);
     this.gamma = gamma;
@@ -84,14 +84,14 @@ public class TrueOnlineSarsa {
     if (rand.nextFloat() > epsilon.number().doubleValue()) {
       return getGreedyAction(state);
     }
-    int index = rand.nextInt(mcInterface.actions(state).length());
-    return mcInterface.actions(state).get(index);
+    int index = rand.nextInt(monteCarloInterface.actions(state).length());
+    return monteCarloInterface.actions(state).get(index);
   }
 
   private Tensor getGreedyAction(Tensor state) {
     double max = Double.NEGATIVE_INFINITY;
     List<Tensor> bestActions = new ArrayList<>();
-    for (Tensor action : mcInterface.actions(state)) {
+    for (Tensor action : monteCarloInterface.actions(state)) {
       Tensor stateActionPair = StateActionMapper.getMap(state, action);
       double current = mapper.getFeature(stateActionPair).dot(w).Get().number().doubleValue();
       if (current > max) {
@@ -105,8 +105,8 @@ public class TrueOnlineSarsa {
 
   public void executeEpisode(Scalar epsilon) {
     // getting random index for startState
-    int index = rand.nextInt(mcInterface.startStates().length());
-    Tensor state = mcInterface.startStates().get(index);
+    int index = rand.nextInt(monteCarloInterface.startStates().length());
+    Tensor state = monteCarloInterface.startStates().get(index);
     Tensor stateOld;
     Tensor action = getEGreedyAction(state, epsilon);
     Tensor actionOld;
@@ -117,11 +117,11 @@ public class TrueOnlineSarsa {
     qOld = RealScalar.ZERO;
     z = Array.zeros(featureSize);
     // run through episode
-    while (!mcInterface.isTerminal(state)) {
+    while (!monteCarloInterface.isTerminal(state)) {
       stateOld = state;
       actionOld = action;
-      state = mcInterface.move(stateOld, actionOld);
-      reward = mcInterface.reward(stateOld, actionOld, state);
+      state = monteCarloInterface.move(stateOld, actionOld);
+      reward = monteCarloInterface.reward(stateOld, actionOld, state);
       // System.out.println("from state " + stateOld + " to " + state + " with action " + actionOld + " reward: " + reward);
       action = getEGreedyAction(state, epsilon);
       update(reward, state, action);
@@ -130,8 +130,8 @@ public class TrueOnlineSarsa {
 
   public void printValues() {
     System.out.println("Values for all state-action pairs:");
-    for (Tensor state : mcInterface.states()) {
-      for (Tensor action : mcInterface.actions(state)) {
+    for (Tensor state : monteCarloInterface.states()) {
+      for (Tensor action : monteCarloInterface.actions(state)) {
         System.out.println(state + " -> " + action + " " + mapper.getFeature(Join.of(state, action)).dot(w));
       }
     }
@@ -140,9 +140,9 @@ public class TrueOnlineSarsa {
   /** Returns the Qsa according to the current feature weights.
    * Only use this function, when the state-action space is small enough. */
   public DiscreteQsa getQsa() {
-    DiscreteQsa qsa = DiscreteQsa.build(mcInterface);
-    for (Tensor state : mcInterface.states()) {
-      for (Tensor action : mcInterface.actions(state)) {
+    DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
+    for (Tensor state : monteCarloInterface.states()) {
+      for (Tensor action : monteCarloInterface.actions(state)) {
         Tensor stateActionPair = StateActionMapper.getMap(state, action);
         qsa.assign(state, action, mapper.getFeature(stateActionPair).dot(w).Get());
       }
@@ -152,7 +152,7 @@ public class TrueOnlineSarsa {
 
   public void printPolicy() {
     System.out.println("Greedy action to each state");
-    for (Tensor state : mcInterface.states()) {
+    for (Tensor state : monteCarloInterface.states()) {
       System.out.println(state + " -> " + getGreedyAction(state));
     }
   }
