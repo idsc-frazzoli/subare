@@ -23,15 +23,15 @@ enum RSTQP_Wireloop {
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         wireloop, qsa, ConstantLearningRate.of(RealScalar.ONE));
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "L_qsa_rstqp.gif"), 250);
-    int batches = 50;
-    for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
-      TabularSteps.batch(wireloop, wireloop, rstqp);
-      gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "L_qsa_rstqp.gif"), 250)) {
+      int batches = 50;
+      for (int index = 0; index < batches; ++index) {
+        Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
+        TabularSteps.batch(wireloop, wireloop, rstqp);
+        gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
   }
 }

@@ -32,17 +32,17 @@ enum TDQ_Dynamaze {
     LearningRate learningRate = DefaultLearningRate.of(5, 0.51);
     Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
     TabularDynaQ tabularDynaQ = new TabularDynaQ(sarsa, 10);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200);
-    for (int index = 0; index < batches; ++index) {
-      // if (EPISODES - 10 < index)
-      Infoline.print(dynamaze, index, ref, qsa);
-      Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(index));
-      sarsa.setExplore(epsilon.Get(index));
-      // for (int count = 0; count < 5; ++count)
-      ExploringStarts.batch(dynamaze, policy, tabularDynaQ);
-      gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200)) {
+      for (int index = 0; index < batches; ++index) {
+        // if (EPISODES - 10 < index)
+        Infoline.print(dynamaze, index, ref, qsa);
+        Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(index));
+        sarsa.setExplore(epsilon.Get(index));
+        // for (int count = 0; count < 5; ++count)
+        ExploringStarts.batch(dynamaze, policy, tabularDynaQ);
+        gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+      }
     }
-    gsw.close();
   }
 
   public static void main(String[] args) throws Exception {

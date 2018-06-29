@@ -22,15 +22,15 @@ enum RSTQP_Windygrid {
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         windygrid, qsa, ConstantLearningRate.one());
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_rstqp.gif"), 250);
-    int batches = 40;
-    for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
-      TabularSteps.batch(windygrid, windygrid, rstqp);
-      gsw.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_rstqp.gif"), 250)) {
+      int batches = 40;
+      for (int index = 0; index < batches; ++index) {
+        Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
+        TabularSteps.batch(windygrid, windygrid, rstqp);
+        gsw.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
   }
 }

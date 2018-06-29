@@ -29,30 +29,30 @@ enum SES_Gridworld {
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    AnimationWriter gsw = AnimationWriter.of( //
-        UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250);
-    LearningRate learningRate = DefaultLearningRate.of(5, 1.1);
-    Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
-    DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
-      @Override
-      public Policy batchPolicy(int batch) {
-        Scalar eps = epsilon.Get(batch);
-        sarsa.setExplore(eps);
-        return EGreedyPolicy.bestEquiprobable(gridworld, qsa, eps);
+    try (AnimationWriter gsw = AnimationWriter.of( //
+        UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
+      LearningRate learningRate = DefaultLearningRate.of(5, 1.1);
+      Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
+      DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
+        @Override
+        public Policy batchPolicy(int batch) {
+          Scalar eps = epsilon.Get(batch);
+          sarsa.setExplore(eps);
+          return EGreedyPolicy.bestEquiprobable(gridworld, qsa, eps);
+        }
+      };
+      int episode = 0;
+      while (exploringStartsStream.batchIndex() < batches) {
+        exploringStartsStream.nextEpisode();
+        if (episode % 5 == 0) {
+          Infoline infoline = Infoline.print(gridworld, episode, ref, qsa);
+          gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+          if (infoline.isLossfree())
+            break;
+        }
+        ++episode;
       }
-    };
-    int episode = 0;
-    while (exploringStartsStream.batchIndex() < batches) {
-      exploringStartsStream.nextEpisode();
-      if (episode % 5 == 0) {
-        Infoline infoline = Infoline.print(gridworld, episode, ref, qsa);
-        gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
-        if (infoline.isLossfree())
-          break;
-      }
-      ++episode;
     }
-    gsw.close();
   }
 
   public static void main(String[] args) throws Exception {

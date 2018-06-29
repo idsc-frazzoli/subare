@@ -37,25 +37,25 @@ enum PS_Dynamaze {
     Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsa, 10, RealScalar.ZERO);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250);
-    // ---
-    StepExploringStarts stepExploringStarts = //
-        new StepExploringStarts(dynamaze, prioritizedSweeping) {
-          @Override
-          public Policy batchPolicy(int batch) {
-            Scalar eps = epsilon.Get(batch);
-            sarsa.setExplore(eps);
-            return EGreedyPolicy.bestEquiprobable(dynamaze, qsa, eps);
-          }
-        };
-    while (stepExploringStarts.batchIndex() < batches) {
-      Infoline infoline = Infoline.print(dynamaze, stepExploringStarts.batchIndex(), ref, qsa);
-      stepExploringStarts.nextEpisode();
-      gsw.append(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250)) {
+      // ---
+      StepExploringStarts stepExploringStarts = //
+          new StepExploringStarts(dynamaze, prioritizedSweeping) {
+            @Override
+            public Policy batchPolicy(int batch) {
+              Scalar eps = epsilon.Get(batch);
+              sarsa.setExplore(eps);
+              return EGreedyPolicy.bestEquiprobable(dynamaze, qsa, eps);
+            }
+          };
+      while (stepExploringStarts.batchIndex() < batches) {
+        Infoline infoline = Infoline.print(dynamaze, stepExploringStarts.batchIndex(), ref, qsa);
+        stepExploringStarts.nextEpisode();
+        gsw.append(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
   }
 
   public static void main(String[] args) throws Exception {

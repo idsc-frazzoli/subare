@@ -18,14 +18,14 @@ enum AVI_Gambler2 {
     Gambler gambler = Gambler.createDefault();
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     ActionValueIteration avi = ActionValueIteration.of(gambler);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_avi.gif"), 500);
-    for (int index = 0; index < 13; ++index) {
-      DiscreteQsa qsa = avi.qsa();
-      Infoline.print(gambler, index, ref, qsa);
-      gsw.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
-      avi.step();
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_avi.gif"), 500)) {
+      for (int index = 0; index < 13; ++index) {
+        DiscreteQsa qsa = avi.qsa();
+        Infoline.print(gambler, index, ref, qsa);
+        gsw.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
+        avi.step();
+      }
+      gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), avi.qsa(), ref)));
     }
-    gsw.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), avi.qsa(), ref)));
-    gsw.close();
   }
 }

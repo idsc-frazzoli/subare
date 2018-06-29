@@ -26,16 +26,16 @@ enum AVI_Cliffwalk {
     Export.of(UserHome.Pictures("cliffwalk_qsa_avi.png"), //
         StateActionRasters.qsa(new CliffwalkRaster(cliffwalk), DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = ActionValueIteration.of(cliffwalk);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("cliffwalk_qsa_avi.gif"), 200);
-    for (int index = 0; index < 20; ++index) {
-      Infoline infoline = Infoline.print(cliffwalk, index, ref, avi.qsa());
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("cliffwalk_qsa_avi.gif"), 200)) {
+      for (int index = 0; index < 20; ++index) {
+        Infoline infoline = Infoline.print(cliffwalk, index, ref, avi.qsa());
+        gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
+        avi.step();
+        if (infoline.isLossfree())
+          break;
+      }
       gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
-      avi.step();
-      if (infoline.isLossfree())
-        break;
     }
-    gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
-    gsw.close();
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
     DiscreteUtils.print(vs);
     Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, ref);

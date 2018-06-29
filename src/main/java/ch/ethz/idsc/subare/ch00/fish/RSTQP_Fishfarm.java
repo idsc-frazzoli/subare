@@ -22,16 +22,16 @@ enum RSTQP_Fishfarm {
     DiscreteQsa qsa = DiscreteQsa.build(fishfarm, DoubleScalar.POSITIVE_INFINITY);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         fishfarm, qsa, ConstantLearningRate.one());
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_rstqp.gif"), 200);
-    int batches = 20;
-    for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
-      TabularSteps.batch(fishfarm, fishfarm, rstqp);
-      gsw.append(StateRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_rstqp.gif"), 200)) {
+      int batches = 20;
+      for (int index = 0; index < batches; ++index) {
+        Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
+        TabularSteps.batch(fishfarm, fishfarm, rstqp);
+        gsw.append(StateRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
     DiscreteUtils.print(qsa, Round._2);
   }
 }

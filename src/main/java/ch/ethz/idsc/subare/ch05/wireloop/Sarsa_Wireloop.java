@@ -28,19 +28,19 @@ enum Sarsa_Wireloop {
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     System.out.println(qsa.size());
     Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(3, 0.51));
-    AnimationWriter gsw = AnimationWriter.of( //
-        UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250);
-    for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
-      Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
-      // sarsa.supplyPolicy(() -> policy);
-      sarsa.setExplore(epsilon.Get(index));
-      ExploringStarts.batch(wireloop, policy, nstep, sarsa);
-      gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of( //
+        UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250)) {
+      for (int index = 0; index < batches; ++index) {
+        Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
+        Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
+        // sarsa.supplyPolicy(() -> policy);
+        sarsa.setExplore(epsilon.Get(index));
+        ExploringStarts.batch(wireloop, policy, nstep, sarsa);
+        gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
     System.out.println("---");
   }
 

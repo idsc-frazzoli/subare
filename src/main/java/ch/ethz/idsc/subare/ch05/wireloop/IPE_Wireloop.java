@@ -17,13 +17,13 @@ enum IPE_Wireloop {
     Policy policy = EquiprobablePolicy.create(wireloop);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         wireloop, policy);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ipe_iteration.gif"), 200);
-    for (int count = 0; count < 20; ++count) {
-      System.out.println(count);
-      gsw.append(StateRasters.vs_rescale(wireloopRaster, ipe.vs()));
-      for (int ep = 0; ep < 5; ++ep)
-        ipe.step();
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ipe_iteration.gif"), 200)) {
+      for (int count = 0; count < 20; ++count) {
+        System.out.println(count);
+        gsw.append(StateRasters.vs_rescale(wireloopRaster, ipe.vs()));
+        for (int ep = 0; ep < 5; ++ep)
+          ipe.step();
+      }
     }
-    gsw.close();
   }
 }

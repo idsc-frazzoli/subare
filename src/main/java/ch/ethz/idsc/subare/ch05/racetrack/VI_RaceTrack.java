@@ -25,27 +25,27 @@ enum VI_RaceTrack {
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     Policy policy = GreedyPolicy.bestEquiprobable(racetrack, vi.vs());
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + ".gif"), 400);
-    for (Tensor start : racetrack.statesStart) {
-      Tensor image = racetrack.image();
-      MonteCarloEpisode mce = new MonteCarloEpisode( //
-          racetrack, policy, start, new LinkedList<>());
-      while (mce.hasNext()) {
-        StepInterface stepInterface = mce.step();
-        {
-          Tensor state = stepInterface.prevState();
-          int[] index = Primitives.toIntArray(state);
-          image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + ".gif"), 400)) {
+      for (Tensor start : racetrack.statesStart) {
+        Tensor image = racetrack.image();
+        MonteCarloEpisode mce = new MonteCarloEpisode( //
+            racetrack, policy, start, new LinkedList<>());
+        while (mce.hasNext()) {
+          StepInterface stepInterface = mce.step();
+          {
+            Tensor state = stepInterface.prevState();
+            int[] index = Primitives.toIntArray(state);
+            image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
+          }
+          {
+            Tensor state = stepInterface.nextState();
+            int[] index = Primitives.toIntArray(state);
+            image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
+          }
         }
-        {
-          Tensor state = stepInterface.nextState();
-          int[] index = Primitives.toIntArray(state);
-          image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
-        }
+        gsw.append(ImageResize.nearest(image, 6));
       }
-      gsw.append(ImageResize.nearest(image, 6));
     }
-    gsw.close();
     System.out.println("gif created");
   }
 }

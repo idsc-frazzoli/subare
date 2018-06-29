@@ -29,19 +29,19 @@ enum Sarsa_Windygrid {
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(3, 0.51);
     Sarsa sarsa = sarsaType.supply(windygrid, qsa, learningRate);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100);
-    for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
-      Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, epsilon.Get(index));
-      // sarsa.supplyPolicy(() -> policy);
-      sarsa.setExplore(epsilon.Get(index));
-      for (int count = 0; count < 10; ++count) // because there is only 1 start state
-        ExploringStarts.batch(windygrid, policy, sarsa);
-      gsw.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100)) {
+      for (int index = 0; index < batches; ++index) {
+        Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
+        Policy policy = EGreedyPolicy.bestEquiprobable(windygrid, qsa, epsilon.Get(index));
+        // sarsa.supplyPolicy(() -> policy);
+        sarsa.setExplore(epsilon.Get(index));
+        for (int count = 0; count < 10; ++count) // because there is only 1 start state
+          ExploringStarts.batch(windygrid, policy, sarsa);
+        gsw.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
   }
 
   public static void main(String[] args) throws Exception {

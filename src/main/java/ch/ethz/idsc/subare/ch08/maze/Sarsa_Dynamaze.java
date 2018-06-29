@@ -30,20 +30,20 @@ enum Sarsa_Dynamaze {
     Tensor epsilon = Subdivide.of(.3, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(15, 0.51);
     Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200);
-    for (int index = 0; index < batches; ++index) {
-      // if (EPISODES - 10 < index)
-      Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
-      Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(index));
-      // sarsa.supplyPolicy(() -> policy);
-      sarsa.setExplore(epsilon.Get(index));
-      // for (int count = 0; count < 5; ++count)
-      ExploringStarts.batch(dynamaze, policy, nstep, sarsa);
-      gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200)) {
+      for (int index = 0; index < batches; ++index) {
+        // if (EPISODES - 10 < index)
+        Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
+        Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(index));
+        // sarsa.supplyPolicy(() -> policy);
+        sarsa.setExplore(epsilon.Get(index));
+        // for (int count = 0; count < 5; ++count)
+        ExploringStarts.batch(dynamaze, policy, nstep, sarsa);
+        gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
   }
 
   public static void main(String[] args) throws Exception {

@@ -37,19 +37,19 @@ enum Sarsa_Gridworld {
     int batches = 10;
     Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250);
-    LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-    Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
-    for (int index = 0; index < batches; ++index) {
-      gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
-      Infoline.print(gridworld, index, ref, qsa);
-      Scalar explore = epsilon.Get(index);
-      Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
-      // sarsa.supplyPolicy(() -> policy);
-      sarsa.setExplore(epsilon.Get(index));
-      ExploringStarts.batch(gridworld, policy, nstep, sarsa);
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250)) {
+      LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
+      Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
+      for (int index = 0; index < batches; ++index) {
+        gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+        Infoline.print(gridworld, index, ref, qsa);
+        Scalar explore = epsilon.Get(index);
+        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
+        // sarsa.supplyPolicy(() -> policy);
+        sarsa.setExplore(epsilon.Get(index));
+        ExploringStarts.batch(gridworld, policy, nstep, sarsa);
+      }
     }
-    gsw.close();
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa);

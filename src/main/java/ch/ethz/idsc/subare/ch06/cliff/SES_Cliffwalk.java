@@ -31,32 +31,32 @@ enum SES_Cliffwalk {
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
-    AnimationWriter gsw = AnimationWriter.of( //
-        UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250);
-    LearningRate learningRate = DefaultLearningRate.of(7, 0.61);
-    Sarsa sarsa = new OriginalSarsa(cliffwalk, qsa, learningRate);
-    DequeExploringStarts exploringStartsStream = new DequeExploringStarts(cliffwalk, nstep, sarsa) {
-      @Override
-      public Policy batchPolicy(int batch) {
-        System.out.println("batch " + batch);
-        Scalar eps = epsilon.Get(batch);
-        sarsa.setExplore(eps);
-        return EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, eps);
+    try (AnimationWriter gsw = AnimationWriter.of( //
+        UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
+      LearningRate learningRate = DefaultLearningRate.of(7, 0.61);
+      Sarsa sarsa = new OriginalSarsa(cliffwalk, qsa, learningRate);
+      DequeExploringStarts exploringStartsStream = new DequeExploringStarts(cliffwalk, nstep, sarsa) {
+        @Override
+        public Policy batchPolicy(int batch) {
+          System.out.println("batch " + batch);
+          Scalar eps = epsilon.Get(batch);
+          sarsa.setExplore(eps);
+          return EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, eps);
+        }
+      };
+      int episode = 0;
+      while (exploringStartsStream.batchIndex() < batches) {
+        exploringStartsStream.nextEpisode();
+        // if (episode % 5 == 0)
+        {
+          Infoline infoline = Infoline.print(cliffwalk, episode, ref, qsa);
+          gsw.append(StateActionRasters.qsaLossRef(new CliffwalkRaster(cliffwalk), qsa, ref));
+          if (infoline.isLossfree())
+            break;
+        }
+        ++episode;
       }
-    };
-    int episode = 0;
-    while (exploringStartsStream.batchIndex() < batches) {
-      exploringStartsStream.nextEpisode();
-      // if (episode % 5 == 0)
-      {
-        Infoline infoline = Infoline.print(cliffwalk, episode, ref, qsa);
-        gsw.append(StateActionRasters.qsaLossRef(new CliffwalkRaster(cliffwalk), qsa, ref));
-        if (infoline.isLossfree())
-          break;
-      }
-      ++episode;
     }
-    gsw.close();
   }
 
   public static void main(String[] args) throws Exception {

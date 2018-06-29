@@ -22,16 +22,17 @@ enum MCES_Gambler {
     GamblerRaster gamblerRaster = new GamblerRaster(gambler);
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gambler);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_mces.gif"), 200);
-    int batches = 20;
-    for (int index = 0; index < batches; ++index) {
-      Infoline.print(gambler, index, ref, mces.qsa());
-      Policy policy = //
-          EGreedyPolicy.bestEquiprobable(gambler, mces.qsa(), RealScalar.of(.1));
-      ExploringStarts.batch(gambler, policy, mces);
-      gsw.append(StateActionRasters.qsaPolicyRef(gamblerRaster, mces.qsa(), ref));
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_mces.gif"), 200)) {
+      int batches = 20;
+      for (int index = 0; index < batches; ++index) {
+        Infoline.print(gambler, index, ref, mces.qsa());
+        Policy policy = //
+            EGreedyPolicy.bestEquiprobable(gambler, mces.qsa(), RealScalar.of(.1));
+        ExploringStarts.batch(gambler, policy, mces);
+        gsw.append(StateActionRasters.qsaPolicyRef(gamblerRaster, mces.qsa(), ref));
+      }
     }
-    gsw.close();
+    System.out.println("done");
     DiscreteVs discreteVs = DiscreteUtils.createVs(gambler, mces.qsa());
     DiscreteUtils.print(discreteVs, Round._2);
   }
