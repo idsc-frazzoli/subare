@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.sca.Ramp;
  * from the airport to the center. Driving without passenger to the other node costs 10CHF. Driving from
  * the airport to the center with a customers gives 30CHF reward instead. Parking at the airport for one
  * time step at the airport costs 5CHF. */
-class Airport implements StandardModel, MonteCarloInterface {
+public class Airport implements StandardModel, MonteCarloInterface {
   static final int LASTT = 4;
   static final int VEHICLES = 5;
   private static final Scalar REBALANCE_COST = RealScalar.of(-10);

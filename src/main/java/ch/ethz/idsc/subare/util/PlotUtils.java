@@ -27,26 +27,30 @@ import org.jfree.ui.RectangleInsets;
 import ch.ethz.idsc.tensor.Tensor;
 
 public class PlotUtils {
-  public static final Color[] COLORS = { new Color(128, 0, 128), //
+  private static final Color[] COLORS = { new Color(128, 0, 128), //
       new Color(255, 51, 0), //
       new Color(0, 153, 255), //
       new Color(0, 204, 0), //
       new Color(64, 64, 64) };
-  public static final Font FONT_TITLE = new Font("Dialog", Font.BOLD, 24);
-  public static final Font FONT_AXIS = new Font("Dialog", Font.BOLD, 18);
-  public static final Font FONT_TICK = new Font("Dialog", Font.PLAIN, 14);
-  public static final Color COLOR_BACKGROUND_PAINT = Color.WHITE;
-  public static final Color COLOR_GRIDLINE_PAINT = Color.LIGHT_GRAY;
-  public static final int WIDTH = 1000;
-  public static final int HEIGHT = 750;
+  private static final Font FONT_TITLE = new Font("Dialog", Font.BOLD, 24);
+  private static final Font FONT_AXIS = new Font("Dialog", Font.BOLD, 18);
+  private static final Font FONT_TICK = new Font("Dialog", Font.PLAIN, 14);
+  private static final Color COLOR_BACKGROUND_PAINT = Color.WHITE;
+  private static final Color COLOR_GRIDLINE_PAINT = Color.LIGHT_GRAY;
+  private static final int WIDTH = 1000;
+  private static final int HEIGHT = 750;
 
-  public static void createPlot(List<Tensor> XYs, List<String> names) {
+  /** A plot can be created and is stored at {@code plot/path}. XYs contains a list of tensors (data sets) that again
+   * contains tensors with x and y components. The list of names contains the data set names.
+   * @param XYs
+   * @param names */
+  public static void createPlot(List<Tensor> XYs, List<String> names, String path) {
     // create plot
     final XYDataset data1 = createDataset(XYs, names);
     File outputDirectory0 = new File("plots");
     // return a new chart containing the overlaid plot...
     try {
-      plot("Convergence", "Convergence", "Number episodes", "Error", //
+      plot(path, path, "Number episodes", "Error", //
           data1, outputDirectory0, //
           false, 100, 500, false, 100, 500);
     } catch (Exception e) {
@@ -55,9 +59,6 @@ public class PlotUtils {
     }
   }
 
-  /** Creates a sample dataset.
-   *
-   * @return Series 1. */
   private static XYDataset createDataset(List<Tensor> XYs, List<String> names) {
     final XYSeriesCollection collection = new XYSeriesCollection();
     // create dataset
@@ -72,7 +73,7 @@ public class PlotUtils {
     return collection;
   }
 
-  public static File plot( //
+  private static File plot( //
       String filename, String diagramTitle, String axisLabelX, String axisLabelY, XYDataset dataset, //
       File directory, //
       boolean setYAxis, double minYValue, double maxYValue, boolean setXAxis, double minXValue, double maxXValue) throws Exception {
@@ -102,7 +103,7 @@ public class PlotUtils {
     return savePlot(directory, filename, chart);
   }
 
-  public static File savePlot(File directory, String fileTitle, JFreeChart chart) throws Exception {
+  private static File savePlot(File directory, String fileTitle, JFreeChart chart) throws Exception {
     File fileChart = new File(directory, fileTitle + ".png");
     ChartUtilities.saveChartAsPNG(fileChart, chart, WIDTH, HEIGHT);
     GlobalAssert.that(fileChart.isFile());
@@ -110,7 +111,7 @@ public class PlotUtils {
     return fileChart;
   }
 
-  public static StandardChartTheme getChartTheme(boolean shadow) {
+  private static StandardChartTheme getChartTheme(boolean shadow) {
     StandardChartTheme theme = new StandardChartTheme("amodeus");
     theme.setExtraLargeFont(new Font("Dialog", Font.BOLD, 24));
     theme.setLargeFont(new Font("Dialog", Font.PLAIN, 18));

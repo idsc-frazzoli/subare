@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.red.Min;
  * or the terminal cash has been reached
  * 
  * [no further references are provided in the book] */
-class Gambler implements StandardModel, MonteCarloInterface {
+public class Gambler implements StandardModel, MonteCarloInterface {
   private final Tensor states;
   final Scalar TERMINAL_W;
   private final Scalar P_win;

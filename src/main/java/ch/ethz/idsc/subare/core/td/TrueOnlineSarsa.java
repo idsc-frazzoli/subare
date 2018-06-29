@@ -1,15 +1,17 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
+import ch.ethz.idsc.subare.core.util.StateActionMapper;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.red.Times;
@@ -63,7 +65,8 @@ public class TrueOnlineSarsa {
   }
 
   private void update(Scalar reward, Tensor s_prime, Tensor a_prime) {
-    x_prime = mapper.getFeature(Join.of(s_prime, a_prime));
+    Tensor stateActionPair = StateActionMapper.getMap(s_prime, a_prime);
+    x_prime = mapper.getFeature(stateActionPair);
     q = w.dot(x).Get();
     q_prime = w.dot(x_prime).Get();
     delta = reward.add(gamma.multiply(q_prime)).subtract(q);
@@ -87,15 +90,17 @@ public class TrueOnlineSarsa {
 
   private Tensor getGreedyAction(Tensor state) {
     double max = Double.NEGATIVE_INFINITY;
-    Tensor bestAction = Tensors.empty();
+    List<Tensor> bestActions = new ArrayList<>();
     for (Tensor action : mcInterface.actions(state)) {
-      double current = mapper.getFeature(Join.of(state, action)).dot(w).Get().number().doubleValue();
+      Tensor stateActionPair = StateActionMapper.getMap(state, action);
+      double current = mapper.getFeature(stateActionPair).dot(w).Get().number().doubleValue();
       if (current > max) {
-        bestAction = action;
+        bestActions.add(action);
         max = current;
       }
     }
-    return bestAction;
+    int index = rand.nextInt(bestActions.size());
+    return bestActions.get(index);
   }
 
   public void executeEpisode(Scalar epsilon) {
@@ -107,7 +112,8 @@ public class TrueOnlineSarsa {
     Tensor actionOld;
     Scalar reward;
     // init every episode again
-    x = mapper.getFeature(Join.of(state, action));
+    Tensor stateActionPair = StateActionMapper.getMap(state, action);
+    x = mapper.getFeature(stateActionPair);
     qOld = RealScalar.ZERO;
     z = Array.zeros(featureSize);
     // run through episode
@@ -137,7 +143,8 @@ public class TrueOnlineSarsa {
     DiscreteQsa qsa = DiscreteQsa.build(mcInterface);
     for (Tensor state : mcInterface.states()) {
       for (Tensor action : mcInterface.actions(state)) {
-        qsa.assign(state, action, mapper.getFeature(Join.of(state, action)).dot(w).Get());
+        Tensor stateActionPair = StateActionMapper.getMap(state, action);
+        qsa.assign(state, action, mapper.getFeature(stateActionPair).dot(w).Get());
       }
     }
     return qsa;
