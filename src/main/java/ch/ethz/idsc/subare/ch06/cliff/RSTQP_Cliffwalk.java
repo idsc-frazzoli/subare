@@ -22,16 +22,16 @@ enum RSTQP_Cliffwalk {
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk, DoubleScalar.POSITIVE_INFINITY);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         cliffwalk, qsa, ConstantLearningRate.one());
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("cliffwalk_qsa_rstqp.gif"), 200);
-    int batches = 20;
-    for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);
-      TabularSteps.batch(cliffwalk, cliffwalk, rstqp);
-      gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("cliffwalk_qsa_rstqp.gif"), 200)) {
+      int batches = 20;
+      for (int index = 0; index < batches; ++index) {
+        Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);
+        TabularSteps.batch(cliffwalk, cliffwalk, rstqp);
+        gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
     DiscreteUtils.print(qsa, Round._2);
   }
 }

@@ -38,20 +38,20 @@ enum SES_Wireloop {
         return EGreedyPolicy.bestEquiprobable(wireloop, qsa, eps);
       }
     };
-    AnimationWriter gsw = AnimationWriter.of( //
-        UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100);
-    int index = 0;
-    while (exploringStartsStream.batchIndex() < batches) {
-      exploringStartsStream.nextEpisode();
-      if (index % 50 == 0) {
-        Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
-        gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
-        if (infoline.isLossfree())
-          break;
+    try (AnimationWriter gsw = AnimationWriter.of( //
+        UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100)) {
+      int index = 0;
+      while (exploringStartsStream.batchIndex() < batches) {
+        exploringStartsStream.nextEpisode();
+        if (index % 50 == 0) {
+          Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
+          gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
+          if (infoline.isLossfree())
+            break;
+        }
+        ++index;
       }
-      ++index;
     }
-    gsw.close();
   }
 
   public static void main(String[] args) throws Exception {

@@ -18,16 +18,16 @@ enum AVH_Dynamaze {
     ActionValueIteration avi = ActionValueIteration.of(dynamaze, est);
     // ---
     DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_qsa_avi.gif"), 500);
-    DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
-    for (int index = 0; index < 50; ++index) {
-      Infoline infoline = Infoline.print(dynamaze, index, ref, avi.qsa());
-      gsw.append(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref));
-      avi.step();
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_qsa_avi.gif"), 500)) {
+      DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
+      for (int index = 0; index < 50; ++index) {
+        Infoline infoline = Infoline.print(dynamaze, index, ref, avi.qsa());
+        gsw.append(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref));
+        avi.step();
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
   }
 
   public static void main(String[] args) throws Exception {

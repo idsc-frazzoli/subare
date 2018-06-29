@@ -18,13 +18,13 @@ enum RSTQP_Blackjack {
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         blackjack, qsa, DefaultLearningRate.of(5, 0.51));
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("blackjack_rstqp.gif"), 250);
-    int batches = 60;
-    for (int index = 0; index < batches; ++index) {
-      for (int count = 0; count < 100; ++count)
-        TabularSteps.batch(blackjack, blackjack, rstqp);
-      gsw.append(BlackjackHelper.joinAll(blackjack, qsa));
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("blackjack_rstqp.gif"), 250)) {
+      int batches = 60;
+      for (int index = 0; index < batches; ++index) {
+        for (int count = 0; count < 100; ++count)
+          TabularSteps.batch(blackjack, blackjack, rstqp);
+        gsw.append(BlackjackHelper.joinAll(blackjack, qsa));
+      }
     }
-    gsw.close();
   }
 }

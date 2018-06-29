@@ -25,15 +25,15 @@ enum AVI_Windygrid {
     Export.of(UserHome.Pictures("windygrid_qsa_avi.png"), //
         StateActionRasters.qsa_rescaled(windygridRaster, ref));
     ActionValueIteration avi = ActionValueIteration.of(windygrid);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250);
-    for (int index = 0; index < 20; ++index) {
-      Infoline infoline = Infoline.print(windygrid, index, ref, avi.qsa());
-      gsw.append(StateActionRasters.qsaLossRef(windygridRaster, avi.qsa(), ref));
-      avi.step();
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250)) {
+      for (int index = 0; index < 20; ++index) {
+        Infoline infoline = Infoline.print(windygrid, index, ref, avi.qsa());
+        gsw.append(StateActionRasters.qsaLossRef(windygridRaster, avi.qsa(), ref));
+        avi.step();
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
     // TODO extract code below to other file
     DiscreteVs vs = DiscreteUtils.createVs(windygrid, ref);
     DiscreteUtils.print(vs);

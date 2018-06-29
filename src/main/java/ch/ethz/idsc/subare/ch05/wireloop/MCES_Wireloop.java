@@ -20,19 +20,19 @@ enum MCES_Wireloop {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(wireloop);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "L_mces.gif"), 100);
-    int batches = 10;
-    Tensor epsilon = Subdivide.of(.2, .05, batches);
-    for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(wireloop, index, ref, mces.qsa());
-      for (int count = 0; count < 4; ++count) {
-        Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, mces.qsa(), epsilon.Get(index));
-        ExploringStarts.batch(wireloop, policy, mces);
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "L_mces.gif"), 100)) {
+      int batches = 10;
+      Tensor epsilon = Subdivide.of(.2, .05, batches);
+      for (int index = 0; index < batches; ++index) {
+        Infoline infoline = Infoline.print(wireloop, index, ref, mces.qsa());
+        for (int count = 0; count < 4; ++count) {
+          Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, mces.qsa(), epsilon.Get(index));
+          ExploringStarts.batch(wireloop, policy, mces);
+        }
+        gsw.append(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));
+        if (infoline.isLossfree())
+          break;
       }
-      gsw.append(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));
-      if (infoline.isLossfree())
-        break;
     }
-    gsw.close();
   }
 }

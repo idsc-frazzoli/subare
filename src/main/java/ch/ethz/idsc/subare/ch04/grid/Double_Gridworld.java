@@ -36,15 +36,15 @@ enum Double_Gridworld {
         qsa1, qsa2, //
         DefaultLearningRate.of(5, .51), //
         DefaultLearningRate.of(5, .51));
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150);
-    for (int index = 0; index < batches; ++index) {
-      if (batches - 10 < index)
-        Infoline.print(gridworld, index, ref, qsa1);
-      doubleSarsa.setExplore(epsilon.Get(index));
-      ExploringStarts.batch(gridworld, doubleSarsa.getEGreedy(), nstep, doubleSarsa);
-      gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150)) {
+      for (int index = 0; index < batches; ++index) {
+        if (batches - 10 < index)
+          Infoline.print(gridworld, index, ref, qsa1);
+        doubleSarsa.setExplore(epsilon.Get(index));
+        ExploringStarts.batch(gridworld, doubleSarsa.getEGreedy(), nstep, doubleSarsa);
+        gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
+      }
     }
-    gsw.close();
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa1);

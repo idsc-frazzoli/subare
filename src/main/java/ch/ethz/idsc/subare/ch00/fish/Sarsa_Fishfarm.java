@@ -30,19 +30,19 @@ enum Sarsa_Fishfarm {
     DiscreteQsa qsa = DiscreteQsa.build(fishfarm, DoubleScalar.POSITIVE_INFINITY);
     Tensor epsilon = Subdivide.of(.5, .01, batches);
     Sarsa sarsa = sarsaType.supply(fishfarm, qsa, DefaultLearningRate.of(7, 0.61));
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200);
-    for (int index = 0; index < batches; ++index) {
-      // if (batches - 10 < index)
-      Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
-      Policy policy = EGreedyPolicy.bestEquiprobable(fishfarm, qsa, epsilon.Get(index));
-      // sarsa.supplyPolicy(() -> policy);
-      sarsa.setExplore(epsilon.Get(index));
-      ExploringStarts.batch(fishfarm, policy, nstep, sarsa);
-      gsw.append(StateRasters.qsaLossRef(fishfarmRaster, qsa, ref));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200)) {
+      for (int index = 0; index < batches; ++index) {
+        // if (batches - 10 < index)
+        Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
+        Policy policy = EGreedyPolicy.bestEquiprobable(fishfarm, qsa, epsilon.Get(index));
+        // sarsa.supplyPolicy(() -> policy);
+        sarsa.setExplore(epsilon.Get(index));
+        ExploringStarts.batch(fishfarm, policy, nstep, sarsa);
+        gsw.append(StateRasters.qsaLossRef(fishfarmRaster, qsa, ref));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
     DiscreteUtils.print(qsa, Round._2);
     // System.out.println("---");
     // Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, qsa);

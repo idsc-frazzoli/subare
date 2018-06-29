@@ -22,15 +22,15 @@ enum RSTQP_Dynamaze {
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
     Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
         dynamaze, qsa, ConstantLearningRate.of(RealScalar.ONE));
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_qsa_rstqp.gif"), 250);
-    int batches = 50;
-    for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
-      TabularSteps.batch(dynamaze, dynamaze, rstqp);
-      gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_qsa_rstqp.gif"), 250)) {
+      int batches = 50;
+      for (int index = 0; index < batches; ++index) {
+        Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
+        TabularSteps.batch(dynamaze, dynamaze, rstqp);
+        gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+        if (infoline.isLossfree())
+          break;
+      }
     }
-    gsw.close();
   }
 }
