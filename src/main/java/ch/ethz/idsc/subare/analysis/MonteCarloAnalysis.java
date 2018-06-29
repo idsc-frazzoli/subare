@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.analysis;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,28 +44,27 @@ public enum MonteCarloAnalysis {
     return error;
   }
 
-  public static void analyse(MonteCarloInterface mcInterface, int batches, List<MonteCarloAlgorithms> analysisAlgorithms) throws Exception {
-    DiscreteQsa optimalQsa = getOptimalQsa(mcInterface);
-    Map<String, Tensor> algorithmResults = new HashMap<>();
+  public static void analyse(MonteCarloInterface monteCarloInterface, int batches, List<MonteCarloAlgorithms> list) throws Exception {
+    DiscreteQsa optimalQsa = getOptimalQsa(monteCarloInterface);
+    Map<String, Tensor> algorithmResults = new LinkedHashMap<>();
     // ---
-    for (MonteCarloAlgorithms alg : analysisAlgorithms) {
-      algorithmResults.put(alg.name(), alg.analyse(mcInterface, batches, optimalQsa));
-    }
-    PlotUtils.createPlot(algorithmResults, "Convergence_" + mcInterface.getClass().getSimpleName().toString());
+    for (MonteCarloAlgorithms monteCarloAlgorithms : list)
+      algorithmResults.put(monteCarloAlgorithms.name(), monteCarloAlgorithms.analyse(monteCarloInterface, batches, optimalQsa));
+    PlotUtils.createPlot(algorithmResults, "Convergence_" + monteCarloInterface.getClass().getSimpleName().toString());
   }
 
-  public static DiscreteQsa getOptimalQsa(MonteCarloInterface mcInterface) {
+  public static DiscreteQsa getOptimalQsa(MonteCarloInterface monteCarloInterface) {
     Stopwatch stopwatch = Stopwatch.started();
-    DiscreteQsa optimalQsa = ActionValueIterations.solve((StandardModel) mcInterface, DecimalScalar.of(.0001));
+    DiscreteQsa optimalQsa = ActionValueIterations.solve((StandardModel) monteCarloInterface, DecimalScalar.of(.0001));
     System.out.println("time for AVI: " + stopwatch.display_seconds() + "s");
     // DiscreteUtils.print(optimalQsa);
-    // Policy policyQsa = GreedyPolicy.bestEquiprobable(mcInterface, optimalQsa);
+    // Policy policyQsa = GreedyPolicy.bestEquiprobable(monteCarloInterface, optimalQsa);
     // Policies.print(policyQsa, airport.states());
     return optimalQsa;
   }
 
   public static void main(String[] args) throws Exception {
-    MonteCarloInterface monteCarloInterface = AnalysisModels.WIRELOOP.supply();
+    MonteCarloInterface monteCarloInterface = MonteCarloExamples.WIRELOOP_C.get();
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
     list.add(MonteCarloAlgorithms.MonteCarlo);

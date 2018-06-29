@@ -23,7 +23,12 @@ import ch.ethz.idsc.tensor.sca.Clip;
 
 public enum WireloopHelper {
   ;
-  public static Wireloop create(String trackName, TensorScalarFunction function, WireloopReward wireloopReward) throws Exception {
+  /** @param trackName
+   * @param function
+   * @param wireloopReward
+   * @return
+   * @throws Exception if resource associated to trackName does not exist */
+  public static Wireloop create(String trackName, TensorScalarFunction function, WireloopReward wireloopReward) {
     return new Wireloop(ResourceData.of("/ch05/" + trackName + ".png"), function, wireloopReward);
   }
 

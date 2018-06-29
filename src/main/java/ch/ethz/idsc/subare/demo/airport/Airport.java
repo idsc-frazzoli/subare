@@ -37,6 +37,7 @@ public class Airport implements StandardModel, MonteCarloInterface {
   // for EmpiricalDistribution#fromUnscaledPDF the numbers don't have to add up to 1
   private final Distribution distribution = EmpiricalDistribution.fromUnscaledPDF(CUSTOMER_HIST);
 
+  // TODO defined parameters for complexity of scenario: # time steps, # taxis ...
   public Airport() {
     Tensor states = Tensors.empty();
     states.append(Tensors.vector(0, 5, 0)); // start at time 0 with 5 taxis in the city and 0 in the airport

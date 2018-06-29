@@ -65,16 +65,16 @@ public enum MonteCarloAlgorithms {
   }, //
   QLearningSarsa() {
     @Override
-    public Tensor analyse(MonteCarloInterface mcInterface, int batches, DiscreteQsa optimalQsa) {
+    public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa) {
       Tensor XYsarsa = Tensors.empty();
-      DiscreteQsa qsaSarsa = DiscreteQsa.build(mcInterface);
-      final Sarsa sarsa = new QLearning(mcInterface, qsaSarsa, ConstantLearningRate.of(RealScalar.of(0.05)));
+      DiscreteQsa qsaSarsa = DiscreteQsa.build(monteCarloInterface);
+      final Sarsa sarsa = new QLearning(monteCarloInterface, qsaSarsa, ConstantLearningRate.of(RealScalar.of(0.05)));
       sarsa.setExplore(RealScalar.of(.1));
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
-        Policy policy = EGreedyPolicy.bestEquiprobable(mcInterface, sarsa.qsa(), RealScalar.of(.1));
-        ExploringStarts.batch(mcInterface, policy, 1, sarsa);
+        Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa(), RealScalar.of(.1));
+        ExploringStarts.batch(monteCarloInterface, policy, 1, sarsa);
         XYsarsa.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloAnalysis.getLinearQsaError(sarsa.qsa(), optimalQsa).number()));
       }
       System.out.println("Time for QLearningSarsa: " + stopwatch.display_seconds() + "s");
@@ -97,8 +97,8 @@ public enum MonteCarloAlgorithms {
         XYmc.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloAnalysis.getLinearQsaError(mces.qsa(), optimalQsa).number()));
       }
       System.out.println("Time for MonteCarlo: " + stopwatch.display_seconds() + "s");
-      System.out.println("Error of MonteCarlo: Linear:" + MonteCarloAnalysis.getLinearQsaError(mces.qsa(), optimalQsa).number().doubleValue()
-          + " Quadratic: " + MonteCarloAnalysis.getSquareQsaError(mces.qsa(), optimalQsa).number().doubleValue());
+      System.out.println("Error of MonteCarlo: Linear:" + MonteCarloAnalysis.getLinearQsaError(mces.qsa(), optimalQsa).number().doubleValue() + " Quadratic: "
+          + MonteCarloAnalysis.getSquareQsaError(mces.qsa(), optimalQsa).number().doubleValue());
       // Policies.print(GreedyPolicy.bestEquiprobable(airport, mces.qsa()), airport.states());
       return XYmc;
     }
@@ -121,8 +121,8 @@ public enum MonteCarloAlgorithms {
       // System.out.println(toSarsa.getW());
       // toSarsa.printValues();
       // toSarsa.printPolicy();
-      System.out.println("Error of TrueOnlineSarsa: Linear: " + MonteCarloAnalysis.getLinearQsaError(toQsa, optimalQsa).number().doubleValue()
-          + " Quadratic: " + MonteCarloAnalysis.getSquareQsaError(toQsa, optimalQsa).number().doubleValue());
+      System.out.println("Error of TrueOnlineSarsa: Linear: " + MonteCarloAnalysis.getLinearQsaError(toQsa, optimalQsa).number().doubleValue() + " Quadratic: "
+          + MonteCarloAnalysis.getSquareQsaError(toQsa, optimalQsa).number().doubleValue());
       return XYtoSarsa;
     }
   }, //

@@ -16,17 +16,17 @@ public class ExactFeatureMapper implements FeatureMapper {
   private final int stateActionSize;
   private final int featureSize;
 
-  public ExactFeatureMapper(MonteCarloInterface mcInterface) {
+  public ExactFeatureMapper(MonteCarloInterface monteCarloInterface) {
     // count the number of possible state-action pairs first
     int count = 0;
-    for (Tensor state : mcInterface.states()) {
-      count += mcInterface.actions(state).length();
+    for (Tensor state : monteCarloInterface.states()) {
+      count += monteCarloInterface.actions(state).length();
     }
     stateActionSize = count;
     featureSize = count; // one-to-one mapping
     int index = -1;
-    for (Tensor state : mcInterface.states()) {
-      for (Tensor action : mcInterface.actions(state)) {
+    for (Tensor state : monteCarloInterface.states()) {
+      for (Tensor action : monteCarloInterface.actions(state)) {
         stateToFeature.put(StateActionMapper.getMap(state, action), UnitVector.of(stateActionSize, ++index));
       }
     }
