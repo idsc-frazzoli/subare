@@ -51,6 +51,7 @@ public enum MonteCarloAnalysis {
     for (MonteCarloAlgorithms monteCarloAlgorithms : list)
       algorithmResults.put(monteCarloAlgorithms.name(), monteCarloAlgorithms.analyse(monteCarloInterface, batches, optimalQsa));
     PlotUtils.createPlot(algorithmResults, "Convergence_" + monteCarloInterface.getClass().getSimpleName().toString());
+    // Policies.print(GreedyPolicy.bestEquiprobable(monteCarloInterface, optimalQsa), monteCarloInterface.states());
   }
 
   public static DiscreteQsa getOptimalQsa(MonteCarloInterface monteCarloInterface) {

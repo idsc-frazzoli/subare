@@ -1,8 +1,6 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -86,30 +84,40 @@ public class TrueOnlineSarsa {
     x = x_prime;
   }
 
+  /** Returns the epsilon greedy action.
+   * With probability epsilon a random action is chosen. In the other case the best
+   * (greedy) action is taken with equal probability when several best actions.
+   * @param state
+   * @param epsilon
+   * @return */
   private Tensor getEGreedyAction(Tensor state, Scalar epsilon) {
+    Tensor actions = monteCarloInterface.actions(state);
     if (rand.nextFloat() > epsilon.number().doubleValue()) {
-      return getGreedyAction(state);
+      actions = getGreedyAction(state);
     }
-    int index = rand.nextInt(monteCarloInterface.actions(state).length());
-    return monteCarloInterface.actions(state).get(index);
+    int index = rand.nextInt(actions.length());
+    return actions.get(index);
   }
 
+  /** Returns the best action according to the current state-action values. In case
+   * of several best actions within a tolerance, all the best actions are returned.
+   * 
+   * @param state
+   * @return */
   private Tensor getGreedyAction(Tensor state) {
     double max = Double.NEGATIVE_INFINITY;
-    List<Tensor> bestActions = new ArrayList<>();
+    Tensor bestActions = Tensors.empty();
     for (Tensor action : monteCarloInterface.actions(state)) {
       Tensor stateActionPair = StateActionMapper.getMap(state, action);
       double current = mapper.getFeature(stateActionPair).dot(w).Get().number().doubleValue();
       if (Math.abs(current - max) < 1e-8) {
-        bestActions.add(action);
+        bestActions.append(action);
       } else if (current > max) {
         max = current;
-        bestActions.clear();
-        bestActions.add(action);
+        bestActions = Tensors.of(action);
       }
     }
-    int index = rand.nextInt(bestActions.size());
-    return bestActions.get(index);
+    return bestActions;
   }
 
   public void executeEpisode(Scalar epsilon) {

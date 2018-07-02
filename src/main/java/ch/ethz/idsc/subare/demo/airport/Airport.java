@@ -95,7 +95,7 @@ public class Airport implements StandardModel, MonteCarloInterface {
     Scalar reward = action.Get(0).multiply(REBALANCE_COST);
     reward = reward.add(Ramp.of(action.Get(1).subtract(customers)).multiply(REBALANCE_COST));
     // deal with parking cost of airport
-    reward = reward.add(move(state, action).Get(2).multiply(AIRPORT_WAIT_COST));
+    reward = reward.add(state.Get(2).subtract(action.Get(1)).multiply(AIRPORT_WAIT_COST));
     // deal with customer reward
     reward = reward.add(Min.of(customers, action.Get(1)).multiply(CUSTOMER_REWARD));
     return reward;
