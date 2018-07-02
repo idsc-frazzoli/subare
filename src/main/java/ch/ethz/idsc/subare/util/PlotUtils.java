@@ -51,6 +51,10 @@ public enum PlotUtils {
   public static void createPlot(List<Tensor> XYs, List<String> names, String path) {
     // create plot
     final XYDataset data1 = createDataset(XYs, names);
+    File outputDirectory0 = new File("plots");
+    if (!outputDirectory0.exists()) {
+      outputDirectory0.mkdirs();
+    }
     // return a new chart containing the overlaid plot...
     try {
       plot(path, path, "Number episodes", "Error", //
@@ -65,6 +69,10 @@ public enum PlotUtils {
   public static void createPlot(Map<String, Tensor> map, String path) {
     // create plot
     final XYDataset data1 = createDataset(map);
+    File outputDirectory0 = new File("plots");
+    if (!outputDirectory0.exists()) {
+      outputDirectory0.mkdirs();
+    }
     // return a new chart containing the overlaid plot...
     try {
       plot(path, path, "Number episodes", "Error", //
@@ -138,7 +146,7 @@ public enum PlotUtils {
     File fileChart = new File(directory, fileTitle + ".png");
     ChartUtilities.saveChartAsPNG(fileChart, chart, WIDTH, HEIGHT);
     GlobalAssert.that(fileChart.isFile());
-    System.out.println("Exported " + fileTitle + ".png");
+    System.out.println("Exported " + fileTitle + ".png to " + directory);
     return fileChart;
   }
 

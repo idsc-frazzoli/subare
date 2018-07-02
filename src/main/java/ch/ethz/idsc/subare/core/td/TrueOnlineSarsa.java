@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.util.StateActionMapper;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.red.Times;
@@ -48,8 +49,9 @@ public class TrueOnlineSarsa {
    * @param alpha positive
    * @param gamma
    * @param mapper
+   * @param init
    * @throws Exception if any parameter is outside valid range */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper, double init) {
     this.monteCarloInterface = monteCarloInterface;
     Clip.unit().requireInside(lambda);
     this.alpha = Sign.requirePositive(alpha);
@@ -61,7 +63,11 @@ public class TrueOnlineSarsa {
     // dimAction = monteCarloInterface.actions(monteCarloInterface.states().get(0)).get(0).length();
     featureSize = mapper.getFeatureSize();
     z = Array.zeros(featureSize);
-    w = Array.zeros(featureSize); // remark: other initialization choices are possible
+    w = Tensors.vector(v -> RealScalar.of(init), featureSize);
+  }
+
+  public TrueOnlineSarsa(MonteCarloInterface mcInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
+    this(mcInterface, lambda, alpha, gamma, mapper, 0);
   }
 
   private void update(Scalar reward, Tensor s_prime, Tensor a_prime) {
@@ -94,9 +100,12 @@ public class TrueOnlineSarsa {
     for (Tensor action : monteCarloInterface.actions(state)) {
       Tensor stateActionPair = StateActionMapper.getMap(state, action);
       double current = mapper.getFeature(stateActionPair).dot(w).Get().number().doubleValue();
-      if (current > max) {
+      if (Math.abs(current - max) < 1e-8) {
         bestActions.add(action);
+      } else if (current > max) {
         max = current;
+        bestActions.clear();
+        bestActions.add(action);
       }
     }
     int index = rand.nextInt(bestActions.size());
@@ -124,6 +133,7 @@ public class TrueOnlineSarsa {
       reward = monteCarloInterface.reward(stateOld, actionOld, state);
       // System.out.println("from state " + stateOld + " to " + state + " with action " + actionOld + " reward: " + reward);
       action = getEGreedyAction(state, epsilon);
+      // System.out.println(action);
       update(reward, state, action);
     }
   }

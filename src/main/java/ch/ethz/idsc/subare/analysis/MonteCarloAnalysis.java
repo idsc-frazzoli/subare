@@ -64,13 +64,13 @@ public enum MonteCarloAnalysis {
   }
 
   public static void main(String[] args) throws Exception {
-    MonteCarloInterface monteCarloInterface = MonteCarloExamples.WIRELOOP_C.get();
+    MonteCarloInterface monteCarloInterface = MonteCarloExamples.AIRPORT.get();
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
-    list.add(MonteCarloAlgorithms.MonteCarlo);
-    list.add(MonteCarloAlgorithms.OriginalSarsa);
-    list.add(MonteCarloAlgorithms.ExpectedSarsa);
-    list.add(MonteCarloAlgorithms.QLearningSarsa);
+    // list.add(MonteCarloAlgorithms.MonteCarlo);
+    // list.add(MonteCarloAlgorithms.OriginalSarsa);
+    // list.add(MonteCarloAlgorithms.ExpectedSarsa);
+    // list.add(MonteCarloAlgorithms.QLearningSarsa);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
     // ---
     analyse(monteCarloInterface, 10, list);
