@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
+import ch.ethz.idsc.subare.core.td.TrueOnlineSarsaMod;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -108,7 +109,7 @@ public enum MonteCarloAlgorithms {
     public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa) {
       Tensor XYtoSarsa = Tensors.empty();
       FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), RealScalar.of(0.2), RealScalar.of(1), mapper);
+      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), RealScalar.of(0.2), RealScalar.of(1), mapper, 10);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
@@ -122,6 +123,30 @@ public enum MonteCarloAlgorithms {
       // toSarsa.printValues();
       // toSarsa.printPolicy();
       System.out.println("Error of TrueOnlineSarsa: Linear: " + MonteCarloAnalysis.getLinearQsaError(toQsa, optimalQsa).number().doubleValue() + " Quadratic: "
+          + MonteCarloAnalysis.getSquareQsaError(toQsa, optimalQsa).number().doubleValue());
+      return XYtoSarsa;
+    }
+  }, //
+  TrueOnlineSarsaMod() {
+    @Override
+    public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa) {
+      Tensor XYtoSarsa = Tensors.empty();
+      FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
+      TrueOnlineSarsaMod toSarsa = new TrueOnlineSarsaMod(monteCarloInterface, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2)),
+          RealScalar.of(1), mapper, 10);
+      Stopwatch stopwatch = Stopwatch.started();
+      for (int index = 0; index < batches; ++index) {
+        // System.out.println("starting batch " + (index + 1) + " of " + batches);
+        toSarsa.executeEpisode(RealScalar.of(0.1));
+        DiscreteQsa toQsa = toSarsa.getQsa();
+        XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloAnalysis.getLinearQsaError(toQsa, optimalQsa).number()));
+      }
+      System.out.println("Time for TrueOnlineSarsaMod: " + stopwatch.display_seconds() + "s");
+      DiscreteQsa toQsa = toSarsa.getQsa();
+      // System.out.println(toSarsa.getW());
+      // toSarsa.printValues();
+      // toSarsa.printPolicy();
+      System.out.println("Error of TrueOnlineSarsaMod: Linear: " + MonteCarloAnalysis.getLinearQsaError(toQsa, optimalQsa).number().doubleValue() + " Quadratic: "
           + MonteCarloAnalysis.getSquareQsaError(toQsa, optimalQsa).number().doubleValue());
       return XYtoSarsa;
     }

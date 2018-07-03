@@ -69,11 +69,12 @@ public enum MonteCarloAnalysis {
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
     // list.add(MonteCarloAlgorithms.MonteCarlo);
-    // list.add(MonteCarloAlgorithms.OriginalSarsa);
+    list.add(MonteCarloAlgorithms.OriginalSarsa);
     // list.add(MonteCarloAlgorithms.ExpectedSarsa);
     // list.add(MonteCarloAlgorithms.QLearningSarsa);
+    list.add(MonteCarloAlgorithms.TrueOnlineSarsaMod);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
     // ---
-    analyse(monteCarloInterface, 10, list);
+    analyse(monteCarloInterface, 10000, list);
   }
 }
