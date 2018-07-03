@@ -77,4 +77,8 @@ public class EGreedyPolicy implements Policy {
     for (Tensor state : states)
       System.out.println(state + " -> " + map.get(state).keys());
   }
+
+  public Tensor getBestActions(Tensor state) {
+    return map.get(state).keys();
+  }
 }
