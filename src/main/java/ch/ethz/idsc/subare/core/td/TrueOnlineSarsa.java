@@ -45,7 +45,7 @@ public class TrueOnlineSarsa {
   /** @param monteCarloInterface
    * @param lambda in [0, 1]
    * @param alpha positive
-   * @param gamma
+   * @param gamma discount factor
    * @param mapper
    * @param init
    * @throws Exception if any parameter is outside valid range */
@@ -53,6 +53,7 @@ public class TrueOnlineSarsa {
     this.monteCarloInterface = monteCarloInterface;
     Clip.unit().requireInside(lambda);
     this.alpha = Sign.requirePositive(alpha);
+    // TODO use monteCarloInterface.gamma(); instead of extra parameter
     this.gamma = gamma;
     this.mapper = mapper;
     gamma_lambda = Times.of(gamma, lambda);
@@ -84,27 +85,22 @@ public class TrueOnlineSarsa {
     x = x_prime;
   }
 
-  /** Returns the epsilon greedy action.
-   * With probability epsilon a random action is chosen. In the other case the best
-   * (greedy) action is taken with equal probability when several best actions.
-   * @param state
+  /** @param state
    * @param epsilon
-   * @return */
+   * @return the epsilon greedy action: With probability epsilon a random action is chosen.
+   * In the other case, the best (greedy) action is taken with equal probability when several best actions coexist. */
   private Tensor getEGreedyAction(Tensor state, Scalar epsilon) {
-    Tensor actions = monteCarloInterface.actions(state);
-    if (rand.nextFloat() > epsilon.number().doubleValue()) {
-      actions = getGreedyAction(state);
-    }
+    Tensor actions = rand.nextFloat() > epsilon.number().doubleValue() //
+        ? getGreedyActions(state)
+        : monteCarloInterface.actions(state);
     int index = rand.nextInt(actions.length());
     return actions.get(index);
   }
 
-  /** Returns the best action according to the current state-action values. In case
-   * of several best actions within a tolerance, all the best actions are returned.
-   * 
-   * @param state
-   * @return */
-  private Tensor getGreedyAction(Tensor state) {
+  /** @param state
+   * @return the best action according to the current state-action values. In case
+   * of several best actions within a tolerance, all the best actions are returned. */
+  private Tensor getGreedyActions(Tensor state) {
     double max = Double.NEGATIVE_INFINITY;
     Tensor bestActions = Tensors.empty();
     for (Tensor action : monteCarloInterface.actions(state)) {
@@ -170,9 +166,8 @@ public class TrueOnlineSarsa {
 
   public void printPolicy() {
     System.out.println("Greedy action to each state");
-    for (Tensor state : monteCarloInterface.states()) {
-      System.out.println(state + " -> " + getGreedyAction(state));
-    }
+    for (Tensor state : monteCarloInterface.states())
+      System.out.println(state + " -> " + getGreedyActions(state));
   }
 
   public Tensor getW() {

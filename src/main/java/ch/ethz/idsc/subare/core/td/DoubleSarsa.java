@@ -13,7 +13,6 @@ import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -36,7 +35,7 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
 public class DoubleSarsa extends DequeDigestAdapter {
-  private static final Distribution COINFLIPPING = BernoulliDistribution.of(RationalScalar.HALF);
+  private static final Distribution COINFLIPPING = BernoulliDistribution.of(RealScalar.of(0.5));
   // ---
   private final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;
@@ -82,7 +81,7 @@ public class DoubleSarsa extends DequeDigestAdapter {
     this.epsilon = epsilon;
   }
 
-  @Override
+  @Override // from DequeDigest
   public void digest(Deque<StepInterface> deque) {
     // randomly select which qsa to read and write
     boolean flip = RandomVariate.of(COINFLIPPING).equals(RealScalar.ZERO); // flip coin, probability 0.5 each
