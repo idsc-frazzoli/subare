@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Power;
 
@@ -19,7 +20,7 @@ public enum MonteCarloErrorAnalysis {
   SQUARE_QSA() {
     @Override
     public Scalar getError(MonteCarloInterface monteCarloInterface, DiscreteQsa refQsa, DiscreteQsa currentQsa) {
-      return Power.of(DiscreteValueFunctions.distanceSquared(refQsa, currentQsa).Get(), 2);
+      return Power.of(DiscreteValueFunctions.distance(refQsa, currentQsa, Norm._2).Get(), 2);
     }
   },
   LINEAR_POLICY() {
