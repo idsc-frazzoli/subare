@@ -62,7 +62,7 @@ class GridworldRaster implements StateRaster, StateActionRaster {
 
   @Override
   public int joinAlongDimension() {
-    return 1;
+    return 0;
   }
 
   @Override

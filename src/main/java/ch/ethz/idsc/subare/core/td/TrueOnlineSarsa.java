@@ -65,8 +65,12 @@ public class TrueOnlineSarsa {
     w = Tensors.vector(v -> RealScalar.of(init), featureSize);
   }
 
-  public TrueOnlineSarsa(MonteCarloInterface mcInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
-    this(mcInterface, lambda, alpha, gamma, mapper, 0);
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
+    this(monteCarloInterface, lambda, alpha, gamma, mapper, 0);
+  }
+
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, FeatureMapper mapper) {
+    this(monteCarloInterface, lambda, alpha, monteCarloInterface.gamma(), mapper, 0);
   }
 
   private void update(Scalar reward, Tensor s_prime, Tensor a_prime) {

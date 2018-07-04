@@ -70,6 +70,10 @@ public class TrueOnlineSarsaMod {
     this(mcInterface, lambda, learningRate, gamma, mapper, 0);
   }
 
+  public TrueOnlineSarsaMod(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper mapper) {
+    this(monteCarloInterface, lambda, learningRate, monteCarloInterface.gamma(), mapper);
+  }
+
   private void update(Scalar reward, Tensor s, Tensor s_prime, Tensor a_prime) {
     Tensor stateActionPair = StateActionMapper.getMap(s_prime, a_prime);
     StepInterface stepInterface = new StepAdapter(s, a_prime, reward, s_prime);
