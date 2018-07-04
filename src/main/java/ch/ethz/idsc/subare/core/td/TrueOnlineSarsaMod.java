@@ -3,7 +3,10 @@ package ch.ethz.idsc.subare.core.td;
 
 import java.util.Random;
 
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.StateActionMapper;
@@ -15,20 +18,19 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
-import ch.ethz.idsc.tensor.sca.Sign;
 
 /** implementation of box "True Online Sarsa(lambda) for estimating w'x approx. q_pi or q_*
  * 
  * in Section 12.8, p.309 */
-public class TrueOnlineSarsa {
+public class TrueOnlineSarsaMod {
   private final Random rand = new Random();
   private final MonteCarloInterface monteCarloInterface;
-  private final Scalar alpha;
   private final Scalar gamma;
   private final FeatureMapper mapper;
+  private final LearningRate learningRate;
   // ---
   private final Scalar gamma_lambda;
-  private final Scalar alpha_gamma_lambda;
+  private Scalar alpha_gamma_lambda;
   private final int featureSize;
   // private final int dimState;
   // private final int dimAction;
@@ -49,14 +51,14 @@ public class TrueOnlineSarsa {
    * @param mapper
    * @param init
    * @throws Exception if any parameter is outside valid range */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper, double init) {
+  public TrueOnlineSarsaMod(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, Scalar gamma, FeatureMapper mapper,
+      double init) {
     this.monteCarloInterface = monteCarloInterface;
+    this.learningRate = learningRate;
     Clip.unit().requireInside(lambda);
-    this.alpha = Sign.requirePositive(alpha);
     this.gamma = gamma;
     this.mapper = mapper;
     gamma_lambda = Times.of(gamma, lambda);
-    alpha_gamma_lambda = Times.of(alpha, gamma, lambda);
     // dimState = monteCarloInterface.states().get(0).length();
     // dimAction = monteCarloInterface.actions(monteCarloInterface.states().get(0)).get(0).length();
     featureSize = mapper.getFeatureSize();
@@ -64,12 +66,16 @@ public class TrueOnlineSarsa {
     w = Tensors.vector(v -> RealScalar.of(init), featureSize);
   }
 
-  public TrueOnlineSarsa(MonteCarloInterface mcInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
-    this(mcInterface, lambda, alpha, gamma, mapper, 0);
+  public TrueOnlineSarsaMod(MonteCarloInterface mcInterface, Scalar lambda, LearningRate learningRate, Scalar gamma, FeatureMapper mapper) {
+    this(mcInterface, lambda, learningRate, gamma, mapper, 0);
   }
 
-  private void update(Scalar reward, Tensor s_prime, Tensor a_prime) {
+  private void update(Scalar reward, Tensor s, Tensor s_prime, Tensor a_prime) {
     Tensor stateActionPair = StateActionMapper.getMap(s_prime, a_prime);
+    StepInterface stepInterface = new StepAdapter(s, a_prime, reward, s_prime);
+    Scalar alpha = learningRate.alpha(stepInterface);
+    learningRate.digest(stepInterface);
+    alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     x_prime = mapper.getFeature(stateActionPair);
     q = w.dot(x).Get();
     q_prime = w.dot(x_prime).Get();
@@ -142,7 +148,7 @@ public class TrueOnlineSarsa {
       // System.out.println("from state " + stateOld + " to " + state + " with action " + actionOld + " reward: " + reward);
       action = getEGreedyAction(state, epsilon);
       // System.out.println(action);
-      update(reward, state, action);
+      update(reward, stateOld, state, action);
     }
   }
 

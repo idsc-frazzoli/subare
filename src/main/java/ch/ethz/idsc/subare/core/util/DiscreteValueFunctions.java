@@ -25,6 +25,10 @@ public enum DiscreteValueFunctions {
     return Norm._1.ofVector(_difference(tvi1, tvi2));
   }
 
+  public static Scalar distanceSquared(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
+    return Norm._2.ofVector(_difference(tvi1, tvi2));
+  }
+
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T average(T tvi1, T tvi2) {
     return (T) tvi1.create(tvi1.values().add(tvi2.values()).multiply(RationalScalar.HALF).stream());
