@@ -123,7 +123,7 @@ public class Airport implements StandardModel, MonteCarloInterface {
       reward = reward.add(Ramp.of(action.Get(1).subtract(RealScalar.of(i))).multiply(REBALANCE_COST).multiply(CUSTOMER_PROB.Get(i)));
     }
     // deal with parking cost of airport
-    reward = reward.add(move(state, action).Get(2).multiply(AIRPORT_WAIT_COST));
+    reward = reward.add(state.Get(2).subtract(action.Get(1)).multiply(AIRPORT_WAIT_COST));
     // deal with customer reward
     Scalar rewardCustomers = Range.of(0, CUSTOMER_PROB.length()) //
         .map(Min.function(action.Get(1))) //

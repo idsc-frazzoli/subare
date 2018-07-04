@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.demo.airport;
 
 import java.util.Arrays;
 
-import ch.ethz.idsc.subare.analysis.MonteCarloAnalysis;
+import ch.ethz.idsc.subare.analysis.MonteCarloErrorAnalysis;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
@@ -44,7 +44,7 @@ enum AirportDemo {
       for (int index = 0; index < batches; ++index) {
         Policy policyMC = EGreedyPolicy.bestEquiprobable(airport, mces.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policyMC, mces);
-        XYmc.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloAnalysis.getLinearQsaError(mces.qsa(), optimalQsa).number()));
+        XYmc.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, mces.qsa()).number()));
       }
       System.out.println("time for MonteCarlo: " + stopwatch.display_seconds() + "s");
       // Policies.print(GreedyPolicy.bestEquiprobable(airport, mces.qsa()), airport.states());
@@ -58,7 +58,8 @@ enum AirportDemo {
       for (int index = 0; index < batches; ++index) {
         Policy policy = EGreedyPolicy.bestEquiprobable(airport, sarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policy, 1, sarsa, sac);
-        XYsarsa.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloAnalysis.getLinearQsaError(sarsa.qsa(), optimalQsa).number()));
+        XYsarsa
+            .append(Tensors.vector(RealScalar.of(index).number(), MonteCarloErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, sarsa.qsa()).number()));
       }
       System.out.println("time for Sarsa: " + stopwatch.display_seconds() + "s");
     }
@@ -70,7 +71,7 @@ enum AirportDemo {
       for (int index = 0; index < batches; ++index) {
         toSarsa.executeEpisode(RealScalar.of(0.1));
         DiscreteQsa toQsa = toSarsa.getQsa();
-        XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloAnalysis.getLinearQsaError(toQsa, optimalQsa).number()));
+        XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));
       }
       System.out.println("time for TrueOnlineSarsa: " + stopwatch.display_seconds() + "s");
     }
@@ -78,12 +79,6 @@ enum AirportDemo {
     // System.out.println(toSarsa.getW());
     // toSarsa.printValues();
     // toSarsa.printPolicy();
-    System.out.println("Error of TrueOnlineSarsa: " + MonteCarloAnalysis.getLinearQsaError(toQsa, optimalQsa).number().doubleValue() + " "
-        + MonteCarloAnalysis.getSquareQsaError(toQsa, optimalQsa).number().doubleValue());
-    System.out.println("Error of Sarsa: " + MonteCarloAnalysis.getLinearQsaError(sarsa.qsa(), optimalQsa).number().doubleValue() + " "
-        + MonteCarloAnalysis.getSquareQsaError(sarsa.qsa(), optimalQsa).number().doubleValue());
-    System.out.println("Error of MonteCarlo: " + MonteCarloAnalysis.getLinearQsaError(mces.qsa(), optimalQsa).number().doubleValue() + " "
-        + MonteCarloAnalysis.getSquareQsaError(mces.qsa(), optimalQsa).number().doubleValue());
     PlotUtils.createPlot(Arrays.asList(XYmc, XYsarsa, XYtoSarsa), Arrays.asList("MonteCarlo", "Sarsa", "TrueOnlineSarsa"), "Convergence_Airport");
   }
 }

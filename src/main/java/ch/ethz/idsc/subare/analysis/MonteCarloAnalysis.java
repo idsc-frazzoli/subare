@@ -70,7 +70,7 @@ public enum MonteCarloAnalysis {
     list.add(MonteCarloAlgorithms.TrueOnlineSarsaMod);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
     // ---
-    MonteCarloErrorAnalysis errorAnalysis = MonteCarloErrorAnalysis.SQUARE_POLICY;
+    MonteCarloErrorAnalysis errorAnalysis = MonteCarloErrorAnalysis.LINEAR_POLICY;
     // ---
     analyse(monteCarloInterface, 100, list, errorAnalysis);
   }
