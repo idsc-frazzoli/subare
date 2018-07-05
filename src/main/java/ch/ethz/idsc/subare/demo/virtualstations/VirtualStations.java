@@ -52,11 +52,10 @@ public class VirtualStations implements MonteCarloInterface {
 
   private static Tensor generateStates() {
     Tensor prefixes = Tensors.empty();
-    for (int t = 0; t < TIMEINTERVALS; ++t) {
+    for (int t = 0; t <= TIMEINTERVALS; ++t) {
       prefixes.append(Tensors.vector(t));
     }
     Tensor states = StaticHelper.binaryVectors(NVNODES, prefixes);
-    // states.append(Tensors.vector(0)); // terminal state
     return states;
   }
 
@@ -109,7 +108,6 @@ public class VirtualStations implements MonteCarloInterface {
       if (Sign.isPositive(state.Get(i + 1))) {
         prefix = StaticHelper.binaryVectors(NVNODES - 1, prefix);
       } else {
-        // prefix = Join.of(prefix, Tensors.vector(v -> RealScalar.ZERO, NVNODES));
         prefix = StaticHelper.zeroVectors(NVNODES - 1, prefix);
       }
     }
@@ -122,6 +120,10 @@ public class VirtualStations implements MonteCarloInterface {
 
   @Override
   public Tensor move(Tensor state, Tensor action) {
+    if (isTerminal(state)) {
+      GlobalAssert.that(action.equals(Tensors.of(RealScalar.ZERO)));
+      return state;
+    }
     // move arriving taxis
     for (int i = 0; i < NVNODES; ++i) {
       for (int j = 0; j < NVNODES; ++j) {
@@ -172,7 +174,7 @@ public class VirtualStations implements MonteCarloInterface {
 
   @Override
   public boolean isTerminal(Tensor state) {
-    return state.Get(0).equals(RealScalar.of(TIMEINTERVALS - 1));
+    return state.Get(0).equals(RealScalar.of(TIMEINTERVALS));
   }
 
   @Override
@@ -180,16 +182,18 @@ public class VirtualStations implements MonteCarloInterface {
     return states.extract(0, 1);
   }
 
+  public int getTimeIntervals() {
+    return TIMEINTERVALS;
+  }
+
+  public int getNVnodes() {
+    return NVNODES;
+  }
+
   public static void main(String[] args) {
     VirtualStations vs = new VirtualStations();
     Tensor state = vs.startStates().get(0);
-    Tensor actions = vs.actions(state);
-    Tensor action = vs.actions(state).get(actions.length() - 1);
-    Tensor endState = vs.states().get(vs.states.length() - 1);
-    System.out.println("State: " + state);
-    System.out.println("Action: " + action);
-    System.out.println("Exact state:" + vs.exactStateMap);
-    System.out.println("Next state: " + vs.move(state, action));
-    System.out.println("Next exact state: " + vs.exactStateMap);
+    System.out.println(vs.states());
+    System.out.println(vs.actions(vs.states().get(vs.states().length() - 1)));
   }
 }

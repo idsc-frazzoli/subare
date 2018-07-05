@@ -49,12 +49,12 @@ public class TrueOnlineSarsa {
    * @param mapper
    * @param init
    * @throws Exception if any parameter is outside valid range */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper, double init) {
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, FeatureMapper mapper, double init) {
     this.monteCarloInterface = monteCarloInterface;
     Clip.unit().requireInside(lambda);
     this.alpha = Sign.requirePositive(alpha);
     // TODO use monteCarloInterface.gamma(); instead of extra parameter
-    this.gamma = gamma;
+    this.gamma = monteCarloInterface.gamma();
     this.mapper = mapper;
     gamma_lambda = Times.of(gamma, lambda);
     alpha_gamma_lambda = Times.of(alpha, gamma, lambda);
@@ -65,12 +65,8 @@ public class TrueOnlineSarsa {
     w = Tensors.vector(v -> RealScalar.of(init), featureSize);
   }
 
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
-    this(monteCarloInterface, lambda, alpha, gamma, mapper, 0);
-  }
-
   public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, FeatureMapper mapper) {
-    this(monteCarloInterface, lambda, alpha, monteCarloInterface.gamma(), mapper, 0);
+    this(monteCarloInterface, lambda, alpha, mapper, 0);
   }
 
   private void update(Scalar reward, Tensor s_prime, Tensor a_prime) {
