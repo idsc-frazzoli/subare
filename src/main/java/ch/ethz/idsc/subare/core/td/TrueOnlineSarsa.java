@@ -45,15 +45,16 @@ public class TrueOnlineSarsa {
   /** @param monteCarloInterface
    * @param lambda in [0, 1]
    * @param alpha positive
-   * @param gamma
+   * @param gamma discount factor
    * @param mapper
    * @param init
    * @throws Exception if any parameter is outside valid range */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper, double init) {
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, FeatureMapper mapper, double init) {
     this.monteCarloInterface = monteCarloInterface;
     Clip.unit().requireInside(lambda);
     this.alpha = Sign.requirePositive(alpha);
-    this.gamma = gamma;
+    // TODO use monteCarloInterface.gamma(); instead of extra parameter
+    this.gamma = monteCarloInterface.gamma();
     this.mapper = mapper;
     gamma_lambda = Times.of(gamma, lambda);
     alpha_gamma_lambda = Times.of(alpha, gamma, lambda);
@@ -64,8 +65,8 @@ public class TrueOnlineSarsa {
     w = Tensors.vector(v -> RealScalar.of(init), featureSize);
   }
 
-  public TrueOnlineSarsa(MonteCarloInterface mcInterface, Scalar lambda, Scalar alpha, Scalar gamma, FeatureMapper mapper) {
-    this(mcInterface, lambda, alpha, gamma, mapper, 0);
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, FeatureMapper mapper) {
+    this(monteCarloInterface, lambda, alpha, mapper, 0);
   }
 
   private void update(Scalar reward, Tensor s_prime, Tensor a_prime) {
@@ -84,27 +85,22 @@ public class TrueOnlineSarsa {
     x = x_prime;
   }
 
-  /** Returns the epsilon greedy action.
-   * With probability epsilon a random action is chosen. In the other case the best
-   * (greedy) action is taken with equal probability when several best actions.
-   * @param state
+  /** @param state
    * @param epsilon
-   * @return */
+   * @return the epsilon greedy action: With probability epsilon a random action is chosen.
+   * In the other case, the best (greedy) action is taken with equal probability when several best actions coexist. */
   private Tensor getEGreedyAction(Tensor state, Scalar epsilon) {
-    Tensor actions = monteCarloInterface.actions(state);
-    if (rand.nextFloat() > epsilon.number().doubleValue()) {
-      actions = getGreedyAction(state);
-    }
+    Tensor actions = rand.nextFloat() > epsilon.number().doubleValue() //
+        ? getGreedyActions(state)
+        : monteCarloInterface.actions(state);
     int index = rand.nextInt(actions.length());
     return actions.get(index);
   }
 
-  /** Returns the best action according to the current state-action values. In case
-   * of several best actions within a tolerance, all the best actions are returned.
-   * 
-   * @param state
-   * @return */
-  private Tensor getGreedyAction(Tensor state) {
+  /** @param state
+   * @return the best action according to the current state-action values. In case
+   * of several best actions within a tolerance, all the best actions are returned. */
+  private Tensor getGreedyActions(Tensor state) {
     double max = Double.NEGATIVE_INFINITY;
     Tensor bestActions = Tensors.empty();
     for (Tensor action : monteCarloInterface.actions(state)) {
@@ -170,9 +166,8 @@ public class TrueOnlineSarsa {
 
   public void printPolicy() {
     System.out.println("Greedy action to each state");
-    for (Tensor state : monteCarloInterface.states()) {
-      System.out.println(state + " -> " + getGreedyAction(state));
-    }
+    for (Tensor state : monteCarloInterface.states())
+      System.out.println(state + " -> " + getGreedyActions(state));
   }
 
   public Tensor getW() {

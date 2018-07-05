@@ -100,6 +100,20 @@ Sarsa
 
 ![gridworld_qsa_original3](https://user-images.githubusercontent.com/4012178/26866447-6ad0ecec-4b61-11e7-88d2-bf6cba11c245.gif)
 
+</tr><tr>
+
+<td>
+
+True Online Sarsa
+
+![gridworld_tos](https://user-images.githubusercontent.com/4012178/42294276-c85d7ef8-7fdf-11e8-9822-dcc127489f57.gif)
+
+<td>
+
+True Online Sarsa Mod
+
+![gridworld_tosm](https://user-images.githubusercontent.com/4012178/42294286-d780568a-7fdf-11e8-94ac-ba04a99c65a5.gif)
+
 </tr></table>
 
 

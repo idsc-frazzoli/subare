@@ -27,7 +27,7 @@ public class QLearning extends Sarsa {
     super(discreteModel, qsa, learningRate);
   }
 
-  @Override
+  @Override // from Sarsa
   protected Scalar evaluate(Tensor state) {
     return discreteModel.actions(state).stream() //
         .filter(action -> learningRate.encountered(state, action)) //
@@ -36,7 +36,7 @@ public class QLearning extends Sarsa {
         .orElse(RealScalar.ZERO);
   }
 
-  @Override
+  @Override // from Sarsa
   protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
     // TODO untested!!!
     Scalar value = RealScalar.ZERO;

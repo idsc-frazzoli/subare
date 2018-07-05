@@ -101,7 +101,7 @@ public enum MonteCarloAlgorithms {
     public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, MonteCarloErrorAnalysis errorAnalysis) {
       Tensor XYtoSarsa = Tensors.empty();
       FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), RealScalar.of(0.2), RealScalar.of(1), mapper, 10);
+      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), RealScalar.of(0.2), mapper, 10);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
@@ -122,8 +122,7 @@ public enum MonteCarloAlgorithms {
     public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, MonteCarloErrorAnalysis errorAnalysis) {
       Tensor XYtoSarsa = Tensors.empty();
       FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      TrueOnlineSarsaMod toSarsa = new TrueOnlineSarsaMod(monteCarloInterface, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2)),
-          RealScalar.of(1), mapper, 10);
+      TrueOnlineSarsaMod toSarsa = new TrueOnlineSarsaMod(monteCarloInterface, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2)), mapper, 10);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);

@@ -17,7 +17,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
  * 
  * if the reference qsa is in exact precision, the return values also have exact precision
  * 
- * loss can be measures per state-action, per state, and overall accumulated as a single number */
+ * loss can be measured per state-action, per state, and overall accumulated as a single number */
 public enum Loss {
   ;
   /** @param discreteModel

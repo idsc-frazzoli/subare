@@ -21,12 +21,12 @@ public enum DiscreteValueFunctions {
     return (T) tvi.create(Rescale.of(tvi.values()).stream());
   }
 
-  public static Scalar distance(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
-    return Norm._1.ofVector(_difference(tvi1, tvi2));
+  public static Scalar distance(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2, Norm norm) {
+    return norm.ofVector(_difference(tvi1, tvi2));
   }
 
-  public static Scalar distanceSquared(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
-    return Norm._2.ofVector(_difference(tvi1, tvi2));
+  public static Scalar distance(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
+    return distance(tvi1, tvi2, Norm._1);
   }
 
   @SuppressWarnings("unchecked")

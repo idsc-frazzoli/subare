@@ -36,6 +36,7 @@ public class VirtualStations implements MonteCarloInterface {
   private static final Scalar AVAILABILITY_COST = RealScalar.of(-10);
   private static final Scalar TAXI_ARRIVAL_PROB = RealScalar.of(0.5); // assuming a fluidic model
   private static final Scalar CUSTOMER_ARRIVAL_RATE = RealScalar.of(0.5);
+  // ---
   private final Distribution customer_distribution = PoissonDistribution.of(CUSTOMER_ARRIVAL_RATE.multiply(RealScalar.of(INTERVALTIME)));
   private final Distribution arrival_distribution = BernoulliDistribution.of(TAXI_ARRIVAL_PROB);
   // ---
@@ -49,13 +50,12 @@ public class VirtualStations implements MonteCarloInterface {
     generateLinkMap();
   }
 
-  private Tensor generateStates() {
+  private static Tensor generateStates() {
     Tensor prefixes = Tensors.empty();
-    for (int t = 0; t < TIMEINTERVALS; ++t) {
+    for (int t = 0; t <= TIMEINTERVALS; ++t) {
       prefixes.append(Tensors.vector(t));
     }
-    Tensor states = binaryVectors(NVNODES, prefixes);
-    // states.append(Tensors.vector(0)); // terminal state
+    Tensor states = StaticHelper.binaryVectors(NVNODES, prefixes);
     return states;
   }
 
@@ -100,16 +100,15 @@ public class VirtualStations implements MonteCarloInterface {
 
   @Override
   public Tensor actions(Tensor state) {
-    if (isTerminal(state)) {
+    if (isTerminal(state))
       return Tensors.of(Tensors.of(RealScalar.ZERO));
-    }
+    //
     Tensor prefix = Tensors.empty();
     for (int i = 0; i < NVNODES; ++i) {
       if (Sign.isPositive(state.Get(i + 1))) {
-        prefix = binaryVectors(NVNODES - 1, prefix);
+        prefix = StaticHelper.binaryVectors(NVNODES - 1, prefix);
       } else {
-        // prefix = Join.of(prefix, Tensors.vector(v -> RealScalar.ZERO, NVNODES));
-        prefix = zeroVectors(NVNODES - 1, prefix);
+        prefix = StaticHelper.zeroVectors(NVNODES - 1, prefix);
       }
     }
     return prefix;
@@ -119,40 +118,12 @@ public class VirtualStations implements MonteCarloInterface {
     return action.Get(linkToIndex.get(from).get(to)).number().intValue();
   }
 
-  /** returns the tensor of all possible binary combinations in a vector of size length
-   * 
-   * @param length
-   * @param prefixes
-   * @return */
-  private Tensor binaryVectors(int length, Tensor prefixes) {
-    if (length == 0)
-      return prefixes;
-    if (prefixes.length() == 0) {
-      return binaryVectors(length - 1, Tensors.of(Tensors.vector(1), Tensors.vector(0)));
-    }
-    Tensor extension = Tensors.empty();
-    for (Tensor prefix : prefixes) {
-      extension.append(Join.of(prefix, Tensors.vector(1)));
-      extension.append(Join.of(prefix, Tensors.vector(0)));
-    }
-    return binaryVectors(length - 1, extension);
-  }
-
-  private Tensor zeroVectors(int length, Tensor prefixes) {
-    if (length == 0)
-      return prefixes;
-    if (prefixes.length() == 0) {
-      return zeroVectors(length - 1, Tensors.of(Tensors.vector(1), Tensors.vector(0)));
-    }
-    Tensor extension = Tensors.empty();
-    for (Tensor prefix : prefixes) {
-      extension.append(Join.of(prefix, Tensors.vector(0)));
-    }
-    return zeroVectors(length - 1, extension);
-  }
-
   @Override
   public Tensor move(Tensor state, Tensor action) {
+    if (isTerminal(state)) {
+      GlobalAssert.that(action.equals(Tensors.of(RealScalar.ZERO)));
+      return state;
+    }
     // move arriving taxis
     for (int i = 0; i < NVNODES; ++i) {
       for (int j = 0; j < NVNODES; ++j) {
@@ -189,13 +160,8 @@ public class VirtualStations implements MonteCarloInterface {
     // System.out.println("After executing action: " + exactStateMap);
     // read new state
     Tensor newState = Tensors.empty();
-    for (int i = 0; i < NVNODES; ++i) {
-      if (exactStateMap.get(i).get(i) > 0) {
-        newState = Join.of(newState, Tensors.vector(1));
-      } else {
-        newState = Join.of(newState, Tensors.vector(0));
-      }
-    }
+    for (int i = 0; i < NVNODES; ++i)
+      newState.append(0 < exactStateMap.get(i).get(i) ? RealScalar.ONE : RealScalar.ZERO);
     return Join.of(Tensors.vector(state.Get(0).number().intValue() + 1), newState);
   }
 
@@ -208,7 +174,7 @@ public class VirtualStations implements MonteCarloInterface {
 
   @Override
   public boolean isTerminal(Tensor state) {
-    return state.Get(0).equals(RealScalar.of(TIMEINTERVALS - 1));
+    return state.Get(0).equals(RealScalar.of(TIMEINTERVALS));
   }
 
   @Override
@@ -216,16 +182,18 @@ public class VirtualStations implements MonteCarloInterface {
     return states.extract(0, 1);
   }
 
+  public int getTimeIntervals() {
+    return TIMEINTERVALS;
+  }
+
+  public int getNVnodes() {
+    return NVNODES;
+  }
+
   public static void main(String[] args) {
     VirtualStations vs = new VirtualStations();
     Tensor state = vs.startStates().get(0);
-    Tensor actions = vs.actions(state);
-    Tensor action = vs.actions(state).get(actions.length() - 1);
-    Tensor endState = vs.states().get(vs.states.length() - 1);
-    System.out.println("State: " + state);
-    System.out.println("Action: " + action);
-    System.out.println("Exact state:" + vs.exactStateMap);
-    System.out.println("Next state: " + vs.move(state, action));
-    System.out.println("Next exact state: " + vs.exactStateMap);
+    System.out.println(vs.states());
+    System.out.println(vs.actions(vs.states().get(vs.states().length() - 1)));
   }
 }

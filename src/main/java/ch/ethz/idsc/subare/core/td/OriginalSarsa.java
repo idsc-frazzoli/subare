@@ -34,12 +34,12 @@ public class OriginalSarsa extends Sarsa {
   }
 
   // TODO can refactor between original sarsa and expected sarsa
-  @Override
+  @Override // from Sarsa
   protected Scalar evaluate(Tensor state) {
     return crossEvaluate(state, qsa);
   }
 
-  @Override
+  @Override // from Sarsa
   protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
     Tensor actions = Tensor.of( //
         discreteModel.actions(state).stream() //

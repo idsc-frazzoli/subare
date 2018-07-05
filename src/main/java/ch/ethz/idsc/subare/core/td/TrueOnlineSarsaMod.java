@@ -51,12 +51,11 @@ public class TrueOnlineSarsaMod {
    * @param mapper
    * @param init
    * @throws Exception if any parameter is outside valid range */
-  public TrueOnlineSarsaMod(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, Scalar gamma, FeatureMapper mapper,
-      double init) {
+  public TrueOnlineSarsaMod(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper mapper, double init) {
     this.monteCarloInterface = monteCarloInterface;
     this.learningRate = learningRate;
     Clip.unit().requireInside(lambda);
-    this.gamma = gamma;
+    this.gamma = monteCarloInterface.gamma();
     this.mapper = mapper;
     gamma_lambda = Times.of(gamma, lambda);
     // dimState = monteCarloInterface.states().get(0).length();
@@ -66,8 +65,8 @@ public class TrueOnlineSarsaMod {
     w = Tensors.vector(v -> RealScalar.of(init), featureSize);
   }
 
-  public TrueOnlineSarsaMod(MonteCarloInterface mcInterface, Scalar lambda, LearningRate learningRate, Scalar gamma, FeatureMapper mapper) {
-    this(mcInterface, lambda, learningRate, gamma, mapper, 0);
+  public TrueOnlineSarsaMod(MonteCarloInterface mcInterface, Scalar lambda, LearningRate learningRate, FeatureMapper mapper) {
+    this(mcInterface, lambda, learningRate, mapper, 0);
   }
 
   private void update(Scalar reward, Tensor s, Tensor s_prime, Tensor a_prime) {
