@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.demo.airport;
 import java.util.Arrays;
 
 import ch.ethz.idsc.subare.analysis.MonteCarloErrorAnalysis;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
@@ -64,10 +65,12 @@ enum AirportDemo {
       System.out.println("time for Sarsa: " + stopwatch.display_seconds() + "s");
     }
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, sarsa.qsa()), airport.states());
+    LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2));
     FeatureMapper mapper = new ExactFeatureMapper(airport);
-    TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(airport, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2)), mapper);
+    TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(airport, RealScalar.of(0.7), learningRate, mapper);
     {
       Stopwatch stopwatch = Stopwatch.started();
+      // TODO misnomer: here batches denotes the number of "episodes"
       for (int index = 0; index < batches; ++index) {
         toSarsa.executeEpisode(RealScalar.of(0.1));
         DiscreteQsa toQsa = toSarsa.getQsa();

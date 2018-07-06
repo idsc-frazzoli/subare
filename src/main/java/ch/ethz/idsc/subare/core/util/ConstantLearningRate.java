@@ -1,18 +1,14 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
 
 /** learning rate of alpha except in first update of state-action pair
  * for which the learning rate equals 1 in the case of warmStart. */
-public class ConstantLearningRate implements LearningRate {
+public class ConstantLearningRate extends StrictConstantLearningRate {
   /** @param alpha
    * @return constant learning rate with factor alpha */
   public static LearningRate of(Scalar alpha) {
@@ -23,7 +19,9 @@ public class ConstantLearningRate implements LearningRate {
    * @param warmStart whether to warmStart (alpha=1 if state-action pair not yet seen) or not
    * @return constant learning rate with factor alpha */
   public static LearningRate of(Scalar alpha, boolean warmStart) {
-    return warmStart ? new ConstantLearningRate(alpha) : new StrictConstantLearningRate(alpha);
+    return warmStart //
+        ? new ConstantLearningRate(alpha)
+        : new StrictConstantLearningRate(alpha);
   }
 
   /** @return constant learning rate with factor 1.0,
@@ -39,26 +37,14 @@ public class ConstantLearningRate implements LearningRate {
   }
 
   // ---
-  private final Set<Tensor> visited = new HashSet<>();
-  private final Scalar alpha;
-
   private ConstantLearningRate(Scalar alpha) {
-    this.alpha = alpha;
-  }
-
-  @Override // from LearningRate
-  public void digest(StepInterface stepInterface) {
-    visited.add(StateAction.key(stepInterface));
+    super(alpha);
   }
 
   @Override // from LearningRate
   public Scalar alpha(StepInterface stepInterface) {
-    return visited.contains(StateAction.key(stepInterface)) ? //
-        alpha : RealScalar.ONE; // overcome initialization bias
-  }
-
-  @Override // from LearningRate
-  public boolean encountered(Tensor state, Tensor action) {
-    return visited.contains(StateAction.key(state, action));
+    return encountered(stepInterface.prevState(), stepInterface.action()) //
+        ? super.alpha(stepInterface)
+        : RealScalar.ONE; // overcome initialization bias
   }
 }

@@ -1,6 +1,7 @@
 // code by fluric
 package ch.ethz.idsc.subare.analysis;
 
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
@@ -99,7 +100,7 @@ public enum MonteCarloAlgorithms {
         Policy policy = sarsa.getEGreedy();
         ExploringStarts.batch(monteCarloInterface, policy, 1, sarsa);
         XYsarsa.append(Tensors.vector(RealScalar.of(index).number(),
-            errorAnalysis.getError(monteCarloInterface, optimalQsa, DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2)).number()));
+            errorAnalysis.getError(monteCarloInterface, optimalQsa, DiscreteValueFunctions.average(qsa1, qsa2)).number()));
       }
       System.out.println("Time for DoubleQLearningSarsa: " + stopwatch.display_seconds() + "s");
       // Policies.print(sarsa.getGreedy(), monteCarloInterface.states());
@@ -127,8 +128,9 @@ public enum MonteCarloAlgorithms {
     @Override
     public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, MonteCarloErrorAnalysis errorAnalysis) {
       Tensor XYtoSarsa = Tensors.empty();
+      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2), false);
       FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2), false), mapper, 0);
+      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), learningRate, mapper);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
@@ -148,8 +150,9 @@ public enum MonteCarloAlgorithms {
     @Override
     public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, MonteCarloErrorAnalysis errorAnalysis) {
       Tensor XYtoSarsa = Tensors.empty();
+      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2), true);
       FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2), true), mapper, 0);
+      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), learningRate, mapper);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
@@ -170,7 +173,7 @@ public enum MonteCarloAlgorithms {
     public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, MonteCarloErrorAnalysis errorAnalysis) {
       Tensor XYtoSarsa = Tensors.empty();
       FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.0), ConstantLearningRate.of(RealScalar.of(0.05)), mapper, 0);
+      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.0), ConstantLearningRate.of(RealScalar.of(0.05)), mapper);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
@@ -190,8 +193,9 @@ public enum MonteCarloAlgorithms {
     @Override
     public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, MonteCarloErrorAnalysis errorAnalysis) {
       Tensor XYtoSarsa = Tensors.empty();
+      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
       FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.05)), mapper, 0);
+      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), learningRate, mapper);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);

@@ -12,10 +12,10 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 
-// general bellman equation:
-// v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
-// bellman optimality equation:
-// v_*(s) == max_a Sum_{s',r} p(s',r | s,a) * (r + gamma * v_*(s'))
+/** general bellman equation:
+ * v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
+ * bellman optimality equation:
+ * v_*(s) == max_a Sum_{s',r} p(s',r | s,a) * (r + gamma * v_*(s')) */
 public class IterativePolicyEvaluation {
   private final StandardModel standardModel;
   private final ActionValueAdapter actionValueAdapter;

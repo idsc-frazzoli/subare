@@ -11,7 +11,7 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** learning rate of alpha except in first update of state-action pair
  * for which the learning rate equals 1 in the case of warmStart. */
-public class StrictConstantLearningRate implements LearningRate {
+/* package */ class StrictConstantLearningRate implements LearningRate {
   private final Set<Tensor> visited = new HashSet<>();
   private final Scalar alpha;
 
@@ -20,7 +20,7 @@ public class StrictConstantLearningRate implements LearningRate {
   }
 
   @Override // from LearningRate
-  public void digest(StepInterface stepInterface) {
+  public final void digest(StepInterface stepInterface) {
     visited.add(StateAction.key(stepInterface));
   }
 
@@ -30,7 +30,7 @@ public class StrictConstantLearningRate implements LearningRate {
   }
 
   @Override // from LearningRate
-  public boolean encountered(Tensor state, Tensor action) {
+  public final boolean encountered(Tensor state, Tensor action) {
     return visited.contains(StateAction.key(state, action));
   }
 }

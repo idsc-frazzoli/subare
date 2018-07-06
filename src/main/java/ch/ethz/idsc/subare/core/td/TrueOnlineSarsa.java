@@ -26,10 +26,10 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * 
  * in Section 12.8, p.309 */
 public class TrueOnlineSarsa {
-  private final Random rand = new Random();
+  private final Random random = new Random();
   private final MonteCarloInterface monteCarloInterface;
   private final Scalar gamma;
-  private final FeatureMapper mapper;
+  private final FeatureMapper featureMapper;
   private final LearningRate learningRate;
   // ---
   private final Scalar gamma_lambda;
@@ -49,27 +49,25 @@ public class TrueOnlineSarsa {
 
   /** @param monteCarloInterface
    * @param lambda in [0, 1]
-   * @param alpha positive
-   * @param gamma
-   * @param mapper
-   * @param init
-   * @throws Exception if any parameter is outside valid range */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper mapper, double init) {
+   * @param learningRate
+   * @param featureMapper
+   * @param init */
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Scalar init) {
     this.monteCarloInterface = monteCarloInterface;
     this.learningRate = learningRate;
     Clip.unit().requireInside(lambda);
     this.gamma = monteCarloInterface.gamma();
-    this.mapper = mapper;
+    this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
     // dimState = monteCarloInterface.states().get(0).length();
     // dimAction = monteCarloInterface.actions(monteCarloInterface.states().get(0)).get(0).length();
-    featureSize = mapper.getFeatureSize();
+    featureSize = featureMapper.getFeatureSize();
     z = Array.zeros(featureSize);
-    w = Tensors.vector(v -> RealScalar.of(init), featureSize);
+    w = Tensors.vector(v -> init, featureSize);
   }
 
   public TrueOnlineSarsa(MonteCarloInterface mcInterface, Scalar lambda, LearningRate learningRate, FeatureMapper mapper) {
-    this(mcInterface, lambda, learningRate, mapper, 0);
+    this(mcInterface, lambda, learningRate, mapper, RealScalar.ZERO); // exact precision intentional
   }
 
   private void update(Scalar reward, Tensor s, Tensor s_prime, Tensor a_prime) {
@@ -78,7 +76,7 @@ public class TrueOnlineSarsa {
     Scalar alpha = learningRate.alpha(stepInterface);
     learningRate.digest(stepInterface);
     alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
-    x_prime = mapper.getFeature(stateActionPair);
+    x_prime = featureMapper.getFeature(stateActionPair);
     q = w.dot(x).Get();
     q_prime = w.dot(x_prime).Get();
     delta = reward.add(gamma.multiply(q_prime)).subtract(q);
@@ -100,10 +98,10 @@ public class TrueOnlineSarsa {
    * @return */
   private Tensor getEGreedyAction(Tensor state, Scalar epsilon) {
     Tensor actions = monteCarloInterface.actions(state);
-    if (rand.nextFloat() > epsilon.number().doubleValue()) {
+    if (random.nextFloat() > epsilon.number().doubleValue()) {
       actions = getGreedyAction(state);
     }
-    int index = rand.nextInt(actions.length());
+    int index = random.nextInt(actions.length());
     return actions.get(index);
   }
 
@@ -117,7 +115,7 @@ public class TrueOnlineSarsa {
     Tensor bestActions = Tensors.empty();
     for (Tensor action : monteCarloInterface.actions(state)) {
       Tensor stateActionPair = StateActionMapper.getMap(state, action);
-      double current = mapper.getFeature(stateActionPair).dot(w).Get().number().doubleValue();
+      double current = featureMapper.getFeature(stateActionPair).dot(w).Get().number().doubleValue();
       if (Math.abs(current - max) < 1e-8) {
         bestActions.append(action);
       } else if (current > max) {
@@ -130,47 +128,24 @@ public class TrueOnlineSarsa {
 
   public void executeEpisode(Scalar epsilon) {
     // getting random index for startState
-    int index = rand.nextInt(monteCarloInterface.startStates().length());
-    Tensor state = monteCarloInterface.startStates().get(index);
-    Tensor stateOld;
+    Tensor states = monteCarloInterface.startStates();
+    Tensor state = states.get(random.nextInt(states.length()));
     Tensor action = getEGreedyAction(state, epsilon);
-    Tensor actionOld;
-    Scalar reward;
-    // init every episode again
-    Tensor stateActionPair = StateActionMapper.getMap(state, action);
-    x = mapper.getFeature(stateActionPair);
-    qOld = RealScalar.ZERO;
-    z = Array.zeros(featureSize);
-    // run through episode
-    while (!monteCarloInterface.isTerminal(state)) {
-      stateOld = state;
-      actionOld = action;
-      state = monteCarloInterface.move(stateOld, actionOld);
-      reward = monteCarloInterface.reward(stateOld, actionOld, state);
-      // System.out.println("from state " + stateOld + " to " + state + " with action " + actionOld + " reward: " + reward);
-      action = getEGreedyAction(state, epsilon);
-      // System.out.println(action);
-      update(reward, stateOld, state, action);
-    }
+    executeEpisode(epsilon, state, action);
   }
 
-  public void executeEpisode(Scalar epsilon, Tensor startState, Tensor startAction) {
-    Tensor state = startState;
-    Tensor stateOld;
-    Tensor action = startAction;
-    Tensor actionOld;
-    Scalar reward;
+  private void executeEpisode(Scalar epsilon, Tensor state, Tensor action) {
     // init every episode again
     Tensor stateActionPair = StateActionMapper.getMap(state, action);
-    x = mapper.getFeature(stateActionPair);
+    x = featureMapper.getFeature(stateActionPair);
     qOld = RealScalar.ZERO;
     z = Array.zeros(featureSize);
     // run through episode
     while (!monteCarloInterface.isTerminal(state)) {
-      stateOld = state;
-      actionOld = action;
+      Tensor stateOld = state;
+      Tensor actionOld = action;
       state = monteCarloInterface.move(stateOld, actionOld);
-      reward = monteCarloInterface.reward(stateOld, actionOld, state);
+      Scalar reward = monteCarloInterface.reward(stateOld, actionOld, state);
       // System.out.println("from state " + stateOld + " to " + state + " with action " + actionOld + " reward: " + reward);
       action = getEGreedyAction(state, epsilon);
       // System.out.println(action);
@@ -180,24 +155,19 @@ public class TrueOnlineSarsa {
 
   public void executeBatch(Scalar epsilon) {
     List<Tensor> list = new ArrayList<>();
-    for (Tensor state : monteCarloInterface.startStates()) {
-      for (Tensor action : monteCarloInterface.actions(state)) {
+    for (Tensor state : monteCarloInterface.startStates())
+      for (Tensor action : monteCarloInterface.actions(state))
         list.add(Tensors.of(state, action));
-      }
-    }
     Collections.shuffle(list);
-    for (Tensor start : list) {
-      executeEpisode(epsilon, start.get(0), start.get(1));
-    }
+    for (Tensor stateActionPair : list)
+      executeEpisode(epsilon, stateActionPair.get(0), stateActionPair.get(1));
   }
 
   public void printValues() {
     System.out.println("Values for all state-action pairs:");
-    for (Tensor state : monteCarloInterface.states()) {
-      for (Tensor action : monteCarloInterface.actions(state)) {
-        System.out.println(state + " -> " + action + " " + mapper.getFeature(Join.of(state, action)).dot(w));
-      }
-    }
+    for (Tensor state : monteCarloInterface.states())
+      for (Tensor action : monteCarloInterface.actions(state))
+        System.out.println(state + " -> " + action + " " + featureMapper.getFeature(Join.of(state, action)).dot(w));
   }
 
   /** Returns the Qsa according to the current feature weights.
@@ -207,7 +177,7 @@ public class TrueOnlineSarsa {
     for (Tensor state : monteCarloInterface.states()) {
       for (Tensor action : monteCarloInterface.actions(state)) {
         Tensor stateActionPair = StateActionMapper.getMap(state, action);
-        qsa.assign(state, action, mapper.getFeature(stateActionPair).dot(w).Get());
+        qsa.assign(state, action, featureMapper.getFeature(stateActionPair).dot(w).Get());
       }
     }
     return qsa;
@@ -215,12 +185,11 @@ public class TrueOnlineSarsa {
 
   public void printPolicy() {
     System.out.println("Greedy action to each state");
-    for (Tensor state : monteCarloInterface.states()) {
+    for (Tensor state : monteCarloInterface.states())
       System.out.println(state + " -> " + getGreedyAction(state));
-    }
   }
 
   public Tensor getW() {
-    return w;
+    return w.unmodifiable();
   }
 }
