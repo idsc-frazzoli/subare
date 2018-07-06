@@ -47,13 +47,14 @@ public enum MonteCarloAnalysis {
         Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(monteCarloInterface, policy, 1, sarsa);
       }
+      System.out.println("Time for optimal QSA approximation: " + stopwatch.display_seconds() + "s");
       // DiscreteUtils.print(sarsa.qsa());
       // Policies.print(GreedyPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa()), monteCarloInterface.states());
       return sarsa.qsa();
     }
     Stopwatch stopwatch = Stopwatch.started();
     DiscreteQsa optimalQsa = ActionValueIterations.solve((StandardModel) monteCarloInterface, DecimalScalar.of(.0001));
-    System.out.println("time for AVI: " + stopwatch.display_seconds() + "s");
+    System.out.println("Time for AVI: " + stopwatch.display_seconds() + "s");
     // DiscreteUtils.print(optimalQsa);
     // Policy policyQsa = GreedyPolicy.bestEquiprobable(monteCarloInterface, optimalQsa);
     // Policies.print(policyQsa, monteCarloInterface.states());
@@ -61,17 +62,18 @@ public enum MonteCarloAnalysis {
   }
 
   public static void main(String[] args) throws Exception {
-    MonteCarloInterface monteCarloInterface = MonteCarloExamples.AIRPORT.get();
+    MonteCarloInterface monteCarloInterface = MonteCarloExamples.MAZE2.get();
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
     list.add(MonteCarloAlgorithms.MonteCarlo);
     list.add(MonteCarloAlgorithms.ExpectedSarsa);
     list.add(MonteCarloAlgorithms.QLearningSarsa);
+    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsaWarmStart);
     // ---
     MonteCarloErrorAnalysis errorAnalysis = MonteCarloErrorAnalysis.LINEAR_POLICY;
     // ---
-    analyse(monteCarloInterface, 100, list, errorAnalysis);
+    analyse(monteCarloInterface, 10, list, errorAnalysis);
   }
 }

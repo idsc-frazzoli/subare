@@ -23,7 +23,8 @@ public enum MonteCarloExamples implements Supplier<MonteCarloInterface> {
   VIRTUALSTATIONS(() -> new VirtualStations()), //
   GAMBLER_20(() -> new Gambler(20, RationalScalar.of(4, 10))), //
   GAMBLER_100(() -> Gambler.createDefault()), //
-  MAZE(() -> DynamazeHelper.create5(3)), //
+  MAZE2(() -> DynamazeHelper.original("maze2")), //
+  MAZE5(() -> DynamazeHelper.create5(3)), //
   WIRELOOP_4(() -> {
     WireloopReward wireloopReward = WireloopReward.freeSteps();
     wireloopReward = WireloopReward.constantCost();

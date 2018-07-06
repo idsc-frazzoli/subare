@@ -109,7 +109,7 @@ public class Airport implements StandardModel, MonteCarloInterface {
 
   @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
-    return state.get(0).equals(RealScalar.of(LASTT));
+    return state.Get(0).equals(RealScalar.of(LASTT));
   }
 
   /**************************************************/

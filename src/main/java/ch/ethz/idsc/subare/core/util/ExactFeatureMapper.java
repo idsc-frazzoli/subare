@@ -6,6 +6,7 @@ import java.util.Map;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.UnitVector;
 
 /** requires keys of the form Join.of(state, action)
@@ -20,6 +21,8 @@ public class ExactFeatureMapper implements FeatureMapper {
     // count the number of possible state-action pairs first
     int count = 0;
     for (Tensor state : monteCarloInterface.states()) {
+      if (monteCarloInterface.isTerminal(state))
+        continue;
       count += monteCarloInterface.actions(state).length();
     }
     stateActionSize = count;
@@ -27,7 +30,10 @@ public class ExactFeatureMapper implements FeatureMapper {
     int index = -1;
     for (Tensor state : monteCarloInterface.states()) {
       for (Tensor action : monteCarloInterface.actions(state)) {
-        stateToFeature.put(StateActionMapper.getMap(state, action), UnitVector.of(stateActionSize, ++index));
+        if (monteCarloInterface.isTerminal(state))
+          stateToFeature.put(StateActionMapper.getMap(state, action), Array.zeros(stateActionSize));
+        else
+          stateToFeature.put(StateActionMapper.getMap(state, action), UnitVector.of(stateActionSize, ++index));
       }
     }
   }

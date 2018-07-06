@@ -35,4 +35,9 @@ enum StaticHelper {
     }
     return extension;
   }
+
+  public static Tensor getTensor(Tensor a) {
+    System.out.println(a);
+    return a;
+  }
 }
