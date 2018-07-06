@@ -16,14 +16,14 @@ public class ConstantLearningRate implements LearningRate {
   /** @param alpha
    * @return constant learning rate with factor alpha */
   public static LearningRate of(Scalar alpha) {
-    return new ConstantLearningRate(alpha, true);
+    return new ConstantLearningRate(alpha);
   }
 
   /** @param alpha
    * @param warmStart whether to warmStart (alpha=1 if state-action pair not yet seen) or not
    * @return constant learning rate with factor alpha */
   public static LearningRate of(Scalar alpha, boolean warmStart) {
-    return new ConstantLearningRate(alpha, warmStart);
+    return warmStart ? new ConstantLearningRate(alpha) : new StrictConstantLearningRate(alpha);
   }
 
   /** @return constant learning rate with factor 1.0,
@@ -41,10 +41,8 @@ public class ConstantLearningRate implements LearningRate {
   // ---
   private final Set<Tensor> visited = new HashSet<>();
   private final Scalar alpha;
-  private final boolean warmStart;
 
-  private ConstantLearningRate(Scalar alpha, boolean warmStart) {
-    this.warmStart = warmStart;
+  private ConstantLearningRate(Scalar alpha) {
     this.alpha = alpha;
   }
 
@@ -55,8 +53,6 @@ public class ConstantLearningRate implements LearningRate {
 
   @Override // from LearningRate
   public Scalar alpha(StepInterface stepInterface) {
-    if (!warmStart)
-      return alpha;
     return visited.contains(StateAction.key(stepInterface)) ? //
         alpha : RealScalar.ONE; // overcome initialization bias
   }
