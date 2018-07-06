@@ -15,7 +15,7 @@ import ch.ethz.idsc.tensor.red.Max;
  * 
  * eq (6.8)
  * 
- * box on p.140
+ * box on p.131
  * 
  * see also Watkins 1989 */
 public class QLearning extends Sarsa {

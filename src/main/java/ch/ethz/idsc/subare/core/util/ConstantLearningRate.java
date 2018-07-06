@@ -11,12 +11,19 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** learning rate of alpha except in first update of state-action pair
- * for which the learning rate equals 1. */
+ * for which the learning rate equals 1 in the case of warmStart. */
 public class ConstantLearningRate implements LearningRate {
   /** @param alpha
    * @return constant learning rate with factor alpha */
   public static LearningRate of(Scalar alpha) {
-    return new ConstantLearningRate(alpha);
+    return new ConstantLearningRate(alpha, true);
+  }
+
+  /** @param alpha
+   * @param warmStart whether to warmStart (alpha=1 if state-action pair not yet seen) or not
+   * @return constant learning rate with factor alpha */
+  public static LearningRate of(Scalar alpha, boolean warmStart) {
+    return new ConstantLearningRate(alpha, warmStart);
   }
 
   /** @return constant learning rate with factor 1.0,
@@ -34,8 +41,10 @@ public class ConstantLearningRate implements LearningRate {
   // ---
   private final Set<Tensor> visited = new HashSet<>();
   private final Scalar alpha;
+  private final boolean warmStart;
 
-  private ConstantLearningRate(Scalar alpha) {
+  private ConstantLearningRate(Scalar alpha, boolean warmStart) {
+    this.warmStart = warmStart;
     this.alpha = alpha;
   }
 
@@ -46,6 +55,8 @@ public class ConstantLearningRate implements LearningRate {
 
   @Override // from LearningRate
   public Scalar alpha(StepInterface stepInterface) {
+    if (!warmStart)
+      return alpha;
     return visited.contains(StateAction.key(stepInterface)) ? //
         alpha : RealScalar.ONE; // overcome initialization bias
   }

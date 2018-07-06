@@ -67,8 +67,8 @@ public enum MonteCarloAnalysis {
     list.add(MonteCarloAlgorithms.MonteCarlo);
     list.add(MonteCarloAlgorithms.ExpectedSarsa);
     list.add(MonteCarloAlgorithms.QLearningSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsaMod);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
+    list.add(MonteCarloAlgorithms.TrueOnlineSarsaWarmStart);
     // ---
     MonteCarloErrorAnalysis errorAnalysis = MonteCarloErrorAnalysis.LINEAR_POLICY;
     // ---

@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
-import ch.ethz.idsc.subare.core.td.TrueOnlineSarsaMod;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -101,7 +100,7 @@ public enum MonteCarloAlgorithms {
     public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, MonteCarloErrorAnalysis errorAnalysis) {
       Tensor XYtoSarsa = Tensors.empty();
       FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), RealScalar.of(0.2), mapper, 10);
+      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2), false), mapper, 10);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
@@ -117,12 +116,12 @@ public enum MonteCarloAlgorithms {
       return XYtoSarsa;
     }
   }, //
-  TrueOnlineSarsaMod() {
+  TrueOnlineSarsaWarmStart() {
     @Override
     public Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, MonteCarloErrorAnalysis errorAnalysis) {
       Tensor XYtoSarsa = Tensors.empty();
       FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      TrueOnlineSarsaMod toSarsa = new TrueOnlineSarsaMod(monteCarloInterface, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2)), mapper, 10);
+      TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2), true), mapper, 10);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
@@ -130,14 +129,14 @@ public enum MonteCarloAlgorithms {
         DiscreteQsa toQsa = toSarsa.getQsa();
         XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
       }
-      System.out.println("Time for TrueOnlineSarsaMod: " + stopwatch.display_seconds() + "s");
+      System.out.println("Time for TrueOnlineSarsaWarmStart: " + stopwatch.display_seconds() + "s");
       DiscreteQsa toQsa = toSarsa.getQsa();
       // System.out.println(toSarsa.getW());
       // toSarsa.printValues();
       // toSarsa.printPolicy();
       return XYtoSarsa;
     }
-  }, //
+  },//
   ;
   public abstract Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, MonteCarloErrorAnalysis errorAnalysis);
 }

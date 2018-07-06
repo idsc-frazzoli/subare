@@ -3,7 +3,10 @@ package ch.ethz.idsc.subare.core.td;
 
 import java.util.Random;
 
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.StateActionMapper;
@@ -15,7 +18,6 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
-import ch.ethz.idsc.tensor.sca.Sign;
 
 /** implementation of box "True Online Sarsa(lambda) for estimating w'x approx. q_pi or q_*
  * 
@@ -23,12 +25,12 @@ import ch.ethz.idsc.tensor.sca.Sign;
 public class TrueOnlineSarsa {
   private final Random rand = new Random();
   private final MonteCarloInterface monteCarloInterface;
-  private final Scalar alpha;
   private final Scalar gamma;
   private final FeatureMapper mapper;
+  private final LearningRate learningRate;
   // ---
   private final Scalar gamma_lambda;
-  private final Scalar alpha_gamma_lambda;
+  private Scalar alpha_gamma_lambda;
   private final int featureSize;
   // private final int dimState;
   // private final int dimAction;
@@ -45,19 +47,17 @@ public class TrueOnlineSarsa {
   /** @param monteCarloInterface
    * @param lambda in [0, 1]
    * @param alpha positive
-   * @param gamma discount factor
+   * @param gamma
    * @param mapper
    * @param init
    * @throws Exception if any parameter is outside valid range */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, FeatureMapper mapper, double init) {
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper mapper, double init) {
     this.monteCarloInterface = monteCarloInterface;
+    this.learningRate = learningRate;
     Clip.unit().requireInside(lambda);
-    this.alpha = Sign.requirePositive(alpha);
-    // TODO use monteCarloInterface.gamma(); instead of extra parameter
     this.gamma = monteCarloInterface.gamma();
     this.mapper = mapper;
     gamma_lambda = Times.of(gamma, lambda);
-    alpha_gamma_lambda = Times.of(alpha, gamma, lambda);
     // dimState = monteCarloInterface.states().get(0).length();
     // dimAction = monteCarloInterface.actions(monteCarloInterface.states().get(0)).get(0).length();
     featureSize = mapper.getFeatureSize();
@@ -65,12 +65,16 @@ public class TrueOnlineSarsa {
     w = Tensors.vector(v -> RealScalar.of(init), featureSize);
   }
 
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, Scalar alpha, FeatureMapper mapper) {
-    this(monteCarloInterface, lambda, alpha, mapper, 0);
+  public TrueOnlineSarsa(MonteCarloInterface mcInterface, Scalar lambda, LearningRate learningRate, FeatureMapper mapper) {
+    this(mcInterface, lambda, learningRate, mapper, 0);
   }
 
-  private void update(Scalar reward, Tensor s_prime, Tensor a_prime) {
+  private void update(Scalar reward, Tensor s, Tensor s_prime, Tensor a_prime) {
     Tensor stateActionPair = StateActionMapper.getMap(s_prime, a_prime);
+    StepInterface stepInterface = new StepAdapter(s, a_prime, reward, s_prime);
+    Scalar alpha = learningRate.alpha(stepInterface);
+    learningRate.digest(stepInterface);
+    alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     x_prime = mapper.getFeature(stateActionPair);
     q = w.dot(x).Get();
     q_prime = w.dot(x_prime).Get();
@@ -85,22 +89,27 @@ public class TrueOnlineSarsa {
     x = x_prime;
   }
 
-  /** @param state
+  /** Returns the epsilon greedy action.
+   * With probability epsilon a random action is chosen. In the other case the best
+   * (greedy) action is taken with equal probability when several best actions.
+   * @param state
    * @param epsilon
-   * @return the epsilon greedy action: With probability epsilon a random action is chosen.
-   * In the other case, the best (greedy) action is taken with equal probability when several best actions coexist. */
+   * @return */
   private Tensor getEGreedyAction(Tensor state, Scalar epsilon) {
-    Tensor actions = rand.nextFloat() > epsilon.number().doubleValue() //
-        ? getGreedyActions(state)
-        : monteCarloInterface.actions(state);
+    Tensor actions = monteCarloInterface.actions(state);
+    if (rand.nextFloat() > epsilon.number().doubleValue()) {
+      actions = getGreedyAction(state);
+    }
     int index = rand.nextInt(actions.length());
     return actions.get(index);
   }
 
-  /** @param state
-   * @return the best action according to the current state-action values. In case
-   * of several best actions within a tolerance, all the best actions are returned. */
-  private Tensor getGreedyActions(Tensor state) {
+  /** Returns the best action according to the current state-action values. In case
+   * of several best actions within a tolerance, all the best actions are returned.
+   * 
+   * @param state
+   * @return */
+  private Tensor getGreedyAction(Tensor state) {
     double max = Double.NEGATIVE_INFINITY;
     Tensor bestActions = Tensors.empty();
     for (Tensor action : monteCarloInterface.actions(state)) {
@@ -138,7 +147,7 @@ public class TrueOnlineSarsa {
       // System.out.println("from state " + stateOld + " to " + state + " with action " + actionOld + " reward: " + reward);
       action = getEGreedyAction(state, epsilon);
       // System.out.println(action);
-      update(reward, state, action);
+      update(reward, stateOld, state, action);
     }
   }
 
@@ -166,8 +175,9 @@ public class TrueOnlineSarsa {
 
   public void printPolicy() {
     System.out.println("Greedy action to each state");
-    for (Tensor state : monteCarloInterface.states())
-      System.out.println(state + " -> " + getGreedyActions(state));
+    for (Tensor state : monteCarloInterface.states()) {
+      System.out.println(state + " -> " + getGreedyAction(state));
+    }
   }
 
   public Tensor getW() {

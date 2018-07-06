@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** Expected Sarsa: An on-policy TD control algorithm
  * 
- * eq (6.9) on p.142 */
+ * eq (6.9) on p.133 */
 public class ExpectedSarsa extends Sarsa {
   /** @param discreteModel
    * @param qsa

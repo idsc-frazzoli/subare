@@ -3,7 +3,9 @@ package ch.ethz.idsc.subare.ch04.grid;
 
 import java.io.IOException;
 
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
+import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
@@ -22,7 +24,9 @@ enum TOS_Gridworld {
     FeatureMapper mapper = new ExactFeatureMapper(gridworld);
     // Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     // DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    TrueOnlineSarsa trueOnlineSarsa = new TrueOnlineSarsa(gridworld, RealScalar.of(0.5), RealScalar.of(0.3), mapper);
+    LearningRate learningRate = DefaultLearningRate.of(RealScalar.of(3), RealScalar.of(0.81));
+    // LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.3), false); // the case without warmStart
+    TrueOnlineSarsa trueOnlineSarsa = new TrueOnlineSarsa(gridworld, RealScalar.of(0.5), learningRate, mapper);
     Stopwatch stopwatch = Stopwatch.started();
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_tos.gif"), 250)) {
       for (int episode = 0; episode < 100; ++episode) {

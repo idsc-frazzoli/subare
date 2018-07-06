@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.Tensor;
  * 
  * eq (6.7)
  * 
- * box on p.138
+ * box on p.130
  * 
  * 2)
  * n-step Sarsa for estimating Q(s,a)
