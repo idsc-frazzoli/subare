@@ -31,7 +31,7 @@ enum TOS_Gridworld {
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_tos.gif"), 250)) {
       for (int episode = 0; episode < 100; ++episode) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
-        trueOnlineSarsa.executeEpisode(RealScalar.of(0.05));
+        trueOnlineSarsa.executeBatch(RealScalar.of(0.05));
         // DiscreteQsa toQsa = trueOnlineSarsa.getQsa();
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
         DiscreteQsa qsa = trueOnlineSarsa.getQsa();

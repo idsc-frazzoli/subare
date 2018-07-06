@@ -1,6 +1,9 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.LearningRate;
@@ -148,6 +151,43 @@ public class TrueOnlineSarsa {
       action = getEGreedyAction(state, epsilon);
       // System.out.println(action);
       update(reward, stateOld, state, action);
+    }
+  }
+
+  public void executeEpisode(Scalar epsilon, Tensor startState, Tensor startAction) {
+    Tensor state = startState;
+    Tensor stateOld;
+    Tensor action = startAction;
+    Tensor actionOld;
+    Scalar reward;
+    // init every episode again
+    Tensor stateActionPair = StateActionMapper.getMap(state, action);
+    x = mapper.getFeature(stateActionPair);
+    qOld = RealScalar.ZERO;
+    z = Array.zeros(featureSize);
+    // run through episode
+    while (!monteCarloInterface.isTerminal(state)) {
+      stateOld = state;
+      actionOld = action;
+      state = monteCarloInterface.move(stateOld, actionOld);
+      reward = monteCarloInterface.reward(stateOld, actionOld, state);
+      // System.out.println("from state " + stateOld + " to " + state + " with action " + actionOld + " reward: " + reward);
+      action = getEGreedyAction(state, epsilon);
+      // System.out.println(action);
+      update(reward, stateOld, state, action);
+    }
+  }
+
+  public void executeBatch(Scalar epsilon) {
+    List<Tensor> list = new ArrayList<>();
+    for (Tensor state : monteCarloInterface.startStates()) {
+      for (Tensor action : monteCarloInterface.actions(state)) {
+        list.add(Tensors.of(state, action));
+      }
+    }
+    Collections.shuffle(list);
+    for (Tensor start : list) {
+      executeEpisode(epsilon, start.get(0), start.get(1));
     }
   }
 

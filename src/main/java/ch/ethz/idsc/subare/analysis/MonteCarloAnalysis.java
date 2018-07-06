@@ -62,18 +62,21 @@ public enum MonteCarloAnalysis {
   }
 
   public static void main(String[] args) throws Exception {
-    MonteCarloInterface monteCarloInterface = MonteCarloExamples.MAZE2.get();
+    MonteCarloInterface monteCarloInterface = MonteCarloExamples.CLIFFWALK.get();
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
-    list.add(MonteCarloAlgorithms.MonteCarlo);
-    list.add(MonteCarloAlgorithms.ExpectedSarsa);
-    list.add(MonteCarloAlgorithms.QLearningSarsa);
-    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
+    // list.add(MonteCarloAlgorithms.MonteCarlo);
+    list.add(MonteCarloAlgorithms.OriginalSarsa);
+    // list.add(MonteCarloAlgorithms.ExpectedSarsa);
+    // list.add(MonteCarloAlgorithms.QLearningSarsa);
+    // list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
+    // list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsaWarmStart);
+    list.add(MonteCarloAlgorithms.TrueOnlineSarsaZero);
+    // list.add(MonteCarloAlgorithms.TrueOnlineSarsaTest);
     // ---
     MonteCarloErrorAnalysis errorAnalysis = MonteCarloErrorAnalysis.LINEAR_POLICY;
     // ---
-    analyse(monteCarloInterface, 10, list, errorAnalysis);
+    analyse(monteCarloInterface, 1000, list, errorAnalysis);
   }
 }

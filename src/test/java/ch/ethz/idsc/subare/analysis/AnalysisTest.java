@@ -30,6 +30,7 @@ public class AnalysisTest extends TestCase {
     int batches = 5;
     DiscreteQsa optimalQsa = MonteCarloAnalysis.getOptimalQsa(example.get(), batches);
     List<MonteCarloAlgorithms> list = new ArrayList<>();
+    list.add(MonteCarloAlgorithms.OriginalSarsa);
     list.add(MonteCarloAlgorithms.ExpectedSarsa);
     list.add(MonteCarloAlgorithms.QLearningSarsa);
     list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
@@ -65,7 +66,7 @@ public class AnalysisTest extends TestCase {
     for (MonteCarloAlgorithms monteCarloAlgorithms : list)
       monteCarloAlgorithms.analyse(monteCarloInterface, batches, optimalQsa, errorAnalysis);
   }
-  
+
   public void testVirtualStationExample() {
     MonteCarloExamples example = MonteCarloExamples.VIRTUALSTATIONS;
     System.out.println("Testing: " + example.toString());
