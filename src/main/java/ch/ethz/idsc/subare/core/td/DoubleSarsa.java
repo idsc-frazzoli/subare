@@ -5,6 +5,7 @@ import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
@@ -35,7 +36,7 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
  * 
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
-public class DoubleSarsa extends DequeDigestAdapter {
+public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
   private static final Distribution COINFLIPPING = BernoulliDistribution.of(RealScalar.of(0.5));
   // ---
   private final DiscreteModel discreteModel;
@@ -111,5 +112,10 @@ public class DoubleSarsa extends DequeDigestAdapter {
     Scalar delta = discountFunction.apply(rewards).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
     LearningRate1.digest(first); // signal to LearningRate1
+  }
+
+  @Override
+  public DiscreteQsa qsa() {
+    return DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
   }
 }

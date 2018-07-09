@@ -1,7 +1,9 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
@@ -10,6 +12,10 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepDigest;
+import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
+import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 
 /** contains helper functions to launch batches of episodes
  * that satisfy the exploring starts condition and have them processed by
@@ -74,5 +80,15 @@ public enum ExploringStarts {
     while (dequeExploringStarts.batchIndex() == 0)
       dequeExploringStarts.nextEpisode();
     return dequeExploringStarts.episodeIndex();
+  }
+
+  public static void batch(Scalar epsilon, MonteCarloInterface monteCarloInterface, TrueOnlineSarsa toSarsa) {
+    List<Tensor> list = new ArrayList<>();
+    for (Tensor state : monteCarloInterface.startStates())
+      for (Tensor action : monteCarloInterface.actions(state))
+        list.add(Tensors.of(state, action));
+    Collections.shuffle(list);
+    for (Tensor stateActionPair : list)
+      toSarsa.executeEpisode(epsilon, stateActionPair.get(0), stateActionPair.get(1));
   }
 }

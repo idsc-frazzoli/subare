@@ -72,12 +72,12 @@ enum AirportDemo {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         toSarsa.executeBatch(RealScalar.of(0.1));
-        DiscreteQsa toQsa = toSarsa.getQsa();
+        DiscreteQsa toQsa = toSarsa.qsa();
         XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));
       }
       System.out.println("time for TrueOnlineSarsa: " + stopwatch.display_seconds() + "s");
     }
-    DiscreteQsa toQsa = toSarsa.getQsa();
+    DiscreteQsa toQsa = toSarsa.qsa();
     // System.out.println(toSarsa.getW());
     // toSarsa.printValues();
     // toSarsa.printPolicy();

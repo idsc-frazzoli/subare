@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
@@ -25,7 +26,7 @@ import ch.ethz.idsc.tensor.sca.Clip;
 /** implementation of box "True Online Sarsa(lambda) for estimating w'x approx. q_pi or q_*
  * 
  * in Section 12.8, p.309 */
-public class TrueOnlineSarsa {
+public class TrueOnlineSarsa implements DiscreteQsaSupplier {
   private final Random random = new Random();
   private final MonteCarloInterface monteCarloInterface;
   private final Scalar gamma;
@@ -134,7 +135,7 @@ public class TrueOnlineSarsa {
     executeEpisode(epsilon, state, action);
   }
 
-  private void executeEpisode(Scalar epsilon, Tensor state, Tensor action) {
+  public void executeEpisode(Scalar epsilon, Tensor state, Tensor action) {
     // init every episode again
     Tensor stateActionPair = StateAction.key(state, action);
     x = featureMapper.getFeature(stateActionPair);
@@ -172,7 +173,7 @@ public class TrueOnlineSarsa {
 
   /** Returns the Qsa according to the current feature weights.
    * Only use this function, when the state-action space is small enough. */
-  public DiscreteQsa getQsa() {
+  public DiscreteQsa qsa() {
     DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
     for (Tensor state : monteCarloInterface.states()) {
       for (Tensor action : monteCarloInterface.actions(state)) {

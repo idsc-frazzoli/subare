@@ -34,7 +34,7 @@ enum TOS_Gridworld {
         trueOnlineSarsa.executeBatch(RealScalar.of(0.05));
         // DiscreteQsa toQsa = trueOnlineSarsa.getQsa();
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
-        DiscreteQsa qsa = trueOnlineSarsa.getQsa();
+        DiscreteQsa qsa = trueOnlineSarsa.qsa();
         Infoline infoline = Infoline.print(gridworld, episode, ref, qsa);
         gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         if (infoline.isLossfree()) {
