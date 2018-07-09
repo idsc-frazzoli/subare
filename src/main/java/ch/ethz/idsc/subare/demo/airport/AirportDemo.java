@@ -70,9 +70,8 @@ enum AirportDemo {
     TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(airport, RealScalar.of(0.7), learningRate, mapper);
     {
       Stopwatch stopwatch = Stopwatch.started();
-      // TODO misnomer: here batches denotes the number of "episodes"
       for (int index = 0; index < batches; ++index) {
-        toSarsa.executeEpisode(RealScalar.of(0.1));
+        toSarsa.executeBatch(RealScalar.of(0.1));
         DiscreteQsa toQsa = toSarsa.getQsa();
         XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));
       }

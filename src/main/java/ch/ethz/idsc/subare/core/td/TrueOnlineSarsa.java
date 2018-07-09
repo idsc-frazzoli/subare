@@ -12,7 +12,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
-import ch.ethz.idsc.subare.core.util.StateActionMapper;
+import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -71,7 +71,7 @@ public class TrueOnlineSarsa {
   }
 
   private void update(Scalar reward, Tensor s, Tensor s_prime, Tensor a_prime) {
-    Tensor stateActionPair = StateActionMapper.getMap(s_prime, a_prime);
+    Tensor stateActionPair = StateAction.key(s_prime, a_prime);
     StepInterface stepInterface = new StepAdapter(s, a_prime, reward, s_prime);
     Scalar alpha = learningRate.alpha(stepInterface);
     learningRate.digest(stepInterface);
@@ -114,7 +114,7 @@ public class TrueOnlineSarsa {
     double max = Double.NEGATIVE_INFINITY;
     Tensor bestActions = Tensors.empty();
     for (Tensor action : monteCarloInterface.actions(state)) {
-      Tensor stateActionPair = StateActionMapper.getMap(state, action);
+      Tensor stateActionPair = StateAction.key(state, action);
       double current = featureMapper.getFeature(stateActionPair).dot(w).Get().number().doubleValue();
       if (Math.abs(current - max) < 1e-8) {
         bestActions.append(action);
@@ -136,7 +136,7 @@ public class TrueOnlineSarsa {
 
   private void executeEpisode(Scalar epsilon, Tensor state, Tensor action) {
     // init every episode again
-    Tensor stateActionPair = StateActionMapper.getMap(state, action);
+    Tensor stateActionPair = StateAction.key(state, action);
     x = featureMapper.getFeature(stateActionPair);
     qOld = RealScalar.ZERO;
     z = Array.zeros(featureSize);
@@ -176,7 +176,7 @@ public class TrueOnlineSarsa {
     DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
     for (Tensor state : monteCarloInterface.states()) {
       for (Tensor action : monteCarloInterface.actions(state)) {
-        Tensor stateActionPair = StateActionMapper.getMap(state, action);
+        Tensor stateActionPair = StateAction.key(state, action);
         qsa.assign(state, action, featureMapper.getFeature(stateActionPair).dot(w).Get());
       }
     }

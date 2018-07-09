@@ -31,9 +31,9 @@ public class ExactFeatureMapper implements FeatureMapper {
     for (Tensor state : monteCarloInterface.states()) {
       for (Tensor action : monteCarloInterface.actions(state)) {
         if (monteCarloInterface.isTerminal(state))
-          stateToFeature.put(StateActionMapper.getMap(state, action), Array.zeros(stateActionSize));
+          stateToFeature.put(StateAction.key(state, action), Array.zeros(stateActionSize));
         else
-          stateToFeature.put(StateActionMapper.getMap(state, action), UnitVector.of(stateActionSize, ++index));
+          stateToFeature.put(StateAction.key(state, action), UnitVector.of(stateActionSize, ++index));
       }
     }
   }
