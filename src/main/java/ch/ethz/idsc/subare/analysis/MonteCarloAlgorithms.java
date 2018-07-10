@@ -43,7 +43,7 @@ public enum MonteCarloAlgorithms {
     @Override
     public void executeBatch(DiscreteQsaSupplier algorithm, MonteCarloInterface monteCarloInterface) {
       GlobalAssert.that(algorithm instanceof OriginalSarsa);
-      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, algorithm.qsa(), RealScalar.of(.1));
+      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, algorithm.qsa(), RealScalar.of(0.1));
       ExploringStarts.batch(monteCarloInterface, policy, 1, (OriginalSarsa) algorithm);
     }
   }, //
@@ -117,9 +117,9 @@ public enum MonteCarloAlgorithms {
   TrueOnlineSarsa() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
-      FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2), false);
-      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), learningRate, mapper);
+      FeatureMapper featureMapper = new ExactFeatureMapper(monteCarloInterface);
+      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
+      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), learningRate, featureMapper);
     }
 
     @Override
@@ -128,12 +128,12 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(RealScalar.of(0.1), monteCarloInterface, (TrueOnlineSarsa) algorithm);
     }
   }, //
-  TrueOnlineSarsaWarmStart() {
+  TrueOnlineSarsaColdStart() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
-      FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2), true);
-      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), learningRate, mapper);
+      FeatureMapper featureMapper = new ExactFeatureMapper(monteCarloInterface);
+      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2), false);
+      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), learningRate, featureMapper);
     }
 
     @Override
@@ -145,9 +145,9 @@ public enum MonteCarloAlgorithms {
   TrueOnlineSarsaZero() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
-      FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05), true);
-      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.0), learningRate, mapper);
+      FeatureMapper featureMapper = new ExactFeatureMapper(monteCarloInterface);
+      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
+      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.0), learningRate, featureMapper);
     }
 
     @Override
@@ -159,9 +159,9 @@ public enum MonteCarloAlgorithms {
   TrueOnlineSarsaTest() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
-      FeatureMapper mapper = new ExactFeatureMapper(monteCarloInterface);
-      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05), true);
-      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.0), learningRate, mapper);
+      FeatureMapper featureMapper = new ExactFeatureMapper(monteCarloInterface);
+      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
+      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.0), learningRate, featureMapper);
     }
 
     @Override
@@ -180,8 +180,14 @@ public enum MonteCarloAlgorithms {
       int nTimes) {
     Tensor nSamples = Tensors.empty();
     Stopwatch stopwatch = Stopwatch.started();
-    for (int i = 0; i < nTimes; ++i)
+    Stopwatch subWatch = Stopwatch.started();
+    for (int i = 0; i < nTimes; ++i) {
       nSamples.append(analyseAlgorithm(monteCarloInterface, batches, optimalQsa, errorAnalysis));
+      if (subWatch.display_seconds() > 10.0) {
+        System.out.println(this.name() + " has finished trial " + i);
+        subWatch = Stopwatch.started();
+      }
+    }
     System.out.println("Time for executing " + this.name() + " " + nTimes + " times with " + batches + " batches: " + stopwatch.display_seconds() + "s");
     return Mean.of(nSamples);
   }

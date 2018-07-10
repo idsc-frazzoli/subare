@@ -16,6 +16,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
 
@@ -32,8 +33,6 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
   private final Scalar gamma_lambda;
   private Scalar alpha_gamma_lambda;
   private final int featureSize;
-  // private final int dimState;
-  // private final int dimAction;
   // ---
   private Scalar qOld = RealScalar.ZERO;
   private Scalar q;
@@ -56,22 +55,17 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
     this.gamma = monteCarloInterface.gamma();
     this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
-    // dimState = monteCarloInterface.states().get(0).length();
-    // dimAction = monteCarloInterface.actions(monteCarloInterface.states().get(0)).get(0).length();
     featureSize = featureMapper.getFeatureSize();
     z = Array.zeros(featureSize);
     w = Tensors.vector(v -> init, featureSize);
   }
 
-  public TrueOnlineSarsa(MonteCarloInterface mcInterface, Scalar lambda, LearningRate learningRate, FeatureMapper mapper) {
-    this(mcInterface, lambda, learningRate, mapper, RealScalar.ZERO); // exact precision intentional
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper) {
+    this(monteCarloInterface, lambda, learningRate, featureMapper, RealScalar.ZERO); // exact precision intentional
   }
 
-  private void update(Scalar reward, Tensor s, Tensor s_prime, Tensor a_prime) {
-    Tensor stateActionPair = StateAction.key(s_prime, a_prime);
-    StepInterface stepInterface = new StepAdapter(s, a_prime, reward, s_prime);
-    Scalar alpha = learningRate.alpha(stepInterface);
-    learningRate.digest(stepInterface);
+  private void update(Scalar reward, Tensor s_next, Tensor a_next, Scalar alpha) {
+    Tensor stateActionPair = StateAction.key(s_next, a_next);
     alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     x_prime = featureMapper.getFeature(stateActionPair);
     q = w.dot(x).Get();
@@ -96,8 +90,9 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
   private Tensor getEGreedyAction(Tensor state, Scalar epsilon) {
     Tensor actions = monteCarloInterface.actions(state);
     if (random.nextFloat() > epsilon.number().doubleValue()) {
-      actions = getGreedyAction(state);
-    }
+      actions = getGreedyActions(state);
+    } else
+      z = Array.zeros(featureSize); // delete eligibility trace when random action taken
     int index = random.nextInt(actions.length());
     return actions.get(index);
   }
@@ -107,19 +102,15 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
    * 
    * @param state
    * @return */
-  private Tensor getGreedyAction(Tensor state) {
-    double max = Double.NEGATIVE_INFINITY;
-    Tensor bestActions = Tensors.empty();
-    for (Tensor action : monteCarloInterface.actions(state)) {
-      Tensor stateActionPair = StateAction.key(state, action);
-      double current = featureMapper.getFeature(stateActionPair).dot(w).Get().number().doubleValue();
-      if (Math.abs(current - max) < 1e-8) {
-        bestActions.append(action);
-      } else if (current > max) {
-        max = current;
-        bestActions = Tensors.of(action);
-      }
-    }
+  private Tensor getGreedyActions(Tensor state) {
+    Tensor actions = Tensor.of(monteCarloInterface.actions(state).stream().filter(action -> learningRate.encountered(state, action)));
+    if (actions.length() == 0) // if this state was not visited yet, choose randomly
+      return monteCarloInterface.actions(state);
+    Scalar max = actions.stream()//
+        .map(action -> featureMapper.getFeature(StateAction.key(state, action)).dot(w).Get())//
+        .reduce(Max::of).get();
+    Tensor bestActions = Tensor.of(actions.stream()//
+        .filter(action -> featureMapper.getFeature(StateAction.key(state, action)).dot(w).Get().subtract(max).number().doubleValue() > -1E-8));
     return bestActions;
   }
 
@@ -146,10 +137,11 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
       Tensor actionOld = action;
       state = monteCarloInterface.move(stateOld, actionOld);
       Scalar reward = monteCarloInterface.reward(stateOld, actionOld, state);
-      // System.out.println("from state " + stateOld + " to " + state + " with action " + actionOld + " reward: " + reward);
       action = getEGreedyAction(state, epsilon);
-      // System.out.println(action);
-      update(reward, stateOld, state, action);
+      StepInterface stepInterface = new StepAdapter(stateOld, actionOld, reward, state);
+      Scalar alpha = learningRate.alpha(stepInterface);
+      learningRate.digest(stepInterface);
+      update(reward, state, action, alpha);
     }
   }
 
@@ -179,7 +171,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
   public void printPolicy() {
     System.out.println("Greedy action to each state");
     for (Tensor state : monteCarloInterface.states())
-      System.out.println(state + " -> " + getGreedyAction(state));
+      System.out.println(state + " -> " + getGreedyActions(state));
   }
 
   public Tensor getW() {

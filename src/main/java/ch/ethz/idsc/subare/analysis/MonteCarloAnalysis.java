@@ -60,20 +60,20 @@ public enum MonteCarloAnalysis {
     MonteCarloInterface monteCarloInterface = MonteCarloExamples.AIRPORT.get();
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
-//    list.add(MonteCarloAlgorithms.MonteCarlo);
+    list.add(MonteCarloAlgorithms.MonteCarlo);
     list.add(MonteCarloAlgorithms.OriginalSarsa);
-//    list.add(MonteCarloAlgorithms.ExpectedSarsa);
-//    list.add(MonteCarloAlgorithms.QLearningSarsa);
-//    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
-//    list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
-//    list.add(MonteCarloAlgorithms.TrueOnlineSarsaWarmStart);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsaZero);
-//    list.add(MonteCarloAlgorithms.TrueOnlineSarsaTest);
+    list.add(MonteCarloAlgorithms.ExpectedSarsa);
+    list.add(MonteCarloAlgorithms.QLearningSarsa);
+    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
+    list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
+    // list.add(MonteCarloAlgorithms.TrueOnlineSarsaColdStart);
+    // list.add(MonteCarloAlgorithms.TrueOnlineSarsaZero);
+    // list.add(MonteCarloAlgorithms.TrueOnlineSarsaTest);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_QSA);
     // ---
-    analyse(monteCarloInterface, 100, 100, list, errorAnalysis);
+    analyse(monteCarloInterface, 10, 100, list, errorAnalysis);
   }
 }
