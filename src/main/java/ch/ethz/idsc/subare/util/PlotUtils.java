@@ -27,7 +27,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 
-import ch.ethz.idsc.subare.analysis.MonteCarloErrorAnalysis;
+import ch.ethz.idsc.subare.analysis.DiscreteModelErrorAnalysis;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.img.ColorDataLists;
 
@@ -67,7 +67,7 @@ public enum PlotUtils {
     }
   }
 
-  public static void createPlot(Map<String, Tensor> map, String path, List<MonteCarloErrorAnalysis> errorAnalysisList) {
+  public static void createPlot(Map<String, Tensor> map, String path, List<DiscreteModelErrorAnalysis> errorAnalysisList) {
     for (int index = 0; index < errorAnalysisList.size(); ++index) {
       // create plot
       final XYDataset data1 = createDataset(map, index);

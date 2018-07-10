@@ -19,7 +19,6 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
 
@@ -135,6 +134,9 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
     executeEpisode(epsilon, state, action);
   }
 
+  /** @param epsilon greedy
+   * @param state where episode starts
+   * @param action taken from given state */
   public void executeEpisode(Scalar epsilon, Tensor state, Tensor action) {
     // init every episode again
     Tensor stateActionPair = StateAction.key(state, action);
@@ -154,6 +156,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
     }
   }
 
+  // TODO function obsolete: instead use ExploringStarts#batch
   public void executeBatch(Scalar epsilon) {
     List<Tensor> list = new ArrayList<>();
     for (Tensor state : monteCarloInterface.startStates())
@@ -167,12 +170,15 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
   public void printValues() {
     System.out.println("Values for all state-action pairs:");
     for (Tensor state : monteCarloInterface.states())
-      for (Tensor action : monteCarloInterface.actions(state))
-        System.out.println(state + " -> " + action + " " + featureMapper.getFeature(Join.of(state, action)).dot(w));
+      for (Tensor action : monteCarloInterface.actions(state)) {
+        Tensor stateActionPair = StateAction.key(state, action);
+        System.out.println(state + " -> " + action + " " + featureMapper.getFeature(stateActionPair).dot(w));
+      }
   }
 
   /** Returns the Qsa according to the current feature weights.
    * Only use this function, when the state-action space is small enough. */
+  @Override
   public DiscreteQsa qsa() {
     DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
     for (Tensor state : monteCarloInterface.states()) {

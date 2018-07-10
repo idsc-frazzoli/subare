@@ -25,7 +25,7 @@ import ch.ethz.idsc.tensor.Tensor;
 public enum MonteCarloAnalysis {
   ;
   public static void analyse(MonteCarloInterface monteCarloInterface, int trials, int batches, List<MonteCarloAlgorithms> algorithmList,
-      List<MonteCarloErrorAnalysis> errorAnalysisList) throws Exception {
+      List<DiscreteModelErrorAnalysis> errorAnalysisList) throws Exception {
     DiscreteQsa optimalQsa = getOptimalQsa(monteCarloInterface, batches);
     Map<String, Tensor> algorithmResults = new LinkedHashMap<>();
     // ---
@@ -70,9 +70,9 @@ public enum MonteCarloAnalysis {
     list.add(MonteCarloAlgorithms.TrueOnlineSarsaZero);
 //    list.add(MonteCarloAlgorithms.TrueOnlineSarsaTest);
     // ---
-    List<MonteCarloErrorAnalysis> errorAnalysis = new ArrayList<>();
-    errorAnalysis.add(MonteCarloErrorAnalysis.LINEAR_POLICY);
-    errorAnalysis.add(MonteCarloErrorAnalysis.LINEAR_QSA);
+    List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_QSA);
     // ---
     analyse(monteCarloInterface, 100, 100, list, errorAnalysis);
   }

@@ -34,8 +34,8 @@ public class AnalysisTest extends TestCase {
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsaWarmStart);
     // ---
-    List<MonteCarloErrorAnalysis> errorAnalysis = new ArrayList<>();
-    errorAnalysis.add(MonteCarloErrorAnalysis.LINEAR_POLICY);
+    List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     // ---
     MonteCarloInterface monteCarloInterface = example.get();
     for (MonteCarloAlgorithms monteCarloAlgorithms : list)
@@ -53,8 +53,8 @@ public class AnalysisTest extends TestCase {
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
     list.add(MonteCarloAlgorithms.MonteCarlo);
     // ---
-    List<MonteCarloErrorAnalysis> errorAnalysis = new ArrayList<>();
-    errorAnalysis.add(MonteCarloErrorAnalysis.LINEAR_POLICY);
+    List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     // ---
     MonteCarloInterface monteCarloInterface = example.get();
     for (MonteCarloAlgorithms monteCarloAlgorithms : list)
@@ -72,9 +72,9 @@ public class AnalysisTest extends TestCase {
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
     list.add(MonteCarloAlgorithms.MonteCarlo);
     // ---
-    List<MonteCarloErrorAnalysis> errorAnalysis = new ArrayList<>();
-    errorAnalysis.add(MonteCarloErrorAnalysis.LINEAR_POLICY);
-    errorAnalysis.add(MonteCarloErrorAnalysis.LINEAR_QSA);
+    List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_QSA);
     // ---
     MonteCarloInterface monteCarloInterface = example.get();
     for (MonteCarloAlgorithms monteCarloAlgorithms : list)
@@ -97,8 +97,8 @@ public class AnalysisTest extends TestCase {
     List<MonteCarloAlgorithms> list = new ArrayList<>();
     list.add(MonteCarloAlgorithms.MonteCarlo);
     // ---
-    List<MonteCarloErrorAnalysis> errorAnalysis = new ArrayList<>();
-    errorAnalysis.add(MonteCarloErrorAnalysis.LINEAR_POLICY);
+    List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     // ---
     MonteCarloInterface monteCarloInterface = example.get();
     for (MonteCarloAlgorithms monteCarloAlgorithms : list)
@@ -118,8 +118,8 @@ public class AnalysisTest extends TestCase {
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsaWarmStart);
     // ---
-    List<MonteCarloErrorAnalysis> errorAnalysis = new ArrayList<>();
-    errorAnalysis.add(MonteCarloErrorAnalysis.LINEAR_POLICY);
+    List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     // ---
     MonteCarloInterface monteCarloInterface = example.get();
     for (MonteCarloAlgorithms monteCarloAlgorithms : list)

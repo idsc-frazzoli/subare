@@ -32,7 +32,8 @@ enum StaticHelper {
     return Tensor.of(prefixes.stream().map(v -> Join.of(v, Array.zeros(length))));
   }
 
-  public static Tensor getTensor(Tensor a) {
+  @Deprecated
+  public static Tensor getTensor(Tensor a) { // TODO possibly remove
     System.out.println(a);
     return a;
   }

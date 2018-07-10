@@ -37,7 +37,7 @@ public enum MonteCarloAlgorithms {
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
       final Sarsa sarsa = new OriginalSarsa(monteCarloInterface, qsaSarsa, learningRate);
       sarsa.setExplore(RealScalar.of(0.1));
-      return (DiscreteQsaSupplier) sarsa;
+      return sarsa;
     }
 
     @Override
@@ -54,7 +54,7 @@ public enum MonteCarloAlgorithms {
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
       final Sarsa sarsa = new ExpectedSarsa(monteCarloInterface, qsaSarsa, learningRate);
       sarsa.setExplore(RealScalar.of(0.1));
-      return (DiscreteQsaSupplier) sarsa;
+      return sarsa;
     }
 
     @Override
@@ -71,7 +71,7 @@ public enum MonteCarloAlgorithms {
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
       final Sarsa sarsa = new QLearning(monteCarloInterface, qsaSarsa, learningRate);
       sarsa.setExplore(RealScalar.of(0.1));
-      return (DiscreteQsaSupplier) sarsa;
+      return sarsa;
     }
 
     @Override
@@ -91,7 +91,7 @@ public enum MonteCarloAlgorithms {
           DefaultLearningRate.of(1, .51), //
           DefaultLearningRate.of(1, .51));
       sarsa.setExplore(RealScalar.of(0.1));
-      return (DiscreteQsaSupplier) sarsa;
+      return sarsa;
     }
 
     @Override
@@ -176,7 +176,7 @@ public enum MonteCarloAlgorithms {
   public abstract void executeBatch(DiscreteQsaSupplier algorithm, MonteCarloInterface monteCarloInterface);
   // public abstract Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, List<MonteCarloErrorAnalysis> errorAnalysis);
 
-  public Tensor analyseNTimes(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, List<MonteCarloErrorAnalysis> errorAnalysis,
+  public Tensor analyseNTimes(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, List<DiscreteModelErrorAnalysis> errorAnalysis,
       int nTimes) {
     Tensor nSamples = Tensors.empty();
     Stopwatch stopwatch = Stopwatch.started();
@@ -187,14 +187,14 @@ public enum MonteCarloAlgorithms {
   }
 
   private Tensor analyseAlgorithm(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa,
-      List<MonteCarloErrorAnalysis> errorAnalysisList) {
+      List<DiscreteModelErrorAnalysis> errorAnalysisList) {
     Tensor samples = Tensors.empty();
     DiscreteQsaSupplier algorithm = getAlgorithm(monteCarloInterface);
     for (int index = 0; index < batches; ++index) {
       Tensor sample = Tensors.vector(index);
       // System.out.println("starting batch " + (index + 1) + " of " + batches);
       executeBatch(algorithm, monteCarloInterface);
-      for (MonteCarloErrorAnalysis errorAnalysis : errorAnalysisList) {
+      for (DiscreteModelErrorAnalysis errorAnalysis : errorAnalysisList) {
         sample.append(errorAnalysis.getError(monteCarloInterface, optimalQsa, algorithm.qsa()));
       }
       samples.append(sample);
