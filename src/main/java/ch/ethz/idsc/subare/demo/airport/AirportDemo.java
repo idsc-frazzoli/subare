@@ -59,8 +59,8 @@ enum AirportDemo {
       for (int index = 0; index < batches; ++index) {
         Policy policy = EGreedyPolicy.bestEquiprobable(airport, sarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policy, 1, sarsa, sac);
-        XYsarsa
-            .append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, sarsa.qsa()).number()));
+        XYsarsa.append(
+            Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, sarsa.qsa()).number()));
       }
       System.out.println("time for Sarsa: " + stopwatch.display_seconds() + "s");
     }
@@ -71,7 +71,7 @@ enum AirportDemo {
     {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
-        toSarsa.executeBatch(RealScalar.of(0.1));
+        ExploringStarts.batch(RealScalar.of(0.1), airport, toSarsa);
         DiscreteQsa toQsa = toSarsa.qsa();
         XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));
       }

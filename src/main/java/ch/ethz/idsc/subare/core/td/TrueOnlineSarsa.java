@@ -1,9 +1,6 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
@@ -154,17 +151,6 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
       // System.out.println(action);
       update(reward, stateOld, state, action);
     }
-  }
-
-  // TODO function obsolete: instead use ExploringStarts#batch
-  public void executeBatch(Scalar epsilon) {
-    List<Tensor> list = new ArrayList<>();
-    for (Tensor state : monteCarloInterface.startStates())
-      for (Tensor action : monteCarloInterface.actions(state))
-        list.add(Tensors.of(state, action));
-    Collections.shuffle(list);
-    for (Tensor stateActionPair : list)
-      executeEpisode(epsilon, stateActionPair.get(0), stateActionPair.get(1));
   }
 
   public void printValues() {
