@@ -29,10 +29,6 @@ enum StaticHelper {
   static Tensor zeroVectors(int length, Tensor prefixes) {
     if (prefixes.length() == 0)
       return Tensors.of(Array.zeros(length));
-    Tensor extension = Tensors.empty();
-    for (Tensor prefix : prefixes) {
-      extension.append(Join.of(prefix, Array.zeros(length)));
-    }
-    return extension;
+    return Tensor.of(prefixes.stream().map(v -> Join.of(v, Array.zeros(length))));
   }
 }

@@ -5,6 +5,7 @@ import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
+import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
@@ -13,6 +14,7 @@ import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -34,7 +36,7 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
  * 
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
-public class DoubleSarsa extends DequeDigestAdapter {
+public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
   private static final Distribution COINFLIPPING = BernoulliDistribution.of(RealScalar.of(0.5));
   // ---
   private final DiscreteModel discreteModel;
@@ -76,6 +78,12 @@ public class DoubleSarsa extends DequeDigestAdapter {
     return EGreedyPolicy.bestEquiprobable(discreteModel, avg, epsilon);
   }
 
+  /** @return greedy policy with respect to (qsa1 + qsa2) / 2 */
+  public Policy getGreedy() {
+    DiscreteQsa avg = DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
+    return GreedyPolicy.bestEquiprobable(discreteModel, avg);
+  }
+
   /** @param epsilon to build an e-greedy policy */
   public void setExplore(Scalar epsilon) {
     this.epsilon = epsilon;
@@ -104,5 +112,10 @@ public class DoubleSarsa extends DequeDigestAdapter {
     Scalar delta = discountFunction.apply(rewards).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
     LearningRate1.digest(first); // signal to LearningRate1
+  }
+
+  @Override
+  public DiscreteQsa qsa() {
+    return DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
   }
 }

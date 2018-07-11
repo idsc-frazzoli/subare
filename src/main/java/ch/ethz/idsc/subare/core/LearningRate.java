@@ -19,9 +19,10 @@ public interface LearningRate extends StepDigest {
    * @return learning rate for given state-action pair */
   Scalar alpha(StepInterface stepInterface);
 
-  /** @param state
+  /** function exists to remove the initialization bias
+   * 
+   * @param state
    * @param action
-   * @return */
-  // EXPERIMENTAL
+   * @return whether given (state, action) pair has already been encountered by learning rate */
   boolean encountered(Tensor state, Tensor action);
 }

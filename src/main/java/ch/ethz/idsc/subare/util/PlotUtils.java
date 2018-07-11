@@ -27,6 +27,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 
+import ch.ethz.idsc.subare.analysis.DiscreteModelErrorAnalysis;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.img.ColorDataLists;
 
@@ -66,6 +67,27 @@ public enum PlotUtils {
     }
   }
 
+  public static void createPlot(Map<String, Tensor> map, String path, List<DiscreteModelErrorAnalysis> errorAnalysisList) {
+    for (int index = 0; index < errorAnalysisList.size(); ++index) {
+      // create plot
+      final XYDataset data1 = createDataset(map, index);
+      File outputDirectory0 = new File("plots");
+      if (!outputDirectory0.exists()) {
+        outputDirectory0.mkdirs();
+      }
+      // return a new chart containing the overlaid plot...
+      String subPath = path + "_" + errorAnalysisList.get(index).name().toLowerCase();
+      try {
+        plot(subPath, subPath, "Number episodes", "Error", //
+            data1, directory(), //
+            false, 100, 500, false, 100, 500);
+      } catch (Exception e) {
+        System.err.println();
+        e.printStackTrace();
+      }
+    }
+  }
+
   public static void createPlot(Map<String, Tensor> map, String path) {
     // create plot
     final XYDataset data1 = createDataset(map);
@@ -85,13 +107,17 @@ public enum PlotUtils {
   }
 
   private static XYDataset createDataset(Map<String, Tensor> map) {
+    return createDataset(map, 0);
+  }
+
+  private static XYDataset createDataset(Map<String, Tensor> map, int index) {
     final XYSeriesCollection collection = new XYSeriesCollection();
     // create dataset
     for (Entry<String, Tensor> entry : map.entrySet()) {
       XYSeries series = new XYSeries(entry.getKey());
       Tensor XY = entry.getValue();
       for (int j = 0; j < XY.length(); ++j) {
-        series.add(XY.get(j).Get(0).number(), XY.get(j).Get(1).number());
+        series.add(XY.get(j).Get(0).number(), XY.get(j).Get(1 + index).number());
       }
       collection.addSeries(series);
     }

@@ -5,7 +5,6 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -39,7 +38,7 @@ enum Sarsa_Gridworld {
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250)) {
       LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-      Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
+      Sarsa sarsa = sarsaType.supply(gridworld, qsa, learningRate);
       for (int index = 0; index < batches; ++index) {
         gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         Infoline.print(gridworld, index, ref, qsa);

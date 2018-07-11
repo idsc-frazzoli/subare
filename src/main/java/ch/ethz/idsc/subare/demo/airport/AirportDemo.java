@@ -3,7 +3,8 @@ package ch.ethz.idsc.subare.demo.airport;
 
 import java.util.Arrays;
 
-import ch.ethz.idsc.subare.analysis.MonteCarloErrorAnalysis;
+import ch.ethz.idsc.subare.analysis.DiscreteModelErrorAnalysis;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
@@ -44,7 +45,7 @@ enum AirportDemo {
       for (int index = 0; index < batches; ++index) {
         Policy policyMC = EGreedyPolicy.bestEquiprobable(airport, mces.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policyMC, mces);
-        XYmc.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, mces.qsa()).number()));
+        XYmc.append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, mces.qsa()).number()));
       }
       System.out.println("time for MonteCarlo: " + stopwatch.display_seconds() + "s");
       // Policies.print(GreedyPolicy.bestEquiprobable(airport, mces.qsa()), airport.states());
@@ -58,24 +59,25 @@ enum AirportDemo {
       for (int index = 0; index < batches; ++index) {
         Policy policy = EGreedyPolicy.bestEquiprobable(airport, sarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policy, 1, sarsa, sac);
-        XYsarsa
-            .append(Tensors.vector(RealScalar.of(index).number(), MonteCarloErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, sarsa.qsa()).number()));
+        XYsarsa.append(
+            Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, sarsa.qsa()).number()));
       }
       System.out.println("time for Sarsa: " + stopwatch.display_seconds() + "s");
     }
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, sarsa.qsa()), airport.states());
+    LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2));
     FeatureMapper mapper = new ExactFeatureMapper(airport);
-    TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(airport, RealScalar.of(0.7), ConstantLearningRate.of(RealScalar.of(0.2)), mapper);
+    TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(airport, RealScalar.of(0.7), learningRate, mapper);
     {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
-        toSarsa.executeEpisode(RealScalar.of(0.1));
-        DiscreteQsa toQsa = toSarsa.getQsa();
-        XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), MonteCarloErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));
+        ExploringStarts.batch(RealScalar.of(0.1), airport, toSarsa);
+        DiscreteQsa toQsa = toSarsa.qsa();
+        XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));
       }
       System.out.println("time for TrueOnlineSarsa: " + stopwatch.display_seconds() + "s");
     }
-    DiscreteQsa toQsa = toSarsa.getQsa();
+    DiscreteQsa toQsa = toSarsa.qsa();
     // System.out.println(toSarsa.getW());
     // toSarsa.printValues();
     // toSarsa.printPolicy();

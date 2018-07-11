@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
+import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
@@ -31,10 +32,10 @@ enum TOS_Gridworld {
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_tos.gif"), 250)) {
       for (int episode = 0; episode < 100; ++episode) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
-        trueOnlineSarsa.executeEpisode(RealScalar.of(0.05));
+        ExploringStarts.batch(RealScalar.of(0.05), gridworld, trueOnlineSarsa);
         // DiscreteQsa toQsa = trueOnlineSarsa.getQsa();
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
-        DiscreteQsa qsa = trueOnlineSarsa.getQsa();
+        DiscreteQsa qsa = trueOnlineSarsa.qsa();
         Infoline infoline = Infoline.print(gridworld, episode, ref, qsa);
         gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         if (infoline.isLossfree()) {

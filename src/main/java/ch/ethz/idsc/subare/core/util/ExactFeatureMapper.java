@@ -6,6 +6,7 @@ import java.util.Map;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.UnitVector;
 
 /** requires keys of the form Join.of(state, action)
@@ -18,18 +19,18 @@ public class ExactFeatureMapper implements FeatureMapper {
 
   public ExactFeatureMapper(MonteCarloInterface monteCarloInterface) {
     // count the number of possible state-action pairs first
-    int count = 0;
-    for (Tensor state : monteCarloInterface.states()) {
-      count += monteCarloInterface.actions(state).length();
-    }
-    stateActionSize = count;
-    featureSize = count; // one-to-one mapping
+    stateActionSize = monteCarloInterface.states().stream() //
+        .filter(state -> !monteCarloInterface.isTerminal(state)) //
+        .mapToInt(state -> monteCarloInterface.actions(state).length()) //
+        .sum();
+    featureSize = stateActionSize; // one-to-one mapping
     int index = -1;
-    for (Tensor state : monteCarloInterface.states()) {
-      for (Tensor action : monteCarloInterface.actions(state)) {
-        stateToFeature.put(StateActionMapper.getMap(state, action), UnitVector.of(stateActionSize, ++index));
-      }
-    }
+    for (Tensor state : monteCarloInterface.states())
+      for (Tensor action : monteCarloInterface.actions(state))
+        stateToFeature.put(StateAction.key(state, action), //
+            monteCarloInterface.isTerminal(state) //
+                ? Array.zeros(stateActionSize)
+                : UnitVector.of(stateActionSize, ++index));
   }
 
   @Override // from FeatureMapper
@@ -38,12 +39,12 @@ public class ExactFeatureMapper implements FeatureMapper {
   }
 
   @Override // from FeatureMapper
-  public int getStateActionSize() {
+  public int stateActionSize() {
     return stateActionSize;
   }
 
   @Override // from FeatureMapper
-  public int getFeatureSize() {
+  public int featureSize() {
     return featureSize;
   }
 }

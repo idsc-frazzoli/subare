@@ -24,15 +24,16 @@ import ch.ethz.idsc.tensor.Tensor;
 
 public enum MonteCarloAnalysis {
   ;
-  public static void analyse(MonteCarloInterface monteCarloInterface, int batches, List<MonteCarloAlgorithms> list, MonteCarloErrorAnalysis errorAnalysis)
-      throws Exception {
+  public static void analyse(MonteCarloInterface monteCarloInterface, int trials, int batches, List<MonteCarloAlgorithms> algorithmList,
+      List<DiscreteModelErrorAnalysis> errorAnalysisList) throws Exception {
     DiscreteQsa optimalQsa = getOptimalQsa(monteCarloInterface, batches);
     Map<String, Tensor> algorithmResults = new LinkedHashMap<>();
     // ---
-    for (MonteCarloAlgorithms monteCarloAlgorithms : list)
-      algorithmResults.put(monteCarloAlgorithms.name(), monteCarloAlgorithms.analyse(monteCarloInterface, batches, optimalQsa, errorAnalysis));
-    PlotUtils.createPlot(algorithmResults, "Convergence_" + monteCarloInterface.getClass().getSimpleName().toString() + "_" + errorAnalysis.name());
-    // Policies.print(GreedyPolicy.bestEquiprobable(monteCarloInterface, optimalQsa), monteCarloInterface.states());
+    for (MonteCarloAlgorithms monteCarloAlgorithms : algorithmList)
+      algorithmResults.put(monteCarloAlgorithms.name(),
+          monteCarloAlgorithms.analyseNTimes(monteCarloInterface, batches, optimalQsa, errorAnalysisList, trials));
+    PlotUtils.createPlot(algorithmResults,
+        "Convergence_" + monteCarloInterface.getClass().getSimpleName().toString() + "_" + trials + "trials" + "_" + batches + "batches", errorAnalysisList);
   }
 
   public static DiscreteQsa getOptimalQsa(MonteCarloInterface monteCarloInterface, int batches) {
@@ -43,20 +44,15 @@ public enum MonteCarloAnalysis {
       sarsa.setExplore(RealScalar.of(.1));
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches * 10; ++index) {
-        // System.out.println("starting batch " + (index + 1) + " of " + batches);
         Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(monteCarloInterface, policy, 1, sarsa);
       }
-      // DiscreteUtils.print(sarsa.qsa());
-      // Policies.print(GreedyPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa()), monteCarloInterface.states());
+      System.out.println("Time for optimal QSA approximation: " + stopwatch.display_seconds() + "s");
       return sarsa.qsa();
     }
     Stopwatch stopwatch = Stopwatch.started();
     DiscreteQsa optimalQsa = ActionValueIterations.solve((StandardModel) monteCarloInterface, DecimalScalar.of(.0001));
-    System.out.println("time for AVI: " + stopwatch.display_seconds() + "s");
-    // DiscreteUtils.print(optimalQsa);
-    // Policy policyQsa = GreedyPolicy.bestEquiprobable(monteCarloInterface, optimalQsa);
-    // Policies.print(policyQsa, monteCarloInterface.states());
+    System.out.println("Time for AVI: " + stopwatch.display_seconds() + "s");
     return optimalQsa;
   }
 
@@ -65,13 +61,19 @@ public enum MonteCarloAnalysis {
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
     list.add(MonteCarloAlgorithms.MonteCarlo);
+    list.add(MonteCarloAlgorithms.OriginalSarsa);
     list.add(MonteCarloAlgorithms.ExpectedSarsa);
     list.add(MonteCarloAlgorithms.QLearningSarsa);
+    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
     list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsaWarmStart);
+    // list.add(MonteCarloAlgorithms.TrueOnlineSarsaColdStart);
+    // list.add(MonteCarloAlgorithms.TrueOnlineSarsaZero);
+    // list.add(MonteCarloAlgorithms.TrueOnlineSarsaTest);
     // ---
-    MonteCarloErrorAnalysis errorAnalysis = MonteCarloErrorAnalysis.LINEAR_POLICY;
+    List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
+    errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_QSA);
     // ---
-    analyse(monteCarloInterface, 100, list, errorAnalysis);
+    analyse(monteCarloInterface, 10, 100, list, errorAnalysis);
   }
 }
