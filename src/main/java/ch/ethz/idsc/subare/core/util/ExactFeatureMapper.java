@@ -38,7 +38,6 @@ public class ExactFeatureMapper implements FeatureMapper {
     return stateToFeature.get(key);
   }
 
-  @Override // from FeatureMapper
   public int stateActionSize() {
     return stateActionSize;
   }
