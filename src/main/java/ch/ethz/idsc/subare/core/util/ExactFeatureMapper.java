@@ -39,12 +39,12 @@ public class ExactFeatureMapper implements FeatureMapper {
   }
 
   @Override // from FeatureMapper
-  public int getStateActionSize() {
+  public int stateActionSize() {
     return stateActionSize;
   }
 
   @Override // from FeatureMapper
-  public int getFeatureSize() {
+  public int featureSize() {
     return featureSize;
   }
 }

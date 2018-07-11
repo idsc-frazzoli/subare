@@ -11,19 +11,22 @@ import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.StateAction;
+import ch.ethz.idsc.subare.util.RobustArgMax;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Times;
+import ch.ethz.idsc.tensor.sca.Chop;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 /** implementation of box "True Online Sarsa(lambda) for estimating w'x approx. q_pi or q_*
  * 
  * in Section 12.8, p.309 */
 public class TrueOnlineSarsa implements DiscreteQsaSupplier {
+  public static final RobustArgMax ROBUST_ARG_MAX = new RobustArgMax(Chop._08);
+  // ---
   private final Random random = new Random();
   private final MonteCarloInterface monteCarloInterface;
   private final Scalar gamma;
@@ -55,7 +58,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
     this.gamma = monteCarloInterface.gamma();
     this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
-    featureSize = featureMapper.getFeatureSize();
+    featureSize = featureMapper.featureSize();
     z = Array.zeros(featureSize);
     w = Tensors.vector(v -> init, featureSize);
   }
@@ -103,15 +106,13 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
    * @param state
    * @return */
   private Tensor getGreedyActions(Tensor state) {
-    Tensor actions = Tensor.of(monteCarloInterface.actions(state).stream().filter(action -> learningRate.encountered(state, action)));
+    Tensor actions = Tensor.of(monteCarloInterface.actions(state).stream() //
+        .filter(action -> learningRate.encountered(state, action)));
     if (actions.length() == 0) // if this state was not visited yet, choose randomly
       return monteCarloInterface.actions(state);
-    Scalar max = actions.stream()//
-        .map(action -> featureMapper.getFeature(StateAction.key(state, action)).dot(w).Get())//
-        .reduce(Max::of).get();
-    Tensor bestActions = Tensor.of(actions.stream()//
-        .filter(action -> featureMapper.getFeature(StateAction.key(state, action)).dot(w).Get().subtract(max).number().doubleValue() > -1E-8));
-    return bestActions;
+    Tensor vector = Tensor.of(actions.stream() //
+        .map(action -> featureMapper.getFeature(StateAction.key(state, action)).dot(w).Get()));
+    return Tensor.of(ROBUST_ARG_MAX.options(vector).mapToObj(actions::get));
   }
 
   public void executeEpisode(Scalar epsilon) {
