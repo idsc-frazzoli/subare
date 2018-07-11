@@ -1,12 +1,14 @@
 // code by jph
 package ch.ethz.idsc.subare.core;
 
+import java.io.Serializable;
+
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** functionality to implement formula's for learning rate
  * that may depend on the {@link StepInterface} seen in the episodes */
-public interface LearningRate extends StepDigest {
+public interface LearningRate extends StepDigest, Serializable {
   /** successive calls to the function give the same result.
    * 
    * the first call to the function should return numerical value == 1

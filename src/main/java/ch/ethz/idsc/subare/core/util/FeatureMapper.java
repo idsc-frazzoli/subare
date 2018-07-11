@@ -6,12 +6,11 @@ import ch.ethz.idsc.tensor.Tensor;
 
 public interface FeatureMapper {
   /** @param key for instance {@link StateAction#key(Tensor, Tensor)}, or {@link StateAction#key(StepInterface)}
-   * @return TODO document is return value always a vector? ... that should combined with a dot product? */
+   * @return a vector with the features as elements, has to be used as dot product, e.g. the {@link ExactFeatureMapper} returns a unit vector for non-terminal
+   * keys */
   Tensor getFeature(Tensor key);
 
-  /** @return TODO document */
-  int stateActionSize(); // TODO function is not used yet
-
-  /** @return TODO document */
+  /** @return returns the length of the feature vector, the number of feature elements, e.g. the {@link ExactFeatureMapper} returns the number of all possible
+   * non-terminal state-action combinations */
   int featureSize();
 }
