@@ -8,6 +8,7 @@ import ch.ethz.idsc.tensor.Scalar;
 
 /** learning rate of alpha except in first update of state-action pair
  * for which the learning rate equals 1 in the case of warmStart. */
+@SuppressWarnings("serial")
 public class ConstantLearningRate extends StrictConstantLearningRate {
   /** @param alpha
    * @return constant learning rate with factor alpha */

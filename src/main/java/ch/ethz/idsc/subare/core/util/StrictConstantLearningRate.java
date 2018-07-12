@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,7 +12,8 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** learning rate of alpha except in first update of state-action pair
  * for which the learning rate equals 1 in the case of warmStart. */
-/* package */ class StrictConstantLearningRate implements LearningRate {
+@SuppressWarnings("serial")
+/* package */ class StrictConstantLearningRate implements LearningRate, Serializable {
   private final Set<Tensor> visited = new HashSet<>();
   private final Scalar alpha;
 
