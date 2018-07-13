@@ -66,8 +66,8 @@ enum AirportDemo {
     }
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, sarsa.qsa()), airport.states());
     LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2));
-    FeatureMapper mapper = new ExactFeatureMapper(airport);
-    TrueOnlineSarsa toSarsa = new TrueOnlineSarsa(airport, RealScalar.of(0.7), learningRate, mapper);
+    FeatureMapper mapper = ExactFeatureMapper.of(airport);
+    TrueOnlineSarsa toSarsa = TrueOnlineSarsa.of(airport, RealScalar.of(0.7), learningRate, mapper);
     {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {

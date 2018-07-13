@@ -19,6 +19,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
   static final Scalar PROB = RealScalar.of(.1);
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   private final Tensor actions = Tensors.of(BACK, END).unmodifiable(); // increment
+  // TODO make class for coinflip
   private final Distribution distribution = BernoulliDistribution.of(PROB);
 
   @Override
@@ -44,7 +45,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
     return RealScalar.ZERO;
   }
 
-  @Override
+  @Override // from MoveInterface
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
@@ -68,12 +69,12 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
   }
 
   /**************************************************/
-  @Override
+  @Override // from TransitionInterface
   public Tensor transitions(Tensor state, Tensor action) {
     return isTerminal(state) ? Tensors.of(state) : states();
   }
 
-  @Override
+  @Override // from TransitionInterface
   public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
     if (isTerminal(state))
       return KroneckerDelta.of(state, next);
@@ -84,7 +85,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
     return next.equals(BACK) ? RealScalar.ONE.subtract(PROB) : PROB;
   }
 
-  @Override
+  @Override // from ActionValueInterface
   public Scalar expectedReward(Tensor state, Tensor action) {
     if (state.equals(BACK) && action.equals(BACK))
       return PROB; // 0.1 * 1

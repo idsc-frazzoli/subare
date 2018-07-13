@@ -1,3 +1,4 @@
+// code by fluric
 package ch.ethz.idsc.subare.analysis;
 
 import java.util.ArrayList;
@@ -7,32 +8,32 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import junit.framework.TestCase;
 
-public class AnalysisTest extends TestCase {
+public class MonteCarloAlgorithmsTest extends TestCase {
   public void testExamplesWithSarsa() {
-    testExampleWithSarsa(MonteCarloExamples.AIRPORT);
-    testExampleWithSarsa(MonteCarloExamples.CLIFFWALK);
-    testExampleWithSarsa(MonteCarloExamples.GAMBLER_20);
-    testExampleWithSarsa(MonteCarloExamples.GRIDWORLD);
-    testExampleWithSarsa(MonteCarloExamples.INFINITEVARIANCE);
-    testExampleWithSarsa(MonteCarloExamples.MAXBIAS);
-    testExampleWithSarsa(MonteCarloExamples.MAZE2);
-    testExampleWithSarsa(MonteCarloExamples.RACETRACK);
-    testExampleWithSarsa(MonteCarloExamples.WINDYGRID);
-    testExampleWithSarsa(MonteCarloExamples.WIRELOOP_4);
-    testExampleWithSarsa(MonteCarloExamples.WIRELOOP_C);
+    checkExampleWithSarsa(MonteCarloExamples.AIRPORT);
+    checkExampleWithSarsa(MonteCarloExamples.CLIFFWALK);
+    checkExampleWithSarsa(MonteCarloExamples.GAMBLER_20);
+    checkExampleWithSarsa(MonteCarloExamples.GRIDWORLD);
+    checkExampleWithSarsa(MonteCarloExamples.INFINITEVARIANCE);
+    checkExampleWithSarsa(MonteCarloExamples.MAXBIAS);
+    checkExampleWithSarsa(MonteCarloExamples.MAZE2);
+    checkExampleWithSarsa(MonteCarloExamples.RACETRACK);
+    checkExampleWithSarsa(MonteCarloExamples.WINDYGRID);
+    checkExampleWithSarsa(MonteCarloExamples.WIRELOOP_4);
+    checkExampleWithSarsa(MonteCarloExamples.WIRELOOP_C);
   }
 
-  private void testExampleWithSarsa(MonteCarloExamples example) {
+  private static void checkExampleWithSarsa(MonteCarloExamples example) {
     System.out.println("Testing: " + example.toString());
     int batches = 5;
     DiscreteQsa optimalQsa = MonteCarloAnalysis.getOptimalQsa(example.get(), batches);
     List<MonteCarloAlgorithms> list = new ArrayList<>();
-    list.add(MonteCarloAlgorithms.OriginalSarsa);
-    list.add(MonteCarloAlgorithms.ExpectedSarsa);
-    list.add(MonteCarloAlgorithms.QLearningSarsa);
-    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsaColdStart);
+    list.add(MonteCarloAlgorithms.ORIGINAL_SARSA);
+    list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
+    list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
+    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA_COLD_START);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
@@ -48,10 +49,10 @@ public class AnalysisTest extends TestCase {
     int batches = 5;
     DiscreteQsa optimalQsa = MonteCarloAnalysis.getOptimalQsa(example.get(), batches);
     List<MonteCarloAlgorithms> list = new ArrayList<>();
-    list.add(MonteCarloAlgorithms.OriginalSarsa);
-    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
-    list.add(MonteCarloAlgorithms.MonteCarlo);
+    list.add(MonteCarloAlgorithms.ORIGINAL_SARSA);
+    list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
+    list.add(MonteCarloAlgorithms.MONTE_CARLO);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
@@ -67,10 +68,10 @@ public class AnalysisTest extends TestCase {
     int batches = 5;
     DiscreteQsa optimalQsa = MonteCarloAnalysis.getOptimalQsa(example.get(), batches);
     List<MonteCarloAlgorithms> list = new ArrayList<>();
-    list.add(MonteCarloAlgorithms.OriginalSarsa);
-    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
-    list.add(MonteCarloAlgorithms.MonteCarlo);
+    list.add(MonteCarloAlgorithms.ORIGINAL_SARSA);
+    list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
+    list.add(MonteCarloAlgorithms.MONTE_CARLO);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
@@ -82,20 +83,20 @@ public class AnalysisTest extends TestCase {
   }
 
   public void testExamplesWithMC() {
-    testExampleWithMC(MonteCarloExamples.AIRPORT);
-    testExampleWithMC(MonteCarloExamples.GAMBLER_20);
-    testExampleWithMC(MonteCarloExamples.INFINITEVARIANCE);
-    testExampleWithMC(MonteCarloExamples.MAXBIAS);
-    testExampleWithMC(MonteCarloExamples.MAZE2);
-    testExampleWithMC(MonteCarloExamples.RACETRACK);
+    checkExampleWithMC(MonteCarloExamples.AIRPORT);
+    checkExampleWithMC(MonteCarloExamples.GAMBLER_20);
+    checkExampleWithMC(MonteCarloExamples.INFINITEVARIANCE);
+    checkExampleWithMC(MonteCarloExamples.MAXBIAS);
+    checkExampleWithMC(MonteCarloExamples.MAZE2);
+    checkExampleWithMC(MonteCarloExamples.RACETRACK);
   }
 
-  private void testExampleWithMC(MonteCarloExamples example) {
+  private static void checkExampleWithMC(MonteCarloExamples example) {
     System.out.println("Testing: " + example.toString());
     int batches = 10;
     DiscreteQsa optimalQsa = MonteCarloAnalysis.getOptimalQsa(example.get(), batches);
     List<MonteCarloAlgorithms> list = new ArrayList<>();
-    list.add(MonteCarloAlgorithms.MonteCarlo);
+    list.add(MonteCarloAlgorithms.MONTE_CARLO);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
@@ -111,12 +112,12 @@ public class AnalysisTest extends TestCase {
     int batches = 1;
     DiscreteQsa optimalQsa = MonteCarloAnalysis.getOptimalQsa(example.get(), batches);
     List<MonteCarloAlgorithms> list = new ArrayList<>();
-    list.add(MonteCarloAlgorithms.MonteCarlo);
-    list.add(MonteCarloAlgorithms.ExpectedSarsa);
-    list.add(MonteCarloAlgorithms.QLearningSarsa);
-    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsaColdStart);
+    list.add(MonteCarloAlgorithms.MONTE_CARLO);
+    list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
+    list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
+    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA_COLD_START);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);

@@ -1,6 +1,7 @@
 // code by jz and jph
 package ch.ethz.idsc.subare.core.util;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
  * in the Gambler problem the following values seem to work well
  * {@link OriginalSarsa} factor == 1.3, and exponent == 0.51
  * {@link QLearning} factor == 0.2, and exponent == 0.55 */
-abstract class DecayedLearningRate implements LearningRate {
+abstract class DecayedLearningRate implements LearningRate, Serializable {
   private final Scalar factor;
   private final Scalar exponent;
   /** the map counts the frequency of the state-action pair */
