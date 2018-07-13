@@ -77,7 +77,6 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
     this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
     featureSize = featureMapper.featureSize();
-    z = Array.zeros(featureSize); // TODO obsolete here
     w = Tensors.vector(v -> init, featureSize);
   }
 
@@ -112,19 +111,12 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
     return Tensor.of(ROBUST_ARG_MAX.options(vector).mapToObj(actions::get));
   }
 
-  // public void executeEpisode(Scalar epsilon) {
-  // // getting random index for startState
-  // Tensor states = monteCarloInterface.startStates();
-  // Tensor state = states.get(random.nextInt(states.length()));
-  // Tensor action = getEGreedyAction(state, epsilon);
-  // executeEpisode(epsilon, state, action);
-  // }
   /** @param epsilon greedy
    * @param state where episode starts
    * @param action taken from given state */
   public void executeEpisode(Scalar epsilon, Tensor state, Tensor action) {
     // init every episode again
-    // TODO check valid range of epsilon
+    Clip.unit().requireInside(epsilon);
     Tensor stateActionPair = StateAction.key(state, action);
     x = featureMapper.getFeature(stateActionPair);
     qOld = RealScalar.ZERO;
@@ -134,7 +126,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
     // run through episode
     while (!monteCarloInterface.isTerminal(state)) {
       Tensor stateOld = state;
-      Tensor actionOld = action; // TODO actionOld not needed, use stepInterface below instead
+      Tensor actionOld = action;
       state = monteCarloInterface.move(stateOld, actionOld);
       Scalar reward = monteCarloInterface.reward(stateOld, actionOld, state);
       action = getEGreedyAction(state, epsilon);
@@ -152,7 +144,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier {
     q = w.dot(x).Get();
     q_prime = w.dot(x_prime).Get();
     delta = reward.add(gamma.multiply(q_prime)).subtract(q);
-    // eq (12.5) // TODO check for better reference
+    // eq (12.11)
     z = z.multiply(gamma_lambda) //
         .add(x.multiply(RealScalar.ONE.subtract(alpha_gamma_lambda.multiply(z.dot(x).Get()))));
     // ---

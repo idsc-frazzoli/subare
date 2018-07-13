@@ -3,12 +3,11 @@ package ch.ethz.idsc.subare.ch05.infvar;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.util.CoinFlip;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
-import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
@@ -19,8 +18,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
   static final Scalar PROB = RealScalar.of(.1);
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   private final Tensor actions = Tensors.of(BACK, END).unmodifiable(); // increment
-  // TODO make class for coinflip
-  private final Distribution distribution = BernoulliDistribution.of(PROB);
+  private final CoinFlip coinFlip = CoinFlip.of(PROB);
 
   @Override
   public Tensor states() {
@@ -51,7 +49,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
       return state;
     if (action.equals(END))
       return END; // END is used as state
-    if (RandomVariate.of(distribution).equals(RealScalar.ZERO)) // TODO check if this is the model
+    if (coinFlip.tossTail()) // TODO check if this is the model
       return END; // END is used as state
     return BACK; // BACK is used as state
   }
