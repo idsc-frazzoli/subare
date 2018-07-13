@@ -1,6 +1,7 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.util;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,12 +13,17 @@ import ch.ethz.idsc.tensor.alg.UnitVector;
 /** requires keys of the form Join.of(state, action)
  * 
  * the implementation initializes the features as unit vectors */
-public class ExactFeatureMapper implements FeatureMapper {
+public class ExactFeatureMapper implements FeatureMapper, Serializable {
+  public static FeatureMapper of(MonteCarloInterface monteCarloInterface) {
+    return new ExactFeatureMapper(monteCarloInterface);
+  }
+
+  // ---
   private final Map<Tensor, Tensor> stateToFeature = new HashMap<>();
   private final int stateActionSize;
   private final int featureSize;
 
-  public ExactFeatureMapper(MonteCarloInterface monteCarloInterface) {
+  private ExactFeatureMapper(MonteCarloInterface monteCarloInterface) {
     // count the number of possible state-action pairs first
     stateActionSize = monteCarloInterface.states().stream() //
         .filter(state -> !monteCarloInterface.isTerminal(state)) //
@@ -38,7 +44,6 @@ public class ExactFeatureMapper implements FeatureMapper {
     return stateToFeature.get(key);
   }
 
-  @Override // from FeatureMapper
   public int stateActionSize() {
     return stateActionSize;
   }

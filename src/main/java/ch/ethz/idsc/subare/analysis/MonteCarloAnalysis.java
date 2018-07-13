@@ -60,12 +60,12 @@ public enum MonteCarloAnalysis {
     MonteCarloInterface monteCarloInterface = MonteCarloExamples.AIRPORT.get();
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
-    list.add(MonteCarloAlgorithms.MonteCarlo);
-    list.add(MonteCarloAlgorithms.OriginalSarsa);
-    list.add(MonteCarloAlgorithms.ExpectedSarsa);
-    list.add(MonteCarloAlgorithms.QLearningSarsa);
-    list.add(MonteCarloAlgorithms.DoubleQLearningSarsa);
-    list.add(MonteCarloAlgorithms.TrueOnlineSarsa);
+    list.add(MonteCarloAlgorithms.MONTE_CARLO);
+    list.add(MonteCarloAlgorithms.ORIGINAL_SARSA);
+    list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
+    list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
     // list.add(MonteCarloAlgorithms.TrueOnlineSarsaColdStart);
     // list.add(MonteCarloAlgorithms.TrueOnlineSarsaZero);
     // list.add(MonteCarloAlgorithms.TrueOnlineSarsaTest);

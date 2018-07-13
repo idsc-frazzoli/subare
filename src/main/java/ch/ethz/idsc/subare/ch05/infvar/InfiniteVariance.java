@@ -3,12 +3,11 @@ package ch.ethz.idsc.subare.ch05.infvar;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.util.CoinFlip;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
-import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
@@ -19,7 +18,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
   static final Scalar PROB = RealScalar.of(.1);
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   private final Tensor actions = Tensors.of(BACK, END).unmodifiable(); // increment
-  private final Distribution distribution = BernoulliDistribution.of(PROB);
+  private final CoinFlip coinFlip = CoinFlip.of(PROB);
 
   @Override
   public Tensor states() {
@@ -44,13 +43,13 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
     return RealScalar.ZERO;
   }
 
-  @Override
+  @Override // from MoveInterface
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
     if (action.equals(END))
       return END; // END is used as state
-    if (RandomVariate.of(distribution).equals(RealScalar.ZERO)) // TODO check if this is the model
+    if (coinFlip.tossTail()) // TODO check if this is the model
       return END; // END is used as state
     return BACK; // BACK is used as state
   }
@@ -68,12 +67,12 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
   }
 
   /**************************************************/
-  @Override
+  @Override // from TransitionInterface
   public Tensor transitions(Tensor state, Tensor action) {
     return isTerminal(state) ? Tensors.of(state) : states();
   }
 
-  @Override
+  @Override // from TransitionInterface
   public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
     if (isTerminal(state))
       return KroneckerDelta.of(state, next);
@@ -84,7 +83,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
     return next.equals(BACK) ? RealScalar.ONE.subtract(PROB) : PROB;
   }
 
-  @Override
+  @Override // from ActionValueInterface
   public Scalar expectedReward(Tensor state, Tensor action) {
     if (state.equals(BACK) && action.equals(BACK))
       return PROB; // 0.1 * 1

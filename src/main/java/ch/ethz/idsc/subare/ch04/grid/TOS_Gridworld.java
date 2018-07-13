@@ -22,12 +22,12 @@ enum TOS_Gridworld {
   public static void main(String[] args) throws IOException, Exception {
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    FeatureMapper mapper = new ExactFeatureMapper(gridworld);
+    FeatureMapper mapper = ExactFeatureMapper.of(gridworld);
     // Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     // DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     LearningRate learningRate = DefaultLearningRate.of(RealScalar.of(3), RealScalar.of(0.81));
     // LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.3), false); // the case without warmStart
-    TrueOnlineSarsa trueOnlineSarsa = new TrueOnlineSarsa(gridworld, RealScalar.of(0.5), learningRate, mapper);
+    TrueOnlineSarsa trueOnlineSarsa = TrueOnlineSarsa.of(gridworld, RealScalar.of(0.5), learningRate, mapper);
     Stopwatch stopwatch = Stopwatch.started();
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_tos.gif"), 250)) {
       for (int episode = 0; episode < 100; ++episode) {

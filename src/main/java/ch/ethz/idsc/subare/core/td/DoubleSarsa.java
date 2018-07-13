@@ -15,12 +15,10 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.util.CoinFlip;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
-import ch.ethz.idsc.tensor.pdf.Distribution;
-import ch.ethz.idsc.tensor.pdf.RandomVariate;
 
 /** double sarsa for single-step, and n-step
  * 
@@ -37,7 +35,7 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
 public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
-  private static final Distribution COINFLIPPING = BernoulliDistribution.of(RealScalar.of(0.5));
+  private static final CoinFlip COINFLIP = CoinFlip.of(RealScalar.of(0.5));
   // ---
   private final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;
@@ -92,7 +90,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   @Override // from DequeDigest
   public void digest(Deque<StepInterface> deque) {
     // randomly select which qsa to read and write
-    boolean flip = RandomVariate.of(COINFLIPPING).equals(RealScalar.ZERO); // flip coin, probability 0.5 each
+    boolean flip = COINFLIP.tossTail(); // flip coin, probability 0.5 each
     QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for selecting actions and updating
     QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation (of actions provided by Qsa1)
     LearningRate LearningRate1 = flip ? learningRate2 : learningRate1; // for updating

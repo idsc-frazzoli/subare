@@ -30,7 +30,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.red.Mean;
 
 public enum MonteCarloAlgorithms {
-  OriginalSarsa() {
+  ORIGINAL_SARSA() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
       DiscreteQsa qsaSarsa = DiscreteQsa.build(monteCarloInterface);
@@ -47,7 +47,7 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(monteCarloInterface, policy, 1, (OriginalSarsa) algorithm);
     }
   }, //
-  ExpectedSarsa() {
+  EXPECTED_SARSA() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
       DiscreteQsa qsaSarsa = DiscreteQsa.build(monteCarloInterface);
@@ -64,7 +64,7 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(monteCarloInterface, policy, 1, (ExpectedSarsa) algorithm);
     }
   }, //
-  QLearningSarsa() {
+  QLEARNING_SARSA() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
       DiscreteQsa qsaSarsa = DiscreteQsa.build(monteCarloInterface);
@@ -81,7 +81,7 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(monteCarloInterface, policy, 1, (QLearning) algorithm);
     }
   }, //
-  DoubleQLearningSarsa() {
+  DOUBLE_QLEARNING_SARSA() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
       DiscreteQsa qsa1 = DiscreteQsa.build(monteCarloInterface);
@@ -101,7 +101,7 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(monteCarloInterface, policy, 1, (DoubleSarsa) algorithm);
     }
   }, //
-  MonteCarlo() {
+  MONTE_CARLO() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
       return new MonteCarloExploringStarts(monteCarloInterface);
@@ -114,12 +114,12 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(monteCarloInterface, policyMC, (MonteCarloExploringStarts) algorithm);
     }
   }, //
-  TrueOnlineSarsa() {
+  TRUE_ONLINE_SARSA() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
-      FeatureMapper featureMapper = new ExactFeatureMapper(monteCarloInterface);
+      FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
-      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), learningRate, featureMapper);
+      return TrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(0.7), learningRate, featureMapper);
     }
 
     @Override
@@ -128,12 +128,12 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(RealScalar.of(0.1), monteCarloInterface, (TrueOnlineSarsa) algorithm);
     }
   }, //
-  TrueOnlineSarsaColdStart() {
+  TRUE_ONLINE_SARSA_COLD_START() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
-      FeatureMapper featureMapper = new ExactFeatureMapper(monteCarloInterface);
+      FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2), false);
-      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.7), learningRate, featureMapper);
+      return TrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(0.7), learningRate, featureMapper);
     }
 
     @Override
@@ -142,12 +142,12 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(RealScalar.of(0.1), monteCarloInterface, (TrueOnlineSarsa) algorithm);
     }
   }, //
-  TrueOnlineSarsaZero() {
+  TRUE_ONLINE_SARSA_ZERO() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
-      FeatureMapper featureMapper = new ExactFeatureMapper(monteCarloInterface);
+      FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
-      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.0), learningRate, featureMapper);
+      return TrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(0.0), learningRate, featureMapper);
     }
 
     @Override
@@ -156,12 +156,12 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(RealScalar.of(0.1), monteCarloInterface, (TrueOnlineSarsa) algorithm);
     }
   }, //
-  TrueOnlineSarsaTest() {
+  TRUE_ONLINE_SARSA_TEST() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
-      FeatureMapper featureMapper = new ExactFeatureMapper(monteCarloInterface);
+      FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
-      return new TrueOnlineSarsa(monteCarloInterface, RealScalar.of(0.0), learningRate, featureMapper);
+      return TrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(0.0), learningRate, featureMapper);
     }
 
     @Override
@@ -169,7 +169,7 @@ public enum MonteCarloAlgorithms {
       GlobalAssert.that(algorithm instanceof TrueOnlineSarsa);
       ExploringStarts.batch(RealScalar.of(0.1), monteCarloInterface, (TrueOnlineSarsa) algorithm);
     }
-  },//
+  }, //
   ;
   public abstract DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface);
 

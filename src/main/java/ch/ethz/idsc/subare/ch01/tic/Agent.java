@@ -11,15 +11,13 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import ch.ethz.idsc.subare.util.CoinFlip;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
-import ch.ethz.idsc.tensor.pdf.Distribution;
-import ch.ethz.idsc.tensor.pdf.RandomVariate;
 
 class Agent {
   double stepSize;
   // double exploreRate;
-  Distribution distribution;
+  private CoinFlip coinFlip;
   List<State> states = new ArrayList<>();
   final int symbol;
   Estimation estimation = new Estimation();
@@ -32,7 +30,7 @@ class Agent {
   public void setRates(double stepSize, double exploreRate) {
     this.stepSize = stepSize;
     // this.exploreRate = exploreRate;
-    distribution = BernoulliDistribution.of(RealScalar.of(exploreRate));
+    coinFlip = CoinFlip.of(RealScalar.of(exploreRate));
   }
 
   // accept a state
@@ -64,7 +62,7 @@ class Agent {
     // ---
     // exploration
     // parameter p denotes the probability of the outcome 1
-    if (RandomVariate.of(distribution).equals(RealScalar.ONE)) {
+    if (coinFlip.tossHead()) {
       List<Entry<Integer, State>> list = new ArrayList<>(nextStates.entrySet());
       Collections.shuffle(list);
       return new Action(list.get(0).getKey(), symbol);

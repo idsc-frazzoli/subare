@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class Analysis {
+/* package */ class Analysis {
   public static void showVariance() {
     Agent p1 = new Agent(1);
     p1.loadPolicy();
