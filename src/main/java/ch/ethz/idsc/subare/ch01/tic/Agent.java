@@ -11,13 +11,13 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-import ch.ethz.idsc.subare.util.CoinFlip;
+import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RealScalar;
 
 class Agent {
   double stepSize;
   // double exploreRate;
-  private CoinFlip coinFlip;
+  private Coinflip coinFlip;
   List<State> states = new ArrayList<>();
   final int symbol;
   Estimation estimation = new Estimation();
@@ -30,7 +30,7 @@ class Agent {
   public void setRates(double stepSize, double exploreRate) {
     this.stepSize = stepSize;
     // this.exploreRate = exploreRate;
-    coinFlip = CoinFlip.of(RealScalar.of(exploreRate));
+    coinFlip = Coinflip.of(RealScalar.of(exploreRate));
   }
 
   // accept a state
