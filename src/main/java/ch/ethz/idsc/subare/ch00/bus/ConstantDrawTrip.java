@@ -6,7 +6,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Range;
 
-public class ConstantDrawTrip implements TripProfile {
+class ConstantDrawTrip implements TripProfile {
   private final int length;
   private final Tensor costPerUnit;
   private final Scalar draw;

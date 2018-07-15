@@ -6,7 +6,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Exp;
 import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
-public enum DLogisticSigmoid implements ScalarUnaryOperator {
+enum DLogisticSigmoid implements ScalarUnaryOperator {
   FUNCTION;
   // ---
   @Override

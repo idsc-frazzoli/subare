@@ -6,7 +6,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.UnitVector;
 
 /** an agent that always produces the same predefined action */
-public class ConstantAgent extends Agent {
+class ConstantAgent extends Agent {
   final int n;
   final int action;
 

@@ -15,7 +15,7 @@ import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Increment;
 
-public class Charger extends DeterministicStandardModel implements TerminalInterface {
+class Charger extends DeterministicStandardModel implements TerminalInterface {
   private final TripProfile tripProfile;
   private final Clip clipCapacity;
   private final Tensor states;

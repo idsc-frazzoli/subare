@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-public class ChargerRaster implements StateActionRaster {
+class ChargerRaster implements StateActionRaster {
   private final Charger charger;
   private final int SPACE_Y;
 
