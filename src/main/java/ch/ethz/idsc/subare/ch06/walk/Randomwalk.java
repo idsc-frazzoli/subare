@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.util.CoinFlip;
+import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.alg.Range;
 
 /** Example 6.2: Random Walk, p.133 */
 class Randomwalk implements MonteCarloInterface {
-  private static final CoinFlip COINFLIP = CoinFlip.of(RationalScalar.HALF);
+  private static final Coinflip COINFLIP = Coinflip.of(RationalScalar.HALF);
   // ---
   private static final Tensor TERMINATE1 = RealScalar.ZERO; // A
   // ---
@@ -57,7 +57,7 @@ class Randomwalk implements MonteCarloInterface {
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
-    return COINFLIP.tossTail() ? //
+    return COINFLIP.tossHead() ? //
         state.add(RealScalar.ONE) : state.subtract(RealScalar.ONE);
   }
 

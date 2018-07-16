@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch04.gambler;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.util.CoinFlip;
+import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -25,7 +25,7 @@ public class Gambler implements StandardModel, MonteCarloInterface {
   private final Tensor states;
   final Scalar TERMINAL_W;
   private final Scalar P_win;
-  private final CoinFlip coinFlip;
+  private final Coinflip coinFlip;
 
   public static Gambler createDefault() {
     return new Gambler(100, RationalScalar.of(4, 10));
@@ -37,7 +37,7 @@ public class Gambler implements StandardModel, MonteCarloInterface {
     states = Range.of(0, max + 1).unmodifiable();
     TERMINAL_W = (Scalar) Last.of(states);
     this.P_win = P_win;
-    coinFlip = CoinFlip.of(P_win);
+    coinFlip = Coinflip.of(P_win);
   }
 
   @Override

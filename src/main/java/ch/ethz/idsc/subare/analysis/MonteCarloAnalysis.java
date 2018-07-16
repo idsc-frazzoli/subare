@@ -72,6 +72,6 @@ public enum MonteCarloAnalysis {
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_QSA);
     // ---
-    analyse(monteCarloInterface, 100, 1000, list, errorAnalysis);
+    analyse(monteCarloInterface, 10, 100, list, errorAnalysis);
   }
 }

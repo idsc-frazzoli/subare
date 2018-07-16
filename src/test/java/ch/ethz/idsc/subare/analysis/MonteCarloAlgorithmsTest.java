@@ -10,20 +10,20 @@ import junit.framework.TestCase;
 
 public class MonteCarloAlgorithmsTest extends TestCase {
   public void testExamplesWithSarsa() {
-    checkExampleWithSarsa(MonteCarloExamples.AIRPORT);
-    checkExampleWithSarsa(MonteCarloExamples.CLIFFWALK);
-    checkExampleWithSarsa(MonteCarloExamples.GAMBLER_20);
-    checkExampleWithSarsa(MonteCarloExamples.GRIDWORLD);
-    checkExampleWithSarsa(MonteCarloExamples.INFINITEVARIANCE);
-    checkExampleWithSarsa(MonteCarloExamples.MAXBIAS);
-    checkExampleWithSarsa(MonteCarloExamples.MAZE2);
-    checkExampleWithSarsa(MonteCarloExamples.RACETRACK);
-    checkExampleWithSarsa(MonteCarloExamples.WINDYGRID);
-    checkExampleWithSarsa(MonteCarloExamples.WIRELOOP_4);
-    checkExampleWithSarsa(MonteCarloExamples.WIRELOOP_C);
+    checkExampleWithSarsa(MonteCarloExamples.AIRPORT, true);
+    checkExampleWithSarsa(MonteCarloExamples.CLIFFWALK, false);
+    checkExampleWithSarsa(MonteCarloExamples.GAMBLER_20, true);
+    checkExampleWithSarsa(MonteCarloExamples.GRIDWORLD, true);
+    checkExampleWithSarsa(MonteCarloExamples.INFINITEVARIANCE, true);
+    checkExampleWithSarsa(MonteCarloExamples.MAXBIAS, true);
+    checkExampleWithSarsa(MonteCarloExamples.MAZE2, false);
+    checkExampleWithSarsa(MonteCarloExamples.RACETRACK, false);
+    checkExampleWithSarsa(MonteCarloExamples.WINDYGRID, false);
+    checkExampleWithSarsa(MonteCarloExamples.WIRELOOP_4, false);
+    checkExampleWithSarsa(MonteCarloExamples.WIRELOOP_C, false);
   }
 
-  private static void checkExampleWithSarsa(MonteCarloExamples example) {
+  private static void checkExampleWithSarsa(MonteCarloExamples example, boolean withTrueOnline) {
     System.out.println("Testing: " + example.toString());
     int batches = 5;
     DiscreteQsa optimalQsa = MonteCarloAnalysis.getOptimalQsa(example.get(), batches);
@@ -32,7 +32,8 @@ public class MonteCarloAlgorithmsTest extends TestCase {
     list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
     list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
     list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
-    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
+    if (withTrueOnline)
+      list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
@@ -115,7 +116,6 @@ public class MonteCarloAlgorithmsTest extends TestCase {
     list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
     list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
     list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
-    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
