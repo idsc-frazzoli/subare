@@ -33,7 +33,6 @@ public class MonteCarloAlgorithmsTest extends TestCase {
     list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
     list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
     list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
-    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA_COLD_START);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
@@ -117,7 +116,6 @@ public class MonteCarloAlgorithmsTest extends TestCase {
     list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
     list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
     list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
-    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA_COLD_START);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
