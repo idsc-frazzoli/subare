@@ -17,7 +17,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     try {
-      TrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(2), learningRate, featureMapper);
+      OriginalTrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(2), learningRate, featureMapper);
       assertTrue(false);
     } catch (Exception exception) {
       // ---
@@ -29,7 +29,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     MonteCarloInterface monteCarloInterface = Gambler.createDefault();
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     try {
-      TrueOnlineSarsa.of(null, RealScalar.ONE, learningRate, featureMapper);
+      OriginalTrueOnlineSarsa.of(null, RealScalar.ONE, learningRate, featureMapper);
       assertTrue(false);
     } catch (Exception exception) {
       // ---
@@ -40,7 +40,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
     MonteCarloInterface monteCarloInterface = Gambler.createDefault();
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    TrueOnlineSarsa trueOnlineSarsa = TrueOnlineSarsa.of(monteCarloInterface, RealScalar.ONE, learningRate, featureMapper);
+    TrueOnlineSarsa trueOnlineSarsa = OriginalTrueOnlineSarsa.of(monteCarloInterface, RealScalar.ONE, learningRate, featureMapper);
     try {
       trueOnlineSarsa.setExplore(RealScalar.of(-0.1));
       assertTrue(false);

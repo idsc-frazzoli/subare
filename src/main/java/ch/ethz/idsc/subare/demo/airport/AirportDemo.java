@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.td.OriginalSarsa;
+import ch.ethz.idsc.subare.core.td.OriginalTrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
@@ -67,7 +68,7 @@ enum AirportDemo {
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, sarsa.qsa()), airport.states());
     LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2));
     FeatureMapper mapper = ExactFeatureMapper.of(airport);
-    TrueOnlineSarsa toSarsa = TrueOnlineSarsa.of(airport, RealScalar.of(0.7), learningRate, mapper);
+    TrueOnlineSarsa toSarsa = OriginalTrueOnlineSarsa.of(airport, RealScalar.of(0.7), learningRate, mapper);
     toSarsa.setExplore(RealScalar.of(0.1));
     {
       Stopwatch stopwatch = Stopwatch.started();

@@ -10,8 +10,11 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
 import ch.ethz.idsc.subare.core.td.ExpectedSarsa;
+import ch.ethz.idsc.subare.core.td.ExpectedTrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.td.OriginalSarsa;
+import ch.ethz.idsc.subare.core.td.OriginalTrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.td.QLearning;
+import ch.ethz.idsc.subare.core.td.QLearningTrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
@@ -114,12 +117,12 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(monteCarloInterface, policyMC, (MonteCarloExploringStarts) algorithm);
     }
   }, //
-  TRUE_ONLINE_SARSA() {
+  ORIGINAL_TRUE_ONLINE_SARSA() {// choose ConstantLearningRate.of(RealScalar.of(0.05)) or ConstantLearningRate.of(RealScalar.of(0.1))
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
       FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
-      TrueOnlineSarsa trueOnlineSarsa = TrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(0.7), learningRate, featureMapper);
+      TrueOnlineSarsa trueOnlineSarsa = OriginalTrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(0.3), learningRate, featureMapper);
       trueOnlineSarsa.setExplore(RealScalar.of(0.1));
       return trueOnlineSarsa;
     }
@@ -131,14 +134,31 @@ public enum MonteCarloAlgorithms {
       ExploringStarts.batch(monteCarloInterface, policy, (TrueOnlineSarsa) algorithm);
     }
   }, //
-  TRUE_ONLINE_SARSA_TEST() {
+  EXPECTED_TRUE_ONLINE_SARSA() {
     @Override
     public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
       FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
-      TrueOnlineSarsa trueOnlineSarsaTemp = TrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(0.0), learningRate, featureMapper);
-      trueOnlineSarsaTemp.setExplore(RealScalar.of(0.1));
-      return trueOnlineSarsaTemp;
+      TrueOnlineSarsa trueOnlineSarsa = ExpectedTrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(0.3), learningRate, featureMapper);
+      trueOnlineSarsa.setExplore(RealScalar.of(0.1));
+      return trueOnlineSarsa;
+    }
+
+    @Override
+    public void executeBatch(DiscreteQsaSupplier algorithm, MonteCarloInterface monteCarloInterface) {
+      GlobalAssert.that(algorithm instanceof TrueOnlineSarsa);
+      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, algorithm.qsa(), RealScalar.of(.1));
+      ExploringStarts.batch(monteCarloInterface, policy, (TrueOnlineSarsa) algorithm);
+    }
+  }, //
+  QLEARNING_TRUE_ONLINE_SARSA() {
+    @Override
+    public DiscreteQsaSupplier getAlgorithm(MonteCarloInterface monteCarloInterface) {
+      FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
+      LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.05));
+      TrueOnlineSarsa trueOnlineSarsa = QLearningTrueOnlineSarsa.of(monteCarloInterface, RealScalar.of(0.3), learningRate, featureMapper);
+      trueOnlineSarsa.setExplore(RealScalar.of(0.1));
+      return trueOnlineSarsa;
     }
 
     @Override

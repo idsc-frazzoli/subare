@@ -61,17 +61,18 @@ public enum MonteCarloAnalysis {
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
     // list.add(MonteCarloAlgorithms.MONTE_CARLO);
-    list.add(MonteCarloAlgorithms.ORIGINAL_SARSA);
+    // list.add(MonteCarloAlgorithms.ORIGINAL_SARSA);
     // list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
     // list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
     // list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
-    // list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA);
-    list.add(MonteCarloAlgorithms.TRUE_ONLINE_SARSA_TEST);
+    list.add(MonteCarloAlgorithms.ORIGINAL_TRUE_ONLINE_SARSA);
+    list.add(MonteCarloAlgorithms.EXPECTED_TRUE_ONLINE_SARSA);
+    list.add(MonteCarloAlgorithms.QLEARNING_TRUE_ONLINE_SARSA);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_QSA);
     // ---
-    analyse(monteCarloInterface, 10, 100, list, errorAnalysis);
+    analyse(monteCarloInterface, 25, 100, list, errorAnalysis);
   }
 }

@@ -4,15 +4,12 @@ package ch.ethz.idsc.subare.core.td;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
-import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -24,29 +21,18 @@ import ch.ethz.idsc.tensor.sca.Clip;
 /** implementation of box "True Online Sarsa(lambda) for estimating w'x approx. q_pi or q_*
  * 
  * in Section 12.8, p.309 */
-public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
-  public static TrueOnlineSarsa of( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper) {
-    return new TrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, null);
-  }
-
-  public static TrueOnlineSarsa of( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
-    return new TrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, w);
-  }
-
-  // ---
-  private final MonteCarloInterface monteCarloInterface;
+public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
+  protected final MonteCarloInterface monteCarloInterface;
   private final Scalar gamma;
-  private final FeatureMapper featureMapper;
-  private final LearningRate learningRate;
+  protected final FeatureMapper featureMapper;
+  protected final LearningRate learningRate;
   // ---
   private final Scalar gamma_lambda;
-  private Scalar epsilon;
+  protected Scalar epsilon;
   private final int featureSize;
   // ---
   /** weight vector w is a long-term memory, accumulating over the lifetime of the system */
-  private Tensor w;
+  protected Tensor w;
   private Scalar nextQOld;
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
   private Tensor z;
@@ -56,7 +42,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
    * tends to be a good choice
    * @param learningRate
    * @param featureMapper */
-  private TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
+  protected TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
     this.monteCarloInterface = monteCarloInterface;
     this.learningRate = learningRate;
     Clip.unit().requireInside(lambda);
@@ -98,7 +84,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     return qsa;
   }
 
-  // from QsaSupplier
+  /** faster when only part of the qsa is required */
   public QsaInterface qsaInterface() {
     return new FeatureQsaAdapter(w, featureMapper);
   }
@@ -138,18 +124,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     }
   }
 
-  private Scalar evalute(StepInterface stepInterface) {
-    Tensor actions = Tensor.of( //
-        monteCarloInterface.actions(stepInterface.nextState()).stream() //
-            .filter(action -> learningRate.encountered(stepInterface.nextState(), action)));
-    if (actions.length() == 0)
-      return RealScalar.ZERO;
-    // ---
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsaInterface(), epsilon, stepInterface.nextState());
-    Tensor nextAction = new PolicyWrap(policy).next(stepInterface.nextState(), actions);
-    Tensor nextX = featureMapper.getFeature(StateAction.key(stepInterface.nextState(), nextAction));
-    return w.dot(nextX).Get();
-  }
+  protected abstract Scalar evalute(StepInterface stepInterface);
 
   private void resetEligibility() {
     nextQOld = RealScalar.ZERO;
