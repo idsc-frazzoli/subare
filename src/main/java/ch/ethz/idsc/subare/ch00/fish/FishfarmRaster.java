@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-public class FishfarmRaster implements StateRaster {
+class FishfarmRaster implements StateRaster {
   private final Fishfarm fishfarm;
 
   public FishfarmRaster(Fishfarm fishfarm) {

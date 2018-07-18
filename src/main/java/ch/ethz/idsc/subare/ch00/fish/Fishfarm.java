@@ -15,7 +15,7 @@ import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Round;
 
-public class Fishfarm extends DeterministicStandardModel implements MonteCarloInterface {
+class Fishfarm extends DeterministicStandardModel implements MonteCarloInterface {
   public final Scalar TERMINAL_LIMIT;
   public final int max_fish;
   public final Clip clip;
