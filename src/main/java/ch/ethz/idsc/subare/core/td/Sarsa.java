@@ -99,4 +99,8 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   public final DiscreteQsa qsa() {
     return (DiscreteQsa) qsa;
   }
+
+  public LearningRate getLearningRate() {
+    return learningRate;
+  }
 }
