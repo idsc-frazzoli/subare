@@ -74,7 +74,7 @@ enum AirportDemo {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
         Policy policy = EGreedyPolicy.bestEquiprobable(airport, toSarsa.qsa(), RealScalar.of(.1));
-        ExploringStarts.batch(airport, policy, (TrueOnlineSarsa) toSarsa);
+        ExploringStarts.batch(airport, policy, toSarsa);
         DiscreteQsa toQsa = toSarsa.qsa();
         XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));
       }

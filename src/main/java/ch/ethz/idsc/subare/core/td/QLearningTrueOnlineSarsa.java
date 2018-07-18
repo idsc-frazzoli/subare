@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -21,18 +22,19 @@ public class QLearningTrueOnlineSarsa extends TrueOnlineSarsa {
     return new QLearningTrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, w);
   }
 
+  // ---
   private QLearningTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
     super(monteCarloInterface, lambda, learningRate, featureMapper, w);
   }
 
-  @Override
-  protected Scalar evalute(StepInterface stepInterface) {
-    Tensor actions = Tensor.of( //
-        monteCarloInterface.actions(stepInterface.nextState()).stream() //
-            .filter(action -> learningRate.encountered(stepInterface.nextState(), action)));
-    if (actions.length() == 0)
-      return RealScalar.ZERO;
-    // ---
-    return actions.stream().map(action -> qsaInterface().value(stepInterface.nextState(), action)).reduce(Max::of).get();
+  @Override // from TrueOnlineSarsa
+  protected Scalar evaluate(StepInterface stepInterface) {
+    Tensor nextState = stepInterface.nextState();
+    QsaInterface qsaInterface = qsaInterface();
+    return monteCarloInterface.actions(nextState).stream() //
+        .filter(action -> learningRate.encountered(nextState, action)) //
+        .map(action -> qsaInterface.value(nextState, action)) //
+        .reduce(Max::of) //
+        .orElse(RealScalar.ZERO);
   }
 }

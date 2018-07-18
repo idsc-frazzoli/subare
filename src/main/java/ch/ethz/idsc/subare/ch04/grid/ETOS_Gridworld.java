@@ -37,7 +37,7 @@ enum ETOS_Gridworld {
       for (int episode = 0; episode < 100; ++episode) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
         Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, trueOnlineSarsa.qsa(), RealScalar.of(.1));
-        ExploringStarts.batch(gridworld, policy, (TrueOnlineSarsa) trueOnlineSarsa);
+        ExploringStarts.batch(gridworld, policy, trueOnlineSarsa);
         // DiscreteQsa toQsa = trueOnlineSarsa.getQsa();
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
         DiscreteQsa qsa = trueOnlineSarsa.qsa();

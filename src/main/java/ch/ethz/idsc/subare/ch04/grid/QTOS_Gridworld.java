@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
-import ch.ethz.idsc.subare.core.td.OriginalTrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.td.QLearningTrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -38,7 +37,7 @@ enum QTOS_Gridworld {
       for (int episode = 0; episode < 100; ++episode) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
         Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, trueOnlineSarsa.qsa(), RealScalar.of(.1));
-        ExploringStarts.batch(gridworld, policy, (TrueOnlineSarsa) trueOnlineSarsa);
+        ExploringStarts.batch(gridworld, policy, trueOnlineSarsa);
         // DiscreteQsa toQsa = trueOnlineSarsa.getQsa();
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
         DiscreteQsa qsa = trueOnlineSarsa.qsa();

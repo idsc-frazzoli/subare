@@ -4,7 +4,7 @@ Java 8 implementation of algorithms, examples, and exercises from the 2nd editio
 
 [Sutton and Barto: Reinforcement Learning](http://incompleteideas.net/book/the-book-2nd.html)
 
-Version `0.1.4`
+Version `0.1.5`
 
 Our implementation is inspired by the 
 [python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction)
@@ -105,12 +105,6 @@ Sarsa
 <td>
 
 True Online Sarsa
-
-![gridworld_tos](https://user-images.githubusercontent.com/4012178/42294276-c85d7ef8-7fdf-11e8-9822-dcc127489f57.gif)
-
-<td>
-
-True Online Sarsa Mod
 
 ![gridworld_tosm](https://user-images.githubusercontent.com/4012178/42294286-d780568a-7fdf-11e8-94ac-ba04a99c65a5.gif)
 

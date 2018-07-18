@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 
 public class OriginalTrueOnlineSarsa extends TrueOnlineSarsa {
   public static TrueOnlineSarsa of( //
@@ -24,21 +25,23 @@ public class OriginalTrueOnlineSarsa extends TrueOnlineSarsa {
     return new OriginalTrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, w);
   }
 
+  // ---
   private OriginalTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
     super(monteCarloInterface, lambda, learningRate, featureMapper, w);
   }
 
-  @Override
-  protected Scalar evalute(StepInterface stepInterface) {
+  @Override // from TrueOnlineSarsa
+  protected Scalar evaluate(StepInterface stepInterface) {
+    Tensor nextState = stepInterface.nextState();
     Tensor actions = Tensor.of( //
-        monteCarloInterface.actions(stepInterface.nextState()).stream() //
-            .filter(action -> learningRate.encountered(stepInterface.nextState(), action)));
-    if (actions.length() == 0)
+        monteCarloInterface.actions(nextState).stream() //
+            .filter(action -> learningRate.encountered(nextState, action)));
+    if (Tensors.isEmpty(actions))
       return RealScalar.ZERO;
     // ---
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsaInterface(), epsilon, stepInterface.nextState());
-    Tensor nextAction = new PolicyWrap(policy).next(stepInterface.nextState(), actions);
-    Tensor nextX = featureMapper.getFeature(StateAction.key(stepInterface.nextState(), nextAction));
+    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsaInterface(), epsilon, nextState);
+    Tensor nextAction = new PolicyWrap(policy).next(nextState, actions);
+    Tensor nextX = featureMapper.getFeature(StateAction.key(nextState, nextAction));
     return w.dot(nextX).Get();
   }
 }

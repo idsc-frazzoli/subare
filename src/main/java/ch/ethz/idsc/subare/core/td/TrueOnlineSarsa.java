@@ -1,6 +1,8 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
+import java.util.Objects;
+
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -23,16 +25,17 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * in Section 12.8, p.309 */
 public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   protected final MonteCarloInterface monteCarloInterface;
-  private final Scalar gamma;
   protected final FeatureMapper featureMapper;
   protected final LearningRate learningRate;
   // ---
+  private final Scalar gamma;
   private final Scalar gamma_lambda;
-  protected Scalar epsilon;
   private final int featureSize;
   // ---
+  protected Scalar epsilon;
   /** weight vector w is a long-term memory, accumulating over the lifetime of the system */
   protected Tensor w;
+  // ---
   private Scalar nextQOld;
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
   private Tensor z;
@@ -41,7 +44,8 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
    * @param lambda in [0, 1] Figure 12.14 in the book suggests that lambda in [0.8, 0.9]
    * tends to be a good choice
    * @param learningRate
-   * @param featureMapper */
+   * @param featureMapper
+   * @param w */
   protected TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
     this.monteCarloInterface = monteCarloInterface;
     this.learningRate = learningRate;
@@ -50,16 +54,14 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
     this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
     featureSize = featureMapper.featureSize();
-    this.w = w;
-    if (w == null)
-      this.w = Array.zeros(featureSize);
+    this.w = Objects.isNull(w) ? Array.zeros(featureSize) : w;
     resetEligibility();
   }
 
-  /** @param epsilon in [0,1] */
+  /** @param epsilon in [0, 1]
+   * @throws Exception if input is outside valid range */
   public final void setExplore(Scalar epsilon) {
-    Clip.unit().requireInside(epsilon);
-    this.epsilon = epsilon;
+    this.epsilon = Clip.unit().requireInside(epsilon);
   }
 
   public void printValues() {
@@ -73,7 +75,7 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
 
   /** Returns the Qsa according to the current feature weights.
    * Only use this function, when the state-action space is small enough. */
-  // from DiscreteQsaSupplier
+  @Override // from DiscreteQsaSupplier
   public DiscreteQsa qsa() {
     DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
     for (Tensor state : monteCarloInterface.states())
@@ -93,7 +95,7 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
     return w.unmodifiable();
   }
 
-  @Override
+  @Override // from StepDigest
   public void digest(StepInterface stepInterface) {
     Tensor prevState = stepInterface.prevState();
     Tensor prevAction = stepInterface.action();
@@ -105,7 +107,7 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
     Scalar prevQ = w.dot(x).Get();
-    Scalar nextQ = evalute(stepInterface);
+    Scalar nextQ = evaluate(stepInterface);
     Scalar delta = reward.add(gamma.multiply(nextQ)).subtract(prevQ);
     // eq (12.11)
     z = z.multiply(gamma_lambda) //
@@ -119,12 +121,13 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
     // ---
     learningRate.digest(stepInterface);
     // ---
-    if (monteCarloInterface.isTerminal(nextState)) {
+    if (monteCarloInterface.isTerminal(nextState))
       resetEligibility();
-    }
   }
 
-  protected abstract Scalar evalute(StepInterface stepInterface);
+  /** @param stepInterface
+   * @return */
+  protected abstract Scalar evaluate(StepInterface stepInterface);
 
   private void resetEligibility() {
     nextQOld = RealScalar.ZERO;
@@ -133,11 +136,11 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
     z = Array.zeros(featureSize);
   }
 
-  public LearningRate getLearningRate() {
+  public LearningRate learningRate() {
     return learningRate;
   }
 
-  public FeatureMapper getFeatureMapper() {
+  public FeatureMapper featureMapper() {
     return featureMapper;
   }
 }

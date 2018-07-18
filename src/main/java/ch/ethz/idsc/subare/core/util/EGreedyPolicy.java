@@ -29,6 +29,7 @@ public class EGreedyPolicy implements Policy {
     return new EGreedyPolicy(builder.map, epsilon, builder.sizes);
   }
 
+  // ---
   private final Map<Tensor, Index> map;
   /** probability of choosing a non-optimal action, if there is at least one non-optimal action */
   private final Scalar epsilon;
@@ -42,7 +43,7 @@ public class EGreedyPolicy implements Policy {
       throw new RuntimeException("sizes invalid for " + epsilon);
   }
 
-  @Override
+  @Override // from Policy
   public Scalar probability(Tensor state, Tensor action) {
     Index index = map.get(state);
     final int optimalCount = index.size();
