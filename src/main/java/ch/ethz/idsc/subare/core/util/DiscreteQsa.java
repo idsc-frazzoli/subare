@@ -4,11 +4,14 @@ package ch.ethz.idsc.subare.core.util;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
+import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionModel;
 import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
@@ -21,10 +24,9 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
     return new DiscreteQsa(index, Array.zeros(index.size()));
   }
 
-  public static DiscreteQsa build(StateActionModel stateActionModel, Scalar init) {
-    // TODO check for terminal states... should all have value == 0
-    Index index = DiscreteUtils.build(stateActionModel, stateActionModel.states());
-    return new DiscreteQsa(index, Array.of(list -> init, index.size()));
+  public static DiscreteQsa build(MonteCarloInterface monteCarloInterface, Scalar init) {
+    Index index = DiscreteUtils.build(monteCarloInterface, monteCarloInterface.states());
+    return new DiscreteQsa(index, Tensors.vector(i -> monteCarloInterface.isTerminal(index.get(i).get(0)) ? RealScalar.ZERO : init, index.size()));
   }
 
   // ---

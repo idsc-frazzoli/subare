@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.core.td;
 
 import java.util.Deque;
+import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscountFunction;
@@ -41,7 +42,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
-    this.qsa = qsa;
+    this.qsa = Objects.isNull(qsa) ? DiscreteQsa.build(discreteModel) : qsa;
     this.learningRate = learningRate;
   }
 
@@ -98,9 +99,5 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   @Override // from DiscreteQsaSupplier
   public final DiscreteQsa qsa() {
     return (DiscreteQsa) qsa;
-  }
-
-  public LearningRate getLearningRate() {
-    return learningRate;
   }
 }
