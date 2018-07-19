@@ -14,7 +14,8 @@ public interface QsaInterface {
    * 
    * @param state
    * @param action
-   * @param value */
+   * @param value
+   * @throws Exception if assign operation is not supported */
   void assign(Tensor state, Tensor action, Scalar value);
 
   /** @return */

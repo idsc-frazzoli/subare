@@ -64,6 +64,7 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
     this.epsilon = Clip.unit().requireInside(epsilon);
   }
 
+  // TODO function generic and can be implemented outside of class using monteCarloInterface and TOS.qsaInterface()
   public void printValues() {
     System.out.println("Values for all state-action pairs:");
     for (Tensor state : monteCarloInterface.states())
@@ -91,6 +92,7 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
     return new FeatureQsaAdapter(w, featureMapper);
   }
 
+  /** @return unmodifiable weight vector w */
   public Tensor getW() {
     return w.unmodifiable();
   }
@@ -136,6 +138,8 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
     z = Array.zeros(featureSize);
   }
 
+  // LONGTERM since these 2 functions below just return parameters that were used during construction,
+  // ... the functions may not be necessary
   public LearningRate learningRate() {
     return learningRate;
   }

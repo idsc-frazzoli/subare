@@ -5,7 +5,9 @@ import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/** Useful to get Qsa values without the need to create all the state-action pair values beforehand */
+/** useful to get Qsa values without the need to create all the state-action pair values beforehand
+ * 
+ * implementation does not support {@link #assign(Tensor, Tensor, Scalar)} */
 public class FeatureQsaAdapter implements QsaInterface {
   private final Tensor w;
   private final FeatureMapper featureMapper;
@@ -15,20 +17,19 @@ public class FeatureQsaAdapter implements QsaInterface {
     this.featureMapper = featureMapper;
   }
 
-  @Override
+  @Override // from QsaInterface
   public Scalar value(Tensor state, Tensor action) {
     Tensor stateAction = StateAction.key(state, action);
     return w.dot(featureMapper.getFeature(stateAction)).Get();
   }
 
-  /** not needed! */
-  @Override
+  @Override // from QsaInterface
   public void assign(Tensor state, Tensor action, Scalar value) {
-    return;
+    throw new UnsupportedOperationException();
   }
 
-  @Override
+  @Override // from QsaInterface
   public QsaInterface copy() {
-    return new FeatureQsaAdapter(w, featureMapper);
+    return this;
   }
 }
