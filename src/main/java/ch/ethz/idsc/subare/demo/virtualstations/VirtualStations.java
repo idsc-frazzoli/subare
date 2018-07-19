@@ -46,7 +46,7 @@ public class VirtualStations implements MonteCarloInterface {
 
   public VirtualStations() {
     states = generateStates().unmodifiable();
-    generateExactStates();
+    generateExactState();
     generateLinkMap();
   }
 
@@ -59,7 +59,7 @@ public class VirtualStations implements MonteCarloInterface {
     return states;
   }
 
-  private void generateExactStates() {
+  private void generateExactState() {
     GlobalAssert.that(VEHICLES % NVNODES == 0);
     for (int i = 0; i < NVNODES; ++i) {
       Map<Integer, Integer> subMap = new HashMap<>();
@@ -102,7 +102,7 @@ public class VirtualStations implements MonteCarloInterface {
   public Tensor actions(Tensor state) {
     if (isTerminal(state))
       return Tensors.of(Tensors.of(RealScalar.ZERO));
-    //
+    // ---
     Tensor prefix = Tensors.empty();
     for (int i = 0; i < NVNODES; ++i) {
       if (Sign.isPositive(state.Get(i + 1))) {
@@ -140,7 +140,7 @@ public class VirtualStations implements MonteCarloInterface {
       for (int j = 0; j < NVNODES; ++j) {
         if (j == i)
           continue;
-        int customers = RandomVariate.of(arrival_distribution).Get().number().intValue();
+        int customers = RandomVariate.of(customer_distribution).Get().number().intValue();
         int served = Math.min(exactStateMap.get(i).get(i), customers);
         exactStateMap.get(i).put(i, exactStateMap.get(i).get(i) - served);
         exactStateMap.get(i).put(j, exactStateMap.get(i).get(j) + served);
@@ -159,9 +159,7 @@ public class VirtualStations implements MonteCarloInterface {
     }
     // System.out.println("After executing action: " + exactStateMap);
     // read new state
-    Tensor newState = Tensors.empty();
-    for (int i = 0; i < NVNODES; ++i)
-      newState.append(0 < exactStateMap.get(i).get(i) ? RealScalar.ONE : RealScalar.ZERO);
+    Tensor newState = Tensors.vector(i -> exactStateMap.get(i).get(i) > 0 ? RealScalar.ONE : RealScalar.ZERO, NVNODES);
     return Join.of(Tensors.vector(state.Get(0).number().intValue() + 1), newState);
   }
 
@@ -188,12 +186,5 @@ public class VirtualStations implements MonteCarloInterface {
 
   public int getNVnodes() {
     return NVNODES;
-  }
-
-  public static void main(String[] args) {
-    VirtualStations vs = new VirtualStations();
-    Tensor state = vs.startStates().get(0);
-    System.out.println(vs.states());
-    System.out.println(vs.actions(vs.states().get(vs.states().length() - 1)));
   }
 }

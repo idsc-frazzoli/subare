@@ -58,7 +58,7 @@ public enum PlotUtils {
     }
     // return a new chart containing the overlaid plot...
     try {
-      plot(path, path, "Number episodes", "Error", //
+      plot(path, path, "Number batches", "Error", //
           data1, directory(), //
           false, 100, 500, false, 100, 500);
     } catch (Exception e) {
@@ -78,7 +78,7 @@ public enum PlotUtils {
       // return a new chart containing the overlaid plot...
       String subPath = path + "_" + errorAnalysisList.get(index).name().toLowerCase();
       try {
-        plot(subPath, subPath, "Number episodes", "Error", //
+        plot(subPath, subPath, "Number batches", "Error", //
             data1, directory(), //
             false, 100, 500, false, 100, 500);
       } catch (Exception e) {
@@ -97,7 +97,7 @@ public enum PlotUtils {
     }
     // return a new chart containing the overlaid plot...
     try {
-      plot(path, path, "Number episodes", "Error", //
+      plot(path, path, "Number batches", "Error", //
           data1, directory(), //
           false, 100, 500, false, 100, 500);
     } catch (Exception e) {

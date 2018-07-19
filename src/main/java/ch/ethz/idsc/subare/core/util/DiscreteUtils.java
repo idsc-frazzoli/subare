@@ -24,7 +24,7 @@ public enum DiscreteUtils {
     Tensor tensor = Tensors.empty();
     for (Tensor state : states)
       for (Tensor action : stateActionModel.actions(state))
-        tensor.append(Tensors.of(state, action));
+        tensor.append(StateAction.key(state, action));
     return Index.build(tensor);
   }
 

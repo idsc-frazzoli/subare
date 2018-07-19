@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.td.OriginalSarsa;
+import ch.ethz.idsc.subare.core.td.OriginalTrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
@@ -38,7 +39,7 @@ enum AirportDemo {
     // DiscreteUtils.print(optimalQsa);
     Policy policyQsa = GreedyPolicy.bestEquiprobable(airport, optimalQsa);
     // Policies.print(policyQsa, airport.states());
-    final int batches = 1000;
+    final int batches = 10;
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(airport);
     {
       Stopwatch stopwatch = Stopwatch.started();
@@ -67,11 +68,13 @@ enum AirportDemo {
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, sarsa.qsa()), airport.states());
     LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2));
     FeatureMapper mapper = ExactFeatureMapper.of(airport);
-    TrueOnlineSarsa toSarsa = TrueOnlineSarsa.of(airport, RealScalar.of(0.7), learningRate, mapper);
+    TrueOnlineSarsa toSarsa = OriginalTrueOnlineSarsa.of(airport, RealScalar.of(0.7), learningRate, mapper);
+    toSarsa.setExplore(RealScalar.of(0.1));
     {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
-        ExploringStarts.batch(RealScalar.of(0.1), airport, toSarsa);
+        Policy policy = EGreedyPolicy.bestEquiprobable(airport, toSarsa.qsa(), RealScalar.of(.1));
+        ExploringStarts.batch(airport, policy, toSarsa);
         DiscreteQsa toQsa = toSarsa.qsa();
         XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));
       }
