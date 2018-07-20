@@ -59,7 +59,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator {
         final int fromIndex = entry.getValue();
         if (0 < fromIndex)
           alt = alt.subtract(accumulate.Get(fromIndex - 1));
-        // Scalar gain = Multinomial.horner(rewards.extract(fromIndex, rewards.length()), gamma);
+        // Scalar gain = Series.of(rewards.extract(fromIndex, rewards.length())).apply(gamma);
         // if (!gain.equals(alt))
         // throw TensorRuntimeException.of(gain, alt);
         gains.put(key, alt);
