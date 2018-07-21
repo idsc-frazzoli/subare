@@ -13,19 +13,19 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
-public class ExpectedTrueOnlineSarsa extends TrueOnlineSarsa {
-  public static TrueOnlineSarsa of( //
+class ExpectedTrueOnlineSarsa extends TrueOnlineSarsa {
+  static TrueOnlineSarsa of( //
       MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper) {
     return new ExpectedTrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, null);
   }
 
-  public static TrueOnlineSarsa of( //
+  static TrueOnlineSarsa of( //
       MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
     return new ExpectedTrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, w);
   }
 
   // ---
-  private ExpectedTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
+  ExpectedTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
     super(monteCarloInterface, lambda, learningRate, featureMapper, w);
   }
 

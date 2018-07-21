@@ -40,7 +40,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   /** @param discreteModel
    * @param qsa
    * @param learningRate */
-  public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+  protected Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.qsa = Objects.isNull(qsa) ? DiscreteQsa.build(discreteModel) : qsa;
