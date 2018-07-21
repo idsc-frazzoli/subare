@@ -17,7 +17,7 @@ public enum SarsaType {
 
     @Override
     public TrueOnlineSarsa trueOnline(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper) {
-      return OriginalTrueOnlineSarsa.of(monteCarloInterface, lambda, learningRate, featureMapper);
+      return new OriginalTrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, null);
     }
   }, //
   EXPECTED() {
@@ -28,7 +28,7 @@ public enum SarsaType {
 
     @Override
     public TrueOnlineSarsa trueOnline(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper) {
-      return ExpectedTrueOnlineSarsa.of(monteCarloInterface, lambda, learningRate, featureMapper);
+      return new ExpectedTrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, null);
     }
   }, //
   QLEARNING() {
@@ -39,7 +39,7 @@ public enum SarsaType {
 
     @Override
     public TrueOnlineSarsa trueOnline(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper) {
-      return QLearningTrueOnlineSarsa.of(monteCarloInterface, lambda, learningRate, featureMapper);
+      return new QLearningTrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, null);
     }
   }, //
   ;

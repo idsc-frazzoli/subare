@@ -8,36 +8,19 @@ import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 
-class ExpectedTrueOnlineSarsa extends TrueOnlineSarsa {
-  static TrueOnlineSarsa of( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper) {
-    return new ExpectedTrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, null);
-  }
-
-  static TrueOnlineSarsa of( //
+/** class is instantiated via {@link SarsaType} */
+/* package */ class ExpectedTrueOnlineSarsa extends AbstractSharedTrueOnlineSarsa {
+  ExpectedTrueOnlineSarsa( //
       MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
-    return new ExpectedTrueOnlineSarsa(monteCarloInterface, lambda, learningRate, featureMapper, w);
-  }
-
-  // ---
-  ExpectedTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper, Tensor w) {
     super(monteCarloInterface, lambda, learningRate, featureMapper, w);
   }
 
-  @Override // from TrueOnlineSarsa
-  protected Scalar evaluate(StepInterface stepInterface) {
+  @Override // from AbstractSharedTrueOnlineSarsa
+  Scalar evaluate(StepInterface stepInterface, Tensor actions) {
     Tensor nextState = stepInterface.nextState();
-    Tensor actions = Tensor.of( //
-        monteCarloInterface.actions(nextState).stream() //
-            .filter(action -> learningRate.encountered(nextState, action)));
-    if (Tensors.isEmpty(actions))
-      return RealScalar.ZERO;
-    // ---
     QsaInterface qsaInterface = qsaInterface();
     Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsaInterface, epsilon, nextState);
     return actions.stream() //
