@@ -8,9 +8,9 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
-import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.OriginalTrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
+import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -53,7 +53,8 @@ enum AirportDemo {
     }
     StateActionCounter sac = new StateActionCounter(airport);
     DiscreteQsa qsaSarsa = DiscreteQsa.build(airport); // q-function for training, initialized to 0
-    final Sarsa sarsa = new OriginalSarsa(airport, qsaSarsa, ConstantLearningRate.of(RealScalar.of(0.05)));
+    SarsaType sarsaType = SarsaType.ORIGINAL;
+    final Sarsa sarsa = sarsaType.supply(airport, qsaSarsa, ConstantLearningRate.of(RealScalar.of(0.05)));
     {
       sarsa.setExplore(RealScalar.of(.1));
       Stopwatch stopwatch = Stopwatch.started();

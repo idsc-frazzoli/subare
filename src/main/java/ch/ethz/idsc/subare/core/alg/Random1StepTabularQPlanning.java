@@ -6,14 +6,13 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
 
-/** similar to {@link QLearning} except does not use episodes but single steps
+/** similar to QLearning except does not use episodes but single steps
  * 
  * similar to {@link ActionValueIteration} but with gauss-seidel updates
  * therefore not parallel()

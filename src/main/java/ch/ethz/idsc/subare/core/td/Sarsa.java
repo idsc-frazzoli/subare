@@ -30,10 +30,11 @@ import ch.ethz.idsc.tensor.Tensors;
  * a single step {@link StepDigest},
  * as well as N-steps {@link DequeDigest} */
 public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
-  final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;
+  final DiscreteModel discreteModel;
   final QsaInterface qsa;
   final LearningRate learningRate;
+  // ---
   Scalar epsilon = null;
 
   /** @param discreteModel
@@ -53,12 +54,23 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
 
   /** @param state
    * @return value estimation of state */
-  protected abstract Scalar evaluate(Tensor state);
+  abstract Scalar evaluate(Tensor state);
 
   /** @param state
    * @param Qsa2
    * @return value from evaluations of Qsa2 via actions provided by qsa (== Qsa1) */
-  protected abstract Scalar crossEvaluate(Tensor state, QsaInterface Qsa2);
+  final Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
+    Tensor actions = Tensor.of( //
+        discreteModel.actions(state).stream() //
+            .filter(action -> learningRate.encountered(state, action)));
+    return actions.length() == 0 ? RealScalar.ZERO : crossEvaluate(state, actions, Qsa2);
+  }
+
+  /** @param state
+   * @param actions non-empty
+   * @param Qsa2
+   * @return value from evaluations of Qsa2 via actions provided by qsa (== Qsa1) */
+  abstract Scalar crossEvaluate(Tensor state, Tensor actions, QsaInterface Qsa2);
 
   @Override // from DequeDigest
   public final void digest(Deque<StepInterface> deque) {

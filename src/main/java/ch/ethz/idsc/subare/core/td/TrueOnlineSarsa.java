@@ -67,7 +67,7 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
   /** Returns the Qsa according to the current feature weights.
    * Only use this function, when the state-action space is small enough. */
   @Override // from DiscreteQsaSupplier
-  public DiscreteQsa qsa() {
+  public final DiscreteQsa qsa() {
     DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
     for (Tensor state : monteCarloInterface.states())
       for (Tensor action : monteCarloInterface.actions(state)) {
@@ -78,17 +78,17 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
   }
 
   /** faster when only part of the qsa is required */
-  public QsaInterface qsaInterface() {
+  public final QsaInterface qsaInterface() {
     return new FeatureQsaAdapter(w, featureMapper);
   }
 
   /** @return unmodifiable weight vector w */
-  public Tensor getW() {
+  public final Tensor getW() {
     return w.unmodifiable();
   }
 
   @Override // from StepDigest
-  public void digest(StepInterface stepInterface) {
+  public final void digest(StepInterface stepInterface) {
     Tensor prevState = stepInterface.prevState();
     Tensor prevAction = stepInterface.action();
     Tensor nextState = stepInterface.nextState();
@@ -117,14 +117,14 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
       resetEligibility();
   }
 
-  /** @param stepInterface
-   * @return */
-  protected abstract Scalar evaluate(StepInterface stepInterface);
-
-  private void resetEligibility() {
+  private final void resetEligibility() {
     nextQOld = RealScalar.ZERO;
     /** eligibility trace vector is initialized to zero at the beginning of the
      * episode */
     z = Array.zeros(featureSize);
   }
+
+  /** @param stepInterface
+   * @return */
+  protected abstract Scalar evaluate(StepInterface stepInterface);
 }

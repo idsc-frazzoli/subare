@@ -7,8 +7,6 @@ import java.util.Map;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.td.OriginalSarsa;
-import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -30,8 +28,8 @@ import ch.ethz.idsc.tensor.sca.Sign;
  * 
  * Example:
  * in the Gambler problem the following values seem to work well
- * {@link OriginalSarsa} factor == 1.3, and exponent == 0.51
- * {@link QLearning} factor == 0.2, and exponent == 0.55 */
+ * OriginalSarsa factor == 1.3, and exponent == 0.51
+ * QLearning factor == 0.2, and exponent == 0.55 */
 abstract class DecayedLearningRate implements LearningRate, Serializable {
   private final Scalar factor;
   private final Scalar exponent;

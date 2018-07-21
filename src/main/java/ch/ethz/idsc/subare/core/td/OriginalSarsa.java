@@ -7,7 +7,6 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
@@ -25,11 +24,8 @@ import ch.ethz.idsc.tensor.Tensor;
  * n-step Sarsa for estimating Q(s,a)
  * 
  * box on p.157 */
-public class OriginalSarsa extends Sarsa {
-  /** @param discreteModel
-   * @param qsa
-   * @param learningRate */
-  public OriginalSarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+/* package */ class OriginalSarsa extends Sarsa {
+  OriginalSarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     super(discreteModel, qsa, learningRate);
   }
 
@@ -40,13 +36,7 @@ public class OriginalSarsa extends Sarsa {
   }
 
   @Override // from Sarsa
-  protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
-    Tensor actions = Tensor.of( //
-        discreteModel.actions(state).stream() //
-            .filter(action -> learningRate.encountered(state, action)));
-    if (actions.length() == 0)
-      return RealScalar.ZERO;
-    // ---
+  protected Scalar crossEvaluate(Tensor state, Tensor actions, QsaInterface Qsa2) {
     Policy policy = EGreedyPolicy.bestEquiprobable(discreteModel, Qsa2, epsilon, state);
     Tensor action = new PolicyWrap(policy).next(state, actions);
     return Qsa2.value(state, action);

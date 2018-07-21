@@ -18,17 +18,13 @@ import ch.ethz.idsc.tensor.red.Max;
  * box on p.131
  * 
  * see also Watkins 1989 */
-public class QLearning extends Sarsa {
-  /** @param discreteModel
-   * @param qsa
-   * @param alpha learning rate should converge to zero, with
-   * sum of alpha's should go to infinity, sum of alpha's squared should be finite */
-  public QLearning(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+/* package */ class QLearning extends Sarsa {
+  QLearning(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
     super(discreteModel, qsa, learningRate);
   }
 
   @Override // from Sarsa
-  protected Scalar evaluate(Tensor state) {
+  Scalar evaluate(Tensor state) {
     return discreteModel.actions(state).stream() //
         .filter(action -> learningRate.encountered(state, action)) //
         .map(action -> qsa.value(state, action)) //
@@ -37,15 +33,10 @@ public class QLearning extends Sarsa {
   }
 
   @Override // from Sarsa
-  protected Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
+  Scalar crossEvaluate(Tensor state, Tensor actions, QsaInterface Qsa2) {
     // TODO untested!!!
-    Scalar value = RealScalar.ZERO;
-    Tensor actions = Tensor.of( //
-        discreteModel.actions(state).stream() //
-            .filter(action -> learningRate.encountered(state, action))); //
-    if (actions.length() == 0)
-      return value;
     // use qsa == Qsa1 to determine best actions
+    Scalar value = RealScalar.ZERO;
     Tensor eval = Tensor.of(actions.stream().map(action -> qsa.value(state, action)));
     FairArgMax fairArgMax = FairArgMax.of(eval);
     Scalar weight = RationalScalar.of(1, fairArgMax.optionsCount()); // uniform distribution among best actions

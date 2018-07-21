@@ -10,8 +10,8 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
-import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.td.Sarsa;
+import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -40,7 +40,7 @@ public enum MonteCarloAnalysis {
     if (!(monteCarloInterface instanceof StandardModel)) { // if no AVI is possible, try to approximate it
       System.out.println("Approximating optimal QSA because the model does not implement StandardModel!");
       DiscreteQsa qsaSarsa = DiscreteQsa.build(monteCarloInterface);
-      final Sarsa sarsa = new QLearning(monteCarloInterface, qsaSarsa, ConstantLearningRate.of(RealScalar.of(0.05)));
+      final Sarsa sarsa = SarsaType.QLEARNING.supply(monteCarloInterface, qsaSarsa, ConstantLearningRate.of(RealScalar.of(0.05)));
       sarsa.setExplore(RealScalar.of(.1));
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches * 10; ++index) {

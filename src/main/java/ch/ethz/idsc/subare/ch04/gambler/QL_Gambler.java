@@ -5,8 +5,8 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.td.QLearning;
 import ch.ethz.idsc.subare.core.td.Sarsa;
+import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
@@ -37,7 +37,7 @@ enum QL_Gambler {
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_ql.gif"), 100);
     ExplorationRateDeque lr_scheduler = new ExplorationRateDeque(0.1);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
-    Sarsa stepDigest = new QLearning(gambler, qsa, learningRate);
+    Sarsa stepDigest = SarsaType.QLEARNING.supply(gambler, qsa, learningRate);
     for (int index = 0; index < batches; ++index) {
       Infoline.print(gambler, index, ref, qsa);
       Scalar error = DiscreteValueFunctions.distance(qsa, ref);
