@@ -29,8 +29,9 @@ import ch.ethz.idsc.tensor.Tensors;
  * 
  * a single step {@link StepDigest},
  * as well as N-steps {@link DequeDigest} */
-public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
+public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
   private final DiscountFunction discountFunction;
+  private final SarsaEvaluationType evaluationType;
   final DiscreteModel discreteModel;
   final QsaInterface qsa;
   final LearningRate learningRate;
@@ -40,8 +41,9 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   /** @param discreteModel
    * @param qsa
    * @param learningRate */
-  protected Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+  public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate, SarsaEvaluationType evaluationType) {
     this.discreteModel = discreteModel;
+    this.evaluationType = evaluationType;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.qsa = Objects.isNull(qsa) ? DiscreteQsa.build(discreteModel) : qsa;
     this.learningRate = learningRate;
@@ -52,32 +54,13 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
     this.epsilon = epsilon;
   }
 
-  /** @param state
-   * @return value estimation of state */
-  abstract Scalar evaluate(Tensor state);
-
-  /** @param state
-   * @param Qsa2
-   * @return value from evaluations of Qsa2 via actions provided by qsa (== Qsa1) */
-  final Scalar crossEvaluate(Tensor state, QsaInterface Qsa2) {
-    Tensor actions = Tensor.of( //
-        discreteModel.actions(state).stream() //
-            .filter(action -> learningRate.encountered(state, action)));
-    return actions.length() == 0 ? RealScalar.ZERO : crossEvaluate(state, actions, Qsa2);
-  }
-
-  /** @param state
-   * @param actions non-empty
-   * @param Qsa2
-   * @return value from evaluations of Qsa2 via actions provided by qsa (== Qsa1) */
-  abstract Scalar crossEvaluate(Tensor state, Tensor actions, QsaInterface Qsa2);
-
   @Override // from DequeDigest
   public final void digest(Deque<StepInterface> deque) {
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
+    Tensor nextState = deque.getLast().nextState();
     // ---
-    // for terminal state in queue, "=last.next", the sarsa implementation has to provide the evaluation
-    rewards.append(evaluate(deque.getLast().nextState())); // <- evaluate(...) is called here
+    // for terminal state in queue, "=last.next"
+    rewards.append(evaluationType.evaluate(discreteModel, epsilon, learningRate, nextState, qsa)); // <- evaluate(...) is called here
     // ---
     final StepInterface stepInterface = deque.getFirst(); // first step in queue
     Tensor state0 = stepInterface.prevState();
@@ -101,7 +84,7 @@ public abstract class Sarsa extends DequeDigestAdapter implements DiscreteQsaSup
   /** @param stepInterface
    * @return non-negative priority rating */
   final Scalar priority(StepInterface stepInterface) {
-    Tensor rewards = Tensors.of(stepInterface.reward(), evaluate(stepInterface.nextState()));
+    Tensor rewards = Tensors.of(stepInterface.reward(), evaluationType.evaluate(discreteModel, epsilon, learningRate, stepInterface.nextState(), qsa));
     Tensor state0 = stepInterface.prevState();
     Tensor action = stepInterface.action();
     Scalar value0 = qsa.value(state0, action);

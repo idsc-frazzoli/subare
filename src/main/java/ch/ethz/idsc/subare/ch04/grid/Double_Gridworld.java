@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
+import ch.ethz.idsc.subare.core.td.SarsaEvaluationType;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -32,7 +33,7 @@ enum Double_Gridworld {
     Tensor epsilon = Subdivide.of(.1, .01, batches); // used in egreedy
     DiscreteQsa qsa1 = DiscreteQsa.build(gridworld);
     DiscreteQsa qsa2 = DiscreteQsa.build(gridworld);
-    DoubleSarsa doubleSarsa = new DoubleSarsa(sarsaType, gridworld, //
+    DoubleSarsa doubleSarsa = new DoubleSarsa(SarsaEvaluationType.QLEARNING, gridworld, //
         qsa1, qsa2, //
         DefaultLearningRate.of(5, .51), //
         DefaultLearningRate.of(5, .51));

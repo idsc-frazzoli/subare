@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.analysis;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.td.SarsaEvaluationType;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.util.Stopwatch;
@@ -18,10 +19,22 @@ public enum MonteCarloAlgorithms {
       return new SarsaMonteCarloTrial(monteCarloInterface, SarsaType.ORIGINAL);
     }
   }, //
+  DOUBLE_ORIGINAL_SARSA() {
+    @Override
+    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
+      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.ORIGINAL);
+    }
+  }, //
   EXPECTED_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
       return new SarsaMonteCarloTrial(monteCarloInterface, SarsaType.EXPECTED);
+    }
+  }, //
+  DOUBLE_EXPECTED_SARSA() {
+    @Override
+    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
+      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.EXPECTED);
     }
   }, //
   QLEARNING_SARSA() {
@@ -33,13 +46,7 @@ public enum MonteCarloAlgorithms {
   DOUBLE_QLEARNING_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaType.QLEARNING);
-    }
-  }, //
-  MONTE_CARLO() {
-    @Override
-    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new EpisodeMonteCarloTrial(monteCarloInterface);
+      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.QLEARNING);
     }
   }, //
   ORIGINAL_TRUE_ONLINE_SARSA() {
@@ -48,10 +55,22 @@ public enum MonteCarloAlgorithms {
       return new TrueOnlineMonteCarloTrial(monteCarloInterface, SarsaType.ORIGINAL);
     }
   }, //
+  DOUBLE_ORIGINAL_TRUE_ONLINE_SARSA() {
+    @Override
+    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
+      return new DoubleTrueOnlineMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.ORIGINAL);
+    }
+  }, //
   EXPECTED_TRUE_ONLINE_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
       return new TrueOnlineMonteCarloTrial(monteCarloInterface, SarsaType.EXPECTED);
+    }
+  }, //
+  DOUBLE_EXPECTED_TRUE_ONLINE_SARSA() {
+    @Override
+    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
+      return new DoubleTrueOnlineMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.EXPECTED);
     }
   }, //
   QLEARNING_TRUE_ONLINE_SARSA() {
@@ -60,9 +79,20 @@ public enum MonteCarloAlgorithms {
       return new TrueOnlineMonteCarloTrial(monteCarloInterface, SarsaType.QLEARNING);
     }
   }, //
+  DOUBLE_QLEARNING_TRUE_ONLINE_SARSA() {
+    @Override
+    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
+      return new DoubleTrueOnlineMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.QLEARNING);
+    }
+  }, //
+  MONTE_CARLO() {
+    @Override
+    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
+      return new EpisodeMonteCarloTrial(monteCarloInterface);
+    }
+  }, //
   ;
   abstract MonteCarloTrial create(MonteCarloInterface monteCarloInterface);
-  // public abstract Tensor analyse(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, List<MonteCarloErrorAnalysis> errorAnalysis);
 
   public Tensor analyseNTimes(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, List<DiscreteModelErrorAnalysis> errorAnalysis,
       int nTimes) {

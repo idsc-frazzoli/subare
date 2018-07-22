@@ -19,6 +19,7 @@ import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 
 /** double sarsa for single-step, and n-step
  * 
@@ -39,7 +40,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   // ---
   private final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;
-  private final SarsaType sarsaType;
+  private final SarsaEvaluationType evaluationType;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
   private final LearningRate learningRate1;
@@ -53,7 +54,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
    * @param learningRate1
    * @param learningRate2 */
   public DoubleSarsa( //
-      SarsaType sarsaType, //
+      SarsaEvaluationType evaluationType, //
       DiscreteModel discreteModel, //
       QsaInterface qsa1, //
       QsaInterface qsa2, //
@@ -62,7 +63,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   ) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
-    this.sarsaType = sarsaType;
+    this.evaluationType = evaluationType;
     this.qsa1 = qsa1;
     this.qsa2 = qsa2;
     this.learningRate1 = learningRate1;
@@ -93,23 +94,25 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
     boolean flip = COINFLIP.tossHead(); // flip coin, probability 0.5 each
     QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for selecting actions and updating
     QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation (of actions provided by Qsa1)
-    LearningRate LearningRate1 = flip ? learningRate2 : learningRate1; // for updating
+    LearningRate LearningRate = flip ? learningRate2 : learningRate1; // for updating
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // TODO test if input LearningRate1 is correct
-    Sarsa sarsa = sarsaType.supply(discreteModel, Qsa1, LearningRate1); // not used for learning
-    sarsa.setExplore(epsilon);
-    rewards.append(sarsa.crossEvaluate(deque.getLast().nextState(), Qsa2));
+    Tensor nextState = deque.getLast().nextState();
+    Tensor nextActions = Tensor.of(discreteModel.actions(nextState).stream().filter(nextAction -> LearningRate.encountered(nextState, nextAction)));
+    Scalar expectedReward = Tensors.isEmpty(nextActions) ? RealScalar.ZERO
+        : evaluationType.crossEvaluate(discreteModel, epsilon, nextState, nextActions, Qsa1, Qsa2);
+    rewards.append(expectedReward);
     // ---
     // the code below is identical to Sarsa
     StepInterface first = deque.getFirst();
     Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
     Scalar value0 = Qsa1.value(state0, action0);
-    Scalar alpha = LearningRate1.alpha(first);
+    Scalar alpha = LearningRate.alpha(first);
     Scalar delta = discountFunction.apply(rewards).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
-    LearningRate1.digest(first); // signal to LearningRate1
+    LearningRate.digest(first); // signal to LearningRate1
   }
 
   @Override

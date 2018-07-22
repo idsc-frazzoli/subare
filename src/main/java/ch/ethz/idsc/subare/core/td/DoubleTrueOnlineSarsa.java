@@ -13,51 +13,58 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
 import ch.ethz.idsc.subare.core.util.StateAction;
+import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.red.Mean;
 import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-/** implementation of box "True Online Sarsa(lambda) for estimating w'x approx. q_pi or q_*
- * 
- * in Section 12.8, p.309 */
-public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
+public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
+  private static final Coinflip COINFLIP = Coinflip.of(RealScalar.of(0.5));
+  // ---
   protected final MonteCarloInterface monteCarloInterface;
   protected final FeatureMapper featureMapper;
-  protected final LearningRate learningRate;
+  protected final LearningRate learningRate1;
+  protected final LearningRate learningRate2;
   // ---
+  private final SarsaEvaluationType evaluationType;
   private final Scalar gamma;
   private final Scalar gamma_lambda;
+  private final Scalar lambda;
   private final int featureSize;
-  private final SarsaEvaluationType evaluationType;
   // ---
   protected Scalar epsilon;
-  /** weight vector w is a long-term memory, accumulating over the lifetime of the system */
-  protected Tensor w;
+  /** weight vectors w1 and w2 are a long-term memory, accumulating over the lifetime of the system */
+  protected Tensor w1;
+  protected Tensor w2;
   // ---
   private Scalar nextQOld;
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
   private Tensor z;
 
-  /** @param monteCarloInterface
-   * @param lambda in [0, 1] Figure 12.14 in the book suggests that lambda in [0.8, 0.9]
-   * tends to be a good choice
-   * @param learningRate
-   * @param featureMapper
-   * @param w */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluationType evaluationType, Scalar lambda, LearningRate learningRate,
-      FeatureMapper featureMapper, Tensor w) {
+  public DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluationType evaluationType, Scalar lambda, LearningRate learningRate1,
+      LearningRate learningRate2, FeatureMapper featureMapper) {
+    this(monteCarloInterface, evaluationType, lambda, learningRate1, learningRate2, featureMapper, null, null);
+  }
+
+  public DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluationType evaluationType, Scalar lambda, LearningRate learningRate1,
+      LearningRate learningRate2, FeatureMapper featureMapper, Tensor w1, Tensor w2) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
-    this.learningRate = learningRate;
+    this.lambda = lambda;
+    this.learningRate1 = learningRate1;
+    this.learningRate2 = learningRate2;
     Clip.unit().requireInside(lambda);
     this.gamma = monteCarloInterface.gamma();
     this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
     featureSize = featureMapper.featureSize();
-    this.w = Objects.isNull(w) ? Array.zeros(featureSize) : w;
+    this.w1 = Objects.isNull(w1) ? Array.zeros(featureSize) : w1;
+    this.w2 = Objects.isNull(w2) ? Array.zeros(featureSize) : w2;
     resetEligibility();
   }
 
@@ -75,34 +82,47 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     for (Tensor state : monteCarloInterface.states())
       for (Tensor action : monteCarloInterface.actions(state)) {
         Tensor stateActionPair = StateAction.key(state, action);
-        qsa.assign(state, action, featureMapper.getFeature(stateActionPair).dot(w).Get());
+        qsa.assign(state, action, featureMapper.getFeature(stateActionPair).dot(getW()).Get());
       }
     return qsa;
   }
 
   /** faster when only part of the qsa is required */
   public final QsaInterface qsaInterface() {
+    return new FeatureQsaAdapter(getW(), featureMapper);
+  }
+
+  /** faster when only part of the qsa is required */
+  public final QsaInterface qsaInterface(Tensor w) {
     return new FeatureQsaAdapter(w, featureMapper);
   }
 
   /** @return unmodifiable weight vector w */
   public final Tensor getW() {
-    return w.unmodifiable();
+    return Mean.of(w1.add(w2)).unmodifiable();
   }
 
   @Override // from StepDigest
   public final void digest(StepInterface stepInterface) {
+    // randomly select which w to read and write
+    boolean flip = COINFLIP.tossHead(); // flip coin, probability 0.5 each
+    Tensor W1 = flip ? w2 : w1; // for selecting actions and updating
+    Tensor W2 = flip ? w1 : w2; // for evaluation (of actions provided by Qsa1)
+    LearningRate LearningRate = flip ? learningRate2 : learningRate1; // for updating
+    // ---
     Tensor prevState = stepInterface.prevState();
     Tensor prevAction = stepInterface.action();
     Tensor nextState = stepInterface.nextState();
+    Tensor nextActions = Tensor.of(monteCarloInterface.actions(nextState).stream().filter(nextAction -> LearningRate.encountered(nextState, nextAction)));
     // ---
     Scalar reward = monteCarloInterface.reward(prevState, prevAction, nextState);
     // ---
-    Scalar alpha = learningRate.alpha(stepInterface);
+    Scalar alpha = learningRate1.alpha(stepInterface);
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
-    Scalar prevQ = w.dot(x).Get();
-    Scalar nextQ = evaluationType.evaluate(monteCarloInterface, epsilon, learningRate, nextState, qsaInterface());
+    Scalar prevQ = W2.dot(x).Get();
+    Scalar nextQ = Tensors.isEmpty(nextActions) ? RealScalar.ZERO
+        : evaluationType.crossEvaluate(monteCarloInterface, epsilon, nextState, nextActions, qsaInterface(W1), qsaInterface(W2));
     Scalar delta = reward.add(gamma.multiply(nextQ)).subtract(prevQ);
     // eq (12.11)
     z = z.multiply(gamma_lambda) //
@@ -111,10 +131,10 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     Scalar diffQ = prevQ.subtract(nextQOld);
     Tensor scalez = z.multiply(alpha.multiply(delta.add(diffQ)));
     Tensor scalex = x.multiply(alpha.multiply(diffQ));
-    w = w.add(scalez).subtract(scalex);
+    W1 = W1.add(scalez).subtract(scalex);
     nextQOld = nextQ;
     // ---
-    learningRate.digest(stepInterface);
+    LearningRate.digest(stepInterface);
     // ---
     if (monteCarloInterface.isTerminal(nextState))
       resetEligibility();

@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.analysis;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
-import ch.ethz.idsc.subare.core.td.SarsaType;
+import ch.ethz.idsc.subare.core.td.SarsaEvaluationType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
@@ -14,11 +14,11 @@ public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
   private final MonteCarloInterface monteCarloInterface;
   private final DoubleSarsa doubleSarsa;
 
-  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaEvaluationType evaluationType) {
     this.monteCarloInterface = monteCarloInterface;
     DiscreteQsa qsa1 = DiscreteQsa.build(monteCarloInterface);
     DiscreteQsa qsa2 = DiscreteQsa.build(monteCarloInterface);
-    doubleSarsa = new DoubleSarsa(sarsaType, monteCarloInterface, //
+    doubleSarsa = new DoubleSarsa(evaluationType, monteCarloInterface, //
         qsa1, qsa2, //
         DefaultLearningRate.of(1, .51), //
         DefaultLearningRate.of(1, .51));
