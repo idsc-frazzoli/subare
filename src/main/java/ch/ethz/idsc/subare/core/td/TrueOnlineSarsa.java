@@ -16,6 +16,7 @@ import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -99,7 +100,7 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
     Scalar prevQ = w.dot(x).Get();
-    Scalar nextQ = evaluate(stepInterface);
+    Scalar nextQ = evaluate(nextState);
     Scalar delta = reward.add(gamma.multiply(nextQ)).subtract(prevQ);
     // eq (12.11)
     z = z.multiply(gamma_lambda) //
@@ -126,5 +127,14 @@ public abstract class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest
 
   /** @param stepInterface
    * @return */
-  protected abstract Scalar evaluate(StepInterface stepInterface);
+  protected final Scalar evaluate(Tensor state) {
+    Tensor actions = Tensor.of( //
+        monteCarloInterface.actions(state).stream() //
+            .filter(action -> learningRate.encountered(state, action)));
+    return Tensors.isEmpty(actions) //
+        ? RealScalar.ZERO
+        : evaluate(state, actions);
+  }
+
+  abstract Scalar evaluate(Tensor state, Tensor actions);
 }
