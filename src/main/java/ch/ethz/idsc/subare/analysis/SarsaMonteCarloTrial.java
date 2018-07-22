@@ -17,6 +17,7 @@ import ch.ethz.idsc.tensor.Scalar;
 public class SarsaMonteCarloTrial implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
   private static final Scalar EPSILON = RealScalar.of(0.1);
+  private static final int DIGEST_DEPTH = 1; // 0 is equal to the MonteCarlo approach
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final Sarsa sarsa;
@@ -32,7 +33,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   @Override // from MonteCarloTrial
   public void executeBatch() {
     Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa(), EPSILON);
-    ExploringStarts.batch(monteCarloInterface, policy, 1, sarsa); // TODO try with omitting "1"
+    ExploringStarts.batch(monteCarloInterface, policy, DIGEST_DEPTH, sarsa);
   }
 
   @Override // from MonteCarloTrial

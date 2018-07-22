@@ -42,7 +42,7 @@ public enum MonteCarloAlgorithms {
       return new EpisodeMonteCarloTrial(monteCarloInterface);
     }
   }, //
-  ORIGINAL_TRUE_ONLINE_SARSA() {// choose ConstantLearningRate.of(RealScalar.of(0.05)) or ConstantLearningRate.of(RealScalar.of(0.1))
+  ORIGINAL_TRUE_ONLINE_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
       return new TrueOnlineMonteCarloTrial(monteCarloInterface, SarsaType.ORIGINAL);
