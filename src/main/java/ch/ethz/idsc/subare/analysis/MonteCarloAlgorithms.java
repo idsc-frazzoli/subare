@@ -55,34 +55,16 @@ public enum MonteCarloAlgorithms {
       return new TrueOnlineMonteCarloTrial(monteCarloInterface, SarsaType.ORIGINAL);
     }
   }, //
-  DOUBLE_ORIGINAL_TRUE_ONLINE_SARSA() {
-    @Override
-    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleTrueOnlineMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.ORIGINAL);
-    }
-  }, //
   EXPECTED_TRUE_ONLINE_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
       return new TrueOnlineMonteCarloTrial(monteCarloInterface, SarsaType.EXPECTED);
     }
   }, //
-  DOUBLE_EXPECTED_TRUE_ONLINE_SARSA() {
-    @Override
-    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleTrueOnlineMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.EXPECTED);
-    }
-  }, //
   QLEARNING_TRUE_ONLINE_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
       return new TrueOnlineMonteCarloTrial(monteCarloInterface, SarsaType.QLEARNING);
-    }
-  }, //
-  DOUBLE_QLEARNING_TRUE_ONLINE_SARSA() {
-    @Override
-    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleTrueOnlineMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.QLEARNING);
     }
   }, //
   MONTE_CARLO() {

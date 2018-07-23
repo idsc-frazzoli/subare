@@ -34,7 +34,6 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   private final SarsaEvaluationType evaluationType;
   private final Scalar gamma;
   private final Scalar gamma_lambda;
-  private final Scalar lambda;
   private final int featureSize;
   // ---
   protected Scalar epsilon;
@@ -55,7 +54,6 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
       LearningRate learningRate2, FeatureMapper featureMapper, Tensor w1, Tensor w2) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
-    this.lambda = lambda;
     this.learningRate1 = learningRate1;
     this.learningRate2 = learningRate2;
     Clip.unit().requireInside(lambda);
@@ -99,15 +97,15 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
 
   /** @return unmodifiable weight vector w */
   public final Tensor getW() {
-    return Mean.of(w1.add(w2)).unmodifiable();
+    return Mean.of(Tensors.of(w1, w2)).unmodifiable();
   }
 
   @Override // from StepDigest
   public final void digest(StepInterface stepInterface) {
     // randomly select which w to read and write
     boolean flip = COINFLIP.tossHead(); // flip coin, probability 0.5 each
-    Tensor W1 = flip ? w2 : w1; // for selecting actions and updating
-    Tensor W2 = flip ? w1 : w2; // for evaluation (of actions provided by Qsa1)
+    Tensor W1 = flip ? w2 : w1;
+    Tensor W2 = flip ? w1 : w2;
     LearningRate LearningRate = flip ? learningRate2 : learningRate1; // for updating
     // ---
     Tensor prevState = stepInterface.prevState();
@@ -131,7 +129,10 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     Scalar diffQ = prevQ.subtract(nextQOld);
     Tensor scalez = z.multiply(alpha.multiply(delta.add(diffQ)));
     Tensor scalex = x.multiply(alpha.multiply(diffQ));
-    W1 = W1.add(scalez).subtract(scalex);
+    if (flip)
+      w2 = w2.add(scalez).subtract(scalex);
+    else
+      w1 = w1.add(scalez).subtract(scalex);
     nextQOld = nextQ;
     // ---
     LearningRate.digest(stepInterface);

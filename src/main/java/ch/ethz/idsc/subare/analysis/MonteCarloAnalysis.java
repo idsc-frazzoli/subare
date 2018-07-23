@@ -57,17 +57,19 @@ public enum MonteCarloAnalysis {
   }
 
   public static void main(String[] args) throws Exception {
-    MonteCarloInterface monteCarloInterface = MonteCarloExamples.VIRTUALSTATIONS.get();
+    MonteCarloInterface monteCarloInterface = MonteCarloExamples.AIRPORT.get();
     // ---
     List<MonteCarloAlgorithms> list = new ArrayList<>();
     // list.add(MonteCarloAlgorithms.MONTE_CARLO);
-    list.add(MonteCarloAlgorithms.ORIGINAL_SARSA);
-    // list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
-    // list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
-    // list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
+    // list.add(MonteCarloAlgorithms.ORIGINAL_SARSA);
     // list.add(MonteCarloAlgorithms.ORIGINAL_TRUE_ONLINE_SARSA);
+    // list.add(MonteCarloAlgorithms.DOUBLE_ORIGINAL_SARSA);
+    // list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
     // list.add(MonteCarloAlgorithms.EXPECTED_TRUE_ONLINE_SARSA);
+    // list.add(MonteCarloAlgorithms.DOUBLE_EXPECTED_SARSA);
+    // list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
     // list.add(MonteCarloAlgorithms.QLEARNING_TRUE_ONLINE_SARSA);
+    // list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
     // ---
     List<DiscreteModelErrorAnalysis> errorAnalysis = new ArrayList<>();
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
