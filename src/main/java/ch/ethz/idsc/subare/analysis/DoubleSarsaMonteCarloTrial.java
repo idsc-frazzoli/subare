@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
-import ch.ethz.idsc.subare.core.td.SarsaEvaluationType;
+import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
@@ -20,13 +20,14 @@ public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
   private final MonteCarloInterface monteCarloInterface;
   private final DoubleSarsa doubleSarsa;
 
-  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaEvaluationType evaluationType) {
+  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
     this.monteCarloInterface = monteCarloInterface;
     DiscreteQsa qsa1 = DiscreteQsa.build(monteCarloInterface);
     DiscreteQsa qsa2 = DiscreteQsa.build(monteCarloInterface);
     LearningRate learningRate1 = ConstantLearningRate.of(ALPHA);
     LearningRate learningRate2 = ConstantLearningRate.of(ALPHA);
-    doubleSarsa = new DoubleSarsa(evaluationType, monteCarloInterface, //
+    doubleSarsa = sarsaType.doubleSarsa( // TODO not sure if this type is intended
+        monteCarloInterface, //
         qsa1, qsa2, //
         learningRate1, learningRate2);
     doubleSarsa.setExplore(EPSILON);

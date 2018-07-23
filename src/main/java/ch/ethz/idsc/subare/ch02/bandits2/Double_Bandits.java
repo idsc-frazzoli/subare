@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.ch02.bandits2;
 
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
-import ch.ethz.idsc.subare.core.td.SarsaEvaluationType;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -25,7 +24,8 @@ enum Double_Bandits {
     Tensor epsilon = Subdivide.of(.3, .01, batches); // used in egreedy
     DiscreteQsa qsa1 = DiscreteQsa.build(bandits);
     DiscreteQsa qsa2 = DiscreteQsa.build(bandits);
-    DoubleSarsa doubleSarsa = new DoubleSarsa(SarsaEvaluationType.QLEARNING, bandits, //
+    DoubleSarsa doubleSarsa = sarsaType.doubleSarsa( //
+        bandits, //
         qsa1, qsa2, //
         DefaultLearningRate.of(15, 1.31), //
         DefaultLearningRate.of(15, 1.31));

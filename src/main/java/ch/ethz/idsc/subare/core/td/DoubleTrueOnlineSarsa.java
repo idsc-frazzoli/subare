@@ -31,7 +31,7 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   protected final LearningRate learningRate1;
   protected final LearningRate learningRate2;
   // ---
-  private final SarsaEvaluationType evaluationType;
+  private final SarsaEvaluation evaluationType;
   private final Scalar gamma;
   private final Scalar gamma_lambda;
   private final int featureSize;
@@ -45,12 +45,12 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
   private Tensor z;
 
-  public DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluationType evaluationType, Scalar lambda, LearningRate learningRate1,
+  /* package */ DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, LearningRate learningRate1,
       LearningRate learningRate2, FeatureMapper featureMapper) {
     this(monteCarloInterface, evaluationType, lambda, learningRate1, learningRate2, featureMapper, null, null);
   }
 
-  public DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluationType evaluationType, Scalar lambda, LearningRate learningRate1,
+  public DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, LearningRate learningRate1,
       LearningRate learningRate2, FeatureMapper featureMapper, Tensor w1, Tensor w2) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
@@ -106,12 +106,13 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     boolean flip = COINFLIP.tossHead(); // flip coin, probability 0.5 each
     Tensor W1 = flip ? w2 : w1;
     Tensor W2 = flip ? w1 : w2;
-    LearningRate LearningRate = flip ? learningRate2 : learningRate1; // for updating
+    LearningRate learningRate = flip ? learningRate2 : learningRate1; // for updating
     // ---
     Tensor prevState = stepInterface.prevState();
     Tensor prevAction = stepInterface.action();
     Tensor nextState = stepInterface.nextState();
-    Tensor nextActions = Tensor.of(monteCarloInterface.actions(nextState).stream().filter(nextAction -> LearningRate.encountered(nextState, nextAction)));
+    Tensor nextActions = Tensor.of(monteCarloInterface.actions(nextState).stream() //
+        .filter(nextAction -> learningRate.encountered(nextState, nextAction)));
     // ---
     Scalar reward = monteCarloInterface.reward(prevState, prevAction, nextState);
     // ---
@@ -119,8 +120,9 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
     Scalar prevQ = W2.dot(x).Get();
-    Scalar nextQ = Tensors.isEmpty(nextActions) ? RealScalar.ZERO
-        : evaluationType.crossEvaluate(monteCarloInterface, epsilon, nextState, nextActions, qsaInterface(W1), qsaInterface(W2));
+    Scalar nextQ = Tensors.isEmpty(nextActions) //
+        ? RealScalar.ZERO
+        : evaluationType.crossEvaluate(epsilon, nextState, nextActions, qsaInterface(W1), qsaInterface(W2));
     Scalar delta = reward.add(gamma.multiply(nextQ)).subtract(prevQ);
     // eq (12.11)
     z = z.multiply(gamma_lambda) //
@@ -135,7 +137,7 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
       w1 = w1.add(scalez).subtract(scalex);
     nextQOld = nextQ;
     // ---
-    LearningRate.digest(stepInterface);
+    learningRate.digest(stepInterface);
     // ---
     if (monteCarloInterface.isTerminal(nextState))
       resetEligibility();

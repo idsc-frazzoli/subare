@@ -31,7 +31,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   private final Scalar gamma;
   private final Scalar gamma_lambda;
   private final int featureSize;
-  private final SarsaEvaluationType evaluationType;
+  private final SarsaEvaluation evaluationType;
   // ---
   protected Scalar epsilon;
   /** weight vector w is a long-term memory, accumulating over the lifetime of the system */
@@ -47,7 +47,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
    * @param learningRate
    * @param featureMapper
    * @param w */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluationType evaluationType, Scalar lambda, LearningRate learningRate,
+  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, LearningRate learningRate,
       FeatureMapper featureMapper, Tensor w) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
@@ -102,7 +102,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
     Scalar prevQ = w.dot(x).Get();
-    Scalar nextQ = evaluationType.evaluate(monteCarloInterface, epsilon, learningRate, nextState, qsaInterface());
+    Scalar nextQ = evaluationType.evaluate(epsilon, learningRate, nextState, qsaInterface());
     Scalar delta = reward.add(gamma.multiply(nextQ)).subtract(prevQ);
     // eq (12.11)
     z = z.multiply(gamma_lambda) //

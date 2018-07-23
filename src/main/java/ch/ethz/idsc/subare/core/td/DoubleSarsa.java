@@ -40,7 +40,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   // ---
   private final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;
-  private final SarsaEvaluationType evaluationType;
+  private final SarsaEvaluation evaluationType;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
   private final LearningRate learningRate1;
@@ -53,8 +53,8 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
    * @param qsa2
    * @param learningRate1
    * @param learningRate2 */
-  public DoubleSarsa( //
-      SarsaEvaluationType evaluationType, //
+  /* package */ DoubleSarsa( //
+      SarsaEvaluation evaluationType, //
       DiscreteModel discreteModel, //
       QsaInterface qsa1, //
       QsaInterface qsa2, //
@@ -100,8 +100,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
     // TODO test if input LearningRate1 is correct
     Tensor nextState = deque.getLast().nextState();
     Tensor nextActions = Tensor.of(discreteModel.actions(nextState).stream().filter(nextAction -> LearningRate.encountered(nextState, nextAction)));
-    Scalar expectedReward = Tensors.isEmpty(nextActions) ? RealScalar.ZERO
-        : evaluationType.crossEvaluate(discreteModel, epsilon, nextState, nextActions, Qsa1, Qsa2);
+    Scalar expectedReward = Tensors.isEmpty(nextActions) ? RealScalar.ZERO : evaluationType.crossEvaluate(epsilon, nextState, nextActions, Qsa1, Qsa2);
     rewards.append(expectedReward);
     // ---
     // the code below is identical to Sarsa
