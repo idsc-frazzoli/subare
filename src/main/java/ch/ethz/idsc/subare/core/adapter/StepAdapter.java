@@ -27,27 +27,27 @@ public final class StepAdapter implements StepInterface {
     this.next = next.unmodifiable();
   }
 
-  @Override
+  @Override // from StepInterface
   public Tensor prevState() {
     return prev;
   }
 
-  @Override
+  @Override // from StepInterface
   public Tensor action() {
     return action;
   }
 
-  @Override
+  @Override // from StepInterface
   public Scalar reward() {
     return reward;
   }
 
-  @Override
+  @Override // from StepInterface
   public Tensor nextState() {
     return next;
   }
 
-  @Override
+  @Override // from Object
   public String toString() {
     return String.format("(%s, %s) -> r=%s next=%s", prev, action, reward, next);
   }

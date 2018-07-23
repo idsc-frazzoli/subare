@@ -104,9 +104,21 @@ Sarsa
 
 <td>
 
-True Online Sarsa
+OTrue Online Sarsa
 
-![gridworld_tosm](https://user-images.githubusercontent.com/4012178/42294286-d780568a-7fdf-11e8-94ac-ba04a99c65a5.gif)
+![gridworld_tos_original](https://user-images.githubusercontent.com/4012178/43031808-b40012b4-8ca9-11e8-9539-9fd66f9e8ba0.gif)
+
+<td>
+
+ETrue Online Sarsa
+
+![gridworld_tos_expected](https://user-images.githubusercontent.com/4012178/43031809-b41b8558-8ca9-11e8-9c2c-0d514e7b1504.gif)
+
+<td>
+
+QTrue Online Sarsa
+
+![gridworld_tos_qlearning](https://user-images.githubusercontent.com/4012178/43031807-b3e5f7a8-8ca9-11e8-8650-0d45638bfe5b.gif)
 
 </tr></table>
 

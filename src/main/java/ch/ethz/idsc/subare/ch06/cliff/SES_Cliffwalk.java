@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.ch06.cliff;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
-import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -34,7 +33,7 @@ enum SES_Cliffwalk {
     try (AnimationWriter gsw = AnimationWriter.of( //
         UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
       LearningRate learningRate = DefaultLearningRate.of(7, 0.61);
-      Sarsa sarsa = new OriginalSarsa(cliffwalk, qsa, learningRate);
+      Sarsa sarsa = sarsaType.supply(cliffwalk, qsa, learningRate);
       DequeExploringStarts exploringStartsStream = new DequeExploringStarts(cliffwalk, nstep, sarsa) {
         @Override
         public Policy batchPolicy(int batch) {

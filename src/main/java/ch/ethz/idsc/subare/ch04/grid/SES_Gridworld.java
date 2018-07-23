@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
-import ch.ethz.idsc.subare.core.td.OriginalSarsa;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -32,7 +31,7 @@ enum SES_Gridworld {
     try (AnimationWriter gsw = AnimationWriter.of( //
         UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
       LearningRate learningRate = DefaultLearningRate.of(5, 1.1);
-      Sarsa sarsa = new OriginalSarsa(gridworld, qsa, learningRate);
+      Sarsa sarsa = sarsaType.supply(gridworld, qsa, learningRate);
       DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
         @Override
         public Policy batchPolicy(int batch) {
