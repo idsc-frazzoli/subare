@@ -27,6 +27,10 @@ public class CoinflipTest extends TestCase {
     assertTrue(Chop.below(1e-2).close(RationalScalar.of(counters[2], rounds), headProbability2));
   }
 
+  public void testInstances() {
+    assertTrue(Coinflip.fair() != Coinflip.fair());
+  }
+
   public void testFail() {
     try {
       Coinflip.of(RealScalar.of(-0.1));

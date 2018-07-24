@@ -12,54 +12,52 @@ import ch.ethz.idsc.tensor.Tensor;
 public enum SarsaType {
   ORIGINAL() {
     @Override
-    public Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
-      return new Sarsa(discreteModel, qsa, learningRate, SarsaEvaluationType.ORIGINAL);
-    }
-
-    @Override
-    public TrueOnlineSarsa trueOnline(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, Tensor w,
-        FeatureMapper featureMapper) {
-      return new TrueOnlineSarsa(monteCarloInterface, SarsaEvaluationType.ORIGINAL, lambda, learningRate, featureMapper, w);
+    SarsaEvaluation sarsaEvaluation(DiscreteModel discreteModel) {
+      return new OriginalSarsaEvaluation(discreteModel);
     }
   }, //
   EXPECTED() {
     @Override
-    public Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
-      return new Sarsa(discreteModel, qsa, learningRate, SarsaEvaluationType.EXPECTED);
-    }
-
-    @Override
-    public TrueOnlineSarsa trueOnline(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, Tensor w,
-        FeatureMapper featureMapper) {
-      return new TrueOnlineSarsa(monteCarloInterface, SarsaEvaluationType.EXPECTED, lambda, learningRate, featureMapper, w);
+    SarsaEvaluation sarsaEvaluation(DiscreteModel discreteModel) {
+      return new ExpectedSarsaEvaluation(discreteModel);
     }
   }, //
   QLEARNING() {
     @Override
-    public Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
-      return new Sarsa(discreteModel, qsa, learningRate, SarsaEvaluationType.QLEARNING);
-    }
-
-    @Override
-    public TrueOnlineSarsa trueOnline(MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, Tensor w,
-        FeatureMapper featureMapper) {
-      return new TrueOnlineSarsa(monteCarloInterface, SarsaEvaluationType.QLEARNING, lambda, learningRate, featureMapper, w);
+    SarsaEvaluation sarsaEvaluation(DiscreteModel discreteModel) {
+      return new QLearningSarsaEvaluation(discreteModel);
     }
   }, //
   ;
   // ---
-  // TODO JAN rename function
-  public abstract Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate);
+  abstract SarsaEvaluation sarsaEvaluation(DiscreteModel discreteModel);
 
-  public Sarsa supply(DiscreteModel discreteModel, LearningRate learningRate) {
+  // TODO JAN rename function
+  public final Sarsa supply(DiscreteModel discreteModel, LearningRate learningRate) {
     return supply(discreteModel, null, learningRate);
   }
 
-  public abstract TrueOnlineSarsa trueOnline( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, Tensor w, FeatureMapper featureMapper);
+  public final Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+    return new Sarsa(sarsaEvaluation(discreteModel), discreteModel, qsa, learningRate);
+  }
 
-  public TrueOnlineSarsa trueOnline( //
+  public final DoubleSarsa doubleSarsa(DiscreteModel discreteModel, QsaInterface qsa1, QsaInterface qsa2, LearningRate learningRate1,
+      LearningRate learningRate2) {
+    return new DoubleSarsa(sarsaEvaluation(discreteModel), discreteModel, qsa1, qsa2, learningRate1, learningRate2);
+  }
+
+  public final TrueOnlineSarsa trueOnline( //
       MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper) {
     return trueOnline(monteCarloInterface, lambda, learningRate, null, featureMapper);
+  }
+
+  public final TrueOnlineSarsa trueOnline( //
+      MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, Tensor w, FeatureMapper featureMapper) {
+    return new TrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, learningRate, featureMapper, w);
+  }
+
+  public final DoubleTrueOnlineSarsa doubleTrueOnline( //
+      MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate1, LearningRate learningRate2, FeatureMapper featureMapper) {
+    return new DoubleTrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, learningRate1, learningRate2, featureMapper);
   }
 }

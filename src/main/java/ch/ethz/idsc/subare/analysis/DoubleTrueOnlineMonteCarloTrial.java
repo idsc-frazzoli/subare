@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.DoubleTrueOnlineSarsa;
-import ch.ethz.idsc.subare.core.td.SarsaEvaluationType;
+import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -24,12 +24,12 @@ public class DoubleTrueOnlineMonteCarloTrial implements MonteCarloTrial {
   private final DoubleTrueOnlineSarsa doubleTrueOnlineSarsa;
 
   // has convergence problems, don't use it yet!
-  public DoubleTrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaEvaluationType evaluationType) {
+  public DoubleTrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
     this.monteCarloInterface = monteCarloInterface;
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     LearningRate learningRate1 = ConstantLearningRate.of(ALPHA);
     LearningRate learningRate2 = ConstantLearningRate.of(ALPHA);
-    doubleTrueOnlineSarsa = new DoubleTrueOnlineSarsa(monteCarloInterface, evaluationType, LAMBDA, learningRate1, learningRate2, featureMapper);
+    doubleTrueOnlineSarsa = sarsaType.doubleTrueOnline(monteCarloInterface, LAMBDA, learningRate1, learningRate2, featureMapper);
     doubleTrueOnlineSarsa.setExplore(EPSILON);
   }
 

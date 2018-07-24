@@ -30,20 +30,19 @@ import ch.ethz.idsc.tensor.Tensors;
  * a single step {@link StepDigest},
  * as well as N-steps {@link DequeDigest} */
 public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
+  private final SarsaEvaluation sarsaEvaluation;
   private final DiscountFunction discountFunction;
-  private final SarsaEvaluationType evaluationType;
-  final DiscreteModel discreteModel;
-  final QsaInterface qsa;
-  final LearningRate learningRate;
+  private final QsaInterface qsa;
+  private final LearningRate learningRate;
   // ---
-  Scalar epsilon = null;
+  private Scalar epsilon = null;
 
   /** @param discreteModel
    * @param qsa
-   * @param learningRate */
-  public Sarsa(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate, SarsaEvaluationType evaluationType) {
-    this.discreteModel = discreteModel;
-    this.evaluationType = evaluationType;
+   * @param learningRate
+   * @param sarsaEvaluation */
+  /* package */ Sarsa(SarsaEvaluation sarsaEvaluation, DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+    this.sarsaEvaluation = sarsaEvaluation;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.qsa = Objects.isNull(qsa) ? DiscreteQsa.build(discreteModel) : qsa;
     this.learningRate = learningRate;
@@ -60,7 +59,7 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
     Tensor nextState = deque.getLast().nextState();
     // ---
     // for terminal state in queue, "=last.next"
-    rewards.append(evaluationType.evaluate(discreteModel, epsilon, learningRate, nextState, qsa)); // <- evaluate(...) is called here
+    rewards.append(sarsaEvaluation.evaluate(epsilon, learningRate, nextState, qsa)); // <- evaluate(...) is called here
     // ---
     final StepInterface stepInterface = deque.getFirst(); // first step in queue
     Tensor state0 = stepInterface.prevState();
@@ -84,7 +83,7 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
   /** @param stepInterface
    * @return non-negative priority rating */
   final Scalar priority(StepInterface stepInterface) {
-    Tensor rewards = Tensors.of(stepInterface.reward(), evaluationType.evaluate(discreteModel, epsilon, learningRate, stepInterface.nextState(), qsa));
+    Tensor rewards = Tensors.of(stepInterface.reward(), sarsaEvaluation.evaluate(epsilon, learningRate, stepInterface.nextState(), qsa));
     Tensor state0 = stepInterface.prevState();
     Tensor action = stepInterface.action();
     Scalar value0 = qsa.value(state0, action);

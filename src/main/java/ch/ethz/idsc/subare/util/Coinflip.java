@@ -3,14 +3,24 @@ package ch.ethz.idsc.subare.util;
 
 import java.util.Random;
 
+import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 public class Coinflip {
   /** @param p_head
-   * @return instance of Coinflip with given probability p_head that tossHead() returns true */
+   * @return new instance of Coinflip with given probability p_head that tossHead() returns true */
   public static Coinflip of(Scalar p_head) {
     return new Coinflip(p_head);
+  }
+
+  /** Quote from Wikipedia:
+   * "a fair coin is an idealized randomizing device with two states
+   * (usually named "heads" and "tails") which are equally likely to occur."
+   * 
+   * @return new instance of Coinflip for which tossHead() returns true with probability 1/2 */
+  public static Coinflip fair() {
+    return of(RationalScalar.HALF);
   }
 
   // ---

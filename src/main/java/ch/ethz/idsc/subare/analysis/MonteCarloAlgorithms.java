@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.analysis;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.td.SarsaEvaluationType;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.util.Stopwatch;
@@ -22,7 +21,7 @@ public enum MonteCarloAlgorithms {
   DOUBLE_ORIGINAL_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.ORIGINAL);
+      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaType.ORIGINAL);
     }
   }, //
   EXPECTED_SARSA() {
@@ -34,7 +33,7 @@ public enum MonteCarloAlgorithms {
   DOUBLE_EXPECTED_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.EXPECTED);
+      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaType.EXPECTED);
     }
   }, //
   QLEARNING_SARSA() {
@@ -46,7 +45,7 @@ public enum MonteCarloAlgorithms {
   DOUBLE_QLEARNING_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaEvaluationType.QLEARNING);
+      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaType.QLEARNING);
     }
   }, //
   ORIGINAL_TRUE_ONLINE_SARSA() {
