@@ -26,8 +26,7 @@ public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
     DiscreteQsa qsa2 = DiscreteQsa.build(monteCarloInterface);
     LearningRate learningRate1 = ConstantLearningRate.of(ALPHA);
     LearningRate learningRate2 = ConstantLearningRate.of(ALPHA);
-    doubleSarsa = sarsaType.doubleSarsa( // TODO not sure if this type is intended
-        monteCarloInterface, //
+    doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, //
         qsa1, qsa2, //
         learningRate1, learningRate2);
     doubleSarsa.setExplore(EPSILON);
