@@ -6,8 +6,8 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
+import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
 
 public enum SarsaType {
   ORIGINAL() {
@@ -43,13 +43,13 @@ public enum SarsaType {
   }
 
   public final TrueOnlineSarsa trueOnline( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, Tensor w) {
+      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w) {
     return new TrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate, w);
   }
 
   public final DoubleTrueOnlineSarsa doubleTrueOnline( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate1, LearningRate learningRate2, Tensor w1,
-      Tensor w2) {
+      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate1, LearningRate learningRate2,
+      FeatureWeight w1, FeatureWeight w2) {
     return new DoubleTrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate1, learningRate2, w1, w2);
   }
 }

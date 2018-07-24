@@ -11,14 +11,13 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
+import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 enum TOS_Wireloop {
@@ -35,7 +34,7 @@ enum TOS_Wireloop {
     // Gambler gambler = new Gambler(20, RealScalar.of(.4));
     final DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     FeatureMapper mapper = ExactFeatureMapper.of(wireloop);
-    Tensor w = Array.zeros(mapper.featureSize());
+    FeatureWeight w = new FeatureWeight(mapper);
     // Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     // DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     LearningRate learningRate = DefaultLearningRate.of(RealScalar.of(3), RealScalar.of(0.81));

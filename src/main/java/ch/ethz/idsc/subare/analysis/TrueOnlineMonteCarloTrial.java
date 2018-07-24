@@ -16,10 +16,9 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
+import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Array;
 
 public class TrueOnlineMonteCarloTrial implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
@@ -29,11 +28,11 @@ public class TrueOnlineMonteCarloTrial implements MonteCarloTrial {
   private final MonteCarloInterface monteCarloInterface;
   private final TrueOnlineSarsa trueOnlineSarsa;
 
-  public TrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, Tensor w_) {
+  public TrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, FeatureWeight w_) {
     this.monteCarloInterface = monteCarloInterface;
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     LearningRate learningRate = Objects.isNull(learningRate_) ? ConstantLearningRate.of(ALPHA) : learningRate_;
-    Tensor w = Objects.isNull(w_) ? Array.zeros(featureMapper.featureSize()) : w_;
+    FeatureWeight w = Objects.isNull(w_) ? new FeatureWeight(featureMapper) : w_;
     trueOnlineSarsa = sarsaType.trueOnline(monteCarloInterface, LAMBDA, featureMapper, learningRate, w);
     trueOnlineSarsa.setExplore(EPSILON);
   }

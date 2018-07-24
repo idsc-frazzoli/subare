@@ -7,10 +7,9 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
+import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Array;
 import junit.framework.TestCase;
 
 public class TrueOnlineSarsaTest extends TestCase {
@@ -18,7 +17,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     MonteCarloInterface monteCarloInterface = Gambler.createDefault();
     LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    Tensor w = Array.zeros(featureMapper.featureSize());
+    FeatureWeight w = new FeatureWeight(featureMapper);
     try {
       SarsaType.ORIGINAL.trueOnline(monteCarloInterface, RealScalar.of(2), featureMapper, learningRate, w);
       assertTrue(false);
@@ -31,7 +30,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
     MonteCarloInterface monteCarloInterface = Gambler.createDefault();
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    Tensor w = Array.zeros(featureMapper.featureSize());
+    FeatureWeight w = new FeatureWeight(featureMapper);
     try {
       SarsaType.ORIGINAL.trueOnline(null, RealScalar.ONE, featureMapper, learningRate, w);
       assertTrue(false);
@@ -44,7 +43,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
     MonteCarloInterface monteCarloInterface = Gambler.createDefault();
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    Tensor w = Array.zeros(featureMapper.featureSize());
+    FeatureWeight w = new FeatureWeight(featureMapper);
     TrueOnlineSarsa trueOnlineSarsa = SarsaType.ORIGINAL.trueOnline(monteCarloInterface, RealScalar.ONE, featureMapper, learningRate, w);
     try {
       trueOnlineSarsa.setExplore(RealScalar.of(-0.1));
