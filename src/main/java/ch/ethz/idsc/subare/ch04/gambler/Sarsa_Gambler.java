@@ -35,7 +35,7 @@ enum Sarsa_Gambler {
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
     AnimationWriter gsc = AnimationWriter.of(UserHome.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
     // ---
-    final Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor, exponent));
+    final Sarsa sarsa = sarsaType.supply(gambler, DefaultLearningRate.of(factor, exponent), qsa);
     // ---
     for (int index = 0; index < batches; ++index) {
       Infoline.print(gambler, index, ref, qsa);

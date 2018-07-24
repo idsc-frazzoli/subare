@@ -33,7 +33,7 @@ enum Sarsa_Randomwalk {
     Randomwalk randomwalk = new Randomwalk(5);
     DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-    Sarsa sarsa = sarsaType.supply(randomwalk, qsa, learningRate);
+    Sarsa sarsa = sarsaType.supply(randomwalk, learningRate, qsa);
     Policy policy = EquiprobablePolicy.create(randomwalk);
     sarsa.setExplore(RealScalar.of(.2));
     for (int count = 0; count < 1000; ++count)

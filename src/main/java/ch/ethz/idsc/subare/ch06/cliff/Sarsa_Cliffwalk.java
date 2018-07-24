@@ -29,7 +29,7 @@ enum Sarsa_Cliffwalk {
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk, DoubleScalar.POSITIVE_INFINITY);
     Tensor epsilon = Subdivide.of(.2, .01, batches);
-    Sarsa sarsa = sarsaType.supply(cliffwalk, qsa, DefaultLearningRate.of(7, 0.61));
+    Sarsa sarsa = sarsaType.supply(cliffwalk, DefaultLearningRate.of(7, 0.61), qsa);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("cliffwalk_qsa_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {
         // if (batches - 10 < index)

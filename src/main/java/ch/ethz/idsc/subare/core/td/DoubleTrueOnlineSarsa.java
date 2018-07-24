@@ -1,8 +1,6 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
-import java.util.Objects;
-
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -45,13 +43,8 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
   private Tensor z;
 
-  /* package */ DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, LearningRate learningRate1,
-      LearningRate learningRate2, FeatureMapper featureMapper) {
-    this(monteCarloInterface, evaluationType, lambda, learningRate1, learningRate2, featureMapper, null, null);
-  }
-
-  public DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, LearningRate learningRate1,
-      LearningRate learningRate2, FeatureMapper featureMapper, Tensor w1, Tensor w2) {
+  /* package */ DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, FeatureMapper featureMapper,
+      LearningRate learningRate1, LearningRate learningRate2, Tensor w1, Tensor w2) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
     this.learningRate1 = learningRate1;
@@ -61,8 +54,8 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
     featureSize = featureMapper.featureSize();
-    this.w1 = Objects.isNull(w1) ? Array.zeros(featureSize) : w1;
-    this.w2 = Objects.isNull(w2) ? Array.zeros(featureSize) : w2;
+    this.w1 = w1;
+    this.w2 = w2;
     resetEligibility();
   }
 

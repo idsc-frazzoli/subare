@@ -34,7 +34,7 @@ enum Bulk_Gambler {
       int y = 0;
       for (Tensor exponent : Subdivide.of(.51, 1.3, 8)) { // .51 2
         DiscreteQsa qsa = DiscreteQsa.build(gambler);
-        Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor.Get(), exponent.Get()));
+        Sarsa sarsa = sarsaType.supply(gambler, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa);
         LearningContender learningContender = LearningContender.sarsa(gambler, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;

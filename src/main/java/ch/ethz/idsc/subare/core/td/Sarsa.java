@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.core.td;
 
 import java.util.Deque;
-import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.DiscountFunction;
@@ -41,10 +40,10 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
    * @param qsa
    * @param learningRate
    * @param sarsaEvaluation */
-  /* package */ Sarsa(SarsaEvaluation sarsaEvaluation, DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+  /* package */ Sarsa(SarsaEvaluation sarsaEvaluation, DiscreteModel discreteModel, LearningRate learningRate, QsaInterface qsa) {
     this.sarsaEvaluation = sarsaEvaluation;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
-    this.qsa = Objects.isNull(qsa) ? DiscreteQsa.build(discreteModel) : qsa;
+    this.qsa = qsa;
     this.learningRate = learningRate;
   }
 

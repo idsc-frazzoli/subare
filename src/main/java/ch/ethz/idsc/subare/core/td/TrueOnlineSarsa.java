@@ -1,8 +1,6 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
-import java.util.Objects;
-
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -47,8 +45,8 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
    * @param learningRate
    * @param featureMapper
    * @param w */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, LearningRate learningRate,
-      FeatureMapper featureMapper, Tensor w) {
+  /* package */ TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, FeatureMapper featureMapper,
+      LearningRate learningRate, Tensor w) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
     this.learningRate = learningRate;
@@ -57,7 +55,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
     featureSize = featureMapper.featureSize();
-    this.w = Objects.isNull(w) ? Array.zeros(featureSize) : w;
+    this.w = w;
     resetEligibility();
   }
 

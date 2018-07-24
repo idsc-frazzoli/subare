@@ -28,7 +28,7 @@ enum SES_Wireloop {
     Tensor epsilon = Subdivide.of(.1, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     System.out.println(qsa.size());
-    Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(7, 1.11));
+    Sarsa sarsa = sarsaType.supply(wireloop, DefaultLearningRate.of(7, 1.11), qsa);
     DequeExploringStarts exploringStartsStream = new DequeExploringStarts(wireloop, nstep, sarsa) {
       @Override
       public Policy batchPolicy(int batch) {

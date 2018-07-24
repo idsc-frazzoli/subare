@@ -17,6 +17,8 @@ import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 enum TOS_Wireloop {
@@ -33,11 +35,12 @@ enum TOS_Wireloop {
     // Gambler gambler = new Gambler(20, RealScalar.of(.4));
     final DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     FeatureMapper mapper = ExactFeatureMapper.of(wireloop);
+    Tensor w = Array.zeros(mapper.featureSize());
     // Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     // DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     LearningRate learningRate = DefaultLearningRate.of(RealScalar.of(3), RealScalar.of(0.81));
     // LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.3), false); // the case without warmStart
-    TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(wireloop, LAMBDA, learningRate, mapper);
+    TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(wireloop, LAMBDA, mapper, learningRate, w);
     trueOnlineSarsa.setExplore(EPSILON);
     final String algo = sarsaType.name().toLowerCase();
     Stopwatch stopwatch = Stopwatch.started();

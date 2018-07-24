@@ -32,9 +32,9 @@ enum Double_Maxbias {
     DiscreteQsa qsa2 = DiscreteQsa.build(maxbias);
     DoubleSarsa doubleSarsa = sarsaType.doubleSarsa( //
         maxbias, //
-        qsa1, qsa2, //
         DefaultLearningRate.of(5, .51), //
-        DefaultLearningRate.of(5, .51));
+        DefaultLearningRate.of(5, .51), //
+        qsa1, qsa2);
     for (int index = 0; index < batches; ++index) {
       if (batches - 10 < index)
         Infoline.print(maxbias, index, ref, qsa1);

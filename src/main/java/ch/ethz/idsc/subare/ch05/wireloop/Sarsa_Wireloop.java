@@ -27,7 +27,7 @@ enum Sarsa_Wireloop {
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
     System.out.println(qsa.size());
-    Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(3, 0.51));
+    Sarsa sarsa = sarsaType.supply(wireloop, DefaultLearningRate.of(3, 0.51), qsa);
     try (AnimationWriter gsw = AnimationWriter.of( //
         UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250)) {
       for (int index = 0; index < batches; ++index) {

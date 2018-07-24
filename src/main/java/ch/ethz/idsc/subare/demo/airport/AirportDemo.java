@@ -25,6 +25,7 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.alg.Array;
 
 /** uses TrueOnlineSarsa */
 enum AirportDemo {
@@ -53,7 +54,7 @@ enum AirportDemo {
     StateActionCounter sac = new StateActionCounter(airport);
     DiscreteQsa qsaSarsa = DiscreteQsa.build(airport); // q-function for training, initialized to 0
     SarsaType sarsaType = SarsaType.ORIGINAL;
-    final Sarsa sarsa = sarsaType.supply(airport, qsaSarsa, ConstantLearningRate.of(RealScalar.of(0.05)));
+    final Sarsa sarsa = sarsaType.supply(airport, ConstantLearningRate.of(RealScalar.of(0.05)), qsaSarsa);
     {
       sarsa.setExplore(RealScalar.of(.1));
       Stopwatch stopwatch = Stopwatch.started();
@@ -68,7 +69,8 @@ enum AirportDemo {
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, sarsa.qsa()), airport.states());
     LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2));
     FeatureMapper mapper = ExactFeatureMapper.of(airport);
-    TrueOnlineSarsa toSarsa = SarsaType.ORIGINAL.trueOnline(airport, RealScalar.of(0.7), learningRate, mapper);
+    Tensor w = Array.zeros(mapper.featureSize());
+    TrueOnlineSarsa toSarsa = SarsaType.ORIGINAL.trueOnline(airport, RealScalar.of(0.7), mapper, learningRate, w);
     toSarsa.setExplore(RealScalar.of(0.1));
     {
       Stopwatch stopwatch = Stopwatch.started();

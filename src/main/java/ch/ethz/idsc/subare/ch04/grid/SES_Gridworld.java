@@ -31,7 +31,7 @@ enum SES_Gridworld {
     try (AnimationWriter gsw = AnimationWriter.of( //
         UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
       LearningRate learningRate = DefaultLearningRate.of(5, 1.1);
-      Sarsa sarsa = sarsaType.supply(gridworld, qsa, learningRate);
+      Sarsa sarsa = sarsaType.supply(gridworld, learningRate, qsa);
       DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
         @Override
         public Policy batchPolicy(int batch) {

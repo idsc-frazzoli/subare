@@ -56,10 +56,10 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   /* package */ DoubleSarsa( //
       SarsaEvaluation evaluationType, //
       DiscreteModel discreteModel, //
-      QsaInterface qsa1, //
-      QsaInterface qsa2, //
       LearningRate learningRate1, //
-      LearningRate learningRate2 //
+      LearningRate learningRate2, //
+      QsaInterface qsa1, //
+      QsaInterface qsa2 //
   ) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());

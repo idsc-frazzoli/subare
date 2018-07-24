@@ -37,7 +37,7 @@ enum QL_Gambler {
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_ql.gif"), 100);
     ExplorationRateDeque lr_scheduler = new ExplorationRateDeque(0.1);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
-    Sarsa stepDigest = SarsaType.QLEARNING.supply(gambler, qsa, learningRate);
+    Sarsa stepDigest = SarsaType.QLEARNING.supply(gambler, learningRate, qsa);
     for (int index = 0; index < batches; ++index) {
       Infoline.print(gambler, index, ref, qsa);
       Scalar error = DiscreteValueFunctions.distance(qsa, ref);

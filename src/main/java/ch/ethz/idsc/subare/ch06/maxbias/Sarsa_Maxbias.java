@@ -27,7 +27,7 @@ enum Sarsa_Maxbias {
     Tensor epsilon = Subdivide.of(.7, .1, batches);
     DiscreteQsa qsa = DiscreteQsa.build(maxbias);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-    Sarsa sarsa = sarsaType.supply(maxbias, qsa, learningRate);
+    Sarsa sarsa = sarsaType.supply(maxbias, learningRate, qsa);
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
     for (int index = 0; index < batches; ++index) {
       if (batches - 10 < index)
