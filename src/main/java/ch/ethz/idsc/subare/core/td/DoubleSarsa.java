@@ -36,7 +36,7 @@ import ch.ethz.idsc.tensor.Tensors;
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
 public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
-  private static final Coinflip COINFLIP = Coinflip.of(RealScalar.of(0.5));
+  private final Coinflip COINFLIP = Coinflip.fair();
   // ---
   private final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;

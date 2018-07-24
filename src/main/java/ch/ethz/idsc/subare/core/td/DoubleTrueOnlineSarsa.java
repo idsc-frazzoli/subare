@@ -24,22 +24,22 @@ import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
-  private static final Coinflip COINFLIP = Coinflip.of(RealScalar.of(0.5));
+  private final Coinflip COINFLIP = Coinflip.fair();
   // ---
-  protected final MonteCarloInterface monteCarloInterface;
-  protected final FeatureMapper featureMapper;
-  protected final LearningRate learningRate1;
-  protected final LearningRate learningRate2;
+  private final MonteCarloInterface monteCarloInterface;
+  private final FeatureMapper featureMapper;
+  private final LearningRate learningRate1;
+  private final LearningRate learningRate2;
   // ---
   private final SarsaEvaluation evaluationType;
   private final Scalar gamma;
   private final Scalar gamma_lambda;
   private final int featureSize;
   // ---
-  protected Scalar epsilon;
+  private Scalar epsilon;
   /** weight vectors w1 and w2 are a long-term memory, accumulating over the lifetime of the system */
-  protected Tensor w1;
-  protected Tensor w2;
+  private Tensor w1;
+  private Tensor w2;
   // ---
   private Scalar nextQOld;
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */

@@ -24,18 +24,18 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * 
  * in Section 12.8, p.309 */
 public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
-  protected final MonteCarloInterface monteCarloInterface;
-  protected final FeatureMapper featureMapper;
-  protected final LearningRate learningRate;
+  private final MonteCarloInterface monteCarloInterface;
+  private final FeatureMapper featureMapper;
+  private final LearningRate learningRate;
   // ---
   private final Scalar gamma;
   private final Scalar gamma_lambda;
   private final int featureSize;
   private final SarsaEvaluation evaluationType;
   // ---
-  protected Scalar epsilon;
+  private Scalar epsilon;
   /** weight vector w is a long-term memory, accumulating over the lifetime of the system */
-  protected Tensor w;
+  private Tensor w;
   // ---
   private Scalar nextQOld;
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
