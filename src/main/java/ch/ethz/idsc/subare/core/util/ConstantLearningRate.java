@@ -1,51 +1,52 @@
-// code by jph
+// code by jph and fluric
 package ch.ethz.idsc.subare.core.util;
 
-import ch.ethz.idsc.subare.core.LearningRateWithCounter;
+import java.io.Serializable;
+
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 
 /** learning rate of alpha except in first update of state-action pair
  * for which the learning rate equals 1 in the case of warmStart. */
-@SuppressWarnings("serial")
-public class ConstantLearningRate extends StrictConstantLearningRate {
+public class ConstantLearningRate extends UnbiasedLearningRate implements Serializable {
   /** @param alpha
    * @return constant learning rate with factor alpha */
-  public static LearningRateWithCounter of(Scalar alpha) {
+  public static LearningRate of(Scalar alpha) {
     return new ConstantLearningRate(alpha);
-  }
-
-  /** @param alpha
-   * @param warmStart whether to warmStart (alpha=1 if state-action pair not yet seen) or not
-   * @return constant learning rate with factor alpha */
-  public static LearningRateWithCounter of(Scalar alpha, boolean warmStart) {
-    return warmStart //
-        ? new ConstantLearningRate(alpha)
-        : new StrictConstantLearningRate(alpha);
   }
 
   /** @return constant learning rate with factor 1.0,
    * that means the updates have numeric precision */
-  public static LearningRateWithCounter one() {
+  public static LearningRate one() {
     return of(RealScalar.of(1.0));
   }
 
   /** @return constant learning rate with exact factor 1,
    * that means the precision in the updates is preserved */
-  public static LearningRateWithCounter one_exact() {
+  public static LearningRate one_exact() {
     return of(RealScalar.ONE);
   }
 
   // ---
+  private final Scalar alpha;
+
   private ConstantLearningRate(Scalar alpha) {
-    super(alpha);
+    this.alpha = alpha;
   }
 
-  @Override // from LearningRate
+  @Override
+  protected Tensor key(Tensor prev, Tensor action) {
+    return Tensors.of(prev, action);
+  }
+
+  @Override
   public Scalar alpha(StepInterface stepInterface) {
-    return encountered(stepInterface.prevState(), stepInterface.action()) //
-        ? super.alpha(stepInterface)
-        : RealScalar.ONE; // overcome initialization bias
+    return isEncountered(stepInterface.prevState(), stepInterface.action()) //
+        ? alpha
+        : RealScalar.ONE;
   }
 }

@@ -1,20 +1,19 @@
-// code by jph
+// code by fluric
 package ch.ethz.idsc.subare.core.util;
 
 import java.io.Serializable;
 
-import ch.ethz.idsc.subare.core.LearningRateWithCounter;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/** learning rate of alpha except in first update of state-action pair
- * for which the learning rate equals 1 in the case of warmStart. */
-@SuppressWarnings("serial")
-/* package */ class StrictConstantLearningRate extends LearningRateWithCounter implements Serializable {
+/** THE USE OF THIS CLASS IS NOT RECOMMENDED BECAUSE THE
+ * UPDATE IS BIASED TOWARDS AN UNWARRANTED INITIAL VALUE */
+public class StrictConstantLearningRate implements LearningRate, Serializable {
   private final Scalar alpha;
 
-  protected StrictConstantLearningRate(Scalar alpha) {
+  public StrictConstantLearningRate(Scalar alpha) {
     this.alpha = alpha;
   }
 
@@ -24,7 +23,12 @@ import ch.ethz.idsc.tensor.Tensor;
   }
 
   @Override
-  protected Tensor key(Tensor prev, Tensor action) {
-    return StateAction.key(prev, action);
+  public void digest(StepInterface stepInterface) {
+    // ---
+  }
+
+  @Override
+  public boolean isEncountered(Tensor state, Tensor action) {
+    return false; // not defined
   }
 }

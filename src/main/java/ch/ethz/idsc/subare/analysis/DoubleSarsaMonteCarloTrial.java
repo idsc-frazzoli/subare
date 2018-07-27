@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.analysis;
 
 import java.util.Objects;
 
-import ch.ethz.idsc.subare.core.LearningRateWithCounter;
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
@@ -24,13 +24,13 @@ public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
   private final MonteCarloInterface monteCarloInterface;
   private final DoubleSarsa doubleSarsa;
 
-  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRateWithCounter learningRate1_,
-      LearningRateWithCounter learningRate2_, DiscreteQsa qsa1_, DiscreteQsa qsa2_) {
+  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate1_, LearningRate learningRate2_,
+      DiscreteQsa qsa1_, DiscreteQsa qsa2_) {
     this.monteCarloInterface = monteCarloInterface;
     DiscreteQsa qsa1 = Objects.isNull(qsa1_) ? DiscreteQsa.build(monteCarloInterface) : qsa1_;
     DiscreteQsa qsa2 = Objects.isNull(qsa2_) ? DiscreteQsa.build(monteCarloInterface) : qsa2_;
-    LearningRateWithCounter learningRate1 = Objects.isNull(learningRate1_) ? ConstantLearningRate.of(ALPHA) : learningRate1_;
-    LearningRateWithCounter learningRate2 = Objects.isNull(learningRate2_) ? ConstantLearningRate.of(ALPHA) : learningRate2_;
+    LearningRate learningRate1 = Objects.isNull(learningRate1_) ? ConstantLearningRate.of(ALPHA) : learningRate1_;
+    LearningRate learningRate2 = Objects.isNull(learningRate2_) ? ConstantLearningRate.of(ALPHA) : learningRate2_;
     doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, //
         learningRate1, learningRate2, //
         qsa1, qsa2);

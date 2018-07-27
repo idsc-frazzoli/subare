@@ -6,8 +6,8 @@ import java.util.Deque;
 import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
+import ch.ethz.idsc.subare.core.DiscreteQsaWeight;
 import ch.ethz.idsc.subare.core.LearningRate;
-import ch.ethz.idsc.subare.core.LearningRateWithCounter;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
@@ -44,21 +44,21 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   private final SarsaEvaluation evaluationType;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
-  private final LearningRateWithCounter learningRate1;
-  private final LearningRateWithCounter learningRate2;
+  private final LearningRate learningRate1;
+  private final LearningRate learningRate2;
   private Scalar epsilon = null;
 
   /** @param sarsaType
    * @param discreteModel
-   * @param qsa1
-   * @param qsa2
    * @param learningRate1
-   * @param learningRate2 */
+   * @param learningRate2
+   * @param qsa1
+   * @param qsa2 */
   /* package */ DoubleSarsa( //
       SarsaEvaluation evaluationType, //
       DiscreteModel discreteModel, //
-      LearningRateWithCounter learningRate1, //
-      LearningRateWithCounter learningRate2, //
+      LearningRate learningRate1, //
+      LearningRate learningRate2, //
       QsaInterface qsa1, //
       QsaInterface qsa2 //
   ) {
@@ -100,7 +100,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // TODO test if input LearningRate1 is correct
     Tensor nextState = deque.getLast().nextState();
-    Tensor nextActions = Tensor.of(discreteModel.actions(nextState).stream().filter(nextAction -> LearningRate.encountered(nextState, nextAction)));
+    Tensor nextActions = Tensor.of(discreteModel.actions(nextState).stream().filter(nextAction -> LearningRate.isEncountered(nextState, nextAction)));
     Scalar expectedReward = Tensors.isEmpty(nextActions) ? RealScalar.ZERO : evaluationType.crossEvaluate(epsilon, nextState, nextActions, Qsa1, Qsa2);
     rewards.append(expectedReward);
     // ---
@@ -117,6 +117,8 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
 
   @Override
   public DiscreteQsa qsa() {
-    return DiscreteValueFunctions.weightedAverage((DiscreteQsa) qsa1, (DiscreteQsa) qsa2, learningRate1, learningRate2);
+    return DiscreteValueFunctions.weightedAverage( //
+        (DiscreteQsa) qsa1, (DiscreteQsa) qsa2, //
+        (DiscreteQsaWeight) learningRate1, (DiscreteQsaWeight) learningRate2);
   }
 }

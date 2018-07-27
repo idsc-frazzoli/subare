@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.core.util;
 
 import java.io.Serializable;
 
-import ch.ethz.idsc.subare.core.LearningRateWithCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -28,7 +27,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
  * in the Gambler problem the following values seem to work well
  * OriginalSarsa factor == 1.3, and exponent == 0.51
  * QLearning factor == 0.2, and exponent == 0.55 */
-abstract class DecayedLearningRate extends LearningRateWithCounter implements Serializable {
+abstract class DecayedLearningRate extends UnbiasedLearningRate implements Serializable {
   private final Scalar factor;
   private final Scalar exponent;
   /** lookup table to speed up computation */
@@ -44,7 +43,7 @@ abstract class DecayedLearningRate extends LearningRateWithCounter implements Se
   @Override // from LearningRate
   public synchronized final Scalar alpha(StepInterface stepInterface) {
     Tensor key = key(stepInterface.prevState(), stepInterface.action());
-    int index = map.containsKey(key) ? map.get(key) : 0;
+    int index = counts(key);
     while (MEMO.length() <= index)
       MEMO.append(Min.of( // TODO the "+1" in the denominator may not be ideal... perhaps +0.5, or +0 ?
           factor.multiply(Power.of(DoubleScalar.of(1.0 / (index + 1)), exponent)), //
@@ -53,11 +52,7 @@ abstract class DecayedLearningRate extends LearningRateWithCounter implements Se
   }
 
   /** @return */
-  public final int maxCount() { // function is not used yet...
+  final int maxCount() { // function is not used yet...
     return MEMO.length();
   }
-
-  /** @param stepInterface
-   * @return key for identifying steps that are considered identical for counting */
-  protected abstract Tensor key(Tensor prev, Tensor action);
 }

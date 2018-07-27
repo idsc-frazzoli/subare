@@ -22,6 +22,15 @@ public class SimpleTestModels extends TestCase {
     assertTrue(ExactScalarQ.of(value_s2_a0));
   }
 
+  public static void _checkExactNumeric(DiscreteQsa qsa) {
+    Scalar value_s0_a1 = qsa.value(RealScalar.ZERO, RealScalar.ONE);
+    assertEquals(value_s0_a1, RealScalar.of(3));
+    Scalar value_s1_a1 = qsa.value(RealScalar.ONE, RealScalar.ONE);
+    assertEquals(value_s1_a1, RealScalar.ONE);
+    Scalar value_s2_a0 = qsa.value(RealScalar.of(2), RealScalar.ZERO);
+    assertEquals(value_s2_a0, RealScalar.ZERO);
+  }
+
   public static void _checkClose(DiscreteQsa qsa) {
     Scalar value_s0_a1 = qsa.value(RealScalar.ZERO, RealScalar.ONE);
     Scalar value_s1_a1 = qsa.value(RealScalar.ONE, RealScalar.ONE);

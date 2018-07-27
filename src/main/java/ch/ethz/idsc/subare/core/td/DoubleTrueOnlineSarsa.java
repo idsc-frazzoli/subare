@@ -106,7 +106,7 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     Tensor prevAction = stepInterface.action();
     Tensor nextState = stepInterface.nextState();
     Tensor nextActions = Tensor.of(monteCarloInterface.actions(nextState).stream() //
-        .filter(nextAction -> learningRate.encountered(nextState, nextAction)));
+        .filter(nextAction -> learningRate.isEncountered(nextState, nextAction)));
     // ---
     Scalar reward = monteCarloInterface.reward(prevState, prevAction, nextState);
     // ---
