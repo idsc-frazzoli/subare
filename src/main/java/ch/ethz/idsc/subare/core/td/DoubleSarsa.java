@@ -7,6 +7,7 @@ import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.LearningRateWithCounter;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
@@ -43,8 +44,8 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   private final SarsaEvaluation evaluationType;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
-  private final LearningRate learningRate1;
-  private final LearningRate learningRate2;
+  private final LearningRateWithCounter learningRate1;
+  private final LearningRateWithCounter learningRate2;
   private Scalar epsilon = null;
 
   /** @param sarsaType
@@ -56,8 +57,8 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   /* package */ DoubleSarsa( //
       SarsaEvaluation evaluationType, //
       DiscreteModel discreteModel, //
-      LearningRate learningRate1, //
-      LearningRate learningRate2, //
+      LearningRateWithCounter learningRate1, //
+      LearningRateWithCounter learningRate2, //
       QsaInterface qsa1, //
       QsaInterface qsa2 //
   ) {

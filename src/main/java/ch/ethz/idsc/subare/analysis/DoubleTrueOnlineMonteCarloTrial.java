@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.analysis;
 
 import java.util.Objects;
 
-import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.LearningRateWithCounter;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
@@ -31,12 +31,12 @@ public class DoubleTrueOnlineMonteCarloTrial implements MonteCarloTrial {
   // has convergence problems, don't use it yet!
   public DoubleTrueOnlineMonteCarloTrial( //
       MonteCarloInterface monteCarloInterface, SarsaType sarsaType, //
-      LearningRate learningRate1_, LearningRate learningRate2_, //
+      LearningRateWithCounter learningRate1_, LearningRateWithCounter learningRate2_, //
       FeatureWeight w1_, FeatureWeight w2_) {
     this.monteCarloInterface = monteCarloInterface;
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    LearningRate learningRate1 = Objects.isNull(learningRate1_) ? ConstantLearningRate.of(ALPHA) : learningRate1_;
-    LearningRate learningRate2 = Objects.isNull(learningRate2_) ? ConstantLearningRate.of(ALPHA) : learningRate2_;
+    LearningRateWithCounter learningRate1 = Objects.isNull(learningRate1_) ? ConstantLearningRate.of(ALPHA) : learningRate1_;
+    LearningRateWithCounter learningRate2 = Objects.isNull(learningRate2_) ? ConstantLearningRate.of(ALPHA) : learningRate2_;
     FeatureWeight w1 = Objects.isNull(w1_) ? new FeatureWeight(featureMapper) : w1_;
     FeatureWeight w2 = Objects.isNull(w2_) ? new FeatureWeight(featureMapper) : w2_;
     doubleTrueOnlineSarsa = sarsaType.doubleTrueOnline(monteCarloInterface, LAMBDA, featureMapper, learningRate1, learningRate2, w1, w2);

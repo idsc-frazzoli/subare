@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.LearningRateWithCounter;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.adapter.SimpleTestModel;
@@ -19,8 +19,8 @@ public class DoubleSarsaTest extends TestCase {
   public void testExact() {
     for (SarsaType sarsaType : SarsaType.values()) {
       MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
-      LearningRate learningRate1 = ConstantLearningRate.of(RationalScalar.HALF);
-      LearningRate learningRate2 = ConstantLearningRate.of(RationalScalar.of(3, 4));
+      LearningRateWithCounter learningRate1 = ConstantLearningRate.of(RationalScalar.HALF);
+      LearningRateWithCounter learningRate2 = ConstantLearningRate.of(RationalScalar.of(3, 4));
       DiscreteQsa qsa1 = DiscreteQsa.build(monteCarloInterface, RealScalar.ZERO);
       DiscreteQsa qsa2 = DiscreteQsa.build(monteCarloInterface, RealScalar.ZERO);
       DoubleSarsa doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, learningRate1, learningRate2, qsa1, qsa2);

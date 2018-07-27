@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.LearningRateWithCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -12,14 +12,14 @@ import ch.ethz.idsc.tensor.Scalar;
 public class ConstantLearningRate extends StrictConstantLearningRate {
   /** @param alpha
    * @return constant learning rate with factor alpha */
-  public static LearningRate of(Scalar alpha) {
+  public static LearningRateWithCounter of(Scalar alpha) {
     return new ConstantLearningRate(alpha);
   }
 
   /** @param alpha
    * @param warmStart whether to warmStart (alpha=1 if state-action pair not yet seen) or not
    * @return constant learning rate with factor alpha */
-  public static LearningRate of(Scalar alpha, boolean warmStart) {
+  public static LearningRateWithCounter of(Scalar alpha, boolean warmStart) {
     return warmStart //
         ? new ConstantLearningRate(alpha)
         : new StrictConstantLearningRate(alpha);
@@ -27,13 +27,13 @@ public class ConstantLearningRate extends StrictConstantLearningRate {
 
   /** @return constant learning rate with factor 1.0,
    * that means the updates have numeric precision */
-  public static LearningRate one() {
+  public static LearningRateWithCounter one() {
     return of(RealScalar.of(1.0));
   }
 
   /** @return constant learning rate with exact factor 1,
    * that means the precision in the updates is preserved */
-  public static LearningRate one_exact() {
+  public static LearningRateWithCounter one_exact() {
     return of(RealScalar.ONE);
   }
 
