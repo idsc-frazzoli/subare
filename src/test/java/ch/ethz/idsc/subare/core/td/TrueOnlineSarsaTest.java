@@ -8,7 +8,6 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.adapter.SimpleTestModel;
 import ch.ethz.idsc.subare.core.adapter.SimpleTestModels;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
-import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
@@ -21,35 +20,39 @@ import junit.framework.TestCase;
 
 public class TrueOnlineSarsaTest extends TestCase {
   public void testExact() {
-    MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
-    FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
-    FeatureWeight w = new FeatureWeight(featureMapper);
-    TrueOnlineSarsa trueOnlineSarsa = SarsaType.ORIGINAL.trueOnline( //
-        SimpleTestModel.INSTANCE, RealScalar.ONE, featureMapper, learningRate, w);
-    Scalar epsilon = RealScalar.of(.2);
-    trueOnlineSarsa.setExplore(epsilon);
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, trueOnlineSarsa.qsa(), epsilon);
-    ExploringStarts.batch(monteCarloInterface, policy, trueOnlineSarsa);
-    // DiscreteUtils.print(trueOnlineSarsa.qsa());
-    SimpleTestModels._checkExact(trueOnlineSarsa.qsa());
+    for (SarsaType sarsaType : SarsaType.values()) {
+      MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
+      FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
+      LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
+      FeatureWeight w = new FeatureWeight(featureMapper);
+      TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline( //
+          SimpleTestModel.INSTANCE, RealScalar.ONE, featureMapper, learningRate, w);
+      Scalar epsilon = RealScalar.of(.2);
+      trueOnlineSarsa.setExplore(epsilon);
+      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, trueOnlineSarsa.qsa(), epsilon);
+      ExploringStarts.batch(monteCarloInterface, policy, trueOnlineSarsa);
+      // DiscreteUtils.print(trueOnlineSarsa.qsa());
+      SimpleTestModels._checkExact(trueOnlineSarsa.qsa());
+    }
   }
 
   public void testLambda() {
-    MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
-    FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
-    FeatureWeight w = new FeatureWeight(featureMapper);
-    TrueOnlineSarsa trueOnlineSarsa = SarsaType.ORIGINAL.trueOnline( //
-        SimpleTestModel.INSTANCE, RealScalar.of(.9), featureMapper, learningRate, w);
-    Scalar epsilon = RealScalar.of(.2);
-    trueOnlineSarsa.setExplore(epsilon);
-    for (int index = 0; index < 10; ++index) {
-      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, trueOnlineSarsa.qsa(), epsilon);
-      ExploringStarts.batch(monteCarloInterface, policy, trueOnlineSarsa);
+    for (SarsaType sarsaType : SarsaType.values()) {
+      MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
+      FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
+      LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
+      FeatureWeight w = new FeatureWeight(featureMapper);
+      TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline( //
+          SimpleTestModel.INSTANCE, RealScalar.of(.9), featureMapper, learningRate, w);
+      Scalar epsilon = RealScalar.of(.2);
+      trueOnlineSarsa.setExplore(epsilon);
+      for (int index = 0; index < 10; ++index) {
+        Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, trueOnlineSarsa.qsa(), epsilon);
+        ExploringStarts.batch(monteCarloInterface, policy, trueOnlineSarsa);
+      }
+      // DiscreteUtils.print(trueOnlineSarsa.qsa());
+      SimpleTestModels._checkClose(trueOnlineSarsa.qsa());
     }
-    DiscreteUtils.print(trueOnlineSarsa.qsa());
-    SimpleTestModels._checkClose(trueOnlineSarsa.qsa());
   }
 
   public void testFailLambda() {

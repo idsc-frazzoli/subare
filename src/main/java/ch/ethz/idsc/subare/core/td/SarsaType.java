@@ -37,8 +37,8 @@ public enum SarsaType {
     return new Sarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate, qsa);
   }
 
-  public final DoubleSarsa doubleSarsa(DiscreteModel discreteModel, LearningRate learningRate1, LearningRate learningRate2, QsaInterface qsa1,
-      QsaInterface qsa2) {
+  public final DoubleSarsa doubleSarsa( //
+      DiscreteModel discreteModel, LearningRate learningRate1, LearningRate learningRate2, QsaInterface qsa1, QsaInterface qsa2) {
     return new DoubleSarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate1, learningRate2, qsa1, qsa2);
   }
 
@@ -53,8 +53,8 @@ public enum SarsaType {
   }
 
   public final DoubleTrueOnlineSarsa doubleTrueOnline( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate1, LearningRate learningRate2,
-      FeatureWeight w1, FeatureWeight w2) {
+      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, //
+      LearningRate learningRate1, LearningRate learningRate2, FeatureWeight w1, FeatureWeight w2) {
     return new DoubleTrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate1, learningRate2, w1, w2);
   }
 }

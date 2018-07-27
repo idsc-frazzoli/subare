@@ -116,6 +116,8 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
 
   @Override
   public DiscreteQsa qsa() {
+    // FIXME JAN/FLURIC this is inherently systematically wrong:
+    // the average should be a weighted average according to how often (state,action) were encountered
     return DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
   }
 }
