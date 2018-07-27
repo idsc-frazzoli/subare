@@ -1,7 +1,9 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.tensor.RationalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Rescale;
@@ -42,6 +44,19 @@ public enum DiscreteValueFunctions {
   @SuppressWarnings("unchecked")
   public static <T extends DiscreteValueFunction> T logisticDifference(T tvi1, T tvi2, Scalar factor) {
     return (T) tvi1.create(LogisticSigmoid.of(_difference(tvi1, tvi2).multiply(factor)).stream());
+  }
+
+  /** @param qsa1
+   * @param qsa2
+   * @param lr1
+   * @param lr2
+   * @return the weighted average of the qsa values according to the number of visits occurred in the different {@link LearningRate}'s.
+   * For each element of the qsa: qsa(e) = (qsa1(e)*lr1_visits(e) + qsa2(e)*lr2_visits(e))/(lr1_visits(e)+lr2_visits(e)) */
+  public static DiscreteQsa weightedAverage(DiscreteQsa qsa1, DiscreteQsa qsa2, LearningRate lr1, LearningRate lr2) {
+    Tensor visits1 = Tensor.of(qsa1.keys().stream().map(key -> RealScalar.of(lr1.visits(key.get(0), key.get(1)))));
+    Tensor visits2 = Tensor.of(qsa2.keys().stream().map(key -> RealScalar.of(lr2.visits(key.get(0), key.get(1)))));
+    Tensor factor = Tensor.of(visits1.add(visits2).stream().map(v -> v.Get().number().doubleValue() > 0 ? v.Get().reciprocal() : RealScalar.ZERO));
+    return qsa1.create(qsa1.values().pmul(visits1).add(qsa2.values().pmul(visits2)).pmul(factor).stream());
   }
 
   /**************************************************/

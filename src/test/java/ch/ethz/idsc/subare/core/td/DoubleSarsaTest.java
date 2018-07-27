@@ -5,9 +5,9 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.adapter.SimpleTestModel;
+import ch.ethz.idsc.subare.core.adapter.SimpleTestModels;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -18,7 +18,6 @@ import junit.framework.TestCase;
 public class DoubleSarsaTest extends TestCase {
   public void testExact() {
     for (SarsaType sarsaType : SarsaType.values()) {
-      System.out.println("---");
       MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
       LearningRate learningRate1 = ConstantLearningRate.of(RationalScalar.HALF);
       LearningRate learningRate2 = ConstantLearningRate.of(RationalScalar.of(3, 4));
@@ -29,10 +28,7 @@ public class DoubleSarsaTest extends TestCase {
       doubleSarsa.setExplore(epsilon);
       Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa1, epsilon);
       ExploringStarts.batch(monteCarloInterface, policy, 2, doubleSarsa); // nstep > 1 required
-      doubleSarsa.qsa();
-      DiscreteUtils.print(qsa1);
-      DiscreteUtils.print(qsa2);
-      // FIXME JAN/FLURIC
+      SimpleTestModels._checkExact(doubleSarsa.qsa());
     }
   }
 }
