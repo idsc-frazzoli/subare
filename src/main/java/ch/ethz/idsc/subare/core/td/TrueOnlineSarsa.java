@@ -31,23 +31,18 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   private final Scalar gamma_lambda;
   private final int featureSize;
   private final SarsaEvaluation evaluationType;
+  /** feature weight vector w is a long-term memory, accumulating over the lifetime of the system */
+  private final FeatureWeight w;
   // ---
   private Scalar epsilon;
-  /** feature weight vector w is a long-term memory, accumulating over the lifetime of the system */
-  private FeatureWeight w;
   // ---
   private Scalar nextQOld;
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
   private Tensor z;
 
-  /** @param monteCarloInterface
-   * @param lambda in [0, 1] Figure 12.14 in the book suggests that lambda in [0.8, 0.9]
-   * tends to be a good choice
-   * @param learningRate
-   * @param featureMapper
-   * @param w */
-  /* package */ TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, FeatureMapper featureMapper,
-      LearningRate learningRate, FeatureWeight w) {
+  /* package */ TrueOnlineSarsa( //
+      MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, //
+      Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
     this.learningRate = learningRate;

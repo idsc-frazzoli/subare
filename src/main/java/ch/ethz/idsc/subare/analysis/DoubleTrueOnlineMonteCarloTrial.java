@@ -29,7 +29,9 @@ public class DoubleTrueOnlineMonteCarloTrial implements MonteCarloTrial {
   private final DoubleTrueOnlineSarsa doubleTrueOnlineSarsa;
 
   // has convergence problems, don't use it yet!
-  public DoubleTrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate1_, LearningRate learningRate2_,
+  public DoubleTrueOnlineMonteCarloTrial( //
+      MonteCarloInterface monteCarloInterface, SarsaType sarsaType, //
+      LearningRate learningRate1_, LearningRate learningRate2_, //
       FeatureWeight w1_, FeatureWeight w2_) {
     this.monteCarloInterface = monteCarloInterface;
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);

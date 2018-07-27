@@ -42,6 +42,11 @@ public enum SarsaType {
     return new DoubleSarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate1, learningRate2, qsa1, qsa2);
   }
 
+  /** @param monteCarloInterface
+   * @param lambda in [0, 1] Figure 12.14 in the book suggests that lambda in [0.8, 0.9] tends to be a good choice
+   * @param learningRate
+   * @param featureMapper
+   * @param w */
   public final TrueOnlineSarsa trueOnline( //
       MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w) {
     return new TrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate, w);

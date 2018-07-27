@@ -14,6 +14,7 @@ import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.sca.N;
+import ch.ethz.idsc.tensor.sca.Sign;
 
 /** action value iteration: "policy evaluation is stopped after just one sweep"
  * 
@@ -63,13 +64,13 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
 
   /** perform iteration until values don't change more than threshold
    * 
-   * @param threshold
-   * @return */
+   * @param threshold positive */
   public void untilBelow(Scalar threshold) {
     untilBelow(threshold, Integer.MAX_VALUE);
   }
 
   public void untilBelow(Scalar threshold, int flips) {
+    Sign.requirePositive(threshold);
     Scalar past = null;
     final long tic = System.nanoTime();
     while (true) {
@@ -84,6 +85,7 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
           break;
         }
       past = delta;
+      // TODO JAN consider changing to lessEquals (requires renaming of API functions)
       if (Scalars.lessThan(delta, threshold))
         break;
     }
