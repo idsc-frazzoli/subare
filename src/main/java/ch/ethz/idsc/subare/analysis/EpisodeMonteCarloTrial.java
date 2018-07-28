@@ -3,6 +3,8 @@ package ch.ethz.idsc.subare.analysis;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
@@ -30,5 +32,15 @@ public class EpisodeMonteCarloTrial implements MonteCarloTrial {
   @Override // from MonteCarloTrial
   public DiscreteQsa qsa() {
     return monteCarloExploringStarts.qsa();
+  }
+
+  @Override // from MonteCarloTrial
+  public void digest(StepInterface stepInterface) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override // from MonteCarloTrial
+  public QsaInterface qsaInterface() {
+    return qsa();
   }
 }

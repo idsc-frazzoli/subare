@@ -1,9 +1,13 @@
 // code by fluric
 package ch.ethz.idsc.subare.analysis;
 
+import java.util.Objects;
+
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
@@ -20,25 +24,41 @@ public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
   private final MonteCarloInterface monteCarloInterface;
   private final DoubleSarsa doubleSarsa;
 
-  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate1_, LearningRate learningRate2_,
+      DiscreteQsa qsa1_, DiscreteQsa qsa2_) {
     this.monteCarloInterface = monteCarloInterface;
-    DiscreteQsa qsa1 = DiscreteQsa.build(monteCarloInterface);
-    DiscreteQsa qsa2 = DiscreteQsa.build(monteCarloInterface);
-    LearningRate learningRate1 = ConstantLearningRate.of(ALPHA);
-    LearningRate learningRate2 = ConstantLearningRate.of(ALPHA);
+    DiscreteQsa qsa1 = Objects.isNull(qsa1_) ? DiscreteQsa.build(monteCarloInterface) : qsa1_;
+    DiscreteQsa qsa2 = Objects.isNull(qsa2_) ? DiscreteQsa.build(monteCarloInterface) : qsa2_;
+    LearningRate learningRate1 = Objects.isNull(learningRate1_) ? ConstantLearningRate.of(ALPHA) : learningRate1_;
+    LearningRate learningRate2 = Objects.isNull(learningRate2_) ? ConstantLearningRate.of(ALPHA) : learningRate2_;
     doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, //
-        qsa1, qsa2, //
-        learningRate1, learningRate2);
+        learningRate1, learningRate2, //
+        qsa1, qsa2);
     doubleSarsa.setExplore(EPSILON);
   }
 
+  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+    this(monteCarloInterface, sarsaType, null, null, null, null);
+  }
+
+  @Override // from MonteCarloTrial
   public void executeBatch() {
     Policy policy = doubleSarsa.getEGreedy();
     ExploringStarts.batch(monteCarloInterface, policy, DIGEST_DEPTH, doubleSarsa);
   }
 
-  @Override
+  @Override // from MonteCarloTrial
   public DiscreteQsa qsa() {
     return doubleSarsa.qsa();
+  }
+
+  @Override // from MonteCarloTrial
+  public void digest(StepInterface stepInterface) {
+    doubleSarsa.digest(stepInterface);
+  }
+
+  @Override // from MonteCarloTrial
+  public QsaInterface qsaInterface() {
+    return qsa();
   }
 }

@@ -24,7 +24,7 @@ enum Sarsa_Blackjack {
     Tensor epsilon = Subdivide.of(.1, .01, batches); // only used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("blackjack_qsa_" + sarsaType + ".gif"), 200)) {
-      Sarsa sarsa = sarsaType.supply(blackjack, qsa, DefaultLearningRate.of(2, 0.6));
+      Sarsa sarsa = sarsaType.supply(blackjack, DefaultLearningRate.of(2, 0.6), qsa);
       for (int index = 0; index < batches; ++index) {
         // Scalar error = DiscreteQsas.distance(qsa, ref);
         System.out.println(index + " " + epsilon.Get(index).map(Round._2));

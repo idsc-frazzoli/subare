@@ -24,6 +24,7 @@ public class DefaultLearningRate extends DecayedLearningRate {
     return of(RealScalar.of(factor), RealScalar.of(exponent));
   }
 
+  // ---
   private DefaultLearningRate(Scalar factor, Scalar exponent) {
     super(factor, exponent);
   }

@@ -17,6 +17,7 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
+import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.StateActionCounter;
 import ch.ethz.idsc.subare.util.PlotUtils;
@@ -53,7 +54,7 @@ enum AirportDemo {
     StateActionCounter sac = new StateActionCounter(airport);
     DiscreteQsa qsaSarsa = DiscreteQsa.build(airport); // q-function for training, initialized to 0
     SarsaType sarsaType = SarsaType.ORIGINAL;
-    final Sarsa sarsa = sarsaType.supply(airport, qsaSarsa, ConstantLearningRate.of(RealScalar.of(0.05)));
+    final Sarsa sarsa = sarsaType.supply(airport, ConstantLearningRate.of(RealScalar.of(0.05)), qsaSarsa);
     {
       sarsa.setExplore(RealScalar.of(.1));
       Stopwatch stopwatch = Stopwatch.started();
@@ -68,7 +69,8 @@ enum AirportDemo {
     // Policies.print(GreedyPolicy.bestEquiprobable(airport, sarsa.qsa()), airport.states());
     LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.2));
     FeatureMapper mapper = ExactFeatureMapper.of(airport);
-    TrueOnlineSarsa toSarsa = SarsaType.ORIGINAL.trueOnline(airport, RealScalar.of(0.7), learningRate, mapper);
+    FeatureWeight w = new FeatureWeight(mapper);
+    TrueOnlineSarsa toSarsa = SarsaType.ORIGINAL.trueOnline(airport, RealScalar.of(0.7), mapper, learningRate, w);
     toSarsa.setExplore(RealScalar.of(0.1));
     {
       Stopwatch stopwatch = Stopwatch.started();

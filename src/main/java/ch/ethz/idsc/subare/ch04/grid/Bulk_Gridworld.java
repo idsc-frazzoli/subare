@@ -34,7 +34,7 @@ enum Bulk_Gridworld {
       int y = 0;
       for (Tensor exponent : Subdivide.of(.51, 1.3, 10)) { // .51 for qlearning use upper bound == 2, else == 1
         DiscreteQsa qsa = DiscreteQsa.build(gambler);
-        Sarsa sarsa = sarsaType.supply(gambler, qsa, DefaultLearningRate.of(factor.Get(), exponent.Get()));
+        Sarsa sarsa = sarsaType.supply(gambler, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa);
         LearningContender learningContender = LearningContender.sarsa(gambler, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;

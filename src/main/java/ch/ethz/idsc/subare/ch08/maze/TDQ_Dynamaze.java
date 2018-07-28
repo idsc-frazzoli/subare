@@ -30,7 +30,7 @@ enum TDQ_Dynamaze {
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(5, 0.51);
-    Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
+    Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa);
     TabularDynaQ tabularDynaQ = new TabularDynaQ(sarsa, 10);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {

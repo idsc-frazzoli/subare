@@ -21,7 +21,7 @@ class QLearningSarsaEvaluation implements SarsaEvaluation {
   @Override // from SarsaEvaluation
   public Scalar evaluate(Scalar epsilon, LearningRate learningRate, Tensor state, QsaInterface qsa) {
     return discreteModel.actions(state).stream() //
-        .filter(action -> learningRate.encountered(state, action)) //
+        .filter(action -> learningRate.isEncountered(state, action)) //
         .map(action -> qsa.value(state, action)) //
         .reduce(Max::of) //
         .orElse(RealScalar.ZERO);

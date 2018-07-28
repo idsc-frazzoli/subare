@@ -34,7 +34,7 @@ enum PS_Dynamaze {
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
     Tensor epsilon = Subdivide.of(.1, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(7, 1.01);
-    Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
+    Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsa, 10, RealScalar.ZERO);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250)) {

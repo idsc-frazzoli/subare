@@ -29,7 +29,7 @@ enum Sarsa_Fishfarm {
     final DiscreteQsa ref = FishfarmHelper.getOptimalQsa(fishfarm);
     DiscreteQsa qsa = DiscreteQsa.build(fishfarm, DoubleScalar.POSITIVE_INFINITY);
     Tensor epsilon = Subdivide.of(.5, .01, batches);
-    Sarsa sarsa = sarsaType.supply(fishfarm, qsa, DefaultLearningRate.of(7, 0.61));
+    Sarsa sarsa = sarsaType.supply(fishfarm, DefaultLearningRate.of(7, 0.61), qsa);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {
         // if (batches - 10 < index)

@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
+import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.Stopwatch;
@@ -29,11 +30,12 @@ enum TOS_Gambler {
     Gambler gambler = new Gambler(20, RealScalar.of(.4));
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     FeatureMapper mapper = ExactFeatureMapper.of(gambler);
+    FeatureWeight w = new FeatureWeight(mapper);
     // Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     // DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     LearningRate learningRate = DefaultLearningRate.of(RealScalar.of(3), RealScalar.of(0.81));
     // LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.3), false); // the case without warmStart
-    TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(gambler, LAMBDA, learningRate, mapper);
+    TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(gambler, LAMBDA, mapper, learningRate, w);
     trueOnlineSarsa.setExplore(EPSILON);
     final String name = sarsaType.name().toLowerCase();
     Stopwatch stopwatch = Stopwatch.started();

@@ -24,5 +24,5 @@ public interface LearningRate extends StepDigest {
    * @param state
    * @param action
    * @return whether given (state, action) pair has already been encountered by learning rate */
-  boolean encountered(Tensor state, Tensor action);
+  boolean isEncountered(Tensor state, Tensor action);
 }

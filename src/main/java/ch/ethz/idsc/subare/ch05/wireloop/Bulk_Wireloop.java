@@ -35,7 +35,7 @@ enum Bulk_Wireloop {
       int y = 0;
       for (Tensor exponent : Subdivide.of(.51, 1.5, 20)) { // .51 2
         DiscreteQsa qsa = DiscreteQsa.build(wireloop);
-        Sarsa sarsa = sarsaType.supply(wireloop, qsa, DefaultLearningRate.of(factor.Get(), exponent.Get()));
+        Sarsa sarsa = sarsaType.supply(wireloop, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa);
         LearningContender learningContender = LearningContender.sarsa(wireloop, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;

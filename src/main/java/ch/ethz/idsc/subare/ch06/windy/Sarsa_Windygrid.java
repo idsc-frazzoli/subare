@@ -28,7 +28,7 @@ enum Sarsa_Windygrid {
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(3, 0.51);
-    Sarsa sarsa = sarsaType.supply(windygrid, qsa, learningRate);
+    Sarsa sarsa = sarsaType.supply(windygrid, learningRate, qsa);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100)) {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(windygrid, index, ref, qsa);

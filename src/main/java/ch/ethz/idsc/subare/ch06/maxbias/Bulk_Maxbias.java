@@ -34,7 +34,7 @@ enum Bulk_Maxbias {
       int y = 0;
       for (Tensor exponent : Subdivide.of(.51, 2, 10)) { // .51 2
         DiscreteQsa qsa = DiscreteQsa.build(maxbias);
-        Sarsa sarsa = sarsaType.supply(maxbias, qsa, DefaultLearningRate.of(factor.Get(), exponent.Get()));
+        Sarsa sarsa = sarsaType.supply(maxbias, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa);
         LearningContender learningContender = LearningContender.sarsa(maxbias, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;

@@ -1,29 +1,20 @@
-// code by jph
+// code by fluric
 package ch.ethz.idsc.subare.core.util;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/** learning rate of alpha except in first update of state-action pair
- * for which the learning rate equals 1 in the case of warmStart. */
-@SuppressWarnings("serial")
-/* package */ class StrictConstantLearningRate implements LearningRate, Serializable {
-  private final Set<Tensor> visited = new HashSet<>();
+/** THE USE OF THIS CLASS IS NOT RECOMMENDED BECAUSE THE
+ * UPDATE IS BIASED TOWARDS AN UNWARRANTED INITIAL VALUE */
+public class StrictConstantLearningRate implements LearningRate, Serializable {
   private final Scalar alpha;
 
-  protected StrictConstantLearningRate(Scalar alpha) {
+  public StrictConstantLearningRate(Scalar alpha) {
     this.alpha = alpha;
-  }
-
-  @Override // from LearningRate
-  public final void digest(StepInterface stepInterface) {
-    visited.add(StateAction.key(stepInterface));
   }
 
   @Override // from LearningRate
@@ -31,8 +22,13 @@ import ch.ethz.idsc.tensor.Tensor;
     return alpha;
   }
 
-  @Override // from LearningRate
-  public final boolean encountered(Tensor state, Tensor action) {
-    return visited.contains(StateAction.key(state, action));
+  @Override
+  public void digest(StepInterface stepInterface) {
+    // ---
+  }
+
+  @Override
+  public boolean isEncountered(Tensor state, Tensor action) {
+    return false; // not defined
   }
 }

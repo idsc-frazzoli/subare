@@ -46,7 +46,7 @@ public class Random1StepTabularQPlanning implements StepDigest {
     // ---
     Scalar max = discreteModel.actions(state1).stream() //
         // ignore un-encountered state-action pairs, otherwise influenced by initial qsa value
-        .filter(action1 -> learningRate.encountered(state1, action1)) //
+        .filter(action1 -> learningRate.isEncountered(state1, action1)) //
         .map(action1 -> qsa.value(state1, action1)) //
         .reduce(Max::of) //
         .orElse(RealScalar.ZERO);

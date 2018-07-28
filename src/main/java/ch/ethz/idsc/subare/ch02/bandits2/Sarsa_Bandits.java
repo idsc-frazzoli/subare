@@ -26,7 +26,7 @@ enum Sarsa_Bandits {
     Tensor epsilon = Subdivide.of(.6, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(bandits); // q-function for training, initialized to 0
     // ---
-    final Sarsa sarsa = sarsaType.supply(bandits, qsa, DefaultLearningRate.of(factor, exponent));
+    final Sarsa sarsa = sarsaType.supply(bandits, DefaultLearningRate.of(factor, exponent), qsa);
     // ---
     for (int index = 0; index < batches; ++index) {
       Scalar error1 = Loss.accumulation(bandits, ref, qsa);

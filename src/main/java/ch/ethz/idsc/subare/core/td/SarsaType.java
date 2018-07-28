@@ -6,8 +6,8 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
+import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
 
 public enum SarsaType {
   ORIGINAL() {
@@ -33,31 +33,28 @@ public enum SarsaType {
   abstract SarsaEvaluation sarsaEvaluation(DiscreteModel discreteModel);
 
   // TODO JAN rename function
-  public final Sarsa supply(DiscreteModel discreteModel, LearningRate learningRate) {
-    return supply(discreteModel, null, learningRate);
+  public final Sarsa supply(DiscreteModel discreteModel, LearningRate learningRate, QsaInterface qsa) {
+    return new Sarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate, qsa);
   }
 
-  public final Sarsa supply(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
-    return new Sarsa(sarsaEvaluation(discreteModel), discreteModel, qsa, learningRate);
+  public final DoubleSarsa doubleSarsa( //
+      DiscreteModel discreteModel, LearningRate learningRate1, LearningRate learningRate2, QsaInterface qsa1, QsaInterface qsa2) {
+    return new DoubleSarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate1, learningRate2, qsa1, qsa2);
   }
 
-  public final DoubleSarsa doubleSarsa(DiscreteModel discreteModel, QsaInterface qsa1, QsaInterface qsa2, LearningRate learningRate1,
-      LearningRate learningRate2) {
-    return new DoubleSarsa(sarsaEvaluation(discreteModel), discreteModel, qsa1, qsa2, learningRate1, learningRate2);
-  }
-
+  /** @param monteCarloInterface
+   * @param lambda in [0, 1] Figure 12.14 in the book suggests that lambda in [0.8, 0.9] tends to be a good choice
+   * @param learningRate
+   * @param featureMapper
+   * @param w */
   public final TrueOnlineSarsa trueOnline( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, FeatureMapper featureMapper) {
-    return trueOnline(monteCarloInterface, lambda, learningRate, null, featureMapper);
-  }
-
-  public final TrueOnlineSarsa trueOnline( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate, Tensor w, FeatureMapper featureMapper) {
-    return new TrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, learningRate, featureMapper, w);
+      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w) {
+    return new TrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate, w);
   }
 
   public final DoubleTrueOnlineSarsa doubleTrueOnline( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, LearningRate learningRate1, LearningRate learningRate2, FeatureMapper featureMapper) {
-    return new DoubleTrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, learningRate1, learningRate2, featureMapper);
+      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, //
+      LearningRate learningRate1, LearningRate learningRate2, FeatureWeight w1, FeatureWeight w2) {
+    return new DoubleTrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate1, learningRate2, w1, w2);
   }
 }

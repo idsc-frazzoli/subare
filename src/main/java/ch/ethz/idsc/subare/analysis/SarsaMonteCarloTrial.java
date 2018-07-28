@@ -1,9 +1,13 @@
 // code by fluric
 package ch.ethz.idsc.subare.analysis;
 
+import java.util.Objects;
+
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
@@ -22,12 +26,16 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   private final MonteCarloInterface monteCarloInterface;
   private final Sarsa sarsa;
 
-  public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+  public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, DiscreteQsa qsa_) {
     this.monteCarloInterface = monteCarloInterface;
-    DiscreteQsa qsaSarsa = DiscreteQsa.build(monteCarloInterface);
-    LearningRate learningRate = ConstantLearningRate.of(ALPHA);
-    sarsa = sarsaType.supply(monteCarloInterface, qsaSarsa, learningRate);
+    DiscreteQsa qsa = Objects.isNull(qsa_) ? DiscreteQsa.build(monteCarloInterface) : qsa_;
+    LearningRate learningRate = Objects.isNull(learningRate_) ? ConstantLearningRate.of(ALPHA) : learningRate_;
+    sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa);
     sarsa.setExplore(EPSILON);
+  }
+
+  public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+    this(monteCarloInterface, sarsaType, null, null);
   }
 
   @Override // from MonteCarloTrial
@@ -39,5 +47,15 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   @Override // from MonteCarloTrial
   public DiscreteQsa qsa() {
     return sarsa.qsa();
+  }
+
+  @Override // from MonteCarloTrial
+  public void digest(StepInterface stepInterface) {
+    sarsa.digest(stepInterface);
+  }
+
+  @Override // from MonteCarloTrial
+  public QsaInterface qsaInterface() {
+    return qsa();
   }
 }

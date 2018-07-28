@@ -1,8 +1,6 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
-import java.util.Objects;
-
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -12,6 +10,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
+import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -32,23 +31,18 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   private final Scalar gamma_lambda;
   private final int featureSize;
   private final SarsaEvaluation evaluationType;
+  /** feature weight vector w is a long-term memory, accumulating over the lifetime of the system */
+  private final FeatureWeight w;
   // ---
   private Scalar epsilon;
-  /** weight vector w is a long-term memory, accumulating over the lifetime of the system */
-  private Tensor w;
   // ---
   private Scalar nextQOld;
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
   private Tensor z;
 
-  /** @param monteCarloInterface
-   * @param lambda in [0, 1] Figure 12.14 in the book suggests that lambda in [0.8, 0.9]
-   * tends to be a good choice
-   * @param learningRate
-   * @param featureMapper
-   * @param w */
-  public TrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, LearningRate learningRate,
-      FeatureMapper featureMapper, Tensor w) {
+  /* package */ TrueOnlineSarsa( //
+      MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, //
+      Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
     this.learningRate = learningRate;
@@ -57,7 +51,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
     featureSize = featureMapper.featureSize();
-    this.w = Objects.isNull(w) ? Array.zeros(featureSize) : w;
+    this.w = w;
     resetEligibility();
   }
 
@@ -75,19 +69,19 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     for (Tensor state : monteCarloInterface.states())
       for (Tensor action : monteCarloInterface.actions(state)) {
         Tensor stateActionPair = StateAction.key(state, action);
-        qsa.assign(state, action, featureMapper.getFeature(stateActionPair).dot(w).Get());
+        qsa.assign(state, action, featureMapper.getFeature(stateActionPair).dot(w.get()).Get());
       }
     return qsa;
   }
 
   /** faster when only part of the qsa is required */
   public final QsaInterface qsaInterface() {
-    return new FeatureQsaAdapter(w, featureMapper);
+    return new FeatureQsaAdapter(w.get(), featureMapper);
   }
 
   /** @return unmodifiable weight vector w */
   public final Tensor getW() {
-    return w.unmodifiable();
+    return w.get().unmodifiable();
   }
 
   @Override // from StepDigest
@@ -101,7 +95,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     Scalar alpha = learningRate.alpha(stepInterface);
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
-    Scalar prevQ = w.dot(x).Get();
+    Scalar prevQ = w.get().dot(x).Get();
     Scalar nextQ = evaluationType.evaluate(epsilon, learningRate, nextState, qsaInterface());
     Scalar delta = reward.add(gamma.multiply(nextQ)).subtract(prevQ);
     // eq (12.11)
@@ -111,7 +105,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     Scalar diffQ = prevQ.subtract(nextQOld);
     Tensor scalez = z.multiply(alpha.multiply(delta.add(diffQ)));
     Tensor scalex = x.multiply(alpha.multiply(diffQ));
-    w = w.add(scalez).subtract(scalex);
+    w.set(w.get().add(scalez).subtract(scalex));
     nextQOld = nextQ;
     // ---
     learningRate.digest(stepInterface);

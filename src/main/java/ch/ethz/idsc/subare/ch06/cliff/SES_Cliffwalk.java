@@ -33,7 +33,7 @@ enum SES_Cliffwalk {
     try (AnimationWriter gsw = AnimationWriter.of( //
         UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
       LearningRate learningRate = DefaultLearningRate.of(7, 0.61);
-      Sarsa sarsa = sarsaType.supply(cliffwalk, qsa, learningRate);
+      Sarsa sarsa = sarsaType.supply(cliffwalk, learningRate, qsa);
       DequeExploringStarts exploringStartsStream = new DequeExploringStarts(cliffwalk, nstep, sarsa) {
         @Override
         public Policy batchPolicy(int batch) {

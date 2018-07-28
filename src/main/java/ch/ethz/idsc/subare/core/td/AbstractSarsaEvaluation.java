@@ -23,7 +23,7 @@ class AbstractSarsaEvaluation implements SarsaEvaluation {
   public final Scalar evaluate(Scalar epsilon, LearningRate learningRate, Tensor state, QsaInterface qsa) {
     Tensor actions = Tensor.of( //
         discreteModel.actions(state).stream() //
-            .filter(action -> learningRate.encountered(state, action)));
+            .filter(action -> learningRate.isEncountered(state, action)));
     return Tensors.isEmpty(actions) //
         ? RealScalar.ZERO
         : crossEvaluate(epsilon, state, actions, qsa, qsa);

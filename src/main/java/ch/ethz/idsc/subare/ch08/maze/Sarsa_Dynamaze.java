@@ -29,7 +29,7 @@ enum Sarsa_Dynamaze {
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
     Tensor epsilon = Subdivide.of(.3, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(15, 0.51);
-    Sarsa sarsa = sarsaType.supply(dynamaze, qsa, learningRate);
+    Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {
         // if (EPISODES - 10 < index)

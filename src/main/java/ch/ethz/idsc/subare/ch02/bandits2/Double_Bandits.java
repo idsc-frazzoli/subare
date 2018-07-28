@@ -26,9 +26,9 @@ enum Double_Bandits {
     DiscreteQsa qsa2 = DiscreteQsa.build(bandits);
     DoubleSarsa doubleSarsa = sarsaType.doubleSarsa( //
         bandits, //
-        qsa1, qsa2, //
         DefaultLearningRate.of(15, 1.31), //
-        DefaultLearningRate.of(15, 1.31));
+        DefaultLearningRate.of(15, 1.31), //
+        qsa1, qsa2);
     for (int index = 0; index < batches; ++index) {
       Scalar error = Loss.accumulation(bandits, ref, qsa1);
       if (batches - 10 < index)
