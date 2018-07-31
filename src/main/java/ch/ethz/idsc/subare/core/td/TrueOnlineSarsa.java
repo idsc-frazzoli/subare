@@ -89,8 +89,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
     Tensor prevState = stepInterface.prevState();
     Tensor prevAction = stepInterface.action();
     Tensor nextState = stepInterface.nextState();
-    // ---
-    Scalar reward = monteCarloInterface.reward(prevState, prevAction, nextState);
+    Scalar reward = stepInterface.reward();
     // ---
     Scalar alpha = learningRate.alpha(stepInterface);
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
