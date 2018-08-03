@@ -1,6 +1,8 @@
 // code by fluric
 package ch.ethz.idsc.subare.analysis;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.LearningRate;
@@ -25,6 +27,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final Sarsa sarsa;
+  private final Deque<StepInterface> deque = new ArrayDeque<>();
 
   public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, DiscreteQsa qsa_) {
     this.monteCarloInterface = monteCarloInterface;
@@ -51,7 +54,18 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
 
   @Override // from MonteCarloTrial
   public void digest(StepInterface stepInterface) {
-    sarsa.digest(stepInterface);
+    deque.add(stepInterface);
+    if (!monteCarloInterface.isTerminal(stepInterface.nextState())) {
+      if (deque.size() == DIGEST_DEPTH) { // never true, if nstep == 0
+        sarsa.digest(deque);
+        deque.poll();
+      }
+    } else {
+      while (!deque.isEmpty()) {
+        sarsa.digest(deque);
+        deque.poll();
+      }
+    }
   }
 
   @Override // from MonteCarloTrial
