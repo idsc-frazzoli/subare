@@ -21,6 +21,10 @@ import ch.ethz.idsc.tensor.sca.Clip;
 
 /** implementation of box "True Online Sarsa(lambda) for estimating w'x approx. q_pi or q_*
  * 
+ * the evaluation types {@link Expected Reward} and {@link Q-Learning} are adapted from the original Sarsa
+ * 
+ * https://github.com/idsc-frazzoli/subare/files/2257720/trueOnlineSarsa.pdf
+ * 
  * in Section 12.8, p.309 */
 public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   private final MonteCarloInterface monteCarloInterface;

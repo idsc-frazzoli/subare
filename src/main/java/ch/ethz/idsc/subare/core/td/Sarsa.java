@@ -24,6 +24,8 @@ import ch.ethz.idsc.tensor.Tensors;
  * {@link ExpectedSarsa}
  * {@link QLearning}
  * 
+ * https://github.com/idsc-frazzoli/subare/files/2257711/sarsa.pdf
+ * 
  * the abstract class Sarsa provides the capability to digest:
  * 
  * a single step {@link StepDigest},
