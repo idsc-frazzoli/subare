@@ -11,7 +11,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.TensorRuntimeException;
 
-class StateOrigins implements StepDigest {
+/* package */ class StateOrigins implements StepDigest {
   private final Map<Tensor, StepSet> map = new HashMap<>();
 
   /** @param state
@@ -30,6 +30,7 @@ class StateOrigins implements StepDigest {
 
   @Override
   public void digest(StepInterface stepInterface) {
+    // TODO code redudant to StepSet
     Tensor key = stepInterface.nextState();
     if (!map.containsKey(key))
       map.put(key, new StepSet());

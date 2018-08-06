@@ -9,7 +9,7 @@ import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-class OriginalSarsaEvaluation extends AbstractSarsaEvaluation {
+/* package */ class OriginalSarsaEvaluation extends AbstractSarsaEvaluation {
   public OriginalSarsaEvaluation(DiscreteModel discreteModel) {
     super(discreteModel);
   }

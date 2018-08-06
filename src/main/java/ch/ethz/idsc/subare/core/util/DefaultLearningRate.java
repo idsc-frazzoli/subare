@@ -17,8 +17,8 @@ public class DefaultLearningRate extends DecayedLearningRate {
     return new DefaultLearningRate(factor, exponent);
   }
 
-  /** @param factor
-   * @param exponent
+  /** @param factor positive, larger values result in larger alpha's
+   * @param exponent greater than 1/2, larger values result in smaller alpha's
    * @return */
   public static LearningRate of(double factor, double exponent) {
     return of(RealScalar.of(factor), RealScalar.of(exponent));

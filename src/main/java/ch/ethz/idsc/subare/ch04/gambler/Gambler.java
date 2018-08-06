@@ -25,7 +25,7 @@ public class Gambler implements StandardModel, MonteCarloInterface {
   private final Tensor states;
   final Scalar TERMINAL_W;
   private final Scalar P_win;
-  private final Coinflip coinFlip;
+  private final Coinflip coinflip;
 
   public static Gambler createDefault() {
     return new Gambler(100, RationalScalar.of(4, 10));
@@ -37,7 +37,7 @@ public class Gambler implements StandardModel, MonteCarloInterface {
     states = Range.of(0, max + 1).unmodifiable();
     TERMINAL_W = (Scalar) Last.of(states);
     this.P_win = P_win;
-    coinFlip = Coinflip.of(P_win);
+    coinflip = Coinflip.of(P_win);
   }
 
   @Override
@@ -66,7 +66,7 @@ public class Gambler implements StandardModel, MonteCarloInterface {
   /**************************************************/
   @Override
   public Tensor move(Tensor state, Tensor action) { // non-deterministic
-    if (coinFlip.tossHead()) // win
+    if (coinflip.tossHead()) // win
       return state.add(action);
     return state.subtract(action);
   }

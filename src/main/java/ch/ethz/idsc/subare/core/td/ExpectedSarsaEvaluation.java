@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-class ExpectedSarsaEvaluation extends AbstractSarsaEvaluation {
+/* package */ class ExpectedSarsaEvaluation extends AbstractSarsaEvaluation {
   public ExpectedSarsaEvaluation(DiscreteModel discreteModel) {
     super(discreteModel);
   }

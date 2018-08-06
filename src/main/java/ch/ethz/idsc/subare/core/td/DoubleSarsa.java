@@ -37,7 +37,7 @@ import ch.ethz.idsc.tensor.Tensors;
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
 public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
-  private final Coinflip COINFLIP = Coinflip.fair();
+  private final Coinflip coinflip = Coinflip.fair();
   // ---
   private final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;
@@ -92,7 +92,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   @Override // from DequeDigest
   public void digest(Deque<StepInterface> deque) {
     // randomly select which qsa to read and write
-    boolean flip = COINFLIP.tossHead(); // flip coin, probability 0.5 each
+    boolean flip = coinflip.tossHead(); // flip coin, probability 0.5 each
     QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for selecting actions and updating
     QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation (of actions provided by Qsa1)
     LearningRate LearningRate = flip ? learningRate2 : learningRate1; // for updating
