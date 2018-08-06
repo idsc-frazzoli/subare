@@ -17,7 +17,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 class Agent {
   double stepSize;
   // double exploreRate;
-  private Coinflip coinFlip;
+  private Coinflip coinflip;
   List<State> states = new ArrayList<>();
   final int symbol;
   Estimation estimation = new Estimation();
@@ -30,7 +30,7 @@ class Agent {
   public void setRates(double stepSize, double exploreRate) {
     this.stepSize = stepSize;
     // this.exploreRate = exploreRate;
-    coinFlip = Coinflip.of(RealScalar.of(exploreRate));
+    coinflip = Coinflip.of(RealScalar.of(exploreRate));
   }
 
   // accept a state
@@ -62,7 +62,7 @@ class Agent {
     // ---
     // exploration
     // parameter p denotes the probability of the outcome 1
-    if (coinFlip.tossHead()) {
+    if (coinflip.tossHead()) {
       List<Entry<Integer, State>> list = new ArrayList<>(nextStates.entrySet());
       Collections.shuffle(list);
       return new Action(list.get(0).getKey(), symbol);

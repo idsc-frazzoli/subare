@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
 
 public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
-  private final Coinflip COINFLIP = Coinflip.fair();
+  private final Coinflip coinflip = Coinflip.fair();
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final FeatureMapper featureMapper;
@@ -97,7 +97,7 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   @Override // from StepDigest
   public final void digest(StepInterface stepInterface) {
     // randomly select which w to read and write
-    boolean flip = COINFLIP.tossHead(); // flip coin, probability 0.5 each
+    boolean flip = coinflip.tossHead(); // flip coin, probability 0.5 each
     FeatureWeight W1 = flip ? w2 : w1;
     FeatureWeight W2 = flip ? w1 : w2;
     LearningRate learningRate = flip ? learningRate2 : learningRate1; // for updating

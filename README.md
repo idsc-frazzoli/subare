@@ -300,6 +300,31 @@ Exact expected reward of two adversarial Upper-Confidence-Bound agents depending
 
 ![ucbs](https://cloud.githubusercontent.com/assets/4012178/26301526/c738ad1c-3ee1-11e7-9438-e928fc349868.png)
 
+## Integration
+
+Specify `dependency` and `repository` of the tensor library in the `pom.xml` file of your maven project:
+
+    <dependencies>
+      <dependency>
+        <groupId>ch.ethz.idsc</groupId>
+        <artifactId>subare</artifactId>
+        <version>0.1.5</version>
+      </dependency>
+    </dependencies>
+    
+    <repositories>
+      <repository>
+        <id>subare-mvn-repo</id>
+        <url>https://raw.github.com/idsc-frazzoli/subare/mvn-repo/</url>
+        <snapshots>
+          <enabled>true</enabled>
+          <updatePolicy>always</updatePolicy>
+        </snapshots>
+      </repository>
+    </repositories>
+
+The source code is attached to every release.
+
 ## Contributors
 
 Jan Hakenberg, Christian Fluri

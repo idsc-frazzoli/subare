@@ -37,7 +37,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator {
     this.qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"
   }
 
-  @Override
+  @Override // from EpisodeDigest
   public void digest(EpisodeInterface episodeInterface) {
     Map<Tensor, Integer> first = new HashMap<>();
     Tensor rewards = Tensors.empty();

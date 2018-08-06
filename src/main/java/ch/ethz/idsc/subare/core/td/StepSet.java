@@ -9,7 +9,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.Tensor;
 
-class StepSet {
+/* package */ class StepSet {
   private final Map<Tensor, StepInterface> map = new HashMap<>();
 
   void register(StepInterface stepInterface) {

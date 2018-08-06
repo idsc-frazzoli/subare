@@ -17,7 +17,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
   static final Scalar PROB = RealScalar.of(.1);
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   private final Tensor actions = Tensors.of(BACK, END).unmodifiable(); // increment
-  private final Coinflip coinFlip = Coinflip.of(PROB);
+  private final Coinflip coinflip = Coinflip.of(PROB);
 
   @Override
   public Tensor states() {
@@ -48,7 +48,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
       return state;
     if (action.equals(END))
       return END; // END is used as state
-    if (coinFlip.tossHead()) // TODO check if this is the model
+    if (coinflip.tossHead()) // TODO check if this is the model
       return BACK; // BACK is used as state
     return END; // END is used as state
   }
