@@ -1,6 +1,7 @@
 // code by jph and fluric
 package ch.ethz.idsc.subare.core.util;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Tensor;
 
-abstract class UnbiasedLearningRate implements LearningRate, DiscreteQsaWeight {
+abstract class UnbiasedLearningRate implements LearningRate, DiscreteQsaWeight, Serializable {
   /** the map counts the frequency of the state-action pair */
   private final Map<Tensor, Integer> map = new HashMap<>();
 
