@@ -23,7 +23,8 @@ import ch.ethz.idsc.tensor.Scalar;
 public class SarsaMonteCarloTrial implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
   private static final Scalar EPSILON = RealScalar.of(0.1);
-  private static final int DIGEST_DEPTH = 5; // 0 is equal to the MonteCarlo approach, 5 is a good number for CascadeModel in amodidsc
+  private static final int DIGEST_DEPTH_BATCH = 5; // 0 is equal to the MonteCarlo approach
+  private static final int DIGEST_DEPTH_DIGEST = 5; // 5 is a good number for CascadeModel in amodidsc
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final Sarsa sarsa;
@@ -44,7 +45,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   @Override // from MonteCarloTrial
   public void executeBatch() {
     Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa(), EPSILON);
-    ExploringStarts.batch(monteCarloInterface, policy, DIGEST_DEPTH, sarsa);
+    ExploringStarts.batch(monteCarloInterface, policy, DIGEST_DEPTH_BATCH, sarsa);
   }
 
   @Override // from MonteCarloTrial
@@ -56,7 +57,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   public void digest(StepInterface stepInterface) {
     deque.add(stepInterface);
     if (!monteCarloInterface.isTerminal(stepInterface.nextState())) {
-      if (deque.size() == DIGEST_DEPTH) { // never true, if nstep == 0
+      if (deque.size() == DIGEST_DEPTH_DIGEST) { // never true, if nstep == 0
         sarsa.digest(deque);
         deque.poll();
       }
