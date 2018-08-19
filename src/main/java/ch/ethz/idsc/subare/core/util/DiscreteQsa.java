@@ -42,12 +42,12 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
 
   @Override
   public Scalar value(Tensor state, Tensor action) {
-    return values.Get(index.of(key(state, action)));
+    return values.Get(index.of(StateAction.key(state, action)));
   }
 
   @Override
   public void assign(Tensor state, Tensor action, Scalar value) {
-    values.set(value, index.of(key(state, action)));
+    values.set(value, index.of(StateAction.key(state, action)));
   }
 
   @Override
@@ -82,9 +82,5 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
 
   public int size() {
     return index.size();
-  }
-
-  private Tensor key(Tensor state, Tensor action) {
-    return StateAction.key(state, action);
   }
 }

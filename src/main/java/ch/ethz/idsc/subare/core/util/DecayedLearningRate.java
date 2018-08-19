@@ -1,8 +1,6 @@
 // code by jz and jph
 package ch.ethz.idsc.subare.core.util;
 
-import java.io.Serializable;
-
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -27,7 +25,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
  * in the Gambler problem the following values seem to work well
  * OriginalSarsa factor == 1.3, and exponent == 0.51
  * QLearning factor == 0.2, and exponent == 0.55 */
-abstract class DecayedLearningRate extends UnbiasedLearningRate implements Serializable {
+abstract class DecayedLearningRate extends UnbiasedLearningRate {
   private final Scalar factor;
   private final Scalar exponent;
   /** lookup table to speed up computation */
