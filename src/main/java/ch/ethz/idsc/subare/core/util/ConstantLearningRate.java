@@ -1,8 +1,6 @@
 // code by jph and fluric
 package ch.ethz.idsc.subare.core.util;
 
-import java.io.Serializable;
-
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -12,7 +10,7 @@ import ch.ethz.idsc.tensor.Tensors;
 
 /** learning rate of alpha except in first update of state-action pair
  * for which the learning rate equals 1 in the case of warmStart. */
-public class ConstantLearningRate extends UnbiasedLearningRate implements Serializable {
+public class ConstantLearningRate extends UnbiasedLearningRate {
   /** @param alpha
    * @return constant learning rate with factor alpha */
   public static LearningRate of(Scalar alpha) {
