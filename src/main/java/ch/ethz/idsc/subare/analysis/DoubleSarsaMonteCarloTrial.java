@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.analysis;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -27,13 +26,9 @@ public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
   private final DoubleSarsa doubleSarsa;
   private final Deque<StepInterface> deque = new ArrayDeque<>();
 
-  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate1_, LearningRate learningRate2_,
-      DiscreteQsa qsa1_, DiscreteQsa qsa2_) {
+  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, //
+      LearningRate learningRate1, LearningRate learningRate2, DiscreteQsa qsa1, DiscreteQsa qsa2) {
     this.monteCarloInterface = monteCarloInterface;
-    DiscreteQsa qsa1 = Objects.isNull(qsa1_) ? DiscreteQsa.build(monteCarloInterface) : qsa1_;
-    DiscreteQsa qsa2 = Objects.isNull(qsa2_) ? DiscreteQsa.build(monteCarloInterface) : qsa2_;
-    LearningRate learningRate1 = Objects.isNull(learningRate1_) ? ConstantLearningRate.of(ALPHA) : learningRate1_;
-    LearningRate learningRate2 = Objects.isNull(learningRate2_) ? ConstantLearningRate.of(ALPHA) : learningRate2_;
     doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, //
         learningRate1, learningRate2, //
         qsa1, qsa2);
@@ -41,7 +36,9 @@ public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
   }
 
   public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
-    this(monteCarloInterface, sarsaType, null, null, null, null);
+    this(monteCarloInterface, sarsaType, //
+        ConstantLearningRate.of(ALPHA), ConstantLearningRate.of(ALPHA), //
+        DiscreteQsa.build(monteCarloInterface), DiscreteQsa.build(monteCarloInterface));
   }
 
   @Override // from MonteCarloTrial

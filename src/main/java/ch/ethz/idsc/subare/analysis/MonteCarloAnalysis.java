@@ -36,9 +36,8 @@ public enum MonteCarloAnalysis {
       DiscreteQsa qsaSarsa = DiscreteQsa.build(monteCarloInterface);
       final SarsaMonteCarloTrial sarsa = new SarsaMonteCarloTrial(monteCarloInterface, SarsaType.QLEARNING);
       Stopwatch stopwatch = Stopwatch.started();
-      for (int index = 0; index < batches * 10; ++index) {
+      for (int index = 0; index < batches * 10; ++index)
         sarsa.executeBatch();
-      }
       System.out.println("Time for optimal QSA approximation: " + stopwatch.display_seconds() + "s");
       return sarsa.qsa();
     }

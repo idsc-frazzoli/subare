@@ -32,7 +32,6 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
   private final SarsaEvaluation evaluationType;
   private final Scalar gamma;
   private final Scalar gamma_lambda;
-  private final int featureSize;
   // ---
   private Scalar epsilon;
   /** feature weight vectors w1 and w2 are a long-term memory, accumulating over the lifetime of the system */
@@ -43,8 +42,11 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
   private Tensor z;
 
-  /* package */ DoubleTrueOnlineSarsa(MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, FeatureMapper featureMapper,
-      LearningRate learningRate1, LearningRate learningRate2, FeatureWeight w1, FeatureWeight w2) {
+  /* package */ DoubleTrueOnlineSarsa( //
+      MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, //
+      FeatureMapper featureMapper, //
+      LearningRate learningRate1, LearningRate learningRate2, //
+      FeatureWeight w1, FeatureWeight w2) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
     this.learningRate1 = learningRate1;
@@ -53,7 +55,6 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
     this.gamma = monteCarloInterface.gamma();
     this.featureMapper = featureMapper;
     gamma_lambda = Times.of(gamma, lambda);
-    featureSize = featureMapper.featureSize();
     this.w1 = w1;
     this.w2 = w2;
     resetEligibility();
@@ -139,8 +140,7 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
 
   private final void resetEligibility() {
     nextQOld = RealScalar.ZERO;
-    /** eligibility trace vector is initialized to zero at the beginning of the
-     * episode */
-    z = Array.zeros(featureSize);
+    /** eligibility trace vector is initialized to zero at the beginning of the episode */
+    z = Array.zeros(featureMapper.featureSize());
   }
 }

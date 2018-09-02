@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.UnitVector;
 
-/** requires keys of the form Join.of(state, action)
+/** requires keys constructed by {@link StateAction}
  * 
  * the implementation initializes the features as unit vectors */
 public class ExactFeatureMapper implements FeatureMapper, Serializable {
@@ -21,7 +21,6 @@ public class ExactFeatureMapper implements FeatureMapper, Serializable {
   // ---
   private final Map<Tensor, Tensor> stateToFeature = new HashMap<>();
   private final int stateActionSize;
-  private final int featureSize;
 
   private ExactFeatureMapper(MonteCarloInterface monteCarloInterface) {
     // count the number of possible state-action pairs first
@@ -29,7 +28,6 @@ public class ExactFeatureMapper implements FeatureMapper, Serializable {
         .filter(state -> !monteCarloInterface.isTerminal(state)) //
         .mapToInt(state -> monteCarloInterface.actions(state).length()) //
         .sum();
-    featureSize = stateActionSize; // one-to-one mapping
     int index = -1;
     for (Tensor state : monteCarloInterface.states())
       for (Tensor action : monteCarloInterface.actions(state))
@@ -44,12 +42,8 @@ public class ExactFeatureMapper implements FeatureMapper, Serializable {
     return stateToFeature.get(key);
   }
 
-  public int stateActionSize() {
-    return stateActionSize;
-  }
-
   @Override // from FeatureMapper
   public int featureSize() {
-    return featureSize;
+    return stateActionSize; // one-to-one mapping
   }
 }

@@ -1,8 +1,6 @@
 // code by fluric
 package ch.ethz.idsc.subare.analysis;
 
-import java.util.Objects;
-
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
@@ -24,21 +22,21 @@ public class TrueOnlineMonteCarloTrial implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
   private static final Scalar LAMBDA = RealScalar.of(0.3);
   private static final Scalar EPSILON = RealScalar.of(0.1);
+
+  public static TrueOnlineMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+    FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
+    return new TrueOnlineMonteCarloTrial(monteCarloInterface, sarsaType, featureMapper, ConstantLearningRate.of(ALPHA), new FeatureWeight(featureMapper));
+  }
+
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final TrueOnlineSarsa trueOnlineSarsa;
 
-  public TrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, FeatureWeight w_) {
+  private TrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, //
+      FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w) {
     this.monteCarloInterface = monteCarloInterface;
-    FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    LearningRate learningRate = Objects.isNull(learningRate_) ? ConstantLearningRate.of(ALPHA) : learningRate_;
-    FeatureWeight w = Objects.isNull(w_) ? new FeatureWeight(featureMapper) : w_;
     trueOnlineSarsa = sarsaType.trueOnline(monteCarloInterface, LAMBDA, featureMapper, learningRate, w);
     trueOnlineSarsa.setExplore(EPSILON);
-  }
-
-  public TrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
-    this(monteCarloInterface, sarsaType, null, null);
   }
 
   @Override // from MonteCarloTrial

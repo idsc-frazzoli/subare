@@ -9,7 +9,7 @@ public interface DiscreteValueFunction {
   /** @return */
   Tensor keys();
 
-  /** @return unmodifiable tensor of (state)-, or (state, action)-values */
+  /** @return unmodifiable vector of (state)-, or (state, action)-values */
   Tensor values();
 
   DiscreteValueFunction create(Stream<? extends Tensor> stream);

@@ -66,7 +66,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
     }
   }
 
-  @Override
+  @Override // from MonteCarloTrial
   public QsaInterface qsaInterface() {
     return qsa();
   }

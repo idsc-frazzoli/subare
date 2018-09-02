@@ -6,8 +6,8 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Norm;
+import ch.ethz.idsc.tensor.red.Norm2Squared;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Power;
 
@@ -33,9 +33,12 @@ public enum DiscreteModelErrorAnalysis {
   SQUARE_POLICY() {
     @Override
     public Scalar getError(DiscreteModel discreteModel, DiscreteQsa refQsa, DiscreteQsa currentQsa) {
-      Tensor errors = Loss.asQsa(discreteModel, refQsa, currentQsa).values();
-      return Total.of(errors.pmul(errors)).Get();
+      return Norm2Squared.ofVector(Loss.asQsa(discreteModel, refQsa, currentQsa).values());
     }
-  },;
+  };
+  /** @param discreteModel
+   * @param refQsa
+   * @param currentQsa
+   * @return */
   public abstract Scalar getError(DiscreteModel discreteModel, DiscreteQsa refQsa, DiscreteQsa currentQsa);
 }

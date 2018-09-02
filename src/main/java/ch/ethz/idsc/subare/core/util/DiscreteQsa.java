@@ -40,33 +40,33 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
     this.values = values;
   }
 
-  @Override
+  @Override // from QsaInterface
   public Scalar value(Tensor state, Tensor action) {
     return values.Get(index.of(StateAction.key(state, action)));
   }
 
-  @Override
+  @Override // from QsaInterface
   public void assign(Tensor state, Tensor action, Scalar value) {
     values.set(value, index.of(StateAction.key(state, action)));
   }
 
-  @Override
+  @Override // from QsaInterface
   public DiscreteQsa copy() {
     return new DiscreteQsa(index, values.copy());
   }
 
   /**************************************************/
-  @Override
+  @Override // from DiscreteValueFunction
   public Tensor keys() {
     return index.keys();
   }
 
-  @Override
+  @Override // from DiscreteValueFunction
   public Tensor values() {
     return values.unmodifiable();
   }
 
-  @Override
+  @Override // from DiscreteValueFunction
   public DiscreteQsa create(Stream<? extends Tensor> stream) {
     return new DiscreteQsa(index, Tensor.of(stream));
   }
