@@ -49,7 +49,7 @@ public class DoubleTrueOnlineMonteCarloTrial implements MonteCarloTrial {
 
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, doubleTrueOnlineSarsa.qsa(), EPSILON);
+    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa(), EPSILON);
     ExploringStarts.batch(monteCarloInterface, policy, doubleTrueOnlineSarsa);
   }
 

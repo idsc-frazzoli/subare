@@ -93,16 +93,15 @@ public enum MonteCarloAlgorithms {
 
   private Tensor analyseAlgorithm(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa,
       List<DiscreteModelErrorAnalysis> errorAnalysisList) {
-    Tensor samples = Tensors.empty();
     MonteCarloTrial monteCarloTrial = create(monteCarloInterface);
+    Tensor samples = Tensors.empty();
     for (int index = 0; index < batches; ++index) {
-      Tensor sample = Tensors.vector(index);
       // System.out.println("starting batch " + (index + 1) + " of " + batches);
       monteCarloTrial.executeBatch();
-      for (DiscreteModelErrorAnalysis errorAnalysis : errorAnalysisList) {
-        sample.append(errorAnalysis.getError(monteCarloInterface, optimalQsa, monteCarloTrial.qsa()));
-      }
-      samples.append(sample);
+      Tensor vector = Tensors.vector(index);
+      for (DiscreteModelErrorAnalysis errorAnalysis : errorAnalysisList)
+        vector.append(errorAnalysis.getError(monteCarloInterface, optimalQsa, monteCarloTrial.qsa()));
+      samples.append(vector);
     }
     return samples;
   }

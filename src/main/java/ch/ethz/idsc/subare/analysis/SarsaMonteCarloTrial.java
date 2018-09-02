@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.analysis;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -30,16 +29,14 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   private final Sarsa sarsa;
   private final Deque<StepInterface> deque = new ArrayDeque<>();
 
-  public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, DiscreteQsa qsa_) {
+  public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa) {
     this.monteCarloInterface = monteCarloInterface;
-    DiscreteQsa qsa = Objects.isNull(qsa_) ? DiscreteQsa.build(monteCarloInterface) : qsa_;
-    LearningRate learningRate = Objects.isNull(learningRate_) ? ConstantLearningRate.of(ALPHA) : learningRate_;
     sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa);
     sarsa.setExplore(EPSILON);
   }
 
   public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
-    this(monteCarloInterface, sarsaType, null, null);
+    this(monteCarloInterface, sarsaType, ConstantLearningRate.of(ALPHA), DiscreteQsa.build(monteCarloInterface));
   }
 
   @Override // from MonteCarloTrial
@@ -69,7 +66,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
     }
   }
 
-  @Override // from MonteCarloTrial
+  @Override
   public QsaInterface qsaInterface() {
     return qsa();
   }

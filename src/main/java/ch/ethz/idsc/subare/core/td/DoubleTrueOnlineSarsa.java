@@ -1,12 +1,11 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.TrueOnlineInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
@@ -22,7 +21,7 @@ import ch.ethz.idsc.tensor.red.Mean;
 import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
+public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
   private final Coinflip coinflip = Coinflip.fair();
   // ---
   private final MonteCarloInterface monteCarloInterface;
@@ -80,12 +79,13 @@ public class DoubleTrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   }
 
   /** faster when only part of the qsa is required */
+  @Override
   public final QsaInterface qsaInterface() {
     return new FeatureQsaAdapter(getW(), featureMapper);
   }
 
   /** faster when only part of the qsa is required */
-  public final QsaInterface qsaInterface(Tensor w) {
+  private QsaInterface qsaInterface(Tensor w) {
     return new FeatureQsaAdapter(w, featureMapper);
   }
 
