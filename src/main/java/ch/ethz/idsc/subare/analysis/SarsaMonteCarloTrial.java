@@ -18,24 +18,30 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.sca.Sign;
 
 /** uses 1-step digest */
 public class SarsaMonteCarloTrial implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
   private static final Scalar EPSILON = RealScalar.of(0.1);
-  private static final int DIGEST_DEPTH_BATCH = 1; // 0 is equal to the MonteCarlo approach
-  private static final int DIGEST_DEPTH_DIGEST = 1;
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final Sarsa sarsa;
   private final Deque<StepInterface> deque = new ArrayDeque<>();
+  private final int digestDepth; // 0 is equal to the MonteCarlo approach
 
   public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, DiscreteQsa qsa_) {
+    this(monteCarloInterface, sarsaType, learningRate_, qsa_, 1);
+  }
+
+  public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, DiscreteQsa qsa_, int digestDepth_) {
     this.monteCarloInterface = monteCarloInterface;
     DiscreteQsa qsa = Objects.isNull(qsa_) ? DiscreteQsa.build(monteCarloInterface) : qsa_;
     LearningRate learningRate = Objects.isNull(learningRate_) ? ConstantLearningRate.of(ALPHA) : learningRate_;
     sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa);
     sarsa.setExplore(EPSILON);
+    digestDepth = digestDepth_;
+    Sign.requirePositiveOrZero(RealScalar.of(digestDepth_));
   }
 
   public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
@@ -45,7 +51,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   @Override // from MonteCarloTrial
   public void executeBatch() {
     Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa(), EPSILON);
-    ExploringStarts.batch(monteCarloInterface, policy, DIGEST_DEPTH_BATCH, sarsa);
+    ExploringStarts.batch(monteCarloInterface, policy, digestDepth, sarsa);
   }
 
   @Override // from MonteCarloTrial
@@ -57,7 +63,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   public void digest(StepInterface stepInterface) {
     deque.add(stepInterface);
     if (!monteCarloInterface.isTerminal(stepInterface.nextState())) {
-      if (deque.size() == DIGEST_DEPTH_DIGEST) { // never true, if nstep == 0
+      if (deque.size() == digestDepth) { // never true, if nstep == 0
         sarsa.digest(deque);
         deque.poll();
       }
@@ -67,6 +73,10 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
         deque.poll();
       }
     }
+  }
+
+  public int getDequeueSize() {
+    return deque.size();
   }
 
   @Override // from MonteCarloTrial
