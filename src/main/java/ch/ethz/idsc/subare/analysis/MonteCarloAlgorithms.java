@@ -15,7 +15,7 @@ public enum MonteCarloAlgorithms {
   ORIGINAL_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new SarsaMonteCarloTrial(monteCarloInterface, SarsaType.ORIGINAL);
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.ORIGINAL);
     }
   }, //
   DOUBLE_ORIGINAL_SARSA() {
@@ -27,7 +27,7 @@ public enum MonteCarloAlgorithms {
   EXPECTED_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new SarsaMonteCarloTrial(monteCarloInterface, SarsaType.EXPECTED);
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.EXPECTED);
     }
   }, //
   DOUBLE_EXPECTED_SARSA() {
@@ -39,7 +39,7 @@ public enum MonteCarloAlgorithms {
   QLEARNING_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new SarsaMonteCarloTrial(monteCarloInterface, SarsaType.QLEARNING);
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING);
     }
   }, //
   DOUBLE_QLEARNING_SARSA() {
