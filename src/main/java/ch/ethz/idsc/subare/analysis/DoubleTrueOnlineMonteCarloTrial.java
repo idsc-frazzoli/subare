@@ -1,8 +1,6 @@
 // code by fluric
 package ch.ethz.idsc.subare.analysis;
 
-import java.util.Objects;
-
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
@@ -24,32 +22,33 @@ public class DoubleTrueOnlineMonteCarloTrial implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
   private static final Scalar LAMBDA = RealScalar.of(0.3);
   private static final Scalar EPSILON = RealScalar.of(0.1);
+
+  public static DoubleTrueOnlineMonteCarloTrial create(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+    FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
+    return new DoubleTrueOnlineMonteCarloTrial(monteCarloInterface, sarsaType, //
+        featureMapper, //
+        ConstantLearningRate.of(ALPHA), ConstantLearningRate.of(ALPHA), //
+        new FeatureWeight(featureMapper), new FeatureWeight(featureMapper));
+  }
+
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final DoubleTrueOnlineSarsa doubleTrueOnlineSarsa;
 
   // has convergence problems, don't use it yet!
-  public DoubleTrueOnlineMonteCarloTrial( //
+  private DoubleTrueOnlineMonteCarloTrial( //
       MonteCarloInterface monteCarloInterface, SarsaType sarsaType, //
-      LearningRate learningRate1_, LearningRate learningRate2_, //
-      FeatureWeight w1_, FeatureWeight w2_) {
+      FeatureMapper featureMapper, //
+      LearningRate learningRate1, LearningRate learningRate2, //
+      FeatureWeight w1, FeatureWeight w2) {
     this.monteCarloInterface = monteCarloInterface;
-    FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    LearningRate learningRate1 = Objects.isNull(learningRate1_) ? ConstantLearningRate.of(ALPHA) : learningRate1_;
-    LearningRate learningRate2 = Objects.isNull(learningRate2_) ? ConstantLearningRate.of(ALPHA) : learningRate2_;
-    FeatureWeight w1 = Objects.isNull(w1_) ? new FeatureWeight(featureMapper) : w1_;
-    FeatureWeight w2 = Objects.isNull(w2_) ? new FeatureWeight(featureMapper) : w2_;
     doubleTrueOnlineSarsa = sarsaType.doubleTrueOnline(monteCarloInterface, LAMBDA, featureMapper, learningRate1, learningRate2, w1, w2);
     doubleTrueOnlineSarsa.setExplore(EPSILON);
   }
 
-  public DoubleTrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
-    this(monteCarloInterface, sarsaType, null, null, null, null);
-  }
-
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, doubleTrueOnlineSarsa.qsa(), EPSILON);
+    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa(), EPSILON);
     ExploringStarts.batch(monteCarloInterface, policy, doubleTrueOnlineSarsa);
   }
 

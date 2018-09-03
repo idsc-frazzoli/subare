@@ -34,11 +34,10 @@ public enum MonteCarloAnalysis {
     if (!(monteCarloInterface instanceof StandardModel)) { // if no AVI is possible, try to approximate it
       System.out.println("Approximating optimal QSA because the model does not implement StandardModel!");
       DiscreteQsa qsaSarsa = DiscreteQsa.build(monteCarloInterface);
-      final SarsaMonteCarloTrial sarsa = new SarsaMonteCarloTrial(monteCarloInterface, SarsaType.QLEARNING);
+      final SarsaMonteCarloTrial sarsa = SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING);
       Stopwatch stopwatch = Stopwatch.started();
-      for (int index = 0; index < batches * 10; ++index) {
+      for (int index = 0; index < batches * 10; ++index)
         sarsa.executeBatch();
-      }
       System.out.println("Time for optimal QSA approximation: " + stopwatch.display_seconds() + "s");
       return sarsa.qsa();
     }

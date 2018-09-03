@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.analysis;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
@@ -20,32 +19,31 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Sign;
 
-/** uses 1-step digest */
 public class SarsaMonteCarloTrial implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
   private static final Scalar EPSILON = RealScalar.of(0.1);
+
+  public static SarsaMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa,
+      int digestDepth) {
+    return new SarsaMonteCarloTrial(monteCarloInterface, sarsaType, learningRate, qsa, digestDepth);
+  }
+
+  public static SarsaMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+    return new SarsaMonteCarloTrial(monteCarloInterface, sarsaType, ConstantLearningRate.of(ALPHA), DiscreteQsa.build(monteCarloInterface), 1);
+  }
+
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final Sarsa sarsa;
   private final Deque<StepInterface> deque = new ArrayDeque<>();
   private final int digestDepth; // 0 is equal to the MonteCarlo approach
 
-  public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, DiscreteQsa qsa_) {
-    this(monteCarloInterface, sarsaType, learningRate_, qsa_, 1);
-  }
-
-  public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate_, DiscreteQsa qsa_, int digestDepth_) {
+  private SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa, int digestDepth) {
     this.monteCarloInterface = monteCarloInterface;
-    DiscreteQsa qsa = Objects.isNull(qsa_) ? DiscreteQsa.build(monteCarloInterface) : qsa_;
-    LearningRate learningRate = Objects.isNull(learningRate_) ? ConstantLearningRate.of(ALPHA) : learningRate_;
     sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa);
     sarsa.setExplore(EPSILON);
-    digestDepth = digestDepth_;
-    Sign.requirePositiveOrZero(RealScalar.of(digestDepth_));
-  }
-
-  public SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
-    this(monteCarloInterface, sarsaType, null, null);
+    this.digestDepth = digestDepth;
+    Sign.requirePositiveOrZero(RealScalar.of(digestDepth));
   }
 
   @Override // from MonteCarloTrial

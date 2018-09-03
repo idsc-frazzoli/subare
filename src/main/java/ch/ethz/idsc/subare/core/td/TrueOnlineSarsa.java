@@ -1,12 +1,11 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.TrueOnlineInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
@@ -26,7 +25,7 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * https://github.com/idsc-frazzoli/subare/files/2257720/trueOnlineSarsa.pdf
  * 
  * in Section 12.8, p.309 */
-public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
+public class TrueOnlineSarsa implements TrueOnlineInterface {
   private final MonteCarloInterface monteCarloInterface;
   private final FeatureMapper featureMapper;
   private final LearningRate learningRate;
@@ -79,6 +78,7 @@ public class TrueOnlineSarsa implements DiscreteQsaSupplier, StepDigest {
   }
 
   /** faster when only part of the qsa is required */
+  @Override // from QsaInterfaceSupplier
   public final QsaInterface qsaInterface() {
     return new FeatureQsaAdapter(w.get(), featureMapper);
   }

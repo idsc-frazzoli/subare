@@ -1,14 +1,8 @@
 // code by fluric
 package ch.ethz.idsc.subare.analysis;
 
-import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
-import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.subare.core.TrueOnlineInterface;
 
-public interface MonteCarloTrial extends DiscreteQsaSupplier {
+public interface MonteCarloTrial extends TrueOnlineInterface {
   void executeBatch();
-
-  void digest(StepInterface stepInterface);
-
-  QsaInterface qsaInterface();
 }
