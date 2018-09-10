@@ -1,15 +1,17 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionCounter;
+import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.TrueOnlineInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -25,7 +27,7 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * https://github.com/idsc-frazzoli/subare/files/2257720/trueOnlineSarsa.pdf
  * 
  * in Section 12.8, p.309 */
-public class TrueOnlineSarsa implements TrueOnlineInterface {
+public class TrueOnlineSarsa implements TrueOnlineInterface, StateActionCounterSupplier {
   private final MonteCarloInterface monteCarloInterface;
   private final FeatureMapper featureMapper;
   private final LearningRate learningRate;
@@ -36,6 +38,7 @@ public class TrueOnlineSarsa implements TrueOnlineInterface {
   private final SarsaEvaluation evaluationType;
   /** feature weight vector w is a long-term memory, accumulating over the lifetime of the system */
   private final FeatureWeight w;
+  private final StateActionCounter sac;
   // ---
   private Scalar epsilon;
   // ---
@@ -45,10 +48,11 @@ public class TrueOnlineSarsa implements TrueOnlineInterface {
 
   /* package */ TrueOnlineSarsa( //
       MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, //
-      Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w) {
+      Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w, StateActionCounter sac) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
     this.learningRate = learningRate;
+    this.sac = sac;
     Clip.unit().requireInside(lambda);
     this.gamma = monteCarloInterface.gamma();
     this.featureMapper = featureMapper;
@@ -95,11 +99,11 @@ public class TrueOnlineSarsa implements TrueOnlineInterface {
     Tensor nextState = stepInterface.nextState();
     Scalar reward = stepInterface.reward();
     // ---
-    Scalar alpha = learningRate.alpha(stepInterface);
+    Scalar alpha = learningRate.alpha(stepInterface, sac);
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
     Scalar prevQ = w.get().dot(x).Get();
-    Scalar nextQ = evaluationType.evaluate(epsilon, learningRate, nextState, qsaInterface());
+    Scalar nextQ = evaluationType.evaluate(epsilon, learningRate, nextState, qsaInterface(), sac);
     Scalar delta = reward.add(gamma.multiply(nextQ)).subtract(prevQ);
     // eq (12.11)
     z = z.multiply(gamma_lambda) //
@@ -111,7 +115,7 @@ public class TrueOnlineSarsa implements TrueOnlineInterface {
     w.set(w.get().add(scalez).subtract(scalex));
     nextQOld = nextQ;
     // ---
-    learningRate.digest(stepInterface);
+    sac.digest(stepInterface);
     // ---
     if (monteCarloInterface.isTerminal(nextState))
       resetEligibility();
@@ -122,5 +126,10 @@ public class TrueOnlineSarsa implements TrueOnlineInterface {
     /** eligibility trace vector is initialized to zero at the beginning of the
      * episode */
     z = Array.zeros(featureSize);
+  }
+
+  @Override
+  public StateActionCounter sac() {
+    return sac;
   }
 }

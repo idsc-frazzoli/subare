@@ -1,6 +1,7 @@
 // code by jz and jph
 package ch.ethz.idsc.subare.core.util;
 
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -25,13 +26,13 @@ import ch.ethz.idsc.tensor.sca.Sign;
  * in the Gambler problem the following values seem to work well
  * OriginalSarsa factor == 1.3, and exponent == 0.51
  * QLearning factor == 0.2, and exponent == 0.55 */
-abstract class DecayedLearningRate extends UnbiasedLearningRate {
+abstract class DecayedLearningRate implements LearningRate {
   private final Scalar factor;
   private final Scalar exponent;
   /** lookup table to speed up computation */
   private final Tensor MEMO = Tensors.vector(1.0); // index == 0 => learning rate == 1
 
-  DecayedLearningRate(Scalar factor, Scalar exponent) {
+  /* package */ DecayedLearningRate(Scalar factor, Scalar exponent) {
     if (Scalars.lessEquals(exponent, RationalScalar.HALF))
       throw TensorRuntimeException.of(factor, exponent);
     this.factor = Sign.requirePositive(factor);
@@ -39,9 +40,9 @@ abstract class DecayedLearningRate extends UnbiasedLearningRate {
   }
 
   @Override // from LearningRate
-  public synchronized final Scalar alpha(StepInterface stepInterface) {
-    Tensor key = key(stepInterface.prevState(), stepInterface.action());
-    int index = counts(key);
+  public synchronized final Scalar alpha(StepInterface stepInterface, StateActionCounter stateActionCounter) {
+    Tensor key = StateAction.key(stepInterface);
+    int index = stateActionCounter.counts(key).number().intValue();
     while (MEMO.length() <= index)
       MEMO.append(Min.of( // TODO the "+1" in the denominator may not be ideal... perhaps +0.5, or +0 ?
           factor.multiply(Power.of(DoubleScalar.of(1.0 / (index + 1)), exponent)), //

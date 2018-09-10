@@ -1,10 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import ch.ethz.idsc.subare.core.DiscreteQsaWeight;
-import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.tensor.RationalScalar;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Rescale;
@@ -50,14 +48,14 @@ public enum DiscreteValueFunctions {
 
   /** @param qsa1
    * @param qsa2
-   * @param discreteQsaWeight1
-   * @param discreteQsaWeight2
+   * @param sac1
+   * @param sac2
    * @return the weighted average of the qsa values according to the number of visits occurred in the different {@link LearningRate}'s.
    * For each element of the qsa: qsa(e) = (qsa1(e)*lr1_visits(e) + qsa2(e)*lr2_visits(e))/(lr1_visits(e)+lr2_visits(e)) */
   public static DiscreteQsa weightedAverage(DiscreteQsa qsa1, DiscreteQsa qsa2, //
-      DiscreteQsaWeight discreteQsaWeight1, DiscreteQsaWeight discreteQsaWeight2) {
-    Tensor visits1 = Tensor.of(qsa1.keys().stream().mapToInt(discreteQsaWeight1::counts).mapToObj(RealScalar::of));
-    Tensor visits2 = Tensor.of(qsa2.keys().stream().mapToInt(discreteQsaWeight2::counts).mapToObj(RealScalar::of));
+      StateActionCounter sac1, StateActionCounter sac2) {
+    Tensor visits1 = Tensor.of(qsa1.keys().stream().map(sac1::counts));
+    Tensor visits2 = Tensor.of(qsa2.keys().stream().map(sac2::counts));
     Tensor inverse = visits1.add(visits2).map(InvertUnlessZero.FUNCTION);
     return qsa1.create(qsa1.values().pmul(visits1).add(qsa2.values().pmul(visits2)).pmul(inverse).stream());
   }

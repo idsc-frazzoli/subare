@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.ch04.gambler.Gambler;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.adapter.SimpleTestModel;
@@ -15,6 +14,7 @@ import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;

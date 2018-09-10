@@ -2,11 +2,13 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
+import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -20,10 +22,10 @@ class AbstractSarsaEvaluation implements SarsaEvaluation {
   }
 
   @Override
-  public final Scalar evaluate(Scalar epsilon, LearningRate learningRate, Tensor state, QsaInterface qsa) {
+  public final Scalar evaluate(Scalar epsilon, LearningRate learningRate, Tensor state, QsaInterface qsa, StateActionCounter sac) {
     Tensor actions = Tensor.of( //
         discreteModel.actions(state).stream() //
-            .filter(action -> learningRate.isEncountered(state, action)));
+            .filter(action -> sac.isEncountered(StateAction.key(state, action))));
     return Tensors.isEmpty(actions) //
         ? RealScalar.ZERO
         : crossEvaluate(epsilon, state, actions, qsa, qsa);

@@ -20,7 +20,7 @@ enum RSTQP_Windygrid {
     WindygridRaster windygridRaster = new WindygridRaster(windygrid);
     final DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         windygrid, qsa, ConstantLearningRate.one());
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_rstqp.gif"), 250)) {
       int batches = 40;

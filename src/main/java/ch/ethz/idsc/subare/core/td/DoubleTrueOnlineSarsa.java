@@ -1,15 +1,16 @@
 // code by fluric
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.TrueOnlineInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -28,6 +29,8 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
   private final FeatureMapper featureMapper;
   private final LearningRate learningRate1;
   private final LearningRate learningRate2;
+  private final StateActionCounter sac1;
+  private final StateActionCounter sac2;
   // ---
   private final SarsaEvaluation evaluationType;
   private final Scalar gamma;
@@ -46,11 +49,14 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
       MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, //
       FeatureMapper featureMapper, //
       LearningRate learningRate1, LearningRate learningRate2, //
-      FeatureWeight w1, FeatureWeight w2) {
+      FeatureWeight w1, FeatureWeight w2, //
+      StateActionCounter sac1, StateActionCounter sac2) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
     this.learningRate1 = learningRate1;
     this.learningRate2 = learningRate2;
+    this.sac1 = sac1;
+    this.sac2 = sac2;
     Clip.unit().requireInside(lambda);
     this.gamma = monteCarloInterface.gamma();
     this.featureMapper = featureMapper;
@@ -102,16 +108,17 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
     FeatureWeight W1 = flip ? w2 : w1;
     FeatureWeight W2 = flip ? w1 : w2;
     LearningRate learningRate = flip ? learningRate2 : learningRate1; // for updating
+    StateActionCounter sac = flip ? sac2 : sac1; // for updating
     // ---
     Tensor prevState = stepInterface.prevState();
     Tensor prevAction = stepInterface.action();
     Tensor nextState = stepInterface.nextState();
     Tensor nextActions = Tensor.of(monteCarloInterface.actions(nextState).stream() //
-        .filter(nextAction -> learningRate.isEncountered(nextState, nextAction)));
+        .filter(nextAction -> sac.isEncountered(StateAction.key(nextState, nextAction))));
     // ---
     Scalar reward = monteCarloInterface.reward(prevState, prevAction, nextState);
     // ---
-    Scalar alpha = learningRate1.alpha(stepInterface);
+    Scalar alpha = learningRate1.alpha(stepInterface, sac);
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
     Scalar prevQ = W2.get().dot(x).Get();
@@ -132,7 +139,7 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
       w1.set(w1.get().add(scalez).subtract(scalex));
     nextQOld = nextQ;
     // ---
-    learningRate.digest(stepInterface);
+    sac.digest(stepInterface);
     // ---
     if (monteCarloInterface.isTerminal(nextState))
       resetEligibility();

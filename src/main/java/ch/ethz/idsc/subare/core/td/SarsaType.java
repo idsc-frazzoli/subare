@@ -2,11 +2,12 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.tensor.Scalar;
 
 public enum SarsaType {
@@ -34,12 +35,13 @@ public enum SarsaType {
 
   // TODO JAN rename function
   public final Sarsa supply(DiscreteModel discreteModel, LearningRate learningRate, QsaInterface qsa) {
-    return new Sarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate, qsa);
+    return new Sarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate, qsa, new DiscreteStateActionCounter());
   }
 
   public final DoubleSarsa doubleSarsa( //
       DiscreteModel discreteModel, LearningRate learningRate1, LearningRate learningRate2, QsaInterface qsa1, QsaInterface qsa2) {
-    return new DoubleSarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate1, learningRate2, qsa1, qsa2);
+    return new DoubleSarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate1, learningRate2, qsa1, qsa2, new DiscreteStateActionCounter(),
+        new DiscreteStateActionCounter());
   }
 
   /** @param monteCarloInterface
@@ -49,12 +51,14 @@ public enum SarsaType {
    * @param w */
   public final TrueOnlineSarsa trueOnline( //
       MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w) {
-    return new TrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate, w);
+    return new TrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate, w,
+        new DiscreteStateActionCounter());
   }
 
   public final DoubleTrueOnlineSarsa doubleTrueOnline( //
       MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, //
       LearningRate learningRate1, LearningRate learningRate2, FeatureWeight w1, FeatureWeight w2) {
-    return new DoubleTrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate1, learningRate2, w1, w2);
+    return new DoubleTrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate1, learningRate2, w1, w2,
+        new DiscreteStateActionCounter(), new DiscreteStateActionCounter());
   }
 }

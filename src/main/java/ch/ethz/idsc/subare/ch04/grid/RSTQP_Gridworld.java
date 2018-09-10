@@ -17,7 +17,7 @@ enum RSTQP_Gridworld {
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         gridworld, qsa, ConstantLearningRate.one());
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_qsa_rstqp.gif"), 250)) {
       int batches = 10;

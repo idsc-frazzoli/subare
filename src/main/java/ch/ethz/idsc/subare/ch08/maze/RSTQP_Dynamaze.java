@@ -20,7 +20,7 @@ enum RSTQP_Dynamaze {
     DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
     DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         dynamaze, qsa, ConstantLearningRate.of(RealScalar.ONE));
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_qsa_rstqp.gif"), 250)) {
       int batches = 50;

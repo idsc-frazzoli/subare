@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.adapter.PolynomialBasis;
 import ch.ethz.idsc.subare.core.td.TabularTemporalDifference0;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
@@ -30,7 +31,7 @@ enum TTD0_Randomwalk {
   ;
   static void some(Randomwalk randomwalk, VsInterface vs) {
     TabularTemporalDifference0 ttd0 = new TabularTemporalDifference0( //
-        vs, randomwalk.gamma(), DefaultLearningRate.of(3, .6));
+        vs, randomwalk.gamma(), DefaultLearningRate.of(3, .6), new DiscreteStateActionCounter());
     Policy policy = EquiprobablePolicy.create(randomwalk);
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policy, ttd0);

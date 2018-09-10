@@ -1,16 +1,14 @@
 // code by jph and fluric
 package ch.ethz.idsc.subare.core.util;
 
-import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 
 /** learning rate of alpha except in first update of state-action pair
  * for which the learning rate equals 1 in the case of warmStart. */
-public class ConstantLearningRate extends UnbiasedLearningRate {
+public class ConstantLearningRate implements LearningRate {
   /** @param alpha
    * @return constant learning rate with factor alpha */
   public static LearningRate of(Scalar alpha) {
@@ -37,14 +35,7 @@ public class ConstantLearningRate extends UnbiasedLearningRate {
   }
 
   @Override
-  protected Tensor key(Tensor prev, Tensor action) {
-    return Tensors.of(prev, action);
-  }
-
-  @Override
-  public Scalar alpha(StepInterface stepInterface) {
-    return isEncountered(stepInterface.prevState(), stepInterface.action()) //
-        ? alpha
-        : RealScalar.ONE;
+  public Scalar alpha(StepInterface stepInterface, StateActionCounter stateActionCounter) {
+    return stateActionCounter.isEncountered(StateAction.key(stepInterface)) ? alpha : RealScalar.ONE;
   }
 }
