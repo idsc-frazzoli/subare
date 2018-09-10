@@ -9,7 +9,11 @@ import ch.ethz.idsc.tensor.Tensor;
 public interface StateActionCounter {
   /** @param key same as listed in {@link DiscreteQsa#keys()}
    * @return number of updates of qsa value for given state-action pair due to learning */
-  Scalar counts(Tensor key);
+  Scalar stateActionCount(Tensor key);
+
+  /** @param key same as listed in {@link DiscreteQsa#keys()}
+   * @return number of updates of qsa value for given state due to learning */
+  Scalar stateCount(Tensor state);
 
   /** function exists to remove the initialization bias
    * 

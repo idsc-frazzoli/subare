@@ -35,7 +35,7 @@ public class EGreedyPolicy implements Policy {
   private final Scalar epsilon;
   private final Map<Tensor, Integer> sizes;
 
-  EGreedyPolicy(Map<Tensor, Index> map, Scalar epsilon, Map<Tensor, Integer> sizes) {
+  protected EGreedyPolicy(Map<Tensor, Index> map, Scalar epsilon, Map<Tensor, Integer> sizes) {
     this.map = map;
     this.epsilon = epsilon;
     this.sizes = sizes;

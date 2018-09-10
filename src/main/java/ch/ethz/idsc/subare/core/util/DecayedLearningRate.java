@@ -42,7 +42,7 @@ abstract class DecayedLearningRate implements LearningRate {
   @Override // from LearningRate
   public synchronized final Scalar alpha(StepInterface stepInterface, StateActionCounter stateActionCounter) {
     Tensor key = StateAction.key(stepInterface);
-    int index = stateActionCounter.counts(key).number().intValue();
+    int index = stateActionCounter.stateActionCount(key).number().intValue();
     while (MEMO.length() <= index)
       MEMO.append(Min.of( // TODO the "+1" in the denominator may not be ideal... perhaps +0.5, or +0 ?
           factor.multiply(Power.of(DoubleScalar.of(1.0 / (index + 1)), exponent)), //

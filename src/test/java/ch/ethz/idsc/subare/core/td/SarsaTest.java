@@ -21,7 +21,7 @@ public class SarsaTest extends TestCase {
     for (SarsaType sarsaType : SarsaType.values()) {
       MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
       LearningRate learningRate = ConstantLearningRate.one();
-      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface, RealScalar.ZERO);
+      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
       Sarsa sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa);
       assertFalse(sarsa.sac().isEncountered(StateAction.key(RealScalar.ZERO, RealScalar.ONE)));
       Scalar epsilon = RealScalar.of(.2);
@@ -37,7 +37,7 @@ public class SarsaTest extends TestCase {
   public void testConstantNonOneExact() {
     for (SarsaType sarsaType : SarsaType.values()) {
       MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
-      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface, RealScalar.ZERO);
+      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(.8));
       Sarsa sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa);
       assertFalse(sarsa.sac().isEncountered(StateAction.key(RealScalar.ZERO, RealScalar.ONE)));
@@ -55,7 +55,7 @@ public class SarsaTest extends TestCase {
     for (SarsaType sarsaType : SarsaType.values()) {
       MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
       LearningRate learningRate = DefaultLearningRate.of(1.5, 0.6);
-      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface, RealScalar.ZERO);
+      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
       Sarsa sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa);
       assertFalse(sarsa.sac().isEncountered(StateAction.key(RealScalar.ZERO, RealScalar.ONE)));
       Scalar epsilon = RealScalar.of(.2);
