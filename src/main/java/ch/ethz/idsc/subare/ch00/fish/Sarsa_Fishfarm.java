@@ -34,7 +34,7 @@ enum Sarsa_Fishfarm {
       for (int index = 0; index < batches; ++index) {
         // if (batches - 10 < index)
         Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
-        Policy policy = EGreedyPolicy.bestEquiprobable(fishfarm, qsa, epsilon.Get(index));
+        Policy policy = new EGreedyPolicy(fishfarm, qsa, epsilon.Get(index));
         // sarsa.supplyPolicy(() -> policy);
         sarsa.setExplore(epsilon.Get(index));
         ExploringStarts.batch(fishfarm, policy, nstep, sarsa);

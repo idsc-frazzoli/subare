@@ -10,8 +10,11 @@ import java.util.Map.Entry;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeQsaEstimator;
+import ch.ethz.idsc.subare.core.StateActionCounter;
+import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.subare.util.Average;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -26,15 +29,17 @@ import ch.ethz.idsc.tensor.alg.Series;
  * based on average returns from complete episodes.
  * 
  * see box on p.107 */
-public class MonteCarloExploringStarts implements EpisodeQsaEstimator {
+public class MonteCarloExploringStarts implements EpisodeQsaEstimator, StateActionCounterSupplier {
   private final Scalar gamma;
   private final DiscreteQsa qsa;
+  private final StateActionCounter sac;
   private final Map<Tensor, Average> map = new HashMap<>();
 
   /** @param discreteModel */
   public MonteCarloExploringStarts(DiscreteModel discreteModel) {
     this.gamma = discreteModel.gamma();
     this.qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"
+    this.sac = new DiscreteStateActionCounter();
   }
 
   @Override // from EpisodeDigest
@@ -49,6 +54,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator {
         first.put(key, trajectory.size());
       rewards.append(stepInterface.reward());
       trajectory.add(stepInterface);
+      sac.digest(stepInterface);
     }
     Map<Tensor, Scalar> gains = new HashMap<>();
     if (gamma.equals(RealScalar.ONE)) {
@@ -95,5 +101,10 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator {
   @Override
   public DiscreteQsa qsa() {
     return qsa;
+  }
+
+  @Override
+  public StateActionCounter sac() {
+    return sac;
   }
 }

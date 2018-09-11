@@ -18,19 +18,17 @@ public enum UcbUtils {
     DiscreteQsa qsaWithUcb = DiscreteQsa.build(discreteModel);
     for (Tensor state : discreteModel.states()) {
       for (Tensor action : discreteModel.actions(state)) {
-        qsaWithUcb.assign(state, action, getUpperConfidenceBound(state, action, qsa, sac, discreteModel));
+        qsaWithUcb.assign(state, action, getUpperConfidenceBound(state, action, qsa.value(state, action), sac, discreteModel));
       }
     }
     return qsaWithUcb;
   }
 
-  public static Scalar getUpperConfidenceBound(Tensor state, Tensor action, QsaInterface qsa, StateActionCounter sac, DiscreteModel discreteModel) {
-    Scalar qsaValue = qsa.value(state, action);
+  public static Scalar getUpperConfidenceBound(Tensor state, Tensor action, Scalar qsaValue, StateActionCounter sac, DiscreteModel discreteModel) {
     Tensor key = StateAction.key(state, action);
     Scalar Nta = sac.stateActionCount(key);
     if (Scalars.isZero(Nta))
       return DoubleScalar.POSITIVE_INFINITY;
-    Scalar actionSize = RealScalar.of(discreteModel.actions(state).length());
     Scalar bias = Sqrt.of(sac.stateCount(state)).divide(Nta);
     Scalar sign = Sign.isPositive(qsaValue) ? RealScalar.ONE : RealScalar.of(-1);
     return qsaValue.multiply((RealScalar.ONE.add(bias.multiply(sign))));

@@ -42,7 +42,7 @@ enum TOS_Gridworld {
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_tos_" + name + ".gif"), 250)) {
       for (int batch = 0; batch < 100; ++batch) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
-        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, trueOnlineSarsa.qsa(), RealScalar.of(.1));
+        Policy policy = new EGreedyPolicy(gridworld, trueOnlineSarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(gridworld, policy, trueOnlineSarsa);
         // DiscreteQsa toQsa = trueOnlineSarsa.getQsa();
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));

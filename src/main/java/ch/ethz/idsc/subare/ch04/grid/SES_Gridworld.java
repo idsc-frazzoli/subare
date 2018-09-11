@@ -37,7 +37,7 @@ enum SES_Gridworld {
         public Policy batchPolicy(int batch) {
           Scalar eps = epsilon.Get(batch);
           sarsa.setExplore(eps);
-          return EGreedyPolicy.bestEquiprobable(gridworld, qsa, eps);
+          return new EGreedyPolicy(gridworld, qsa, eps);
         }
       };
       int episode = 0;

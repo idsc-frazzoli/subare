@@ -44,7 +44,7 @@ enum BlackjackHelper {
 
   public static Tensor joinAll(Blackjack blackjack, DiscreteQsa qsa) {
     Tensor im1 = render(blackjack, qsa);
-    Policy policy = GreedyPolicy.bestEquiprobable(blackjack, qsa);
+    Policy policy = GreedyPolicy.of(blackjack, qsa);
     Tensor im2 = render(blackjack, policy);
     List<Integer> list = Dimensions.of(im1);
     list.set(1, 2);

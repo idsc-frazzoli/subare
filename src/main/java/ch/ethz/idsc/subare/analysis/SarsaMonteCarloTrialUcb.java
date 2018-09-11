@@ -48,7 +48,7 @@ public class SarsaMonteCarloTrialUcb implements MonteCarloTrial {
 
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = UcbPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa(), sarsa.sac(), EPSILON);
+    Policy policy = new UcbPolicy(monteCarloInterface, sarsa.qsa(), sarsa.sac(), monteCarloInterface.states());
     ExploringStarts.batch(monteCarloInterface, policy, digestDepth, sarsa);
   }
 

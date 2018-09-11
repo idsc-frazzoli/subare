@@ -34,7 +34,7 @@ enum Sarsa_Cliffwalk {
       for (int index = 0; index < batches; ++index) {
         // if (batches - 10 < index)
         Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);
-        Policy policy = EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, epsilon.Get(index));
+        Policy policy = new EGreedyPolicy(cliffwalk, qsa, epsilon.Get(index));
         // sarsa.supplyPolicy(() -> policy);
         sarsa.setExplore(epsilon.Get(index));
         ExploringStarts.batch(cliffwalk, policy, nstep, sarsa);

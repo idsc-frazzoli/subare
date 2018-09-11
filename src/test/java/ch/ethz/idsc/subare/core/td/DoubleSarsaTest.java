@@ -26,7 +26,7 @@ public class DoubleSarsaTest extends TestCase {
       DoubleSarsa doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, learningRate1, learningRate2, qsa1, qsa2);
       Scalar epsilon = RealScalar.of(.2);
       doubleSarsa.setExplore(epsilon);
-      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa1, epsilon);
+      Policy policy = new EGreedyPolicy(monteCarloInterface, qsa1, epsilon);
       ExploringStarts.batch(monteCarloInterface, policy, 2, doubleSarsa); // nstep > 1 required
       // DiscreteUtils.print(doubleSarsa.qsa());
       // TODO JAN investigate why this results in numeric precision
@@ -44,7 +44,7 @@ public class DoubleSarsaTest extends TestCase {
       DoubleSarsa doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, learningRate1, learningRate2, qsa1, qsa2);
       Scalar epsilon = RealScalar.of(.2);
       doubleSarsa.setExplore(epsilon);
-      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa1, epsilon);
+      Policy policy = new EGreedyPolicy(monteCarloInterface, qsa1, epsilon);
       ExploringStarts.batch(monteCarloInterface, policy, 2, doubleSarsa); // nstep > 1 required
       // DiscreteUtils.print(doubleSarsa.qsa());
       SimpleTestModels._checkExact(doubleSarsa.qsa());

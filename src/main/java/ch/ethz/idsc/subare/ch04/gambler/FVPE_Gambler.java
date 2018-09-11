@@ -16,7 +16,7 @@ enum FVPE_Gambler {
   public static void main(String[] args) {
     final Gambler gambler = Gambler.createDefault();
     final DiscreteVs ref = GamblerHelper.getOptimalVs(gambler);
-    final Policy policy = GreedyPolicy.bestEquiprobable(gambler, ref);
+    final Policy policy = GreedyPolicy.of(gambler, ref);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gambler, null);
     for (int count = 0; count < 100; ++count) {

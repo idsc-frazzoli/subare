@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionCounter;
+import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -17,6 +18,7 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.StateAction;
+import ch.ethz.idsc.subare.core.util.StateActionCounterUtil;
 import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -37,7 +39,7 @@ import ch.ethz.idsc.tensor.Tensors;
  * 
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
-public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
+public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, StateActionCounterSupplier {
   private final Coinflip coinflip = Coinflip.fair();
   // ---
   private final DiscreteModel discreteModel;
@@ -82,13 +84,13 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
    * @return epsilon-greedy policy with respect to (qsa1 + qsa2) / 2 */
   public Policy getEGreedy() {
     DiscreteQsa avg = DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
-    return EGreedyPolicy.bestEquiprobable(discreteModel, avg, epsilon);
+    return new EGreedyPolicy(discreteModel, avg, epsilon);
   }
 
   /** @return greedy policy with respect to (qsa1 + qsa2) / 2 */
   public Policy getGreedy() {
     DiscreteQsa avg = DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
-    return GreedyPolicy.bestEquiprobable(discreteModel, avg);
+    return GreedyPolicy.of(discreteModel, avg);
   }
 
   /** @param epsilon to build an e-greedy policy */
@@ -127,5 +129,10 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   public DiscreteQsa qsa() {
     return DiscreteValueFunctions.weightedAverage( //
         (DiscreteQsa) qsa1, (DiscreteQsa) qsa2, sac1, sac2);
+  }
+
+  @Override
+  public StateActionCounter sac() {
+    return StateActionCounterUtil.getSummedSac(sac1, sac2, discreteModel);
   }
 }

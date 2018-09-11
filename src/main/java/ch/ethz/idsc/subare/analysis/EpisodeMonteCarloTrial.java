@@ -25,7 +25,7 @@ public class EpisodeMonteCarloTrial implements MonteCarloTrial {
 
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, monteCarloExploringStarts.qsa(), EPSILON);
+    Policy policy = new EGreedyPolicy(monteCarloInterface, monteCarloExploringStarts.qsa(), EPSILON);
     ExploringStarts.batch(monteCarloInterface, policy, monteCarloExploringStarts);
   }
 

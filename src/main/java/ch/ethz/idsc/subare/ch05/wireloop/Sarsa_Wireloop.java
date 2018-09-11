@@ -32,7 +32,7 @@ enum Sarsa_Wireloop {
         UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250)) {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
-        Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, qsa, epsilon.Get(index));
+        Policy policy = new EGreedyPolicy(wireloop, qsa, epsilon.Get(index));
         // sarsa.supplyPolicy(() -> policy);
         sarsa.setExplore(epsilon.Get(index));
         ExploringStarts.batch(wireloop, policy, nstep, sarsa);

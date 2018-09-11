@@ -44,6 +44,14 @@ public class DiscreteStateActionCounter implements StateActionCounter, Serializa
     return Sign.isPositive(stateActionCount(key));
   }
 
+  public void setStateCount(Tensor state, Scalar value) {
+    stateMap.put(state, value.number().intValue());
+  }
+
+  public void setStateActionCount(Tensor key, Scalar value) {
+    stateActionMap.put(key, value.number().intValue());
+  }
+
   public Scalar getLogarithmicStateActionCount(Tensor state, Tensor action) {
     Tensor key = StateAction.key(state, action);
     return stateActionMap.containsKey(key) ? //

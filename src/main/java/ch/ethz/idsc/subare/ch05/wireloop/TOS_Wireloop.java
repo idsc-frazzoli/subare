@@ -46,7 +46,7 @@ enum TOS_Wireloop {
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_tos_" + algo + ".gif"), 250)) {
       for (int batch = 0; batch < 20; ++batch) {
         // System.out.println("batch " + batch);
-        Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, trueOnlineSarsa.qsa(), RealScalar.of(.1));
+        Policy policy = new EGreedyPolicy(wireloop, trueOnlineSarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(wireloop, policy, trueOnlineSarsa);
         // DiscreteQsa toQsa = trueOnlineSarsa.getQsa();
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));

@@ -18,6 +18,6 @@ enum CliffwalkHelper {
   static Policy getOptimalPolicy(Cliffwalk cliffwalk) {
     ValueIteration vi = new ValueIteration(cliffwalk, cliffwalk);
     vi.untilBelow(RealScalar.of(1e-10));
-    return GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
+    return GreedyPolicy.of(cliffwalk, vi.vs());
   }
 }

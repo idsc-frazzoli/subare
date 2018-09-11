@@ -28,7 +28,7 @@ enum MCES_Randomwalk {
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(randomwalk);
     int batches = 1000;
     for (int count = 0; count < batches; ++count) {
-      Policy policy = EGreedyPolicy.bestEquiprobable(randomwalk, mces.qsa(), RealScalar.of(.1));
+      Policy policy = new EGreedyPolicy(randomwalk, mces.qsa(), RealScalar.of(.1));
       if (count == 0) {
         boolean equals = Policies.equals(randomwalk, policy, EquiprobablePolicy.create(randomwalk));
         if (!equals)

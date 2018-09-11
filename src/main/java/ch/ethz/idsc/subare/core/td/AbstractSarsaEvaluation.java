@@ -33,7 +33,7 @@ class AbstractSarsaEvaluation implements SarsaEvaluation {
 
   @Override
   public Scalar crossEvaluate(Scalar epsilon, Tensor state, Tensor actions, QsaInterface qsa1, QsaInterface qsa2) {
-    Policy policy = EGreedyPolicy.bestEquiprobable(discreteModel, qsa1, epsilon, state);
+    Policy policy = new EGreedyPolicy(discreteModel, qsa1, epsilon, state);
     Tensor action = new PolicyWrap(policy).next(state, actions);
     return qsa2.value(state, action);
   }

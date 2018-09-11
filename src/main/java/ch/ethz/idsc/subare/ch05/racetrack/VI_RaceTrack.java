@@ -24,7 +24,7 @@ enum VI_RaceTrack {
     ValueIteration vi = new ValueIteration(racetrack, racetrack);
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
-    Policy policy = GreedyPolicy.bestEquiprobable(racetrack, vi.vs());
+    Policy policy = GreedyPolicy.of(racetrack, vi.vs());
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + ".gif"), 400)) {
       for (Tensor start : racetrack.statesStart) {
         Tensor image = racetrack.image();

@@ -38,7 +38,7 @@ enum AVI_Cliffwalk {
     }
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
     DiscreteUtils.print(vs);
-    Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, ref);
+    Policy policy = GreedyPolicy.of(cliffwalk, ref);
     Policies.print(policy, cliffwalk.states());
   }
 }

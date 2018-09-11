@@ -48,7 +48,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
 
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, sarsa.qsa(), EPSILON);
+    Policy policy = new EGreedyPolicy(monteCarloInterface, sarsa.qsa(), EPSILON);
     ExploringStarts.batch(monteCarloInterface, policy, digestDepth, sarsa);
   }
 

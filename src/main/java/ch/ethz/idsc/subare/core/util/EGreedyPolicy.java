@@ -1,85 +1,72 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import java.util.Map;
-import java.util.Objects;
-
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.StateActionCounter;
+import ch.ethz.idsc.subare.core.VsInterface;
+import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.sca.Clip;
 
 /** p.33 */
-public class EGreedyPolicy implements Policy {
-  public static Policy bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon) {
-    EGreedyPolicyBuilder builder = new EGreedyPolicyBuilder(discreteModel, qsa);
-    discreteModel.states().forEach(builder::append);
-    return new EGreedyPolicy(builder.map, epsilon, builder.sizes);
-  }
-
-  public static Policy bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon, Tensor state) {
-    EGreedyPolicyBuilder builder = new EGreedyPolicyBuilder(discreteModel, qsa);
-    builder.append(state);
-    return new EGreedyPolicy(builder.map, epsilon, builder.sizes);
-  }
-
-  // ---
-  private final Map<Tensor, Index> map;
+public class EGreedyPolicy extends PolicyBase {
   /** probability of choosing a non-optimal action, if there is at least one non-optimal action */
   private final Scalar epsilon;
-  private final Map<Tensor, Integer> sizes;
 
-  protected EGreedyPolicy(Map<Tensor, Index> map, Scalar epsilon, Map<Tensor, Integer> sizes) {
-    this.map = map;
+  public EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon, Tensor states) {
+    super(discreteModel, qsa, null, states);
+    Clip.function(0, 1).requireInside(epsilon);
     this.epsilon = epsilon;
-    this.sizes = sizes;
-    if (Objects.isNull(sizes) && Scalars.nonZero(epsilon))
-      throw new RuntimeException("sizes invalid for " + epsilon);
+  }
+
+  public EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon) {
+    super(discreteModel, qsa, null, discreteModel.states());
+    Clip.function(0, 1).requireInside(epsilon);
+    this.epsilon = epsilon;
+  }
+
+  public EGreedyPolicy(StandardModel standardModel, VsInterface vs, Scalar epsilon, Tensor states) {
+    states.forEach(v -> appendToMaps(standardModel, vs, v));
+    Clip.function(0, 1).requireInside(epsilon);
+    this.epsilon = epsilon;
+  }
+
+  @Override
+  protected void appendToMaps(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac, Tensor state) {
+    Tensor actions = discreteModel.actions(state);
+    Tensor va = Tensor.of(actions.stream().map(action -> qsa.value(state, action)));
+    FairArgMax fairArgMax = FairArgMax.of(va);
+    Tensor feasible = Tensor.of(fairArgMax.options().stream().map(actions::get));
+    stateToBestActions.put(state, Index.build(feasible));
+    stateToActionSize.put(state, actions.length());
+  }
+
+  protected void appendToMaps(StandardModel standardModel, VsInterface vs, Tensor state) {
+    ActionValueAdapter actionValueAdapter = new ActionValueAdapter(standardModel);
+    Tensor actions = standardModel.actions(state);
+    Tensor va = Tensor.of(actions.stream() //
+        .map(action -> actionValueAdapter.qsa(state, action, vs)));
+    FairArgMax fairArgMax = FairArgMax.of(va);
+    Tensor feasible = Tensor.of(fairArgMax.options().stream().map(actions::get));
+    stateToBestActions.put(state, Index.build(feasible));
+    stateToActionSize.put(state, actions.length());
   }
 
   @Override // from Policy
   public Scalar probability(Tensor state, Tensor action) {
-    Index index = map.get(state);
+    Index index = stateToBestActions.get(state);
     final int optimalCount = index.size();
-    if (Objects.isNull(sizes)) // greedy
-      return index.containsKey(action) ? RationalScalar.of(1, optimalCount) : RealScalar.ZERO;
-    // ---
-    final int nonOptimalCount = sizes.get(state) - optimalCount;
+    final int nonOptimalCount = stateToActionSize.get(state) - optimalCount;
     if (nonOptimalCount == 0) // no non-optimal action exists
       return RationalScalar.of(1, optimalCount);
     if (index.containsKey(action))
       return RealScalar.ONE.subtract(epsilon).divide(RealScalar.of(optimalCount));
     return epsilon.divide(RealScalar.of(nonOptimalCount));
-  }
-
-  /** useful for export to Mathematica
-   * 
-   * @param states
-   * @return list of actions optimal for */
-  public Tensor flatten(Tensor states) {
-    Tensor result = Tensors.empty();
-    for (Tensor state : states)
-      for (Tensor action : map.get(state).keys())
-        result.append(Tensors.of(state, action));
-    return result;
-  }
-
-  /** print overview of possible actions for given states in console
-   * 
-   * @param states */
-  public void print(Tensor states) {
-    System.out.println("greedy:");
-    for (Tensor state : states)
-      System.out.println(state + " -> " + map.get(state).keys());
-  }
-
-  public Tensor getBestActions(Tensor state) {
-    return map.get(state).keys();
   }
 }

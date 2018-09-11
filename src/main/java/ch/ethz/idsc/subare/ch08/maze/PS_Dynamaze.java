@@ -45,7 +45,7 @@ enum PS_Dynamaze {
             public Policy batchPolicy(int batch) {
               Scalar eps = epsilon.Get(batch);
               sarsa.setExplore(eps);
-              return EGreedyPolicy.bestEquiprobable(dynamaze, qsa, eps);
+              return new EGreedyPolicy(dynamaze, qsa, eps);
             }
           };
       while (stepExploringStarts.batchIndex() < batches) {

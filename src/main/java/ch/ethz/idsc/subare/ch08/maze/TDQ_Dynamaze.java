@@ -36,7 +36,7 @@ enum TDQ_Dynamaze {
       for (int index = 0; index < batches; ++index) {
         // if (EPISODES - 10 < index)
         Infoline.print(dynamaze, index, ref, qsa);
-        Policy policy = EGreedyPolicy.bestEquiprobable(dynamaze, qsa, epsilon.Get(index));
+        Policy policy = new EGreedyPolicy(dynamaze, qsa, epsilon.Get(index));
         sarsa.setExplore(epsilon.Get(index));
         // for (int count = 0; count < 5; ++count)
         ExploringStarts.batch(dynamaze, policy, tabularDynaQ);

@@ -45,7 +45,7 @@ enum QL_Gambler {
       Scalar eps = lr_scheduler.getEpsilon();
       for (int count = 0; count < 1; ++count) {
         ExploringStarts.batch(gambler, policy, 1, stepDigest);
-        policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);
+        policy = new EGreedyPolicy(gambler, qsa, eps);
       }
       gsw.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
     }

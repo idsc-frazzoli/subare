@@ -26,7 +26,7 @@ public class SarsaTest extends TestCase {
       assertFalse(sarsa.sac().isEncountered(StateAction.key(RealScalar.ZERO, RealScalar.ONE)));
       Scalar epsilon = RealScalar.of(.2);
       sarsa.setExplore(epsilon);
-      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa, epsilon);
+      Policy policy = new EGreedyPolicy(monteCarloInterface, qsa, epsilon);
       ExploringStarts.batch(monteCarloInterface, policy, 2, sarsa); // nstep > 1 required
       // DiscreteUtils.print(qsa);
       SimpleTestModels._checkExact(qsa);
@@ -43,7 +43,7 @@ public class SarsaTest extends TestCase {
       assertFalse(sarsa.sac().isEncountered(StateAction.key(RealScalar.ZERO, RealScalar.ONE)));
       Scalar epsilon = RealScalar.of(.2);
       sarsa.setExplore(epsilon);
-      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa, epsilon);
+      Policy policy = new EGreedyPolicy(monteCarloInterface, qsa, epsilon);
       ExploringStarts.batch(monteCarloInterface, policy, 2, sarsa); // nstep > 1 required
       // DiscreteUtils.print(qsa);
       SimpleTestModels._checkExact(qsa);
@@ -60,7 +60,7 @@ public class SarsaTest extends TestCase {
       assertFalse(sarsa.sac().isEncountered(StateAction.key(RealScalar.ZERO, RealScalar.ONE)));
       Scalar epsilon = RealScalar.of(.2);
       sarsa.setExplore(epsilon);
-      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa, epsilon);
+      Policy policy = new EGreedyPolicy(monteCarloInterface, qsa, epsilon);
       ExploringStarts.batch(monteCarloInterface, policy, 2, sarsa); // nstep > 1 required
       // DiscreteUtils.print(qsa);
       SimpleTestModels._checkExact(qsa);

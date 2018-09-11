@@ -40,7 +40,7 @@ enum SES_Cliffwalk {
           System.out.println("batch " + batch);
           Scalar eps = epsilon.Get(batch);
           sarsa.setExplore(eps);
-          return EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, eps);
+          return new EGreedyPolicy(cliffwalk, qsa, eps);
         }
       };
       int episode = 0;

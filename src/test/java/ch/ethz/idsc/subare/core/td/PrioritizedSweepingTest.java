@@ -19,9 +19,8 @@ public class PrioritizedSweepingTest extends TestCase {
     DiscreteQsa qsa = DiscreteQsa.build(simpleTestModel, RealScalar.ZERO);
     Sarsa sarsa = SarsaType.ORIGINAL.supply(simpleTestModel, learningRate, qsa);
     PrioritizedSweeping ps = new PrioritizedSweeping(sarsa, 2, RealScalar.of(.1));
-    Policy policy = EGreedyPolicy.bestEquiprobable(simpleTestModel, qsa, RealScalar.of(.1));
+    Policy policy = new EGreedyPolicy(simpleTestModel, qsa, RealScalar.of(.1));
     ExploringStarts.batch(simpleTestModel, policy, ps);
-    // DiscreteUtils.print(qsa);
     SimpleTestModels._checkExact(qsa);
   }
 }

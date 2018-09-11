@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.td;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionCounter;
+import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.TrueOnlineInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -12,6 +13,7 @@ import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.StateAction;
+import ch.ethz.idsc.subare.core.util.StateActionCounterUtil;
 import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -22,7 +24,7 @@ import ch.ethz.idsc.tensor.red.Mean;
 import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
+public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCounterSupplier {
   private final Coinflip coinflip = Coinflip.fair();
   // ---
   private final MonteCarloInterface monteCarloInterface;
@@ -118,7 +120,7 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
     // ---
     Scalar reward = monteCarloInterface.reward(prevState, prevAction, nextState);
     // ---
-    Scalar alpha = learningRate1.alpha(stepInterface, sac);
+    Scalar alpha = learningRate.alpha(stepInterface, sac);
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
     Scalar prevQ = W2.get().dot(x).Get();
@@ -149,5 +151,10 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface {
     nextQOld = RealScalar.ZERO;
     /** eligibility trace vector is initialized to zero at the beginning of the episode */
     z = Array.zeros(featureMapper.featureSize());
+  }
+
+  @Override
+  public StateActionCounter sac() {
+    return StateActionCounterUtil.getSummedSac(sac1, sac2, monteCarloInterface);
   }
 }

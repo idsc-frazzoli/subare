@@ -61,8 +61,9 @@ public class MonteCarloAlgorithmsTest extends TestCase {
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     // ---
     MonteCarloInterface monteCarloInterface = example.get();
-    for (MonteCarloAlgorithms monteCarloAlgorithms : list)
+    for (MonteCarloAlgorithms monteCarloAlgorithms : list) {
       monteCarloAlgorithms.analyseNTimes(monteCarloInterface, batches, optimalQsa, errorAnalysis, 10);
+    }
   }
 
   public void testExamplesWithSeveralErrorAnalysis() {

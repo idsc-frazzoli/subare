@@ -47,7 +47,7 @@ enum VI_Gridworld {
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
     DiscreteUtils.print(vi.vs(), Round._1);
-    Policy policy = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
+    Policy policy = GreedyPolicy.of(gridworld, vi.vs());
     Policies.print(policy, gridworld.states());
   }
 }

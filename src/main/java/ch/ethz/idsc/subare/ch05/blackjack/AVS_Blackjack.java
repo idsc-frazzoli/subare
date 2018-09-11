@@ -30,7 +30,7 @@ enum AVS_Blackjack {
       for (int index = 0; index < batches; ++index) {
         System.out.println(index + " " + epsilon.Get(index));
         for (int count = 0; count < batches; ++count) {
-          Policy policy = EGreedyPolicy.bestEquiprobable(blackjack, mces.qsa(), epsilon.Get(index));
+          Policy policy = new EGreedyPolicy(blackjack, mces.qsa(), epsilon.Get(index));
           episodes += //
               ExploringStarts.batchWithReplay(blackjack, policy, mces, avs);
         }

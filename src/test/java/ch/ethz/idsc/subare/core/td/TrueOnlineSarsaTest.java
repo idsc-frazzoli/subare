@@ -31,7 +31,7 @@ public class TrueOnlineSarsaTest extends TestCase {
           SimpleTestModel.INSTANCE, RealScalar.ONE, featureMapper, learningRate, w);
       Scalar epsilon = RealScalar.of(.2);
       trueOnlineSarsa.setExplore(epsilon);
-      Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, trueOnlineSarsa.qsa(), epsilon);
+      Policy policy = new EGreedyPolicy(monteCarloInterface, trueOnlineSarsa.qsa(), epsilon);
       ExploringStarts.batch(monteCarloInterface, policy, trueOnlineSarsa);
       // DiscreteUtils.print(trueOnlineSarsa.qsa());
       SimpleTestModels._checkExact(trueOnlineSarsa.qsa());
@@ -49,7 +49,7 @@ public class TrueOnlineSarsaTest extends TestCase {
       Scalar epsilon = RealScalar.of(.2);
       trueOnlineSarsa.setExplore(epsilon);
       for (int index = 0; index < 10; ++index) {
-        Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, trueOnlineSarsa.qsa(), epsilon);
+        Policy policy = new EGreedyPolicy(monteCarloInterface, trueOnlineSarsa.qsa(), epsilon);
         ExploringStarts.batch(monteCarloInterface, policy, trueOnlineSarsa);
       }
       DiscreteQsa qsa = trueOnlineSarsa.qsa();

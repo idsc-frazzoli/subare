@@ -33,7 +33,7 @@ enum VI_Gambler {
     final DiscreteVs vr = DiscreteUtils.createVs(gambler, ref);
     Scalar diff = DiscreteValueFunctions.distance(vs, vr);
     System.out.println("error=" + N.DOUBLE.of(diff));
-    Policy policy = GreedyPolicy.bestEquiprobable(gambler, vi.vs());
+    Policy policy = GreedyPolicy.of(gambler, vi.vs());
     Policies.print(policy, gambler.states());
   }
 }

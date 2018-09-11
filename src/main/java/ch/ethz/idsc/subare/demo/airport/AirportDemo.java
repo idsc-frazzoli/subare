@@ -37,14 +37,14 @@ enum AirportDemo {
     Airport airport = new Airport();
     DiscreteQsa optimalQsa = ActionValueIterations.solve(airport, DecimalScalar.of(.0001));
     // DiscreteUtils.print(optimalQsa);
-    Policy policyQsa = GreedyPolicy.bestEquiprobable(airport, optimalQsa);
+    Policy policyQsa = GreedyPolicy.of(airport, optimalQsa);
     // Policies.print(policyQsa, airport.states());
     final int batches = 10;
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(airport);
     {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
-        Policy policyMC = EGreedyPolicy.bestEquiprobable(airport, mces.qsa(), RealScalar.of(.1));
+        Policy policyMC = new EGreedyPolicy(airport, mces.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policyMC, mces);
         XYmc.append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, mces.qsa()).number()));
       }
@@ -59,7 +59,7 @@ enum AirportDemo {
       sarsa.setExplore(RealScalar.of(.1));
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
-        Policy policy = EGreedyPolicy.bestEquiprobable(airport, sarsa.qsa(), RealScalar.of(.1));
+        Policy policy = new EGreedyPolicy(airport, sarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policy, 1, sarsa);
         XYsarsa.append(
             Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, sarsa.qsa()).number()));
@@ -75,7 +75,7 @@ enum AirportDemo {
     {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
-        Policy policy = EGreedyPolicy.bestEquiprobable(airport, toSarsa.qsa(), RealScalar.of(.1));
+        Policy policy = new EGreedyPolicy(airport, toSarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policy, toSarsa);
         DiscreteQsa toQsa = toSarsa.qsa();
         XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));

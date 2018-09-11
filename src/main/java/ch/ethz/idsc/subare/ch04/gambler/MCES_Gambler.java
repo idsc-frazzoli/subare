@@ -26,8 +26,7 @@ enum MCES_Gambler {
       int batches = 20;
       for (int index = 0; index < batches; ++index) {
         Infoline.print(gambler, index, ref, mces.qsa());
-        Policy policy = //
-            EGreedyPolicy.bestEquiprobable(gambler, mces.qsa(), RealScalar.of(.1));
+        Policy policy = new EGreedyPolicy(gambler, mces.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(gambler, policy, mces);
         gsw.append(StateActionRasters.qsaPolicyRef(gamblerRaster, mces.qsa(), ref));
       }

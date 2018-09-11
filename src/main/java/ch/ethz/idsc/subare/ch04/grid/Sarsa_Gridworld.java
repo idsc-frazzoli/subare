@@ -43,7 +43,7 @@ enum Sarsa_Gridworld {
         gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         Infoline.print(gridworld, index, ref, qsa);
         Scalar explore = epsilon.Get(index);
-        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
+        Policy policy = new EGreedyPolicy(gridworld, qsa, explore);
         // sarsa.supplyPolicy(() -> policy);
         sarsa.setExplore(epsilon.Get(index));
         ExploringStarts.batch(gridworld, policy, nstep, sarsa);
@@ -53,7 +53,7 @@ enum Sarsa_Gridworld {
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa);
     Put.of(UserHome.file("gridworld_" + sarsaType), vs.values());
-    Policy policy = GreedyPolicy.bestEquiprobable(gridworld, qsa);
+    Policy policy = GreedyPolicy.of(gridworld, qsa);
     EpisodeInterface ei = EpisodeKickoff.single(gridworld, policy);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();

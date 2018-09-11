@@ -57,8 +57,8 @@ public enum MonteCarloAnalysis {
     // list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
     // list.add(MonteCarloAlgorithms.EXPECTED_TRUE_ONLINE_SARSA);
     // list.add(MonteCarloAlgorithms.DOUBLE_EXPECTED_SARSA);
-    // list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
-    // list.add(MonteCarloAlgorithms.QLEARNING_SARSA_UCB);
+    list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.QLEARNING_SARSA_UCB);
     // list.add(MonteCarloAlgorithms.QLEARNING_TRUE_ONLINE_SARSA);
     // list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
     // ---
@@ -66,6 +66,6 @@ public enum MonteCarloAnalysis {
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_QSA);
     // ---
-    analyse(monteCarloInterface, 1, 10, list, errorAnalysis);
+    analyse(monteCarloInterface, 10, 1001, list, errorAnalysis);
   }
 }

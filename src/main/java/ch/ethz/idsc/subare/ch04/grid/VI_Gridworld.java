@@ -43,7 +43,7 @@ enum VI_Gridworld {
     ValueIteration vi = new ValueIteration(gridworld, gridworld);
     vi.untilBelow(DecimalScalar.of(.0001));
     DiscreteUtils.print(vi.vs());
-    Policy policy = GreedyPolicy.bestEquiprobable(gridworld, vi.vs());
+    Policy policy = GreedyPolicy.of(gridworld, vi.vs());
     Policies.print(policy, gridworld.states());
     Export.of(UserHome.Pictures("gridworld_vs_vi.png"), //
         StateRasters.vs(gridworldStateRaster, DiscreteValueFunctions.rescaled(vi.vs())));
