@@ -25,7 +25,7 @@ public class EGreedyPolicy extends PolicyBase {
   }
 
   public EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon) {
-    this(discreteModel, qsa, null, discreteModel.states());
+    this(discreteModel, qsa, epsilon, discreteModel.states());
   }
 
   public EGreedyPolicy(StandardModel standardModel, VsInterface vs, Scalar epsilon, Tensor states) {
