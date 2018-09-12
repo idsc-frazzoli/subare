@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
@@ -16,6 +15,7 @@ import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
@@ -43,7 +43,7 @@ enum Sarsa_Gridworld {
         gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         Infoline.print(gridworld, index, ref, qsa);
         Scalar explore = epsilon.Get(index);
-        Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, qsa, explore);
+        Policy policy = new EGreedyPolicy(gridworld, qsa, explore);
         // sarsa.supplyPolicy(() -> policy);
         sarsa.setExplore(epsilon.Get(index));
         ExploringStarts.batch(gridworld, policy, nstep, sarsa);
@@ -53,7 +53,7 @@ enum Sarsa_Gridworld {
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa);
     Put.of(UserHome.file("gridworld_" + sarsaType), vs.values());
-    Policy policy = GreedyPolicy.bestEquiprobable(gridworld, qsa);
+    Policy policy = GreedyPolicy.of(gridworld, qsa);
     EpisodeInterface ei = EpisodeKickoff.single(gridworld, policy);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();

@@ -16,7 +16,7 @@ enum RSTQP_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         blackjack, qsa, DefaultLearningRate.of(5, 0.51));
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("blackjack_rstqp.gif"), 250)) {
       int batches = 60;

@@ -19,4 +19,12 @@ public enum StateAction {
   public static Tensor key(StepInterface stepInterface) {
     return key(stepInterface.prevState(), stepInterface.action());
   }
+
+  public static Tensor getState(Tensor key) {
+    return key.get(0);
+  }
+
+  public static Tensor getAction(Tensor key) {
+    return key.get(1);
+  }
 }

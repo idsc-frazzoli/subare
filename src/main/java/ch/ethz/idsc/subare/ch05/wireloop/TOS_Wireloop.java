@@ -1,7 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
@@ -13,6 +12,7 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.subare.util.UserHome;
@@ -46,7 +46,7 @@ enum TOS_Wireloop {
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_tos_" + algo + ".gif"), 250)) {
       for (int batch = 0; batch < 20; ++batch) {
         // System.out.println("batch " + batch);
-        Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, trueOnlineSarsa.qsa(), RealScalar.of(.1));
+        Policy policy = new EGreedyPolicy(wireloop, trueOnlineSarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(wireloop, policy, trueOnlineSarsa);
         // DiscreteQsa toQsa = trueOnlineSarsa.getQsa();
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));

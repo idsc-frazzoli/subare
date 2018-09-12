@@ -8,9 +8,10 @@ import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeQsaEstimator;
-import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -22,12 +23,14 @@ public class ConstantAlphaMonteCarloQsa implements EpisodeQsaEstimator {
   private final DiscountFunction discountFunction;
   private final DiscreteQsa qsa;
   private final LearningRate learningRate;
+  private final StateActionCounter sac;
 
   /** @param discreteModel */
-  public ConstantAlphaMonteCarloQsa(DiscreteModel discreteModel, LearningRate learningRate) {
+  public ConstantAlphaMonteCarloQsa(DiscreteModel discreteModel, LearningRate learningRate, StateActionCounter sac) {
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"
     this.learningRate = learningRate;
+    this.sac = sac;
   }
 
   @Override
@@ -45,10 +48,10 @@ public class ConstantAlphaMonteCarloQsa implements EpisodeQsaEstimator {
       Tensor action = stepInterface.action();
       Scalar gain = discountFunction.apply(rewards.extract(fromIndex, rewards.length()));
       Scalar value0 = qsa.value(state, action);
-      Scalar alpha = learningRate.alpha(stepInterface);
+      Scalar alpha = learningRate.alpha(stepInterface, sac);
       Scalar delta = gain.subtract(value0).multiply(alpha);
       qsa.assign(state, action, value0.add(delta)); // (6.1)
-      learningRate.digest(stepInterface);
+      sac.digest(stepInterface);
       ++fromIndex;
     }
   }

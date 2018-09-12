@@ -41,7 +41,7 @@ enum VI_Cliffwalk {
     // Tensor state = statesIndex.get(stateI);
     // System.out.println(state + " " + values.get(stateI).map(ROUND));
     // }
-    Policy policy = GreedyPolicy.bestEquiprobable(cliffwalk, vi.vs());
+    Policy policy = GreedyPolicy.of(cliffwalk, vi.vs());
     EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();

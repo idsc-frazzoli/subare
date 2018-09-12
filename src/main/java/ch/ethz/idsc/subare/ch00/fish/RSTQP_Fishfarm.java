@@ -20,7 +20,7 @@ enum RSTQP_Fishfarm {
     FishfarmRaster cliffwalkRaster = new FishfarmRaster(fishfarm);
     final DiscreteQsa ref = FishfarmHelper.getOptimalQsa(fishfarm);
     DiscreteQsa qsa = DiscreteQsa.build(fishfarm, DoubleScalar.POSITIVE_INFINITY);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         fishfarm, qsa, ConstantLearningRate.one());
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_rstqp.gif"), 200)) {
       int batches = 20;

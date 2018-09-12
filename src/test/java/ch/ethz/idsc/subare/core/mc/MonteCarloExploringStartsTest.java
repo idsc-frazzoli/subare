@@ -14,7 +14,7 @@ public class MonteCarloExploringStartsTest extends TestCase {
   public void testSimple() {
     MonteCarloInterface monteCarloInterface = SimpleTestModel.INSTANCE;
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(monteCarloInterface);
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, mces.qsa(), RealScalar.of(.1));
+    Policy policy = new EGreedyPolicy(monteCarloInterface, mces.qsa(), RealScalar.of(.1));
     ExploringStarts.batch(monteCarloInterface, policy, mces);
     // DiscreteUtils.print(mces.qsa());
     SimpleTestModels._checkExact(mces.qsa());

@@ -38,7 +38,7 @@ enum AVI_Dynamaze {
     // TODO extract code below to other file
     DiscreteVs vs = DiscreteUtils.createVs(dynamaze, ref);
     DiscreteUtils.print(vs);
-    Policy policy = GreedyPolicy.bestEquiprobable(dynamaze, ref);
+    Policy policy = GreedyPolicy.of(dynamaze, ref);
     Policies.print(policy, dynamaze.states());
   }
 }

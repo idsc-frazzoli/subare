@@ -26,8 +26,7 @@ enum MCES_Cliffwalk {
       for (int index = 0; index < batches; ++index) {
         Infoline.print(cliffwalk, index, ref, mces.qsa());
         for (int count = 0; count < 10; ++count) {
-          Policy policy = //
-              EGreedyPolicy.bestEquiprobable(cliffwalk, mces.qsa(), RealScalar.of(.4));
+          Policy policy = new EGreedyPolicy(cliffwalk, mces.qsa(), RealScalar.of(.4));
           ExploringStarts.batch(cliffwalk, policy, mces);
         }
         gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, mces.qsa(), ref));

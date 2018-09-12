@@ -28,7 +28,7 @@ class Gambler_Ex4_04 {
     // System.out.println(values);
     Put.of(UserHome.file("ex403_values"), values);
     Put.of(UserHome.file("ex403_record"), record);
-    Policy policy = GreedyPolicy.bestEquiprobable(gambler, vi.vs());
+    Policy policy = GreedyPolicy.of(gambler, vi.vs());
     Policies.print(policy, gambler.states());
     Tensor greedy = Policies.flatten(policy, gambler.states());
     Put.of(UserHome.file("ex403_greedy"), greedy);

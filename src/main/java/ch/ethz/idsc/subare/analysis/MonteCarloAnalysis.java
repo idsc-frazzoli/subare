@@ -33,7 +33,6 @@ public enum MonteCarloAnalysis {
   public static DiscreteQsa getOptimalQsa(MonteCarloInterface monteCarloInterface, int batches) {
     if (!(monteCarloInterface instanceof StandardModel)) { // if no AVI is possible, try to approximate it
       System.out.println("Approximating optimal QSA because the model does not implement StandardModel!");
-      DiscreteQsa qsaSarsa = DiscreteQsa.build(monteCarloInterface);
       final SarsaMonteCarloTrial sarsa = SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING);
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches * 10; ++index)
@@ -58,7 +57,8 @@ public enum MonteCarloAnalysis {
     // list.add(MonteCarloAlgorithms.EXPECTED_SARSA);
     // list.add(MonteCarloAlgorithms.EXPECTED_TRUE_ONLINE_SARSA);
     // list.add(MonteCarloAlgorithms.DOUBLE_EXPECTED_SARSA);
-    // list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.QLEARNING_SARSA);
+    list.add(MonteCarloAlgorithms.QLEARNING_SARSA_UCB);
     // list.add(MonteCarloAlgorithms.QLEARNING_TRUE_ONLINE_SARSA);
     // list.add(MonteCarloAlgorithms.DOUBLE_QLEARNING_SARSA);
     // ---
@@ -66,6 +66,6 @@ public enum MonteCarloAnalysis {
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_POLICY);
     errorAnalysis.add(DiscreteModelErrorAnalysis.LINEAR_QSA);
     // ---
-    analyse(monteCarloInterface, 1, 10, list, errorAnalysis);
+    analyse(monteCarloInterface, 10, 1001, list, errorAnalysis);
   }
 }

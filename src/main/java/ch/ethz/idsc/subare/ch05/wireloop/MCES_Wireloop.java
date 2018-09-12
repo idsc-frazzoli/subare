@@ -26,7 +26,7 @@ enum MCES_Wireloop {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, mces.qsa());
         for (int count = 0; count < 4; ++count) {
-          Policy policy = EGreedyPolicy.bestEquiprobable(wireloop, mces.qsa(), epsilon.Get(index));
+          Policy policy = new EGreedyPolicy(wireloop, mces.qsa(), epsilon.Get(index));
           ExploringStarts.batch(wireloop, policy, mces);
         }
         gsw.append(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));

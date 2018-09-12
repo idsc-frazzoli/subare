@@ -45,7 +45,7 @@ enum Double_Maxbias {
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(maxbias, qsa1);
     Put.of(UserHome.file("gridworld_" + sarsaType), vs.values());
-    Policy policy = GreedyPolicy.bestEquiprobable(maxbias, qsa1);
+    Policy policy = GreedyPolicy.of(maxbias, qsa1);
     EpisodeInterface ei = EpisodeKickoff.single(maxbias, policy);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();

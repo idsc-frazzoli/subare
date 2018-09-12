@@ -12,24 +12,24 @@ import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.UcbPolicy;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Sign;
 
-public class SarsaMonteCarloTrial implements MonteCarloTrial {
+public class SarsaMonteCarloTrialUcb implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
-  private static final Scalar EPSILON = RealScalar.of(0.1);
+  private static final Scalar EPSILON = RealScalar.of(0.0);
 
-  public static SarsaMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa,
+  public static SarsaMonteCarloTrialUcb of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa,
       int digestDepth) {
-    return new SarsaMonteCarloTrial(monteCarloInterface, sarsaType, learningRate, qsa, digestDepth);
+    return new SarsaMonteCarloTrialUcb(monteCarloInterface, sarsaType, learningRate, qsa, digestDepth);
   }
 
-  public static SarsaMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
-    return new SarsaMonteCarloTrial(monteCarloInterface, sarsaType, ConstantLearningRate.of(ALPHA), DiscreteQsa.build(monteCarloInterface), 1);
+  public static SarsaMonteCarloTrialUcb of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+    return new SarsaMonteCarloTrialUcb(monteCarloInterface, sarsaType, ConstantLearningRate.of(ALPHA), DiscreteQsa.build(monteCarloInterface), 1);
   }
 
   // ---
@@ -38,7 +38,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   private final Deque<StepInterface> deque = new ArrayDeque<>();
   private final int digestDepth; // 0 is equal to the MonteCarlo approach
 
-  private SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa, int digestDepth) {
+  private SarsaMonteCarloTrialUcb(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa, int digestDepth) {
     this.monteCarloInterface = monteCarloInterface;
     sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa);
     sarsa.setExplore(EPSILON);
@@ -48,7 +48,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
 
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = new EGreedyPolicy(monteCarloInterface, sarsa.qsa(), EPSILON);
+    Policy policy = new UcbPolicy(monteCarloInterface, sarsa.qsa(), sarsa.sac(), monteCarloInterface.states());
     ExploringStarts.batch(monteCarloInterface, policy, digestDepth, sarsa);
   }
 

@@ -35,7 +35,7 @@ enum SES_Wireloop {
         Scalar eps = epsilon.Get(batch);
         System.out.println("policy update " + batchIndex() + " " + eps);
         sarsa.setExplore(eps);
-        return EGreedyPolicy.bestEquiprobable(wireloop, qsa, eps);
+        return new EGreedyPolicy(wireloop, qsa, eps);
       }
     };
     try (AnimationWriter gsw = AnimationWriter.of( //

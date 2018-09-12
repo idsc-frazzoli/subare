@@ -1,7 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.maxbias;
 
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -13,6 +12,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -32,7 +32,7 @@ enum Sarsa_Maxbias {
     for (int index = 0; index < batches; ++index) {
       if (batches - 10 < index)
         Infoline.print(maxbias, index, ref, qsa);
-      Policy policy = EGreedyPolicy.bestEquiprobable(maxbias, qsa, epsilon.Get(index));
+      Policy policy = new EGreedyPolicy(maxbias, qsa, epsilon.Get(index));
       // sarsa.supplyPolicy(() -> policy);
       sarsa.setExplore(epsilon.Get(index));
       ExploringStarts.batch(maxbias, policy, nstep, sarsa, avs);

@@ -2,8 +2,10 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionCounter;
+import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -19,9 +21,9 @@ import ch.ethz.idsc.tensor.red.Max;
   }
 
   @Override // from SarsaEvaluation
-  public Scalar evaluate(Scalar epsilon, LearningRate learningRate, Tensor state, QsaInterface qsa) {
+  public Scalar evaluate(Scalar epsilon, LearningRate learningRate, Tensor state, QsaInterface qsa, StateActionCounter stateActionCounter) {
     return discreteModel.actions(state).stream() //
-        .filter(action -> learningRate.isEncountered(state, action)) //
+        .filter(action -> stateActionCounter.isEncountered(StateAction.key(state, action))) //
         .map(action -> qsa.value(state, action)) //
         .reduce(Max::of) //
         .orElse(RealScalar.ZERO);

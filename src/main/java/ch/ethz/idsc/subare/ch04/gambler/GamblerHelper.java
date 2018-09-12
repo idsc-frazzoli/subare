@@ -31,13 +31,13 @@ enum GamblerHelper {
     // TODO test for equality of policies from qsa and vs
     ValueIteration vi = new ValueIteration(gambler, gambler);
     vi.untilBelow(RealScalar.of(1e-10));
-    return GreedyPolicy.bestEquiprobable(gambler, vi.vs());
+    return GreedyPolicy.of(gambler, vi.vs());
   }
 
   public static void play(Gambler gambler, DiscreteQsa qsa) {
     DiscreteUtils.print(qsa, Round._2);
     System.out.println("---");
-    Policy policy = GreedyPolicy.bestEquiprobable(gambler, qsa);
+    Policy policy = GreedyPolicy.of(gambler, qsa);
     EpisodeInterface mce = EpisodeKickoff.single(gambler, policy, //
         gambler.startStates().get(gambler.startStates().length() / 2));
     while (mce.hasNext()) {

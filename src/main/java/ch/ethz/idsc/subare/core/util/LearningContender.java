@@ -25,7 +25,7 @@ public class LearningContender {
   }
 
   public void stepAndCompare(Scalar epsilon, int nstep, DiscreteQsa ref) {
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa, epsilon);
+    Policy policy = new EGreedyPolicy(monteCarloInterface, qsa, epsilon);
     if (dequeDigest instanceof Sarsa) {
       Sarsa sarsa = (Sarsa) dequeDigest;
       sarsa.setExplore(epsilon);

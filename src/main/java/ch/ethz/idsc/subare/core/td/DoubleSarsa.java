@@ -6,16 +6,19 @@ import java.util.Deque;
 import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
-import ch.ethz.idsc.subare.core.DiscreteQsaWeight;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionCounter;
+import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.StateAction;
+import ch.ethz.idsc.subare.core.util.StateActionCounterUtil;
 import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -36,7 +39,7 @@ import ch.ethz.idsc.tensor.Tensors;
  * 
  * Maximization bias and Doubled learning were introduced and investigated
  * by Hado van Hasselt (2010, 2011) */
-public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSupplier {
+public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, StateActionCounterSupplier {
   private final Coinflip coinflip = Coinflip.fair();
   // ---
   private final DiscreteModel discreteModel;
@@ -46,6 +49,8 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   private final QsaInterface qsa2;
   private final LearningRate learningRate1;
   private final LearningRate learningRate2;
+  private final StateActionCounter sac1;
+  private final StateActionCounter sac2;
   private Scalar epsilon = null;
 
   /** @param sarsaType
@@ -60,7 +65,9 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
       LearningRate learningRate1, //
       LearningRate learningRate2, //
       QsaInterface qsa1, //
-      QsaInterface qsa2 //
+      QsaInterface qsa2, //
+      StateActionCounter sac1, //
+      StateActionCounter sac2 //
   ) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
@@ -69,19 +76,21 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
     this.qsa2 = qsa2;
     this.learningRate1 = learningRate1;
     this.learningRate2 = learningRate2;
+    this.sac1 = sac1;
+    this.sac2 = sac2;
   }
 
   /** @param epsilon
    * @return epsilon-greedy policy with respect to (qsa1 + qsa2) / 2 */
   public Policy getEGreedy() {
     DiscreteQsa avg = DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
-    return EGreedyPolicy.bestEquiprobable(discreteModel, avg, epsilon);
+    return new EGreedyPolicy(discreteModel, avg, epsilon);
   }
 
   /** @return greedy policy with respect to (qsa1 + qsa2) / 2 */
   public Policy getGreedy() {
     DiscreteQsa avg = DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
-    return GreedyPolicy.bestEquiprobable(discreteModel, avg);
+    return GreedyPolicy.of(discreteModel, avg);
   }
 
   /** @param epsilon to build an e-greedy policy */
@@ -96,11 +105,12 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
     QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for selecting actions and updating
     QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation (of actions provided by Qsa1)
     LearningRate LearningRate = flip ? learningRate2 : learningRate1; // for updating
+    StateActionCounter Sac = flip ? sac2 : sac1; // for updating
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // TODO test if input LearningRate1 is correct
     Tensor nextState = deque.getLast().nextState();
-    Tensor nextActions = Tensor.of(discreteModel.actions(nextState).stream().filter(nextAction -> LearningRate.isEncountered(nextState, nextAction)));
+    Tensor nextActions = Tensor.of(discreteModel.actions(nextState).stream().filter(nextAction -> Sac.isEncountered(StateAction.key(nextState, nextAction))));
     Scalar expectedReward = Tensors.isEmpty(nextActions) ? RealScalar.ZERO : evaluationType.crossEvaluate(epsilon, nextState, nextActions, Qsa1, Qsa2);
     rewards.append(expectedReward);
     // ---
@@ -109,16 +119,20 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
     Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
     Scalar value0 = Qsa1.value(state0, action0);
-    Scalar alpha = LearningRate.alpha(first);
+    Scalar alpha = LearningRate.alpha(first, Sac);
     Scalar delta = discountFunction.apply(rewards).subtract(value0).multiply(alpha);
     Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
-    LearningRate.digest(first); // signal to LearningRate1
+    Sac.digest(first); // signal to LearningRate1
   }
 
   @Override
   public DiscreteQsa qsa() {
     return DiscreteValueFunctions.weightedAverage( //
-        (DiscreteQsa) qsa1, (DiscreteQsa) qsa2, //
-        (DiscreteQsaWeight) learningRate1, (DiscreteQsaWeight) learningRate2);
+        (DiscreteQsa) qsa1, (DiscreteQsa) qsa2, sac1, sac2);
+  }
+
+  @Override
+  public StateActionCounter sac() {
+    return StateActionCounterUtil.getSummedSac(sac1, sac2, discreteModel);
   }
 }

@@ -1,8 +1,10 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.ch04.gambler.Gambler;
 import ch.ethz.idsc.subare.core.adapter.StepAdapter;
+import ch.ethz.idsc.subare.core.td.Sarsa;
+import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -13,12 +15,14 @@ import junit.framework.TestCase;
 public class DefaultLearningRateTest extends TestCase {
   public void testFirst() {
     LearningRate learningRate = DefaultLearningRate.of(0.9, .51);
+    Gambler gambler = new Gambler(100, RealScalar.of(0.4));
+    Sarsa sarsa = SarsaType.ORIGINAL.supply(gambler, learningRate, DiscreteQsa.build(gambler));
     Tensor state = Tensors.vector(1);
     Tensor action = Tensors.vector(0);
-    Scalar first = learningRate.alpha(new StepAdapter(state, action, RealScalar.ZERO, state));
+    Scalar first = learningRate.alpha(new StepAdapter(state, action, RealScalar.ZERO, state), sarsa.sac());
     assertEquals(first, RealScalar.ONE);
-    learningRate.digest(new StepAdapter(state, action, RealScalar.ZERO, state));
-    Scalar second = learningRate.alpha(new StepAdapter(state, action, RealScalar.ZERO, state));
+    sarsa.sac().digest(new StepAdapter(state, action, RealScalar.ZERO, state));
+    Scalar second = learningRate.alpha(new StepAdapter(state, action, RealScalar.ZERO, state), sarsa.sac());
     // System.out.println(second);
     assertTrue(Scalars.lessThan(second, first));
   }

@@ -19,7 +19,7 @@ enum RSTQP_Maxbias {
     Maxbias maxbias = new Maxbias(3);
     DiscreteQsa ref = MaxbiasHelper.getOptimalQsa(maxbias);
     DiscreteQsa qsa = DiscreteQsa.build(maxbias);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         maxbias, qsa, DefaultLearningRate.of(3, 0.51));
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
     int batches = 5000;

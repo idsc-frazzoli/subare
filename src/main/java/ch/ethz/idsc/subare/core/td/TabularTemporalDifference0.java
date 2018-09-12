@@ -1,10 +1,11 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.core.LearningRate;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.VsInterface;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.sca.Clip;
@@ -22,15 +23,17 @@ public class TabularTemporalDifference0 implements StepDigest {
   private final VsInterface vs;
   private final Scalar gamma;
   private final LearningRate learningRate;
+  private final StateActionCounter sac;
 
   /** @param vs
    * @param gamma discount factor
    * @param learningRate */
   public TabularTemporalDifference0( //
-      VsInterface vs, Scalar gamma, LearningRate learningRate) {
+      VsInterface vs, Scalar gamma, LearningRate learningRate, StateActionCounter sac) {
     this.vs = vs;
     this.gamma = Clip.unit().requireInside(gamma);
     this.learningRate = learningRate;
+    this.sac = sac;
   }
 
   @Override // from StepDigest
@@ -42,9 +45,9 @@ public class TabularTemporalDifference0 implements StepDigest {
     // ---
     Scalar value0 = vs.value(state0);
     Scalar value1 = vs.value(state1);
-    Scalar alpha = learningRate.alpha(stepInterface);
+    Scalar alpha = learningRate.alpha(stepInterface, sac);
     Scalar delta = reward.add(gamma.multiply(value1)).subtract(value0).multiply(alpha);
     vs.increment(state0, delta);
-    learningRate.digest(stepInterface);
+    sac.digest(stepInterface);
   }
 }

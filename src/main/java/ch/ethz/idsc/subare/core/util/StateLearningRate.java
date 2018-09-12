@@ -1,10 +1,8 @@
 // code by jz and jph
 package ch.ethz.idsc.subare.core.util;
 
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
 
 /** adaptive learning rate for states but independent of the action taken
  * 
@@ -30,10 +28,5 @@ public class StateLearningRate extends DecayedLearningRate {
 
   private StateLearningRate(Scalar factor, Scalar exponent) {
     super(factor, exponent);
-  }
-
-  @Override
-  protected Tensor key(Tensor prev, Tensor action) {
-    return prev;
   }
 }

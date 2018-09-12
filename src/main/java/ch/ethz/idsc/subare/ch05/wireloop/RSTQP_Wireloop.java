@@ -21,7 +21,7 @@ enum RSTQP_Wireloop {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     DiscreteQsa qsa = DiscreteQsa.build(wireloop);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         wireloop, qsa, ConstantLearningRate.of(RealScalar.ONE));
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "L_qsa_rstqp.gif"), 250)) {
       int batches = 50;

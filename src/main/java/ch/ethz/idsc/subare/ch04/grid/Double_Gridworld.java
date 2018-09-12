@@ -50,7 +50,7 @@ enum Double_Gridworld {
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gridworld, qsa1);
     Put.of(UserHome.file("gridworld_" + sarsaType), vs.values());
-    Policy policy = GreedyPolicy.bestEquiprobable(gridworld, qsa1);
+    Policy policy = GreedyPolicy.of(gridworld, qsa1);
     EpisodeInterface ei = EpisodeKickoff.single(gridworld, policy);
     while (ei.hasNext()) {
       StepInterface stepInterface = ei.step();

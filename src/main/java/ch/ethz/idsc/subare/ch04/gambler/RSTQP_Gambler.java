@@ -5,9 +5,9 @@ import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.Infoline;
-import ch.ethz.idsc.subare.core.util.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
@@ -22,19 +22,18 @@ enum RSTQP_Gambler {
     GamblerRaster gamblerRaster = new GamblerRaster(gambler);
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     DiscreteQsa qsa = DiscreteQsa.build(gambler);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning(gambler, qsa, //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of(gambler, qsa, //
         DefaultLearningRate.of(4, 0.71));
     ActionValueStatistics avs = new ActionValueStatistics(gambler);
-    StateActionCounter sac = new StateActionCounter(gambler);
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_rstqp.gif"), 100);
     AnimationWriter gsc = AnimationWriter.of(UserHome.Pictures("gambler_sac_rstqp.gif"), 200);
     int batches = 200;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(gambler, index, ref, qsa);
-      TabularSteps.batch(gambler, gambler, rstqp, avs, sac);
+      TabularSteps.batch(gambler, gambler, rstqp, avs);
       gsw.append(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
       gsc.append(StateActionRasters.qsa( //
-          gamblerRaster, DiscreteValueFunctions.rescaled(sac.qsa(StateActionCounter.LOGARITHMIC))));
+          gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) rstqp.sac()).inQsa(gambler))));
       if (infoline.isLossfree())
         break;
     }

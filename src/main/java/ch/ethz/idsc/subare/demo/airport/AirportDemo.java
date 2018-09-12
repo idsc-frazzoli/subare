@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.demo.airport;
 import java.util.Arrays;
 
 import ch.ethz.idsc.subare.analysis.DiscreteModelErrorAnalysis;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
@@ -13,13 +12,14 @@ import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.GreedyPolicy;
-import ch.ethz.idsc.subare.core.util.StateActionCounter;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.util.PlotUtils;
 import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -37,21 +37,21 @@ enum AirportDemo {
     Airport airport = new Airport();
     DiscreteQsa optimalQsa = ActionValueIterations.solve(airport, DecimalScalar.of(.0001));
     // DiscreteUtils.print(optimalQsa);
-    Policy policyQsa = GreedyPolicy.bestEquiprobable(airport, optimalQsa);
+    Policy policyQsa = GreedyPolicy.of(airport, optimalQsa);
     // Policies.print(policyQsa, airport.states());
     final int batches = 10;
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(airport);
     {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
-        Policy policyMC = EGreedyPolicy.bestEquiprobable(airport, mces.qsa(), RealScalar.of(.1));
+        Policy policyMC = new EGreedyPolicy(airport, mces.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policyMC, mces);
         XYmc.append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, mces.qsa()).number()));
       }
       System.out.println("time for MonteCarlo: " + stopwatch.display_seconds() + "s");
       // Policies.print(GreedyPolicy.bestEquiprobable(airport, mces.qsa()), airport.states());
     }
-    StateActionCounter sac = new StateActionCounter(airport);
+    DiscreteStateActionCounter sac = new DiscreteStateActionCounter();
     DiscreteQsa qsaSarsa = DiscreteQsa.build(airport); // q-function for training, initialized to 0
     SarsaType sarsaType = SarsaType.ORIGINAL;
     final Sarsa sarsa = sarsaType.supply(airport, ConstantLearningRate.of(RealScalar.of(0.05)), qsaSarsa);
@@ -59,8 +59,8 @@ enum AirportDemo {
       sarsa.setExplore(RealScalar.of(.1));
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
-        Policy policy = EGreedyPolicy.bestEquiprobable(airport, sarsa.qsa(), RealScalar.of(.1));
-        ExploringStarts.batch(airport, policy, 1, sarsa, sac);
+        Policy policy = new EGreedyPolicy(airport, sarsa.qsa(), RealScalar.of(.1));
+        ExploringStarts.batch(airport, policy, 1, sarsa);
         XYsarsa.append(
             Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, sarsa.qsa()).number()));
       }
@@ -75,7 +75,7 @@ enum AirportDemo {
     {
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches; ++index) {
-        Policy policy = EGreedyPolicy.bestEquiprobable(airport, toSarsa.qsa(), RealScalar.of(.1));
+        Policy policy = new EGreedyPolicy(airport, toSarsa.qsa(), RealScalar.of(.1));
         ExploringStarts.batch(airport, policy, toSarsa);
         DiscreteQsa toQsa = toSarsa.qsa();
         XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), DiscreteModelErrorAnalysis.LINEAR_POLICY.getError(airport, optimalQsa, toQsa).number()));

@@ -2,7 +2,6 @@
 package ch.ethz.idsc.subare.ch04.gambler;
 
 import ch.ethz.idsc.subare.core.EpisodeInterface;
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
@@ -16,6 +15,7 @@ import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
@@ -45,7 +45,7 @@ enum QL_Gambler {
       Scalar eps = lr_scheduler.getEpsilon();
       for (int count = 0; count < 1; ++count) {
         ExploringStarts.batch(gambler, policy, 1, stepDigest);
-        policy = EGreedyPolicy.bestEquiprobable(gambler, qsa, eps);
+        policy = new EGreedyPolicy(gambler, qsa, eps);
       }
       gsw.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
     }

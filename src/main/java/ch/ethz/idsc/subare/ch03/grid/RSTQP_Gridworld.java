@@ -15,7 +15,7 @@ enum RSTQP_Gridworld {
     Gridworld gridworld = new Gridworld();
     DiscreteQsa ref = ActionValueIterations.solve(gridworld, DecimalScalar.of(0.0001));
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         gridworld, qsa, ConstantLearningRate.one());
     for (int index = 0; index < 20; ++index) {
       Infoline infoline = Infoline.print(gridworld, index, ref, qsa);

@@ -42,6 +42,12 @@ public enum MonteCarloAlgorithms {
       return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING);
     }
   }, //
+  QLEARNING_SARSA_UCB() {
+    @Override
+    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
+      return SarsaMonteCarloTrialUcb.of(monteCarloInterface, SarsaType.QLEARNING);
+    }
+  }, //
   DOUBLE_QLEARNING_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {

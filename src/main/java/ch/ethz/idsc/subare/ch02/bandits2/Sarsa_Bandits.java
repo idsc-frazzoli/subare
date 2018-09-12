@@ -31,7 +31,7 @@ enum Sarsa_Bandits {
     for (int index = 0; index < batches; ++index) {
       Scalar error1 = Loss.accumulation(bandits, ref, qsa);
       System.out.println(index + " " + epsilon.Get(index).map(Round._2) + " " + error1.map(Round._3));
-      Policy policy = EGreedyPolicy.bestEquiprobable(bandits, qsa, epsilon.Get(index));
+      Policy policy = new EGreedyPolicy(bandits, qsa, epsilon.Get(index));
       // sarsa.supplyPolicy(() -> policy);
       sarsa.setExplore(epsilon.Get(index));
       ExploringStarts.batch(bandits, policy, 1, sarsa);

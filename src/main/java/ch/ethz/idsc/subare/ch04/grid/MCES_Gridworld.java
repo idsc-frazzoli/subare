@@ -26,7 +26,7 @@ enum MCES_Gridworld {
       for (int index = 0; index < batches; ++index) {
         Infoline.print(gridworld, index, ref, mces.qsa());
         for (int count = 0; count < 1; ++count) {
-          Policy policy = EGreedyPolicy.bestEquiprobable(gridworld, mces.qsa(), epsilon.Get(index));
+          Policy policy = new EGreedyPolicy(gridworld, mces.qsa(), epsilon.Get(index));
           ExploringStarts.batch(gridworld, policy, mces);
         }
         gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), mces.qsa(), ref));

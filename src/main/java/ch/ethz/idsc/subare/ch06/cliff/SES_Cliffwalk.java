@@ -1,7 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.cliff;
 
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -10,6 +9,7 @@ import ch.ethz.idsc.subare.core.util.DequeExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Scalar;
@@ -40,7 +40,7 @@ enum SES_Cliffwalk {
           System.out.println("batch " + batch);
           Scalar eps = epsilon.Get(batch);
           sarsa.setExplore(eps);
-          return EGreedyPolicy.bestEquiprobable(cliffwalk, qsa, eps);
+          return new EGreedyPolicy(cliffwalk, qsa, eps);
         }
       };
       int episode = 0;

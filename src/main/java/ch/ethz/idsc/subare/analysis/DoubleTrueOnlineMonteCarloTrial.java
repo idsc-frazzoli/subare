@@ -1,10 +1,11 @@
 // code by fluric
 package ch.ethz.idsc.subare.analysis;
 
-import ch.ethz.idsc.subare.core.LearningRate;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionCounter;
+import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.DoubleTrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -15,10 +16,11 @@ import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
+import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 
-public class DoubleTrueOnlineMonteCarloTrial implements MonteCarloTrial {
+public class DoubleTrueOnlineMonteCarloTrial implements MonteCarloTrial, StateActionCounterSupplier {
   private static final Scalar ALPHA = RealScalar.of(0.05);
   private static final Scalar LAMBDA = RealScalar.of(0.3);
   private static final Scalar EPSILON = RealScalar.of(0.1);
@@ -48,7 +50,7 @@ public class DoubleTrueOnlineMonteCarloTrial implements MonteCarloTrial {
 
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = EGreedyPolicy.bestEquiprobable(monteCarloInterface, qsa(), EPSILON);
+    Policy policy = new EGreedyPolicy(monteCarloInterface, qsa(), EPSILON);
     ExploringStarts.batch(monteCarloInterface, policy, doubleTrueOnlineSarsa);
   }
 
@@ -65,5 +67,10 @@ public class DoubleTrueOnlineMonteCarloTrial implements MonteCarloTrial {
   @Override // from MonteCarloTrial
   public QsaInterface qsaInterface() {
     return doubleTrueOnlineSarsa.qsaInterface();
+  }
+
+  @Override
+  public StateActionCounter sac() {
+    return doubleTrueOnlineSarsa.sac();
   }
 }

@@ -33,7 +33,7 @@ public class GridworldTest extends TestCase {
     Gridworld gridworld = new Gridworld();
     DiscreteQsa ref = ActionValueIterations.solve(gridworld, DecimalScalar.of(0.0001));
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    Random1StepTabularQPlanning rstqp = new Random1StepTabularQPlanning( //
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         gridworld, qsa, ConstantLearningRate.of(RealScalar.ONE));
     Scalar error = null;
     for (int index = 0; index < 40; ++index) {
