@@ -1,4 +1,4 @@
-// code by jph
+// code by jph, fluric
 package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
@@ -16,11 +16,9 @@ public enum UcbUtils {
   ;
   public static DiscreteQsa getUcbInQsa(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
     DiscreteQsa qsaWithUcb = DiscreteQsa.build(discreteModel);
-    for (Tensor state : discreteModel.states()) {
-      for (Tensor action : discreteModel.actions(state)) {
+    for (Tensor state : discreteModel.states())
+      for (Tensor action : discreteModel.actions(state))
         qsaWithUcb.assign(state, action, getUpperConfidenceBound(state, action, qsa.value(state, action), sac, discreteModel));
-      }
-    }
     return qsaWithUcb;
   }
 

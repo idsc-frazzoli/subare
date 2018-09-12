@@ -1,4 +1,4 @@
-// code by jph
+// code by fluric
 package ch.ethz.idsc.subare.core.util;
 
 import java.io.Serializable;
@@ -8,12 +8,12 @@ import java.util.Map;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
+import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.sca.Log;
 import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
-import ch.ethz.idsc.tensor.sca.Sign;
 
 public class DiscreteStateActionCounter implements StateActionCounter, Serializable {
   private static final ScalarUnaryOperator LOGARITHMIC = scalar -> Log.of(scalar.add(RealScalar.ONE));
@@ -41,7 +41,7 @@ public class DiscreteStateActionCounter implements StateActionCounter, Serializa
 
   @Override
   public boolean isEncountered(Tensor key) {
-    return Sign.isPositive(stateActionCount(key));
+    return stateActionMap.containsKey(key);
   }
 
   public void setStateCount(Tensor state, Scalar value) {
@@ -54,8 +54,9 @@ public class DiscreteStateActionCounter implements StateActionCounter, Serializa
 
   public Scalar getLogarithmicStateActionCount(Tensor state, Tensor action) {
     Tensor key = StateAction.key(state, action);
-    return stateActionMap.containsKey(key) ? //
-        LOGARITHMIC.apply(RealScalar.of(stateActionMap.get(key))) : RealScalar.of(Double.NEGATIVE_INFINITY);
+    return stateActionMap.containsKey(key) //
+        ? LOGARITHMIC.apply(RealScalar.of(stateActionMap.get(key)))
+        : DoubleScalar.NEGATIVE_INFINITY;
   }
 
   public DiscreteQsa inQsa(DiscreteModel discreteModel) {

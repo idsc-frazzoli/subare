@@ -25,11 +25,11 @@ import ch.ethz.idsc.tensor.red.Max;
  * 
  * algorithm performs poorly when rewards are unevenly distributed */
 public class Random1StepTabularQPlanning implements StepDigest, StateActionCounterSupplier {
-  public static Random1StepTabularQPlanning of(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRat) {
-    return new Random1StepTabularQPlanning(discreteModel, qsa, learningRat, new DiscreteStateActionCounter());
+  public static Random1StepTabularQPlanning of(DiscreteModel discreteModel, QsaInterface qsa, LearningRate learningRate) {
+    return new Random1StepTabularQPlanning(discreteModel, qsa, learningRate, new DiscreteStateActionCounter());
   }
-  // ---
 
+  // ---
   private final DiscreteModel discreteModel;
   private final DiscreteQsa qsa;
   private final Scalar gamma;

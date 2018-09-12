@@ -44,7 +44,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   // ---
   private final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;
-  private final SarsaEvaluation evaluationType;
+  private final SarsaEvaluation sarsaEvaluation;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
   private final LearningRate learningRate1;
@@ -53,14 +53,16 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   private final StateActionCounter sac2;
   private Scalar epsilon = null;
 
-  /** @param sarsaType
+  /** @param sarsaEvaluation
    * @param discreteModel
    * @param learningRate1
    * @param learningRate2
    * @param qsa1
-   * @param qsa2 */
+   * @param qsa2
+   * @param sac1
+   * @param sac2 */
   /* package */ DoubleSarsa( //
-      SarsaEvaluation evaluationType, //
+      SarsaEvaluation sarsaEvaluation, //
       DiscreteModel discreteModel, //
       LearningRate learningRate1, //
       LearningRate learningRate2, //
@@ -71,7 +73,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   ) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
-    this.evaluationType = evaluationType;
+    this.sarsaEvaluation = sarsaEvaluation;
     this.qsa1 = qsa1;
     this.qsa2 = qsa2;
     this.learningRate1 = learningRate1;
@@ -110,8 +112,11 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     // TODO test if input LearningRate1 is correct
     Tensor nextState = deque.getLast().nextState();
-    Tensor nextActions = Tensor.of(discreteModel.actions(nextState).stream().filter(nextAction -> Sac.isEncountered(StateAction.key(nextState, nextAction))));
-    Scalar expectedReward = Tensors.isEmpty(nextActions) ? RealScalar.ZERO : evaluationType.crossEvaluate(epsilon, nextState, nextActions, Qsa1, Qsa2);
+    Tensor nextActions = Tensor.of(discreteModel.actions(nextState).stream() //
+        .filter(nextAction -> Sac.isEncountered(StateAction.key(nextState, nextAction))));
+    Scalar expectedReward = Tensors.isEmpty(nextActions) //
+        ? RealScalar.ZERO
+        : sarsaEvaluation.crossEvaluate(epsilon, nextState, nextActions, Qsa1, Qsa2);
     rewards.append(expectedReward);
     // ---
     // the code below is identical to Sarsa

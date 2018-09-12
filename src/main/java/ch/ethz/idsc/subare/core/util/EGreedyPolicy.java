@@ -21,20 +21,16 @@ public class EGreedyPolicy extends PolicyBase {
 
   public EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon, Tensor states) {
     super(discreteModel, qsa, null, states);
-    Clip.function(0, 1).requireInside(epsilon);
-    this.epsilon = epsilon;
+    this.epsilon = Clip.unit().requireInside(epsilon);
   }
 
   public EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon) {
-    super(discreteModel, qsa, null, discreteModel.states());
-    Clip.function(0, 1).requireInside(epsilon);
-    this.epsilon = epsilon;
+    this(discreteModel, qsa, epsilon, discreteModel.states());
   }
 
   public EGreedyPolicy(StandardModel standardModel, VsInterface vs, Scalar epsilon, Tensor states) {
     states.forEach(v -> appendToMaps(standardModel, vs, v));
-    Clip.function(0, 1).requireInside(epsilon);
-    this.epsilon = epsilon;
+    this.epsilon = Clip.unit().requireInside(epsilon);
   }
 
   @Override

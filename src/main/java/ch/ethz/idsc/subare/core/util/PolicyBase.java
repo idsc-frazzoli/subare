@@ -1,4 +1,4 @@
-// code by jph
+// code by fluric, jph
 package ch.ethz.idsc.subare.core.util;
 
 import java.util.HashMap;
@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.util.Index;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
@@ -18,18 +17,14 @@ abstract class PolicyBase implements Policy {
   protected final Map<Tensor, Integer> stateToActionSize = new HashMap<>();
 
   protected PolicyBase(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac, Tensor states) {
-    for (Tensor state : states) {
+    for (Tensor state : states)
       appendToMaps(discreteModel, qsa, sac, state);
-    }
   }
 
   protected PolicyBase() {
   }
 
-  abstract protected void appendToMaps(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac, Tensor state);
-
-  @Override // from Policy
-  abstract public Scalar probability(Tensor state, Tensor action);
+  protected abstract void appendToMaps(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac, Tensor state);
 
   /** useful for export to Mathematica
    * 
