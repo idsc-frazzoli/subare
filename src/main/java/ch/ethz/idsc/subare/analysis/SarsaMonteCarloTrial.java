@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
@@ -72,5 +73,9 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   @Override // from MonteCarloTrial
   public QsaInterface qsaInterface() {
     return qsa();
+  }
+
+  public Policy getPolicy() {
+    return policy;
   }
 }
