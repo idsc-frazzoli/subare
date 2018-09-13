@@ -39,7 +39,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   // ---
   private final DiscreteModel discreteModel;
   private final DiscountFunction discountFunction;
-  private final SarsaEvaluation evaluationType;
+  private final SarsaEvaluation sarsaEvaluation;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
   private final LearningRate learningRate;
@@ -48,14 +48,16 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   private final PolicyBase policy1;
   private final PolicyBase policy2;
 
-  /** @param sarsaType
+  /** @param sarsaEvaluation
    * @param discreteModel
    * @param learningRate1
    * @param learningRate2
    * @param qsa1
-   * @param qsa2 */
+   * @param qsa2
+   * @param sac1
+   * @param sac2 */
   /* package */ DoubleSarsa( //
-      SarsaEvaluation evaluationType, //
+      SarsaEvaluation sarsaEvaluation, //
       DiscreteModel discreteModel, //
       LearningRate learningRate, //
       QsaInterface qsa1, //
@@ -67,7 +69,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   ) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
-    this.evaluationType = evaluationType;
+    this.sarsaEvaluation = sarsaEvaluation;
     this.qsa1 = qsa1;
     this.qsa2 = qsa2;
     this.learningRate = learningRate;
@@ -94,7 +96,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     Tensor nextState = deque.getLast().nextState();
-    Scalar expectedReward = evaluationType.crossEvaluate(nextState, Policy1, Policy2);
+    Scalar expectedReward = sarsaEvaluation.crossEvaluate(nextState, Policy1, Policy2);
     rewards.append(expectedReward);
     // ---
     // the code below is identical to Sarsa
