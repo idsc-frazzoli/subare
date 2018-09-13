@@ -11,7 +11,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -41,7 +41,7 @@ enum VI_Cliffwalk {
     // Tensor state = statesIndex.get(stateI);
     // System.out.println(state + " " + values.get(stateI).map(ROUND));
     // }
-    Policy policy = GreedyPolicy.of(cliffwalk, vi.vs());
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(cliffwalk, ref, null);
     EpisodeInterface mce = EpisodeKickoff.single(cliffwalk, policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();

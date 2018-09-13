@@ -11,7 +11,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -31,13 +31,13 @@ enum GamblerHelper {
     // TODO test for equality of policies from qsa and vs
     ValueIteration vi = new ValueIteration(gambler, gambler);
     vi.untilBelow(RealScalar.of(1e-10));
-    return GreedyPolicy.of(gambler, vi.vs());
+    return PolicyType.GREEDY.bestEquiprobable(gambler, vi.vs(), null);
   }
 
   public static void play(Gambler gambler, DiscreteQsa qsa) {
     DiscreteUtils.print(qsa, Round._2);
     System.out.println("---");
-    Policy policy = GreedyPolicy.of(gambler, qsa);
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(gambler, qsa, null);
     EpisodeInterface mce = EpisodeKickoff.single(gambler, policy, //
         gambler.startStates().get(gambler.startStates().length() / 2));
     while (mce.hasNext()) {

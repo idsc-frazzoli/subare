@@ -1,11 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import ch.ethz.idsc.subare.core.DequeDigest;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.td.Sarsa;
-import ch.ethz.idsc.tensor.Scalar;
 
 /**  */
 public class LearningContender {
@@ -16,21 +13,18 @@ public class LearningContender {
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final DiscreteQsa qsa;
-  private final DequeDigest dequeDigest;
+  private final Sarsa sarsa;
 
-  private LearningContender(MonteCarloInterface monteCarloInterface, DequeDigest sarsa, DiscreteQsa qsa) {
+  private LearningContender(MonteCarloInterface monteCarloInterface, Sarsa sarsa, DiscreteQsa qsa) {
     this.monteCarloInterface = monteCarloInterface;
     this.qsa = qsa;
-    this.dequeDigest = sarsa;
+    this.sarsa = sarsa;
   }
 
-  public void stepAndCompare(Scalar epsilon, int nstep, DiscreteQsa ref) {
-    Policy policy = new EGreedyPolicy(monteCarloInterface, qsa, epsilon);
-    if (dequeDigest instanceof Sarsa) {
-      Sarsa sarsa = (Sarsa) dequeDigest;
-      sarsa.setExplore(epsilon);
-    }
-    ExploringStarts.batch(monteCarloInterface, policy, nstep, dequeDigest);
+  public void stepAndCompare(ExplorationRate explorationRate, int nstep, DiscreteQsa ref) {
+    EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, ref, sarsa.sac());
+    policy.setExplorationRate(explorationRate);
+    ExploringStarts.batch(monteCarloInterface, policy, nstep, sarsa);
   }
 
   public Infoline infoline(DiscreteQsa ref) {

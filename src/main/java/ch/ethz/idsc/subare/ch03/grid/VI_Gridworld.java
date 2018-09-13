@@ -5,8 +5,8 @@ package ch.ethz.idsc.subare.ch03.grid;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -47,7 +47,7 @@ enum VI_Gridworld {
     vi.untilBelow(DecimalScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
     DiscreteUtils.print(vi.vs(), Round._1);
-    Policy policy = GreedyPolicy.of(gridworld, vi.vs());
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(gridworld, vi.vs(), null);
     Policies.print(policy, gridworld.states());
   }
 }

@@ -8,9 +8,9 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
@@ -38,7 +38,7 @@ enum AVI_Cliffwalk {
     }
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
     DiscreteUtils.print(vs);
-    Policy policy = GreedyPolicy.of(cliffwalk, ref);
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(cliffwalk, ref, null);
     Policies.print(policy, cliffwalk.states());
   }
 }

@@ -4,8 +4,12 @@ package ch.ethz.idsc.subare.analysis;
 import java.util.List;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -15,43 +19,51 @@ public enum MonteCarloAlgorithms {
   ORIGINAL_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.ORIGINAL);
+      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      StateActionCounter sac = new DiscreteStateActionCounter();
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.ORIGINAL, PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac));
     }
   }, //
   DOUBLE_ORIGINAL_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaType.ORIGINAL);
+      return DoubleSarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.ORIGINAL);
     }
   }, //
   EXPECTED_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.EXPECTED);
+      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      StateActionCounter sac = new DiscreteStateActionCounter();
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.EXPECTED, PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac));
     }
   }, //
   DOUBLE_EXPECTED_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaType.EXPECTED);
+      return DoubleSarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.EXPECTED);
     }
   }, //
   QLEARNING_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING);
+      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      StateActionCounter sac = new DiscreteStateActionCounter();
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING, PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac));
     }
   }, //
   QLEARNING_SARSA_UCB() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return SarsaMonteCarloTrialUcb.of(monteCarloInterface, SarsaType.QLEARNING);
+      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      StateActionCounter sac = new DiscreteStateActionCounter();
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING, PolicyType.UCB.bestEquiprobable(monteCarloInterface, qsa, sac));
     }
   }, //
   DOUBLE_QLEARNING_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new DoubleSarsaMonteCarloTrial(monteCarloInterface, SarsaType.QLEARNING);
+      return DoubleSarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING);
     }
   }, //
   ORIGINAL_TRUE_ONLINE_SARSA() {
@@ -75,7 +87,9 @@ public enum MonteCarloAlgorithms {
   MONTE_CARLO() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      return new EpisodeMonteCarloTrial(monteCarloInterface);
+      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      StateActionCounter sac = new DiscreteStateActionCounter();
+      return new EpisodeMonteCarloTrial(monteCarloInterface, PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac));
     }
   }, //
   ;

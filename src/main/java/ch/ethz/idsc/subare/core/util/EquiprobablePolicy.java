@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StateActionModel;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;

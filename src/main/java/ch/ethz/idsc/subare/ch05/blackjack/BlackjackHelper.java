@@ -7,7 +7,7 @@ import java.util.List;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -44,7 +44,7 @@ enum BlackjackHelper {
 
   public static Tensor joinAll(Blackjack blackjack, DiscreteQsa qsa) {
     Tensor im1 = render(blackjack, qsa);
-    Policy policy = GreedyPolicy.of(blackjack, qsa);
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(blackjack, qsa, null);
     Tensor im2 = render(blackjack, policy);
     List<Integer> list = Dimensions.of(im1);
     list.set(1, 2);

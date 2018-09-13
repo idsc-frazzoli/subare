@@ -7,10 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
+import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.util.PlotUtils;
 import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
@@ -33,7 +37,10 @@ public enum MonteCarloAnalysis {
   public static DiscreteQsa getOptimalQsa(MonteCarloInterface monteCarloInterface, int batches) {
     if (!(monteCarloInterface instanceof StandardModel)) { // if no AVI is possible, try to approximate it
       System.out.println("Approximating optimal QSA because the model does not implement StandardModel!");
-      final SarsaMonteCarloTrial sarsa = SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING);
+      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      StateActionCounter sac = new DiscreteStateActionCounter();
+      final SarsaMonteCarloTrial sarsa = SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING,
+          PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac));
       Stopwatch stopwatch = Stopwatch.started();
       for (int index = 0; index < batches * 10; ++index)
         sarsa.executeBatch();

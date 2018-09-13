@@ -5,7 +5,7 @@ import java.util.List;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -51,7 +51,7 @@ enum CarRentalHelper {
 
   public static Tensor joinAll(CarRental carRental, DiscreteVs vs) {
     Tensor im1 = render(carRental, vs);
-    Policy pi = GreedyPolicy.of(carRental, vs);
+    Policy pi = PolicyType.GREEDY.bestEquiprobable(carRental, vs, null);
     Tensor im2 = render(carRental, pi);
     List<Integer> list = Dimensions.of(im1);
     list.set(0, 4 * 2);

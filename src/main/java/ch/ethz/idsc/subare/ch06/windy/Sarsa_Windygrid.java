@@ -2,15 +2,17 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch06.windy;
 
-import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
@@ -28,13 +30,13 @@ enum Sarsa_Windygrid {
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     Tensor epsilon = Subdivide.of(.2, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(3, 0.51);
-    Sarsa sarsa = sarsaType.supply(windygrid, learningRate, qsa);
+    StateActionCounter sac = new DiscreteStateActionCounter();
+    EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(windygrid, qsa, sac);
+    Sarsa sarsa = sarsaType.supply(windygrid, learningRate, qsa, sac, policy);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100)) {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
-        Policy policy = new EGreedyPolicy(windygrid, qsa, epsilon.Get(index));
         // sarsa.supplyPolicy(() -> policy);
-        sarsa.setExplore(epsilon.Get(index));
         for (int count = 0; count < 10; ++count) // because there is only 1 start state
           ExploringStarts.batch(windygrid, policy, sarsa);
         gsw.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));

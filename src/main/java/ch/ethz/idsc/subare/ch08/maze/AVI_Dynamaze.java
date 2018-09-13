@@ -7,9 +7,9 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
@@ -38,7 +38,7 @@ enum AVI_Dynamaze {
     // TODO extract code below to other file
     DiscreteVs vs = DiscreteUtils.createVs(dynamaze, ref);
     DiscreteUtils.print(vs);
-    Policy policy = GreedyPolicy.of(dynamaze, ref);
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(dynamaze, ref, null);
     Policies.print(policy, dynamaze.states());
   }
 }

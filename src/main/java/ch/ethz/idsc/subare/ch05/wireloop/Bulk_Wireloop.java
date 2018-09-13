@@ -3,12 +3,17 @@ package ch.ethz.idsc.subare.ch05.wireloop;
 
 import java.awt.Point;
 
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
+import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.LearningCompetition;
 import ch.ethz.idsc.subare.core.util.LearningContender;
+import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -35,7 +40,10 @@ enum Bulk_Wireloop {
       int y = 0;
       for (Tensor exponent : Subdivide.of(.51, 1.5, 20)) { // .51 2
         DiscreteQsa qsa = DiscreteQsa.build(wireloop);
-        Sarsa sarsa = sarsaType.supply(wireloop, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa);
+        StateActionCounter sac = new DiscreteStateActionCounter();
+        EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(wireloop, qsa, sac);
+        policy.setExplorationRate(LinearExplorationRate.of(40, 0.2, 0.05));
+        Sarsa sarsa = sarsaType.supply(wireloop, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa, sac, policy);
         LearningContender learningContender = LearningContender.sarsa(wireloop, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;

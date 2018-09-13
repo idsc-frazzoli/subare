@@ -7,66 +7,58 @@ import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.FairArgMax;
+import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.sca.Clip;
 
 /** p.33 */
 public class EGreedyPolicy extends PolicyBase {
-  /** probability of choosing a non-optimal action, if there is at least one non-optimal action */
-  private final Scalar epsilon;
+  protected ExplorationRate explorationRate;
 
-  public EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon, Tensor states) {
-    super(discreteModel, qsa, null, states);
-    Clip.function(0, 1).requireInside(epsilon);
-    this.epsilon = epsilon;
+  /* package */ EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
+    super(discreteModel, qsa, sac);
+    explorationRate = ConstantExplorationRate.of(0.1);
   }
 
-  public EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, Scalar epsilon) {
-    super(discreteModel, qsa, null, discreteModel.states());
-    Clip.function(0, 1).requireInside(epsilon);
-    this.epsilon = epsilon;
+  /* package */ EGreedyPolicy(StandardModel standardModel, VsInterface vs, StateActionCounter sac) {
+    super(standardModel, vs, sac);
+    explorationRate = ConstantExplorationRate.of(0.1);
   }
 
-  public EGreedyPolicy(StandardModel standardModel, VsInterface vs, Scalar epsilon, Tensor states) {
-    states.forEach(v -> appendToMaps(standardModel, vs, v));
-    Clip.function(0, 1).requireInside(epsilon);
-    this.epsilon = epsilon;
+  public EGreedyPolicy setExplorationRate(ExplorationRate explorationRate) {
+    this.explorationRate = explorationRate;
+    return this;
   }
 
   @Override
-  protected void appendToMaps(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac, Tensor state) {
+  protected Tensor getBestActions(DiscreteModel discreteModel, Tensor state) {
     Tensor actions = discreteModel.actions(state);
     Tensor va = Tensor.of(actions.stream().map(action -> qsa.value(state, action)));
     FairArgMax fairArgMax = FairArgMax.of(va);
-    Tensor feasible = Tensor.of(fairArgMax.options().stream().map(actions::get));
-    stateToBestActions.put(state, Index.build(feasible));
-    stateToActionSize.put(state, actions.length());
+    return Tensor.of(fairArgMax.options().stream().map(actions::get));
   }
 
-  protected void appendToMaps(StandardModel standardModel, VsInterface vs, Tensor state) {
-    ActionValueAdapter actionValueAdapter = new ActionValueAdapter(standardModel);
-    Tensor actions = standardModel.actions(state);
-    Tensor va = Tensor.of(actions.stream() //
-        .map(action -> actionValueAdapter.qsa(state, action, vs)));
-    FairArgMax fairArgMax = FairArgMax.of(va);
-    Tensor feasible = Tensor.of(fairArgMax.options().stream().map(actions::get));
-    stateToBestActions.put(state, Index.build(feasible));
-    stateToActionSize.put(state, actions.length());
-  }
-
-  @Override // from Policy
+  @Override
   public Scalar probability(Tensor state, Tensor action) {
-    Index index = stateToBestActions.get(state);
-    final int optimalCount = index.size();
-    final int nonOptimalCount = stateToActionSize.get(state) - optimalCount;
+    Tensor bestActions = getBestActions(discreteModel, state);
+    Index index = Index.build(bestActions);
+    final int optimalCount = bestActions.length();
+    final int nonOptimalCount = discreteModel.actions(state).length() - optimalCount;
     if (nonOptimalCount == 0) // no non-optimal action exists
       return RationalScalar.of(1, optimalCount);
+    Scalar epsilon = explorationRate.epsilon(state, sac);
     if (index.containsKey(action))
       return RealScalar.ONE.subtract(epsilon).divide(RealScalar.of(optimalCount));
     return epsilon.divide(RealScalar.of(nonOptimalCount));
+  }
+
+  @Override
+  public PolicyBase copyOf(PolicyBase policyBase) {
+    GlobalAssert.that(policyBase instanceof EGreedyPolicy);
+    EGreedyPolicy newPolicy = new EGreedyPolicy(policyBase.discreteModel, policyBase.qsa, policyBase.sac);
+    return newPolicy.setExplorationRate(((EGreedyPolicy) policyBase).explorationRate);
   }
 }

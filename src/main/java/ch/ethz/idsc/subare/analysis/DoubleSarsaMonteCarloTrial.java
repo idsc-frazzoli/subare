@@ -7,43 +7,47 @@ import java.util.Deque;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.DoubleSarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 
 public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
-  private static final Scalar ALPHA = RealScalar.of(0.05);
-  private static final Scalar EPSILON = RealScalar.of(0.1);
-  private static final int DIGEST_DEPTH = 1; // 0 is equal to the MonteCarlo approach
+  public static DoubleSarsaMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
+    DiscreteQsa qsa1 = DiscreteQsa.build(monteCarloInterface);
+    DiscreteQsa qsa2 = DiscreteQsa.build(monteCarloInterface);
+    StateActionCounter sac1 = new DiscreteStateActionCounter();
+    StateActionCounter sac2 = new DiscreteStateActionCounter();
+    PolicyBase policy1 = PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa1, sac1);
+    PolicyBase policy2 = PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa2, sac2);
+    return new DoubleSarsaMonteCarloTrial(monteCarloInterface, sarsaType, //
+        ConstantLearningRate.of(RealScalar.of(0.05)), qsa1, qsa2, sac1, sac2, policy1, policy2);
+  }
+
+  private final static int DIGEST_DEPTH = 1;
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final DoubleSarsa doubleSarsa;
   private final Deque<StepInterface> deque = new ArrayDeque<>();
 
   public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, //
-      LearningRate learningRate1, LearningRate learningRate2, DiscreteQsa qsa1, DiscreteQsa qsa2) {
+      LearningRate learningRate, DiscreteQsa qsa1, DiscreteQsa qsa2, StateActionCounter sac1, StateActionCounter sac2, PolicyBase policy1, PolicyBase policy2) {
     this.monteCarloInterface = monteCarloInterface;
     doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, //
-        learningRate1, learningRate2, //
-        qsa1, qsa2);
-    doubleSarsa.setExplore(EPSILON);
-  }
-
-  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
-    this(monteCarloInterface, sarsaType, //
-        ConstantLearningRate.of(ALPHA), ConstantLearningRate.of(ALPHA), //
-        DiscreteQsa.build(monteCarloInterface), DiscreteQsa.build(monteCarloInterface));
+        learningRate, qsa1, qsa2, sac1, sac2, policy1, policy2);
   }
 
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = doubleSarsa.getEGreedy();
+    Policy policy = doubleSarsa.getPolicy();
     ExploringStarts.batch(monteCarloInterface, policy, DIGEST_DEPTH, doubleSarsa);
   }
 

@@ -1,4 +1,4 @@
-// code by jph and fluric
+// code by fluric
 package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;

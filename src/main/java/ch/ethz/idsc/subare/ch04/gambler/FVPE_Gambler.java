@@ -6,7 +6,7 @@ import ch.ethz.idsc.subare.core.mc.FirstVisitPolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.N;
 
@@ -16,7 +16,7 @@ enum FVPE_Gambler {
   public static void main(String[] args) {
     final Gambler gambler = Gambler.createDefault();
     final DiscreteVs ref = GamblerHelper.getOptimalVs(gambler);
-    final Policy policy = GreedyPolicy.of(gambler, ref);
+    final Policy policy = PolicyType.GREEDY.bestEquiprobable(gambler, ref, null);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
         gambler, null);
     for (int count = 0; count < 100; ++count) {

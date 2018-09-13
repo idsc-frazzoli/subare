@@ -2,20 +2,21 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch00.fish;
 
-import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DoubleScalar;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -28,15 +29,15 @@ enum Sarsa_Fishfarm {
     FishfarmRaster fishfarmRaster = new FishfarmRaster(fishfarm);
     final DiscreteQsa ref = FishfarmHelper.getOptimalQsa(fishfarm);
     DiscreteQsa qsa = DiscreteQsa.build(fishfarm, DoubleScalar.POSITIVE_INFINITY);
-    Tensor epsilon = Subdivide.of(.5, .01, batches);
-    Sarsa sarsa = sarsaType.supply(fishfarm, DefaultLearningRate.of(7, 0.61), qsa);
+    StateActionCounter sac = new DiscreteStateActionCounter();
+    EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(fishfarm, qsa, sac);
+    policy.setExplorationRate(LinearExplorationRate.of(batches, 0.5, 0.01));
+    Sarsa sarsa = sarsaType.supply(fishfarm, DefaultLearningRate.of(7, 0.61), qsa, sac, policy);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {
         // if (batches - 10 < index)
         Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
-        Policy policy = new EGreedyPolicy(fishfarm, qsa, epsilon.Get(index));
         // sarsa.supplyPolicy(() -> policy);
-        sarsa.setExplore(epsilon.Get(index));
         ExploringStarts.batch(fishfarm, policy, nstep, sarsa);
         gsw.append(StateRasters.qsaLossRef(fishfarmRaster, qsa, ref));
         if (infoline.isLossfree())
