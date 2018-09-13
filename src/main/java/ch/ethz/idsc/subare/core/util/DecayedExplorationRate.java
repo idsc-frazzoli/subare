@@ -14,12 +14,17 @@ import ch.ethz.idsc.tensor.sca.Sign;
 /** using formula: epsilon = factor*(1/(1+N))^(exponent), N is the number of state visits
  * good values are: factor = 0.5, exponent = 0.5, depends strongly on problem */
 public class DecayedExplorationRate implements ExplorationRate {
+  public static DecayedExplorationRate of(double factor, double exponent) {
+    return new DecayedExplorationRate(RealScalar.of(factor), RealScalar.of(exponent));
+  }
+
+  // ---
   private final Scalar factor;
   private final Scalar exponent;
   /** lookup table to speed up computation */
   private final Tensor MEMO = Tensors.vector(1.0); // index == 0 => learning rate == 1
 
-  public DecayedExplorationRate(Scalar factor, Scalar exponent) {
+  /* package */ DecayedExplorationRate(Scalar factor, Scalar exponent) {
     this.factor = Sign.requirePositiveOrZero(factor);
     this.exponent = exponent;
   }

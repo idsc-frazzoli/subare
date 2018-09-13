@@ -10,27 +10,17 @@ import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
-import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Sign;
 
 public class SarsaMonteCarloTrial implements MonteCarloTrial {
-  private static final Scalar ALPHA = RealScalar.of(0.05);
-
   public static SarsaMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa,
       StateActionCounter sac, PolicyBase policy, int digestDepth) {
     return new SarsaMonteCarloTrial(monteCarloInterface, sarsaType, learningRate, qsa, sac, policy, digestDepth);
-  }
-
-  public static SarsaMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, PolicyBase policy) {
-    return new SarsaMonteCarloTrial(monteCarloInterface, sarsaType, ConstantLearningRate.of(ALPHA), DiscreteQsa.build(monteCarloInterface),
-        new DiscreteStateActionCounter(), policy, 1);
   }
 
   // ---

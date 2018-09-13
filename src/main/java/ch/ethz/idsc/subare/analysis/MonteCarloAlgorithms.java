@@ -7,10 +7,16 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.SarsaType;
+import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
+import ch.ethz.idsc.subare.core.util.DecayedExplorationRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
+import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
+import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.util.Stopwatch;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.red.Mean;
@@ -19,9 +25,10 @@ public enum MonteCarloAlgorithms {
   ORIGINAL_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
       StateActionCounter sac = new DiscreteStateActionCounter();
-      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.ORIGINAL, PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac));
+      PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac);
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.ORIGINAL, ConstantLearningRate.of(RealScalar.of(0.05)), qsa, sac, policy, 1);
     }
   }, //
   DOUBLE_ORIGINAL_SARSA() {
@@ -33,9 +40,10 @@ public enum MonteCarloAlgorithms {
   EXPECTED_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
       StateActionCounter sac = new DiscreteStateActionCounter();
-      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.EXPECTED, PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac));
+      PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac);
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.EXPECTED, ConstantLearningRate.of(RealScalar.of(0.05)), qsa, sac, policy, 1);
     }
   }, //
   DOUBLE_EXPECTED_SARSA() {
@@ -47,17 +55,39 @@ public enum MonteCarloAlgorithms {
   QLEARNING_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
       StateActionCounter sac = new DiscreteStateActionCounter();
-      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING, PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac));
+      PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac);
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING, ConstantLearningRate.of(RealScalar.of(0.05)), qsa, sac, policy, 1);
     }
   }, //
   QLEARNING_SARSA_UCB() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
-      QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
       StateActionCounter sac = new DiscreteStateActionCounter();
-      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING, PolicyType.UCB.bestEquiprobable(monteCarloInterface, qsa, sac));
+      PolicyBase policy = PolicyType.UCB.bestEquiprobable(monteCarloInterface, qsa, sac);
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING, ConstantLearningRate.of(RealScalar.of(0.05)), qsa, sac, policy, 1);
+    }
+  }, //
+  QLEARNING_SARSA_LINEAR_EXPLORATION() {
+    @Override
+    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
+      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
+      StateActionCounter sac = new DiscreteStateActionCounter();
+      EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac);
+      policy.setExplorationRate(LinearExplorationRate.of(1000, 0.5, 0.01));
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING, ConstantLearningRate.of(RealScalar.of(0.05)), qsa, sac, policy, 1);
+    }
+  }, //
+  QLEARNING_SARSA_EXPONENTIAL_EXPLORATION() {
+    @Override
+    MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {
+      DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
+      StateActionCounter sac = new DiscreteStateActionCounter();
+      EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac);
+      policy.setExplorationRate(DecayedExplorationRate.of(1, 0.5));
+      return SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING, ConstantLearningRate.of(RealScalar.of(0.05)), qsa, sac, policy, 1);
     }
   }, //
   DOUBLE_QLEARNING_SARSA() {
