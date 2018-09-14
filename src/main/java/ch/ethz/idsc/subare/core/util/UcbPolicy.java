@@ -15,8 +15,6 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** upper confidence bound is greedy except that it encourages
  * exploration if an action has not been encountered often relative to other actions */
-// TODO fluric right now there is no reason to make the class public
-// ... since construction happens exclusively via policytype
 /* package */ class UcbPolicy extends PolicyBase {
   /* package */ UcbPolicy(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
     super(discreteModel, qsa, sac);

@@ -28,10 +28,6 @@ public class LinearExplorationRate implements ExplorationRate {
     Sign.requirePositiveOrZero(maximum.subtract(maximum));
   }
 
-  // TODO fluric this function does not need to be synchronized
-  // ... the only reason why synchronization may be necessary could be
-  // ... sac.stateCount(state) ... but then that function should be synchronized
-  // ... in the respective implementation of StateActionCounter
   @Override // from ExplorationRate
   public final Scalar epsilon(Tensor state, StateActionCounter sac) {
     Scalar decayedValue = maximum.subtract(maximum.subtract(minimum).multiply(sac.stateCount(state)).divide(decayInterval));
