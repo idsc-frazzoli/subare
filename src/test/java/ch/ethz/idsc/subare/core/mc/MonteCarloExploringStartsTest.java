@@ -5,7 +5,6 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.adapter.SimpleTestModel;
 import ch.ethz.idsc.subare.core.adapter.SimpleTestModels;
-import ch.ethz.idsc.subare.core.util.ConstantExplorationRate;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import junit.framework.TestCase;

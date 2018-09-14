@@ -38,8 +38,12 @@ public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
   private final DoubleSarsa doubleSarsa;
   private final Deque<StepInterface> deque = new ArrayDeque<>();
 
-  public DoubleSarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, //
-      LearningRate learningRate, DiscreteQsa qsa1, DiscreteQsa qsa2, StateActionCounter sac1, StateActionCounter sac2, PolicyBase policy1, PolicyBase policy2) {
+  public DoubleSarsaMonteCarloTrial( //
+      MonteCarloInterface monteCarloInterface, SarsaType sarsaType, //
+      LearningRate learningRate, //
+      DiscreteQsa qsa1, DiscreteQsa qsa2, //
+      StateActionCounter sac1, StateActionCounter sac2, //
+      PolicyBase policy1, PolicyBase policy2) {
     this.monteCarloInterface = monteCarloInterface;
     doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, //
         learningRate, qsa1, qsa2, sac1, sac2, policy1, policy2);

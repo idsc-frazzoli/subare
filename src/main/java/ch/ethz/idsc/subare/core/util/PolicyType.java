@@ -11,12 +11,16 @@ public enum PolicyType {
   GREEDY() {
     @Override
     public PolicyBase bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
-      return new EGreedyPolicy(discreteModel, qsa, sac).setExplorationRate(ConstantExplorationRate.of(0));
+      EGreedyPolicy eGreedyPolicy = new EGreedyPolicy(discreteModel, qsa, sac);
+      eGreedyPolicy.setExplorationRate(ConstantExplorationRate.of(0));
+      return eGreedyPolicy;
     }
 
     @Override
     public PolicyBase bestEquiprobable(StandardModel standardModel, VsInterface vs, StateActionCounter sac) {
-      return new EGreedyPolicy(standardModel, vs, sac).setExplorationRate(ConstantExplorationRate.of(0));
+      EGreedyPolicy eGreedyPolicy = new EGreedyPolicy(standardModel, vs, sac);
+      eGreedyPolicy.setExplorationRate(ConstantExplorationRate.of(0));
+      return eGreedyPolicy;
     }
   }, //
   EGREEDY() {
@@ -42,7 +46,7 @@ public enum PolicyType {
     }
   }, //
   ;
-  abstract public PolicyBase bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac);
+  public abstract PolicyBase bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac);
 
-  abstract public PolicyBase bestEquiprobable(StandardModel standardModel, VsInterface vs, StateActionCounter sac);
+  public abstract PolicyBase bestEquiprobable(StandardModel standardModel, VsInterface vs, StateActionCounter sac);
 }

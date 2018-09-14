@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
 /** using formula: epsilon = Max(minimum, maximum-(maximum-minimum)*N/decayInterval)
  * good values could be: minimum=0.01, maximum=0.5, decayInterval=1000, strongly depends on the problem */
 public class LinearExplorationRate implements ExplorationRate {
-  public static LinearExplorationRate of(double decayInterval, double maximum, double minimum) {
+  public static ExplorationRate of(double decayInterval, double maximum, double minimum) {
     return new LinearExplorationRate(RealScalar.of(decayInterval), RealScalar.of(maximum), RealScalar.of(minimum));
   }
 
@@ -28,8 +28,12 @@ public class LinearExplorationRate implements ExplorationRate {
     Sign.requirePositiveOrZero(maximum.subtract(maximum));
   }
 
+  // TODO fluric this function does not need to be synchronized
+  // ... the only reason why synchronization may be necessary could be
+  // ... sac.stateCount(state) ... but then that function should be synchronized
+  // ... in the respective implementation of StateActionCounter
   @Override // from ExplorationRate
-  public synchronized final Scalar epsilon(Tensor state, StateActionCounter sac) {
+  public final Scalar epsilon(Tensor state, StateActionCounter sac) {
     Scalar decayedValue = maximum.subtract(maximum.subtract(minimum).multiply(sac.stateCount(state)).divide(decayInterval));
     return Max.of(minimum, decayedValue);
   }

@@ -5,6 +5,7 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.StateActionModel;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.Index;
@@ -89,5 +90,17 @@ public enum DiscreteUtils {
 
   public static void print(DiscreteVs vs) {
     print(vs, Function.identity());
+  }
+
+  /** @param standardModel
+   * @param vs
+   * @return */
+  public static QsaInterface getQsaFromVs(StandardModel standardModel, VsInterface vs) {
+    ActionValueAdapter actionValueAdapter = new ActionValueAdapter(standardModel);
+    DiscreteQsa qsa = DiscreteQsa.build(standardModel);
+    for (Tensor state : standardModel.states())
+      for (Tensor action : standardModel.actions(state))
+        qsa.assign(state, action, actionValueAdapter.qsa(state, action, vs));
+    return qsa;
   }
 }

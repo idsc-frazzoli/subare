@@ -15,7 +15,9 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** upper confidence bound is greedy except that it encourages
  * exploration if an action has not been encountered often relative to other actions */
-public class UcbPolicy extends PolicyBase {
+// TODO fluric right now there is no reason to make the class public
+// ... since construction happens exclusively via policytype
+/* package */ class UcbPolicy extends PolicyBase {
   /* package */ UcbPolicy(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
     super(discreteModel, qsa, sac);
   }
@@ -25,7 +27,7 @@ public class UcbPolicy extends PolicyBase {
   }
 
   @Override
-  protected Tensor getBestActions(DiscreteModel discreteModel, Tensor state) {
+  public Tensor getBestActions(Tensor state) {
     Tensor actions = discreteModel.actions(state);
     Tensor va = Tensor.of(actions.stream().parallel(). //
         map(action -> UcbUtils.getUpperConfidenceBound(state, action, qsa.value(state, action), sac, discreteModel)));
@@ -35,7 +37,7 @@ public class UcbPolicy extends PolicyBase {
 
   @Override
   public Scalar probability(Tensor state, Tensor action) {
-    Index index = Index.build(getBestActions(discreteModel, state));
+    Index index = Index.build(getBestActions(state));
     final int optimalCount = index.size();
     return index.containsKey(action) ? RationalScalar.of(1, optimalCount) : RealScalar.ZERO;
   }

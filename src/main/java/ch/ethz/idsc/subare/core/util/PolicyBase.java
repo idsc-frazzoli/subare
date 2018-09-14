@@ -10,9 +10,8 @@ import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 
-abstract public class PolicyBase implements Policy, QsaInterfaceSupplier, StateActionCounterSupplier {
+public abstract class PolicyBase implements Policy, QsaInterfaceSupplier, StateActionCounterSupplier {
   protected final DiscreteModel discreteModel;
   // ---
   protected StateActionCounter sac;
@@ -27,66 +26,31 @@ abstract public class PolicyBase implements Policy, QsaInterfaceSupplier, StateA
   protected PolicyBase(StandardModel standardModel, VsInterface vs, StateActionCounter sac) {
     this.discreteModel = standardModel;
     this.sac = sac;
-    this.qsa = getQsaFromVs(standardModel, vs, standardModel.states()); // might be inefficient or even stale information
+    // might be inefficient or even stale information
+    this.qsa = DiscreteUtils.getQsaFromVs(standardModel, vs);
   }
 
-  private QsaInterface getQsaFromVs(StandardModel standardModel, VsInterface vs, Tensor states) {
-    ActionValueAdapter actionValueAdapter = new ActionValueAdapter(standardModel);
-    DiscreteQsa qsa = DiscreteQsa.build(standardModel);
-    for (Tensor state : states) {
-      for (Tensor action : standardModel.actions(state)) {
-        qsa.assign(state, action, actionValueAdapter.qsa(state, action, vs));
-      }
-    }
-    return qsa;
-  }
-
-  abstract protected Tensor getBestActions(DiscreteModel discreteModel, Tensor state);
-
-  /** useful for export to Mathematica
-   * 
-   * @param states
-   * @return list of actions optimal for */
-  public Tensor flatten(Tensor states) {
-    Tensor result = Tensors.empty();
-    for (Tensor state : states)
-      for (Tensor action : getBestActions(discreteModel, state))
-        result.append(Tensors.of(state, action));
-    return result;
-  }
-
-  /** print overview of possible best actions for given states
-   * 
-   * @param states */
-  public void print(Tensor states) {
-    System.out.println("greedy:");
-    for (Tensor state : states)
-      System.out.println(state + " -> " + getBestActions(discreteModel, state));
-  }
-
-  /** @param state
-   * @return the best actions put in a {@link Tensor} */
-  public Tensor getBestActions(Tensor state) {
-    return getBestActions(discreteModel, state);
-  }
-
-  public void setQsa(QsaInterface qsa) {
+  public final void setQsa(QsaInterface qsa) {
     this.qsa = qsa;
   }
 
   @Override // from QsaInterfaceSupplier
-  public QsaInterface qsaInterface() {
+  public final QsaInterface qsaInterface() {
     return qsa;
   }
 
-  public void setSac(StateActionCounter sac) {
+  public final void setSac(StateActionCounter sac) {
     this.sac = sac;
   }
 
   @Override // from StateActionCounterSupplier
-  public StateActionCounter sac() {
+  public final StateActionCounter sac() {
     return sac;
   }
 
-  abstract public PolicyBase copyOf(PolicyBase policyBase);
+  /** @param state
+   * @return vector of actions that are equally optimal */
+  public abstract Tensor getBestActions(Tensor state);
+
+  public abstract PolicyBase copyOf(PolicyBase policyBase);
 }

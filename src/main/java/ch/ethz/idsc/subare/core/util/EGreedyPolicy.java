@@ -16,25 +16,25 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** p.33 */
 public class EGreedyPolicy extends PolicyBase {
-  protected ExplorationRate explorationRate;
+  // LONGTERM make explorationRate final
+  private ExplorationRate explorationRate;
 
-  /* package */ EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
+  public EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
     super(discreteModel, qsa, sac);
     explorationRate = ConstantExplorationRate.of(0.1);
   }
 
-  /* package */ EGreedyPolicy(StandardModel standardModel, VsInterface vs, StateActionCounter sac) {
+  public EGreedyPolicy(StandardModel standardModel, VsInterface vs, StateActionCounter sac) {
     super(standardModel, vs, sac);
     explorationRate = ConstantExplorationRate.of(0.1);
   }
 
-  public EGreedyPolicy setExplorationRate(ExplorationRate explorationRate) {
+  public void setExplorationRate(ExplorationRate explorationRate) {
     this.explorationRate = explorationRate;
-    return this;
   }
 
   @Override
-  protected Tensor getBestActions(DiscreteModel discreteModel, Tensor state) {
+  public Tensor getBestActions(Tensor state) {
     Tensor actions = discreteModel.actions(state);
     Tensor va = Tensor.of(actions.stream().map(action -> qsa.value(state, action)));
     FairArgMax fairArgMax = FairArgMax.of(va);
@@ -43,7 +43,7 @@ public class EGreedyPolicy extends PolicyBase {
 
   @Override
   public Scalar probability(Tensor state, Tensor action) {
-    Tensor bestActions = getBestActions(discreteModel, state);
+    Tensor bestActions = getBestActions(state);
     Index index = Index.build(bestActions);
     final int optimalCount = bestActions.length();
     final int nonOptimalCount = discreteModel.actions(state).length() - optimalCount;
@@ -59,6 +59,7 @@ public class EGreedyPolicy extends PolicyBase {
   public PolicyBase copyOf(PolicyBase policyBase) {
     GlobalAssert.that(policyBase instanceof EGreedyPolicy);
     EGreedyPolicy newPolicy = new EGreedyPolicy(policyBase.discreteModel, policyBase.qsa, policyBase.sac);
-    return newPolicy.setExplorationRate(((EGreedyPolicy) policyBase).explorationRate);
+    newPolicy.setExplorationRate(((EGreedyPolicy) policyBase).explorationRate);
+    return newPolicy;
   }
 }
