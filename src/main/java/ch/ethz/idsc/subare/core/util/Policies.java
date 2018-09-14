@@ -7,18 +7,27 @@ import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 
 public enum Policies {
   ;
   public static void print(Policy policy, Tensor states) {
-    EGreedyPolicy eGreedyPolicy = (EGreedyPolicy) policy;
-    eGreedyPolicy.print(states);
+    PolicyBase policyBase = (PolicyBase) policy;
+    System.out.println("best actions:");
+    for (Tensor state : states)
+      System.out.println(state + " -> " + policyBase.getBestActions(state));
   }
 
-  // function only used once
-  public static Tensor flatten(Policy policy, Tensor states) {
-    EGreedyPolicy eGreedyPolicy = (EGreedyPolicy) policy;
-    return eGreedyPolicy.flatten(states);
+  /** useful for export to Mathematica
+   * 
+   * @param states
+   * @return list of state action pairs that are optimal with respect to ... */
+  public static Tensor flatten(PolicyBase policyBase, Tensor states) {
+    Tensor result = Tensors.empty();
+    for (Tensor state : states)
+      for (Tensor action : policyBase.getBestActions(state))
+        result.append(StateAction.key(state, action));
+    return result;
   }
 
   /** function builds a {@link DiscreteQsa} where the state-action values are

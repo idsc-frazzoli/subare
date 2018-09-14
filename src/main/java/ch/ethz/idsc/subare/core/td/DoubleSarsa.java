@@ -6,7 +6,6 @@ import java.util.Deque;
 import ch.ethz.idsc.subare.core.DiscountFunction;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteQsaSupplier;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
@@ -14,16 +13,12 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.LearningRate;
-import ch.ethz.idsc.subare.core.util.StateAction;
+import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.StateActionCounterUtil;
 import ch.ethz.idsc.subare.util.Coinflip;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 
 /** double sarsa for single-step, and n-step
  * 
@@ -47,11 +42,11 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   private final SarsaEvaluation sarsaEvaluation;
   private final QsaInterface qsa1;
   private final QsaInterface qsa2;
-  private final LearningRate learningRate1;
-  private final LearningRate learningRate2;
+  private final LearningRate learningRate;
   private final StateActionCounter sac1;
   private final StateActionCounter sac2;
-  private Scalar epsilon = null;
+  private final PolicyBase policy1;
+  private final PolicyBase policy2;
 
   /** @param sarsaEvaluation
    * @param discreteModel
@@ -64,70 +59,55 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   /* package */ DoubleSarsa( //
       SarsaEvaluation sarsaEvaluation, //
       DiscreteModel discreteModel, //
-      LearningRate learningRate1, //
-      LearningRate learningRate2, //
+      LearningRate learningRate, //
       QsaInterface qsa1, //
       QsaInterface qsa2, //
       StateActionCounter sac1, //
-      StateActionCounter sac2 //
+      StateActionCounter sac2, //
+      PolicyBase policy1, //
+      PolicyBase policy2 //
   ) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.sarsaEvaluation = sarsaEvaluation;
     this.qsa1 = qsa1;
     this.qsa2 = qsa2;
-    this.learningRate1 = learningRate1;
-    this.learningRate2 = learningRate2;
+    this.learningRate = learningRate;
     this.sac1 = sac1;
     this.sac2 = sac2;
+    this.policy1 = policy1;
+    this.policy2 = policy2;
   }
 
-  /** @param epsilon
-   * @return epsilon-greedy policy with respect to (qsa1 + qsa2) / 2 */
-  public Policy getEGreedy() {
-    DiscreteQsa avg = DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
-    return new EGreedyPolicy(discreteModel, avg, epsilon);
-  }
-
-  /** @return greedy policy with respect to (qsa1 + qsa2) / 2 */
-  public Policy getGreedy() {
-    DiscreteQsa avg = DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2);
-    return GreedyPolicy.of(discreteModel, avg);
-  }
-
-  /** @param epsilon to build an e-greedy policy */
-  public void setExplore(Scalar epsilon) {
-    this.epsilon = epsilon;
+  /** @return policy with respect to (qsa1 + qsa2) / 2 and sac1+sac2 */
+  public PolicyBase getPolicy() {
+    PolicyBase copy = policy1.copyOf(policy1);
+    copy.setQsa(DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2));
+    copy.setSac(StateActionCounterUtil.getSummedSac(sac1, sac2, discreteModel));
+    return copy;
   }
 
   @Override // from DequeDigest
   public void digest(Deque<StepInterface> deque) {
     // randomly select which qsa to read and write
     boolean flip = coinflip.tossHead(); // flip coin, probability 0.5 each
-    QsaInterface Qsa1 = flip ? qsa2 : qsa1; // for selecting actions and updating
-    QsaInterface Qsa2 = flip ? qsa1 : qsa2; // for evaluation (of actions provided by Qsa1)
-    LearningRate LearningRate = flip ? learningRate2 : learningRate1; // for updating
-    StateActionCounter Sac = flip ? sac2 : sac1; // for updating
+    PolicyBase Policy1 = flip ? policy2 : policy1;
+    PolicyBase Policy2 = flip ? policy1 : policy2;
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
-    // TODO test if input LearningRate1 is correct
     Tensor nextState = deque.getLast().nextState();
-    Tensor nextActions = Tensor.of(discreteModel.actions(nextState).stream() //
-        .filter(nextAction -> Sac.isEncountered(StateAction.key(nextState, nextAction))));
-    Scalar expectedReward = Tensors.isEmpty(nextActions) //
-        ? RealScalar.ZERO
-        : sarsaEvaluation.crossEvaluate(epsilon, nextState, nextActions, Qsa1, Qsa2);
+    Scalar expectedReward = sarsaEvaluation.crossEvaluate(nextState, Policy1, Policy2);
     rewards.append(expectedReward);
     // ---
     // the code below is identical to Sarsa
     StepInterface first = deque.getFirst();
     Tensor state0 = first.prevState(); // state-action pair that is being updated in Q
     Tensor action0 = first.action();
-    Scalar value0 = Qsa1.value(state0, action0);
-    Scalar alpha = LearningRate.alpha(first, Sac);
+    Scalar value0 = Policy1.qsaInterface().value(state0, action0);
+    Scalar alpha = learningRate.alpha(first, Policy1.sac());
     Scalar delta = discountFunction.apply(rewards).subtract(value0).multiply(alpha);
-    Qsa1.assign(state0, action0, value0.add(delta)); // update Qsa1
-    Sac.digest(first); // signal to LearningRate1
+    Policy1.qsaInterface().assign(state0, action0, value0.add(delta)); // update Qsa1
+    Policy1.sac().digest(first); // signal to LearningRate1
   }
 
   @Override

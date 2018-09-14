@@ -1,53 +1,56 @@
-// code by fluric, jph
+// code by jph, fluric
 package ch.ethz.idsc.subare.core.util;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.QsaInterfaceSupplier;
+import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.StateActionCounter;
-import ch.ethz.idsc.subare.util.Index;
+import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
+import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
 
-abstract class PolicyBase implements Policy {
-  protected final Map<Tensor, Index> stateToBestActions = new HashMap<>();
-  protected final Map<Tensor, Integer> stateToActionSize = new HashMap<>();
+public abstract class PolicyBase implements Policy, QsaInterfaceSupplier, StateActionCounterSupplier {
+  protected final DiscreteModel discreteModel;
+  // ---
+  protected StateActionCounter sac;
+  protected QsaInterface qsa;
 
-  protected PolicyBase(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac, Tensor states) {
-    for (Tensor state : states)
-      appendToMaps(discreteModel, qsa, sac, state);
+  protected PolicyBase(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
+    this.discreteModel = discreteModel;
+    this.sac = sac;
+    this.qsa = qsa;
   }
 
-  protected PolicyBase() {
+  protected PolicyBase(StandardModel standardModel, VsInterface vs, StateActionCounter sac) {
+    this.discreteModel = standardModel;
+    this.sac = sac;
+    // might be inefficient or even stale information
+    this.qsa = DiscreteUtils.getQsaFromVs(standardModel, vs);
   }
 
-  protected abstract void appendToMaps(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac, Tensor state);
-
-  /** useful for export to Mathematica
-   * 
-   * @param states
-   * @return list of actions optimal for */
-  public Tensor flatten(Tensor states) {
-    Tensor result = Tensors.empty();
-    for (Tensor state : states)
-      for (Tensor action : stateToBestActions.get(state).keys())
-        result.append(Tensors.of(state, action));
-    return result;
+  public final void setQsa(QsaInterface qsa) {
+    this.qsa = qsa;
   }
 
-  /** print overview of possible actions for given states in console
-   * 
-   * @param states */
-  public void print(Tensor states) {
-    System.out.println("greedy:");
-    for (Tensor state : states)
-      System.out.println(state + " -> " + stateToBestActions.get(state).keys());
+  @Override // from QsaInterfaceSupplier
+  public final QsaInterface qsaInterface() {
+    return qsa;
   }
 
-  public Tensor getBestActions(Tensor state) {
-    return stateToBestActions.get(state).keys();
+  public final void setSac(StateActionCounter sac) {
+    this.sac = sac;
   }
+
+  @Override // from StateActionCounterSupplier
+  public final StateActionCounter sac() {
+    return sac;
+  }
+
+  /** @param state
+   * @return vector of actions that are equally optimal */
+  public abstract Tensor getBestActions(Tensor state);
+
+  public abstract PolicyBase copyOf(PolicyBase policyBase);
 }

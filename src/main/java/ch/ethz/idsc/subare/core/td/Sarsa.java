@@ -15,6 +15,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -38,24 +39,20 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, St
   private final QsaInterface qsa;
   private final StateActionCounter sac;
   private final LearningRate learningRate;
-  // ---
-  private Scalar epsilon = null;
+  private final PolicyBase policy;
 
   /** @param discreteModel
    * @param qsa
    * @param learningRate
    * @param sarsaEvaluation */
-  /* package */ Sarsa(SarsaEvaluation sarsaEvaluation, DiscreteModel discreteModel, LearningRate learningRate, QsaInterface qsa, StateActionCounter sac) {
+  /* package */ Sarsa(SarsaEvaluation sarsaEvaluation, DiscreteModel discreteModel, LearningRate learningRate, QsaInterface qsa, StateActionCounter sac,
+      PolicyBase policy) {
     this.sarsaEvaluation = sarsaEvaluation;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.sac = sac;
     this.qsa = qsa;
     this.learningRate = learningRate;
-  }
-
-  /** @param epsilon */
-  public final void setExplore(Scalar epsilon) {
-    this.epsilon = epsilon;
+    this.policy = policy;
   }
 
   @Override // from DequeDigest
@@ -64,7 +61,6 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, St
     Tensor nextState = deque.getLast().nextState();
     // ---
     // for terminal state in queue, "=last.next"
-    rewards.append(sarsaEvaluation.evaluate(epsilon, learningRate, nextState, qsa, sac)); // <- evaluate(...) is called here
     // ---
     final StepInterface stepInterface = deque.getFirst(); // first step in queue
     Tensor state0 = stepInterface.prevState();
@@ -72,6 +68,7 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, St
     // ---
     Scalar value0 = qsa.value(state0, action);
     Scalar alpha = learningRate.alpha(stepInterface, sac);
+    rewards.append(sarsaEvaluation.evaluate(nextState, policy)); // <- evaluate(...) is called here
     Scalar value1 = discountFunction.apply(rewards);
     if (alpha.equals(RealScalar.ONE))
       qsa.assign(state0, action, value1);
@@ -85,10 +82,10 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, St
   /** @param stepInterface
    * @return non-negative priority rating */
   final Scalar priority(StepInterface stepInterface) {
-    Tensor rewards = Tensors.of(stepInterface.reward(), sarsaEvaluation.evaluate(epsilon, learningRate, stepInterface.nextState(), qsa, sac));
     Tensor state0 = stepInterface.prevState();
     Tensor action = stepInterface.action();
     Scalar value0 = qsa.value(state0, action);
+    Tensor rewards = Tensors.of(stepInterface.reward(), sarsaEvaluation.evaluate(stepInterface.nextState(), policy));
     return discountFunction.apply(rewards).subtract(value0).abs();
   }
 

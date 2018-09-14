@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.ActionValueAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;

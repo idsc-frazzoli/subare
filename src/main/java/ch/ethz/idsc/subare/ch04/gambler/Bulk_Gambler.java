@@ -3,12 +3,17 @@ package ch.ethz.idsc.subare.ch04.gambler;
 
 import java.awt.Point;
 
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
+import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.LearningCompetition;
 import ch.ethz.idsc.subare.core.util.LearningContender;
+import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -34,7 +39,10 @@ enum Bulk_Gambler {
       int y = 0;
       for (Tensor exponent : Subdivide.of(.51, 1.3, 8)) { // .51 2
         DiscreteQsa qsa = DiscreteQsa.build(gambler);
-        Sarsa sarsa = sarsaType.supply(gambler, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa);
+        StateActionCounter sac = new DiscreteStateActionCounter();
+        EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
+        policy.setExplorationRate(LinearExplorationRate.of(100, 0.2, 0.01));
+        Sarsa sarsa = sarsaType.supply(gambler, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa, sac, policy);
         LearningContender learningContender = LearningContender.sarsa(gambler, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;

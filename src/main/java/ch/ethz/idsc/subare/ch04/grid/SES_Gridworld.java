@@ -2,19 +2,20 @@
 package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DequeExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
@@ -26,18 +27,18 @@ enum SES_Gridworld {
     System.out.println(sarsaType);
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
-    Tensor epsilon = Subdivide.of(.2, .01, batches); // used in egreedy
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
+    StateActionCounter sac = new DiscreteStateActionCounter();
+    EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gridworld, qsa, sac);
+    policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     try (AnimationWriter gsw = AnimationWriter.of( //
         UserHome.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
       LearningRate learningRate = DefaultLearningRate.of(5, 1.1);
-      Sarsa sarsa = sarsaType.supply(gridworld, learningRate, qsa);
+      Sarsa sarsa = sarsaType.supply(gridworld, learningRate, qsa, sac, policy);
       DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
         @Override
         public Policy batchPolicy(int batch) {
-          Scalar eps = epsilon.Get(batch);
-          sarsa.setExplore(eps);
-          return new EGreedyPolicy(gridworld, qsa, eps);
+          return policy;
         }
       };
       int episode = 0;

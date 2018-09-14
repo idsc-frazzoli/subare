@@ -3,15 +3,18 @@
 package ch.ethz.idsc.subare.ch06.walk;
 
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
+import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.LearningRate;
-import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** Example 7.1
@@ -49,11 +52,12 @@ enum SarsaNStep_Randomwalk {
     Randomwalk randomwalk = new Randomwalk(19);
     DiscreteQsa qsa = DiscreteQsa.build(randomwalk);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-    Sarsa sarsa = sarsaType.supply(randomwalk, learningRate, qsa);
-    Policy policy = EquiprobablePolicy.create(randomwalk);
-    sarsa.setExplore(RealScalar.of(.2));
+    StateActionCounter sac = new DiscreteStateActionCounter();
+    EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(randomwalk, qsa, sac);
+    Sarsa sarsa = sarsaType.supply(randomwalk, learningRate, qsa, sac, policy);
+    Policy policyEqui = EquiprobablePolicy.create(randomwalk);
     for (int count = 0; count < 1000; ++count)
-      ExploringStarts.batch(randomwalk, policy, nstep, sarsa);
+      ExploringStarts.batch(randomwalk, policyEqui, nstep, sarsa);
     DiscreteUtils.print(qsa, Round._2);
   }
 

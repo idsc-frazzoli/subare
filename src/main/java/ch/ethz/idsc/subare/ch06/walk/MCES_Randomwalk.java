@@ -1,15 +1,16 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.walk;
 
-import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Policies;
-import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** <pre>
@@ -26,9 +27,10 @@ enum MCES_Randomwalk {
   public static void main(String[] args) throws Exception {
     Randomwalk randomwalk = new Randomwalk(5);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(randomwalk);
+    StateActionCounter sac = new DiscreteStateActionCounter();
+    EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(randomwalk, mces.qsa(), sac);
     int batches = 1000;
     for (int count = 0; count < batches; ++count) {
-      Policy policy = new EGreedyPolicy(randomwalk, mces.qsa(), RealScalar.of(.1));
       if (count == 0) {
         boolean equals = Policies.equals(randomwalk, policy, EquiprobablePolicy.create(randomwalk));
         if (!equals)

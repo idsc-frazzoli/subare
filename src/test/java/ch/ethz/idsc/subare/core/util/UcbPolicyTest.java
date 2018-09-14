@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -14,7 +15,9 @@ public class UcbPolicyTest extends TestCase {
   public void testSimple() {
     Airport airport = new Airport();
     DiscreteQsa qsa = DiscreteQsa.build(airport);
-    Sarsa sarsa = SarsaType.ORIGINAL.supply(airport, ConstantLearningRate.of(RealScalar.ZERO), qsa);
+    StateActionCounter sac = new DiscreteStateActionCounter();
+    Sarsa sarsa = SarsaType.ORIGINAL.supply(airport, ConstantLearningRate.of(RealScalar.ZERO), //
+        qsa, sac, PolicyType.EGREEDY.bestEquiprobable(airport, qsa, sac));
     for (Tensor state : airport.states()) {
       for (Tensor action : airport.actions(state)) {
         assertFalse(sarsa.sac().isEncountered(StateAction.key(state, action)));
@@ -47,7 +50,9 @@ public class UcbPolicyTest extends TestCase {
   public void testUcb() {
     Airport airport = new Airport();
     DiscreteQsa qsa = DiscreteQsa.build(airport);
-    Sarsa sarsa = SarsaType.ORIGINAL.supply(airport, ConstantLearningRate.of(RealScalar.ZERO), qsa);
+    StateActionCounter sac = new DiscreteStateActionCounter();
+    Sarsa sarsa = SarsaType.ORIGINAL.supply(airport, ConstantLearningRate.of(RealScalar.ZERO), //
+        qsa, sac, PolicyType.EGREEDY.bestEquiprobable(airport, qsa, sac));
     DiscreteQsa ucbInQsa = UcbUtils.getUcbInQsa(airport, qsa, sarsa.sac());
     for (Tensor state : airport.states()) {
       for (Tensor action : airport.actions(state)) {

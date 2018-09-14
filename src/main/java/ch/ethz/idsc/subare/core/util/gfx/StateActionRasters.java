@@ -10,9 +10,9 @@ import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.util.UnitClip;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -77,7 +77,7 @@ public enum StateActionRasters {
 
   public static Tensor qsaPolicy(StateActionRaster stateActionRaster, DiscreteQsa qsa) {
     Tensor image1 = _render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
-    Policy policy = GreedyPolicy.of(stateActionRaster.discreteModel(), qsa);
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(stateActionRaster.discreteModel(), qsa, null);
     Tensor image2 = _render(stateActionRaster, policy);
     List<Integer> list = Dimensions.of(image1);
     int dim = stateActionRaster.joinAlongDimension();
@@ -90,7 +90,7 @@ public enum StateActionRasters {
     Tensor image1 = _render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
     // return ImageResize.nearest(image1, stateActionRaster.magnify());
     // System.out.println(image1.block(Arrays.asList(0,0), Arrays.asList(2,2)));
-    Policy policy = GreedyPolicy.of(stateActionRaster.discreteModel(), qsa);
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(stateActionRaster.discreteModel(), qsa, null);
     Tensor image2 = _render(stateActionRaster, policy);
     Scalar qdelta = stateActionRaster.scaleQdelta();
     Tensor image3 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, qdelta), UnitClip::of);

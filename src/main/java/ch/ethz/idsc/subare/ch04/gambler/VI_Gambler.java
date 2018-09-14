@@ -8,8 +8,8 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.core.util.GreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Policies;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.N;
@@ -33,7 +33,7 @@ enum VI_Gambler {
     final DiscreteVs vr = DiscreteUtils.createVs(gambler, ref);
     Scalar diff = DiscreteValueFunctions.distance(vs, vr);
     System.out.println("error=" + N.DOUBLE.of(diff));
-    Policy policy = GreedyPolicy.of(gambler, vi.vs());
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(gambler, ref, null);
     Policies.print(policy, gambler.states());
   }
 }

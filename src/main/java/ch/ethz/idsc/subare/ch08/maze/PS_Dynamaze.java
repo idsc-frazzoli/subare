@@ -3,21 +3,22 @@
 package ch.ethz.idsc.subare.ch08.maze;
 
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.PrioritizedSweeping;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.StepExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** determines q(s,a) function for equiprobable "random" policy */
@@ -32,9 +33,11 @@ enum PS_Dynamaze {
     DynamazeRaster dynamazeRaster = new DynamazeRaster(dynamaze);
     final DiscreteQsa ref = DynamazeHelper.getOptimalQsa(dynamaze);
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
-    Tensor epsilon = Subdivide.of(.1, .01, batches);
     LearningRate learningRate = DefaultLearningRate.of(7, 1.01);
-    Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa);
+    StateActionCounter sac = new DiscreteStateActionCounter();
+    EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(dynamaze, qsa, sac);
+    policy.setExplorationRate(LinearExplorationRate.of(batches, 0.1, 0.01));
+    Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa, sac, policy);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsa, 10, RealScalar.ZERO);
     try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250)) {
@@ -43,9 +46,7 @@ enum PS_Dynamaze {
           new StepExploringStarts(dynamaze, prioritizedSweeping) {
             @Override
             public Policy batchPolicy(int batch) {
-              Scalar eps = epsilon.Get(batch);
-              sarsa.setExplore(eps);
-              return new EGreedyPolicy(dynamaze, qsa, eps);
+              return policy;
             }
           };
       while (stepExploringStarts.batchIndex() < batches) {

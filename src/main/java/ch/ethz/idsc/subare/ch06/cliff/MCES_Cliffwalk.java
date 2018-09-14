@@ -1,15 +1,16 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.cliff;
 
-import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
+import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.UserHome;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** monte carlo is bad in this example, since the steep negative reward biases most episodes */
@@ -26,7 +27,8 @@ enum MCES_Cliffwalk {
       for (int index = 0; index < batches; ++index) {
         Infoline.print(cliffwalk, index, ref, mces.qsa());
         for (int count = 0; count < 10; ++count) {
-          Policy policy = new EGreedyPolicy(cliffwalk, mces.qsa(), RealScalar.of(.4));
+          StateActionCounter sac = new DiscreteStateActionCounter();
+          PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(cliffwalk, mces.qsa(), sac);
           ExploringStarts.batch(cliffwalk, policy, mces);
         }
         gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, mces.qsa(), ref));

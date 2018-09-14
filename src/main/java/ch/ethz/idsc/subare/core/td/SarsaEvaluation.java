@@ -1,14 +1,17 @@
 // code by jph and fluric
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.core.StateActionCounter;
-import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /* package */ interface SarsaEvaluation {
-  Scalar evaluate(Scalar epsilon, LearningRate learningRate, Tensor state, QsaInterface qsa, StateActionCounter stateActionCounter);
+  Scalar evaluate(Tensor state, PolicyBase policy);
 
-  Scalar crossEvaluate(Scalar epsilon, Tensor state, Tensor actions, QsaInterface qsa1, QsaInterface qsa2);
+  /** The action probabilities are chosen according to policy1 and then added up by the qsa of policy2
+   * @param state
+   * @param policy1
+   * @param policy2
+   * @return qsa value */
+  Scalar crossEvaluate(Tensor state, PolicyBase policy1, PolicyBase policy2);
 }

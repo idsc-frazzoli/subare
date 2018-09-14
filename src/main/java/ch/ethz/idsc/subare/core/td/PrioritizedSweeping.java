@@ -5,7 +5,6 @@ import java.util.PriorityQueue;
 
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.sca.Sign;
@@ -26,7 +25,6 @@ public class PrioritizedSweeping implements StepDigest {
    * @param theta non-negative threshold */
   public PrioritizedSweeping(Sarsa sarsa, int n, Scalar theta) {
     this.sarsa = sarsa;
-    sarsa.setExplore(RealScalar.of(0.1));
     this.n = n;
     this.theta = Sign.requirePositiveOrZero(theta);
   }

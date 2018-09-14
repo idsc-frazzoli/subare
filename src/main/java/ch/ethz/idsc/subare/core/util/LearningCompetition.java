@@ -65,7 +65,8 @@ public class LearningCompetition {
   }
 
   private void processEntry(Tensor image, Point point, LearningContender learningContender, int index) {
-    learningContender.stepAndCompare(epsilon.Get(index), nstep, ref);
+    ConstantExplorationRate explorationRate = ConstantExplorationRate.of(epsilon.Get(index).number().doubleValue());
+    learningContender.stepAndCompare(explorationRate, nstep, ref);
     Infoline infoline = learningContender.infoline(ref);
     {
       Scalar error = infoline.q_error();

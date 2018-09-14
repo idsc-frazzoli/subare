@@ -2,36 +2,32 @@
 package ch.ethz.idsc.subare.analysis;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
-import ch.ethz.idsc.tensor.RealScalar;
-import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.subare.core.util.PolicyBase;
 
 public class EpisodeMonteCarloTrial implements MonteCarloTrial {
-  private static final Scalar EPSILON = RealScalar.of(0.1);
-  // ---
   private final MonteCarloInterface monteCarloInterface;
-  private final MonteCarloExploringStarts monteCarloExploringStarts;
+  private final MonteCarloExploringStarts mces;
+  private final PolicyBase policy;
 
-  public EpisodeMonteCarloTrial(MonteCarloInterface monteCarloInterface) {
+  public EpisodeMonteCarloTrial(MonteCarloInterface monteCarloInterface, PolicyBase policy) {
     this.monteCarloInterface = monteCarloInterface;
-    monteCarloExploringStarts = new MonteCarloExploringStarts(monteCarloInterface);
+    this.mces = new MonteCarloExploringStarts(monteCarloInterface);
+    this.policy = policy;
   }
 
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = new EGreedyPolicy(monteCarloInterface, monteCarloExploringStarts.qsa(), EPSILON);
-    ExploringStarts.batch(monteCarloInterface, policy, monteCarloExploringStarts);
+    ExploringStarts.batch(monteCarloInterface, policy, mces);
   }
 
   @Override // from MonteCarloTrial
   public DiscreteQsa qsa() {
-    return monteCarloExploringStarts.qsa();
+    return mces.qsa();
   }
 
   @Override // from MonteCarloTrial

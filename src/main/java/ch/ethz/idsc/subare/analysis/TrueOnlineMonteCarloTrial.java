@@ -2,46 +2,51 @@
 package ch.ethz.idsc.subare.analysis;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
+import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
+import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.ExactFeatureMapper;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.LearningRate;
+import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 
 public class TrueOnlineMonteCarloTrial implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
   private static final Scalar LAMBDA = RealScalar.of(0.3);
-  private static final Scalar EPSILON = RealScalar.of(0.1);
 
   public static TrueOnlineMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
-    return new TrueOnlineMonteCarloTrial(monteCarloInterface, sarsaType, featureMapper, ConstantLearningRate.of(ALPHA), new FeatureWeight(featureMapper));
+    QsaInterface qsa = DiscreteQsa.build(monteCarloInterface);
+    StateActionCounter sac = new DiscreteStateActionCounter();
+    return new TrueOnlineMonteCarloTrial(monteCarloInterface, sarsaType, featureMapper, ConstantLearningRate.of(ALPHA), new FeatureWeight(featureMapper), sac,
+        PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac));
   }
 
   // ---
   private final MonteCarloInterface monteCarloInterface;
   private final TrueOnlineSarsa trueOnlineSarsa;
+  private final PolicyBase policy;
 
   private TrueOnlineMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, //
-      FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w) {
+      FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w, StateActionCounter sac, PolicyBase policy) {
     this.monteCarloInterface = monteCarloInterface;
-    trueOnlineSarsa = sarsaType.trueOnline(monteCarloInterface, LAMBDA, featureMapper, learningRate, w);
-    trueOnlineSarsa.setExplore(EPSILON);
+    this.policy = policy;
+    trueOnlineSarsa = sarsaType.trueOnline(monteCarloInterface, LAMBDA, featureMapper, learningRate, w, sac, policy);
   }
 
   @Override // from MonteCarloTrial
   public void executeBatch() {
-    Policy policy = new EGreedyPolicy(monteCarloInterface, trueOnlineSarsa.qsa(), EPSILON);
+    policy.setQsa(trueOnlineSarsa.qsaInterface());
     ExploringStarts.batch(monteCarloInterface, policy, trueOnlineSarsa);
   }
 
