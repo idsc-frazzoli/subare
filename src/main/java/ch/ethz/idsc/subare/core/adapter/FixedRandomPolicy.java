@@ -11,6 +11,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.pdf.Distribution;
 
 public class FixedRandomPolicy implements Policy {
   private static final Random RANDOM = new Random();
@@ -27,5 +28,10 @@ public class FixedRandomPolicy implements Policy {
   @Override // from Policy
   public final Scalar probability(Tensor state, Tensor action) {
     return set.contains(Tensors.of(state, action)) ? RealScalar.ONE : RealScalar.ZERO;
+  }
+
+  @Override
+  public Distribution getDistribution(Tensor state) {
+    throw new UnsupportedOperationException();
   }
 }

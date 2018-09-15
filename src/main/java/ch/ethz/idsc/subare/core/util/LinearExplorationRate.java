@@ -22,7 +22,7 @@ public class LinearExplorationRate implements ExplorationRate {
   private final Scalar maximum;
 
   private LinearExplorationRate(Scalar decayRate, Scalar maximum, Scalar minimum) {
-    this.decayInterval = Sign.requirePositiveOrZero(decayRate);
+    this.decayInterval = Sign.requirePositive(decayRate);
     this.minimum = Clip.function(0, 1).requireInside(minimum);
     this.maximum = Clip.function(0, 1).requireInside(maximum);
     Sign.requirePositiveOrZero(maximum.subtract(maximum));

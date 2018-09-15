@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.core;
 
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.pdf.Distribution;
 
 /** a policy is a function that maps a state-action pair to a real number
  * 
@@ -17,4 +18,8 @@ public interface Policy {
    * the probability is in the interval [0, 1], and the sum of
    * probabilities of all actions for a given state has to equal 1 */
   Scalar probability(Tensor state, Tensor action);
+
+  /** @param state
+   * @return distribution over all possible actions for given state */
+  Distribution getDistribution(Tensor state);
 }

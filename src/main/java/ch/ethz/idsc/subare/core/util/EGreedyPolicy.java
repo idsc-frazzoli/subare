@@ -13,6 +13,9 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.pdf.Distribution;
+import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
 
 /** p.33 */
 public class EGreedyPolicy extends PolicyBase {
@@ -39,6 +42,24 @@ public class EGreedyPolicy extends PolicyBase {
     Tensor va = Tensor.of(actions.stream().map(action -> qsa.value(state, action)));
     FairArgMax fairArgMax = FairArgMax.of(va);
     return Tensor.of(fairArgMax.options().stream().map(actions::get));
+  }
+
+  @Override
+  public Distribution getDistribution(Tensor state) {
+    Tensor bestActions = getBestActions(state);
+    Index index = Index.build(bestActions);
+    final int optimalCount = bestActions.length();
+    final int nonOptimalCount = discreteModel.actions(state).length() - optimalCount;
+    Scalar epsilon = explorationRate.epsilon(state, sac);
+    if (nonOptimalCount == 0) {
+      Tensor pdf = Tensors.vector(v -> RationalScalar.of(1, optimalCount), bestActions.length());
+      return EmpiricalDistribution.fromUnscaledPDF(pdf);
+    }
+    Tensor pdf = Tensor.of(discreteModel.actions(state).stream(). //
+        map(action -> index.containsKey(action) ? //
+            RealScalar.ONE.subtract(epsilon).divide(RealScalar.of(optimalCount)) : //
+            epsilon.divide(RealScalar.of(nonOptimalCount))));
+    return EmpiricalDistribution.fromUnscaledPDF(pdf);
   }
 
   @Override
