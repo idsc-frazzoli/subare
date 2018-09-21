@@ -57,8 +57,9 @@ class Randomwalk implements MonteCarloInterface {
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
-    return COINFLIP.tossHead() ? //
-        state.add(RealScalar.ONE) : state.subtract(RealScalar.ONE);
+    return COINFLIP.tossHead() //
+        ? state.add(RealScalar.ONE)
+        : state.subtract(RealScalar.ONE);
   }
 
   /**************************************************/

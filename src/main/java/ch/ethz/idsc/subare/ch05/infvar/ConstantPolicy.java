@@ -17,8 +17,9 @@ class ConstantPolicy implements Policy {
   @Override
   public Scalar probability(Tensor state, Tensor action) {
     if (state.equals(RealScalar.ZERO))
-      return action.equals(RealScalar.ZERO) ? //
-          backProb : RealScalar.ONE.subtract(backProb);
+      return action.equals(RealScalar.ZERO) //
+          ? backProb
+          : RealScalar.ONE.subtract(backProb);
     return RealScalar.ONE;
   }
 

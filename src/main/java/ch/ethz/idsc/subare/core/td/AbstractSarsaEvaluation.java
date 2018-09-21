@@ -18,16 +18,17 @@ class AbstractSarsaEvaluation implements SarsaEvaluation {
 
   @Override
   public final Scalar evaluate(Tensor state, PolicyBase policy) {
-    return discreteModel.actions(state).stream(). //
-        anyMatch(action -> policy.sac().isEncountered(StateAction.key(state, action))) ? //
-            crossEvaluate(state, policy, policy) : //
-            RealScalar.ZERO;
+    return discreteModel.actions(state).stream() //
+        .anyMatch(action -> policy.sac().isEncountered(StateAction.key(state, action))) //
+            ? crossEvaluate(state, policy, policy)
+            : RealScalar.ZERO;
   }
 
   @Override
   public Scalar crossEvaluate(Tensor state, PolicyBase policy1, PolicyBase policy2) {
-    Tensor actions = Tensor.of(discreteModel.actions(state).stream(). //
-        filter(action -> policy1.sac().isEncountered(StateAction.key(state, action))));
+    // TODO actions is not used. is this an error?
+    // Tensor actions = Tensor.of(discreteModel.actions(state).stream() //
+    // .filter(action -> policy1.sac().isEncountered(StateAction.key(state, action))));
     Tensor action = new PolicyWrap(policy1).next(state, discreteModel);
     return policy2.qsaInterface().value(state, action);
   }
