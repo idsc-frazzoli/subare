@@ -44,9 +44,9 @@ public class GradientAgent extends Agent {
       Scalar delta = r.subtract(getRewardAverage());
       // (2.10)
       Scalar pa = pi.Get(a);
-      Scalar prob = k == a ? //
-          RealScalar.of(1).subtract(pa) : // 1 - pi(At)
-          pa.negate(); // - pi(At)
+      Scalar prob = k == a //
+          ? RealScalar.of(1).subtract(pa) // 1 - pi(At)
+          : pa.negate(); // - pi(At)
       Ht.set(HA -> HA.add(alpha.multiply(delta).multiply(prob)), k);
     }
   }

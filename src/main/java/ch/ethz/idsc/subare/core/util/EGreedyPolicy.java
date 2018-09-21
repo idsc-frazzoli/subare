@@ -55,10 +55,10 @@ public class EGreedyPolicy extends PolicyBase {
       Tensor pdf = Tensors.vector(v -> RationalScalar.of(1, optimalCount), bestActions.length());
       return EmpiricalDistribution.fromUnscaledPDF(pdf);
     }
-    Tensor pdf = Tensor.of(discreteModel.actions(state).stream(). //
-        map(action -> index.containsKey(action) ? //
-            RealScalar.ONE.subtract(epsilon).divide(RealScalar.of(optimalCount)) : //
-            epsilon.divide(RealScalar.of(nonOptimalCount))));
+    Tensor pdf = Tensor.of(discreteModel.actions(state).stream() //
+        .map(action -> index.containsKey(action) //
+            ? RealScalar.ONE.subtract(epsilon).divide(RealScalar.of(optimalCount))
+            : epsilon.divide(RealScalar.of(nonOptimalCount))));
     return EmpiricalDistribution.fromUnscaledPDF(pdf);
   }
 

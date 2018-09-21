@@ -66,7 +66,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     FeatureWeight w = new FeatureWeight(featureMapper);
     try {
-      TrueOnlineSarsa trueOnlineSarsa = SarsaType.ORIGINAL.trueOnline(SimpleTestModel.INSTANCE, RealScalar.of(2), featureMapper, //
+      SarsaType.ORIGINAL.trueOnline(SimpleTestModel.INSTANCE, RealScalar.of(2), featureMapper, //
           learningRate, w, new DiscreteStateActionCounter(), null);
       assertTrue(false);
     } catch (Exception exception) {
@@ -80,7 +80,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     FeatureWeight w = new FeatureWeight(featureMapper);
     try {
-      TrueOnlineSarsa trueOnlineSarsa = SarsaType.ORIGINAL.trueOnline(null, RealScalar.of(0.9), featureMapper, //
+      SarsaType.ORIGINAL.trueOnline(null, RealScalar.of(0.9), featureMapper, //
           learningRate, w, new DiscreteStateActionCounter(), null);
       assertTrue(false);
     } catch (Exception exception) {

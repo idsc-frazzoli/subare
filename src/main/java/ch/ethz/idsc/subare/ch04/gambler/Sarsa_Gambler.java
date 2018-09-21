@@ -18,8 +18,6 @@ import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 
 /** Sarsa applied to gambler */
@@ -30,12 +28,12 @@ enum Sarsa_Gambler {
     System.out.println(sarsaType);
     GamblerRaster gamblerRaster = new GamblerRaster(gambler);
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler); // true q-function, for error measurement
-    Tensor epsilon = Subdivide.of(.2, .01, batches);
     DiscreteQsa qsa = DiscreteQsa.build(gambler); // q-function for training, initialized to 0
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     // ---
+    UserHome.Pictures("").mkdir();
     AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
     AnimationWriter gsc = AnimationWriter.of(UserHome.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
     // ---

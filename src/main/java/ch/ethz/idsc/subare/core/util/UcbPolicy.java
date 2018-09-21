@@ -29,8 +29,8 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
   @Override
   public Tensor getBestActions(Tensor state) {
     Tensor actions = discreteModel.actions(state);
-    Tensor va = Tensor.of(actions.stream().parallel(). //
-        map(action -> UcbUtils.getUpperConfidenceBound(state, action, qsa.value(state, action), sac, discreteModel)));
+    Tensor va = Tensor.of(actions.stream().parallel() //
+        .map(action -> UcbUtils.getUpperConfidenceBound(state, action, qsa.value(state, action), sac, discreteModel)));
     FairArgMax fairArgMax = FairArgMax.of(va);
     return Tensor.of(fairArgMax.options().stream().map(actions::get));
   }
@@ -40,8 +40,8 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
     Tensor bestActions = getBestActions(state);
     Index index = Index.build(bestActions);
     final int optimalCount = bestActions.length();
-    Tensor pdf = Tensor.of(discreteModel.actions(state).stream(). //
-        map(action -> index.containsKey(action) ? RationalScalar.of(1, optimalCount) : RealScalar.ZERO));
+    Tensor pdf = Tensor.of(discreteModel.actions(state).stream() //
+        .map(action -> index.containsKey(action) ? RationalScalar.of(1, optimalCount) : RealScalar.ZERO));
     return EmpiricalDistribution.fromUnscaledPDF(pdf);
   }
 

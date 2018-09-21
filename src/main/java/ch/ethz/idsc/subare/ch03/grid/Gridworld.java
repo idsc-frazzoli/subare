@@ -54,8 +54,9 @@ class Gridworld extends DeterministicStandardModel implements MonteCarloInterfac
       return RealScalar.of(5);
     // check if action would take agent off the board
     Tensor effective = state.add(action);
-    return effective.map(CLIP).equals(effective) ? //
-        RealScalar.ZERO : RealScalar.ONE.negate();
+    return effective.map(CLIP).equals(effective) //
+        ? RealScalar.ZERO
+        : RealScalar.ONE.negate();
   }
 
   @Override

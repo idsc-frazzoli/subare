@@ -30,8 +30,8 @@ import ch.ethz.idsc.tensor.red.Max;
   @Override // from SarsaEvaluation
   public Scalar crossEvaluate(Tensor state, PolicyBase policy1, PolicyBase policy2) {
     Scalar value = RealScalar.ZERO;
-    Tensor actions = Tensor.of(discreteModel.actions(state).stream(). //
-        filter(action -> policy1.sac().isEncountered(StateAction.key(state, action))));
+    Tensor actions = Tensor.of(discreteModel.actions(state).stream() //
+        .filter(action -> policy1.sac().isEncountered(StateAction.key(state, action))));
     if (actions.length() == 0)
       return RealScalar.ZERO;
     Tensor eval = Tensor.of(actions.stream().map(action -> policy1.qsaInterface().value(state, action)));
