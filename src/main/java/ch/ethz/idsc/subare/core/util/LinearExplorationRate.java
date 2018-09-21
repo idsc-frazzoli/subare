@@ -12,8 +12,12 @@ import ch.ethz.idsc.tensor.sca.Sign;
 /** using formula: epsilon = Max(minimum, maximum-(maximum-minimum)*N/decayInterval)
  * good values could be: minimum=0.01, maximum=0.5, decayInterval=1000, strongly depends on the problem */
 public class LinearExplorationRate implements ExplorationRate {
+  public static ExplorationRate of(Scalar decayInterval, Scalar maximum, Scalar minimum) {
+    return new LinearExplorationRate(decayInterval, maximum, minimum);
+  }
+
   public static ExplorationRate of(double decayInterval, double maximum, double minimum) {
-    return new LinearExplorationRate(RealScalar.of(decayInterval), RealScalar.of(maximum), RealScalar.of(minimum));
+    return of(RealScalar.of(decayInterval), RealScalar.of(maximum), RealScalar.of(minimum));
   }
 
   // ---
@@ -21,11 +25,11 @@ public class LinearExplorationRate implements ExplorationRate {
   private final Scalar minimum;
   private final Scalar maximum;
 
-  private LinearExplorationRate(Scalar decayRate, Scalar maximum, Scalar minimum) {
-    this.decayInterval = Sign.requirePositive(decayRate);
-    this.minimum = Clip.function(0, 1).requireInside(minimum);
-    this.maximum = Clip.function(0, 1).requireInside(maximum);
-    Sign.requirePositiveOrZero(maximum.subtract(maximum));
+  private LinearExplorationRate(Scalar decayInterval, Scalar maximum, Scalar minimum) {
+    this.decayInterval = Sign.requirePositive(decayInterval);
+    this.minimum = Clip.unit().requireInside(minimum);
+    this.maximum = Clip.unit().requireInside(maximum);
+    Sign.requirePositiveOrZero(maximum.subtract(minimum));
   }
 
   @Override // from ExplorationRate
