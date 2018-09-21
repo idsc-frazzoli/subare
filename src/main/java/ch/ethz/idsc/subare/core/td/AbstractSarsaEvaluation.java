@@ -28,7 +28,7 @@ class AbstractSarsaEvaluation implements SarsaEvaluation {
   public Scalar crossEvaluate(Tensor state, PolicyBase policy1, PolicyBase policy2) {
     Tensor actions = Tensor.of(discreteModel.actions(state).stream(). //
         filter(action -> policy1.sac().isEncountered(StateAction.key(state, action))));
-    Tensor action = new PolicyWrap(policy1).next(state, actions);
+    Tensor action = new PolicyWrap(policy1).next(state, discreteModel);
     return policy2.qsaInterface().value(state, action);
   }
 }

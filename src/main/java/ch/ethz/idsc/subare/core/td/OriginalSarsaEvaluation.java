@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.Tensor;
         filter(action -> policy1.sac().isEncountered(StateAction.key(state, action))));
     if (actions.length() == 0)
       return RealScalar.ZERO;
-    Tensor action = new PolicyWrap(policy1).next(state, actions);
+    Tensor action = new PolicyWrap(policy1).next(state, discreteModel);
     return policy2.qsaInterface().value(state, action);
   }
 }

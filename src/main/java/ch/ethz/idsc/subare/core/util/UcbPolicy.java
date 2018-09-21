@@ -12,6 +12,8 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.pdf.Distribution;
+import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
 
 /** upper confidence bound is greedy except that it encourages
  * exploration if an action has not been encountered often relative to other actions */
@@ -31,6 +33,16 @@ import ch.ethz.idsc.tensor.Tensor;
         map(action -> UcbUtils.getUpperConfidenceBound(state, action, qsa.value(state, action), sac, discreteModel)));
     FairArgMax fairArgMax = FairArgMax.of(va);
     return Tensor.of(fairArgMax.options().stream().map(actions::get));
+  }
+
+  @Override
+  public Distribution getDistribution(Tensor state) {
+    Tensor bestActions = getBestActions(state);
+    Index index = Index.build(bestActions);
+    final int optimalCount = bestActions.length();
+    Tensor pdf = Tensor.of(discreteModel.actions(state).stream(). //
+        map(action -> index.containsKey(action) ? RationalScalar.of(1, optimalCount) : RealScalar.ZERO));
+    return EmpiricalDistribution.fromUnscaledPDF(pdf);
   }
 
   @Override

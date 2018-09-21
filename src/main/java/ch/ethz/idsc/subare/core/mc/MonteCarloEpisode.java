@@ -38,7 +38,7 @@ public final class MonteCarloEpisode implements EpisodeInterface {
     final Tensor action;
     if (openingActions.isEmpty()) {
       PolicyWrap policyWrap = new PolicyWrap(policy);
-      action = policyWrap.next(state, monteCarloInterface.actions(state));
+      action = policyWrap.next(state, monteCarloInterface);
     } else {
       action = openingActions.poll();
     }

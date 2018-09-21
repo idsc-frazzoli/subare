@@ -11,6 +11,9 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.pdf.Distribution;
+import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
 
 /** the term "equiprobable" appears in Exercise 4.1 */
 public class EquiprobablePolicy implements Policy {
@@ -37,5 +40,14 @@ public class EquiprobablePolicy implements Policy {
     if (!index.containsKey(action)) // alternatively return 0
       throw new RuntimeException("action invalid " + action);
     return RationalScalar.of(1, index.size());
+  }
+
+  @Override
+  public Distribution getDistribution(Tensor state) {
+    Tensor pdf = Tensors.empty();
+    for (Tensor action : stateActionModel.actions(state)) {
+      pdf.append(probability(state, action));
+    }
+    return EmpiricalDistribution.fromUnscaledPDF(pdf);
   }
 }
