@@ -1,8 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.Policy;
+import ch.ethz.idsc.subare.core.StateActionModel;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
@@ -26,10 +26,10 @@ public class PolicyWrap {
   }
 
   /** @param state
-   * @param discreteModel
+   * @param stateActionModel
    * @return */
-  public Tensor next(Tensor state, DiscreteModel discreteModel) {
+  public Tensor next(Tensor state, StateActionModel stateActionModel) {
     Distribution distribution = policy.getDistribution(state);
-    return discreteModel.actions(state).get(RandomVariate.of(distribution).number().intValue());
+    return stateActionModel.actions(state).get(RandomVariate.of(distribution).number().intValue());
   }
 }
