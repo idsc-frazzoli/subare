@@ -6,7 +6,6 @@ import java.util.stream.IntStream;
 
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.red.ArgMax;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.sca.Chop;
 
@@ -29,7 +28,7 @@ public class RobustArgMax implements Serializable {
         .filter(index -> chop.close(vector.Get(index), max));
   }
 
-  /** in the spirit of {@link ArgMax} which returns the first of equally maximal indices.
+  /** in the spirit of ArgMax which returns the first of equally maximal indices.
    * 
    * @param vector
    * @return first index that is epsilon close to the maximum
