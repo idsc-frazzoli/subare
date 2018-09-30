@@ -44,9 +44,9 @@ class Training {
     {
       Estimation estimation = Estimation.load(1);
       System.out.println("P_win(   0)=" + //
-          estimation.get(AllStates.instance.getFromHash(0)));
+          estimation.get(AllStates.INSTANCE.getFromHash(0)));
       System.out.println("P_win(8338)=" + //
-          estimation.get(AllStates.instance.getFromHash(8338)));
+          estimation.get(AllStates.INSTANCE.getFromHash(8338)));
     }
     play();
     // System.out.println(BinomialCoefficient.numpyRandomBinomial(1, 0.0));

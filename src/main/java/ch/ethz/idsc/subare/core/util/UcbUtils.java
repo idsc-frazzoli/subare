@@ -28,7 +28,9 @@ public enum UcbUtils {
     if (Scalars.isZero(Nta))
       return DoubleScalar.POSITIVE_INFINITY;
     Scalar bias = Sqrt.of(sac.stateCount(state)).divide(Nta);
-    Scalar sign = Sign.isPositive(qsaValue) ? RealScalar.ONE : RealScalar.of(-1);
+    Scalar sign = Sign.isPositive(qsaValue) //
+        ? RealScalar.ONE
+        : RealScalar.of(-1);
     return qsaValue.multiply((RealScalar.ONE.add(bias.multiply(sign))));
   }
 }

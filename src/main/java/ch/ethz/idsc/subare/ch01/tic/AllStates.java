@@ -10,10 +10,10 @@ import java.util.Set;
 import java.util.TreeMap;
 
 class AllStates {
-  public static final AllStates instance = new AllStates();
+  public static final AllStates INSTANCE = new AllStates();
   // ---
-  private Map<Integer, State> allStates = new HashMap<>();
-  private Map<State, State> equivalence = new HashMap<>();
+  private final Map<Integer, State> allStates = new HashMap<>();
+  private final Map<State, State> equivalence = new HashMap<>();
 
   private AllStates() {
     State newState = State.empty;
@@ -74,12 +74,12 @@ class AllStates {
   }
 
   public static void main(String[] args) {
-    for (State s : instance.allStates.values()) {
+    for (State s : INSTANCE.allStates.values()) {
       if (s.isEnd())
         System.out.println(s);
     }
-    System.out.println(instance.allStates.size());
-    System.out.println(instance.getEquivalenceSet().size());
+    System.out.println(INSTANCE.allStates.size());
+    System.out.println(INSTANCE.getEquivalenceSet().size());
     // instance.allStates
     // System.out.println(instance.getRepresentative(State.empty));
     // System.out.println(instance.getRepresentative(new State(new int[9])));

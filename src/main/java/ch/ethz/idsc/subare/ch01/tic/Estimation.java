@@ -11,7 +11,7 @@ import java.util.Objects;
  * Roughly speaking, the value of a state is the total amount of reward
  * an agent can expect to accumulate over the future, starting from that state. */
 class Estimation implements Serializable {
-  private Map<State, Double> map = new HashMap<>();
+  private final Map<State, Double> map = new HashMap<>();
 
   /** Assuming we always play Xs, then for
    * all states with three Xs in a row the probability of winning is 1,
@@ -21,7 +21,7 @@ class Estimation implements Serializable {
    * We set the initial values of all the other states to 0.5,
    * representing a guess that we have a 50% chance of winning. */
   public void init(int symbol) {
-    for (State state : AllStates.instance.getEquivalenceSet()) {
+    for (State state : AllStates.INSTANCE.getEquivalenceSet()) {
       if (Objects.isNull(state.winner)) {
         map.put(state, 0.5);
       } else
@@ -38,7 +38,7 @@ class Estimation implements Serializable {
 
   private static State normalize(State state) {
     // return AllStates.instance.getEquivalent(state);
-    return AllStates.instance.getRepresentative(state);
+    return AllStates.INSTANCE.getRepresentative(state);
   }
 
   public double get(State state) {

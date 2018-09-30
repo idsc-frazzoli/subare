@@ -62,7 +62,9 @@ class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface
 
   @Override
   public Tensor actions(Tensor state) {
-    return isTerminal(state) ? ACTIONS_TERMINAL : ACTIONS;
+    return isTerminal(state) //
+        ? ACTIONS_TERMINAL
+        : ACTIONS;
   }
 
   @Override
@@ -79,6 +81,7 @@ class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
+ // TODO V061
     return !isTerminal(state) && isTerminal(next) ? RealScalar.ONE : RealScalar.ZERO;
   }
 

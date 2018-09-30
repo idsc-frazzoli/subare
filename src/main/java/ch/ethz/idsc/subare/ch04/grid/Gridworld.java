@@ -46,12 +46,16 @@ public class Gridworld extends DeterministicStandardModel implements MonteCarloI
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor stateS) {
-    return isTerminal(state) ? RealScalar.ZERO : NEGATIVE_ONE;
+    return isTerminal(state) //
+        ? RealScalar.ZERO
+        : NEGATIVE_ONE;
   }
 
   @Override
   public Tensor move(Tensor state, Tensor action) {
-    return isTerminal(state) ? state : state.add(action).map(CLIP);
+    return isTerminal(state) //
+        ? state
+        : state.add(action).map(CLIP);
   }
 
   /**************************************************/

@@ -72,7 +72,7 @@ public class Cliffwalk extends DeterministicStandardModel implements MonteCarloI
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    if (isTerminal(next))
+    if (isTerminal(next)) // TODO V061
       return isTerminal(state) ? RealScalar.ZERO : RealScalar.ONE;
     if (next.equals(START) && Scalars.lessThan( //
         RealScalar.ONE, Norm._1.between(state, next)))

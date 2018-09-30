@@ -159,6 +159,7 @@ public class VirtualStations implements MonteCarloInterface {
     }
     // System.out.println("After executing action: " + exactStateMap);
     // read new state
+    // TODO V061
     Tensor newState = Tensors.vector(i -> exactStateMap.get(i).get(i) > 0 ? RealScalar.ONE : RealScalar.ZERO, NVNODES);
     return Join.of(Tensors.vector(state.Get(0).number().intValue() + 1), newState);
   }

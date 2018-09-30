@@ -48,7 +48,9 @@ class Blackjack implements MonteCarloInterface {
 
   @Override // from DiscreteModel
   public Tensor actions(Tensor state) {
-    return isTerminal(state) ? actionsTerminal : actions;
+    return isTerminal(state) //
+        ? actionsTerminal
+        : actions;
   }
 
   @Override // from DiscountInterface

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
     Agent p1 = new Agent(1);
     p1.loadPolicy();
     Estimation estimation = p1.estimation;
-    Set<State> set = AllStates.instance.getAll();
+    Set<State> set = AllStates.INSTANCE.getAll();
     @SuppressWarnings("unused")
     int count = 0;
     List<Double> list = new ArrayList<>();
@@ -64,13 +64,13 @@ import java.util.stream.Collectors;
     p1.loadPolicy();
     Estimation estimation = p1.estimation;
     @SuppressWarnings("unused")
-    Set<State> set = AllStates.instance.getAll();
-    for (State state : AllStates.instance.getEquivalenceSet()) {
+    Set<State> set = AllStates.INSTANCE.getAll();
+    for (State state : AllStates.INSTANCE.getEquivalenceSet()) {
       System.out.println(state);
       System.out.println(estimation.get(state));
     }
     {
-      State state = AllStates.instance.getFromHash(8338);
+      State state = AllStates.INSTANCE.getFromHash(8338);
       System.out.println(state);
       System.out.println(estimation.get(state));
     }
