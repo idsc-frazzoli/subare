@@ -26,7 +26,9 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
 
   @Override
   public Tensor actions(Tensor state) {
-    return isTerminal(state) ? Tensors.of(END) : actions;
+    return isTerminal(state) //
+        ? Tensors.of(END)
+        : actions;
   }
 
   @Override

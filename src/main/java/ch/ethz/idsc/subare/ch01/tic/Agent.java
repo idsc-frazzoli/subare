@@ -35,7 +35,7 @@ class Agent {
 
   // accept a state
   final void feedState(State state) {
-    currentState = AllStates.instance.getRepresentative(state);
+    currentState = AllStates.INSTANCE.getRepresentative(state);
     states.add(currentState);
   }
 

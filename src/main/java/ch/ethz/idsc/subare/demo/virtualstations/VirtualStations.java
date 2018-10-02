@@ -15,6 +15,7 @@ import ch.ethz.idsc.tensor.pdf.BernoulliDistribution;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.PoissonDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
+import ch.ethz.idsc.tensor.qty.Boole;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Sign;
 
@@ -159,7 +160,7 @@ public class VirtualStations implements MonteCarloInterface {
     }
     // System.out.println("After executing action: " + exactStateMap);
     // read new state
-    Tensor newState = Tensors.vector(i -> exactStateMap.get(i).get(i) > 0 ? RealScalar.ONE : RealScalar.ZERO, NVNODES);
+    Tensor newState = Tensors.vector(i -> Boole.of(0 < exactStateMap.get(i).get(i)), NVNODES);
     return Join.of(Tensors.vector(state.Get(0).number().intValue() + 1), newState);
   }
 

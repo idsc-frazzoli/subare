@@ -64,7 +64,9 @@ class Charger extends DeterministicStandardModel implements TerminalInterface {
     if (isTerminal(next)) {
       if (isTerminal(state))
         return RealScalar.ZERO;
-      return RealScalar.of(0 == capacity ? -10 : 0);
+      return 0 == capacity //
+          ? RealScalar.of(-10)
+          : RealScalar.ZERO;
     }
     Scalar total = tripProfile.costPerUnit(time).multiply(action.Get()).negate();
     if (capacity == 0)
