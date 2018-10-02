@@ -7,11 +7,11 @@ import java.util.Set;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StateActionModel;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.pdf.Distribution;
+import ch.ethz.idsc.tensor.qty.Boole;
 
 public class FixedRandomPolicy implements Policy {
   private static final Random RANDOM = new Random();
@@ -27,8 +27,7 @@ public class FixedRandomPolicy implements Policy {
 
   @Override // from Policy
   public final Scalar probability(Tensor state, Tensor action) {
-    // TODO V061
-    return set.contains(Tensors.of(state, action)) ? RealScalar.ONE : RealScalar.ZERO;
+    return Boole.of(set.contains(Tensors.of(state, action)));
   }
 
   @Override

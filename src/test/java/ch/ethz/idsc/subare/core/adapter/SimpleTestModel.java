@@ -8,6 +8,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.qty.Boole;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
 /** states = 0 1 2 with start = 0 and terminal = 2
@@ -27,10 +28,7 @@ public enum SimpleTestModel implements MonteCarloInterface, StandardModel {
 
   @Override // from DiscreteModel
   public Tensor actions(Tensor state) {
-    // TODO V061
-    return Tensors.of(isTerminal(state) //
-        ? RealScalar.ZERO
-        : RealScalar.ONE);
+    return Tensors.of(Boole.of(!isTerminal(state)));
   }
 
   @Override // from DiscreteModel

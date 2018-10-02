@@ -12,6 +12,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
+import ch.ethz.idsc.tensor.qty.Boole;
 
 /** Example 8.1 p.164: Dyna Maze */
 class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface {
@@ -81,8 +82,7 @@ class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
- // TODO V061
-    return !isTerminal(state) && isTerminal(next) ? RealScalar.ONE : RealScalar.ZERO;
+    return Boole.of(!isTerminal(state) && isTerminal(next));
   }
 
   /**************************************************/
