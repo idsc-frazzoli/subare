@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.demo.airport;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.util.GlobalAssert;
+import ch.ethz.idsc.subare.util.VectorTotal;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -14,7 +15,6 @@ import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.Min;
-import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Ramp;
 
@@ -30,12 +30,12 @@ public class Airport implements StandardModel, MonteCarloInterface {
   private static final Scalar AIRPORT_WAIT_COST = RealScalar.of(-5);
   private static final Scalar CUSTOMER_REWARD = RealScalar.of(30);
   // i.e. CUSTOMER_PROB.Get(0) is the probability that 0 customers are waiting
-  private final Tensor CUSTOMER_HIST = Tensors.vector(1, 2, 4, 3);
-  private final Tensor CUSTOMER_PROB = Normalize.of(CUSTOMER_HIST, Norm._1);
+  private static final Tensor CUSTOMER_HIST = Tensors.vector(1, 2, 4, 3);
+  private static final Tensor CUSTOMER_PROB = Normalize.with(VectorTotal.FUNCTION).apply(CUSTOMER_HIST);
   // ---
   private final Tensor states;
   // for EmpiricalDistribution#fromUnscaledPDF the numbers don't have to add up to 1
-  private final Distribution distribution = EmpiricalDistribution.fromUnscaledPDF(CUSTOMER_HIST);
+  private static final Distribution distribution = EmpiricalDistribution.fromUnscaledPDF(CUSTOMER_HIST);
 
   // TODO defined parameters for complexity of scenario: # time steps, # taxis ...
   public Airport() {
