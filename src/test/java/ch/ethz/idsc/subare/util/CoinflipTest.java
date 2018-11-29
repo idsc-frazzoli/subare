@@ -34,13 +34,13 @@ public class CoinflipTest extends TestCase {
   public void testFail() {
     try {
       Coinflip.of(RealScalar.of(-0.1));
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }
     try {
       Coinflip.of(RealScalar.of(1.1));
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }

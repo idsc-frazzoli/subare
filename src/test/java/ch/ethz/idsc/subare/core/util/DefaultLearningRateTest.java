@@ -34,13 +34,13 @@ public class DefaultLearningRateTest extends TestCase {
   public void testFailFactor() {
     try {
       DefaultLearningRate.of(0, 1);
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }
     try {
       DefaultLearningRate.of(-1, 1);
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }
@@ -49,13 +49,13 @@ public class DefaultLearningRateTest extends TestCase {
   public void testFailExponent() {
     try {
       DefaultLearningRate.of(1, 0.5);
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }
     try {
       DefaultLearningRate.of(1, 0.4);
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }

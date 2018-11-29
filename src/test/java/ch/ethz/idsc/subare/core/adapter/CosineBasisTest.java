@@ -25,7 +25,7 @@ public class CosineBasisTest extends TestCase {
     TensorUnaryOperator tuo = CosineBasis.create(4, Clip.function(50, 100));
     try {
       tuo.apply(RealScalar.ZERO);
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }

@@ -40,7 +40,7 @@ public class AirportTest extends TestCase {
       if (!clip.isInside(R.subtract(mean))) {
         System.out.println(state + " " + action);
         System.out.println(R + " " + mean);
-        assertTrue(false);
+        fail();
       }
     }
   }

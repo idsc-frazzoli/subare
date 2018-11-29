@@ -68,7 +68,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     try {
       SarsaType.ORIGINAL.trueOnline(SimpleTestModel.INSTANCE, RealScalar.of(2), featureMapper, //
           learningRate, w, new DiscreteStateActionCounter(), null);
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }
@@ -82,7 +82,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     try {
       SarsaType.ORIGINAL.trueOnline(null, RealScalar.of(0.9), featureMapper, //
           learningRate, w, new DiscreteStateActionCounter(), null);
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }

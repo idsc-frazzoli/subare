@@ -15,7 +15,7 @@ public class ExactFeatureMapperTest extends TestCase {
   public void testFail() {
     try {
       ExactFeatureMapper.of(null);
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }

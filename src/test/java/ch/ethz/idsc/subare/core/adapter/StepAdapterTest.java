@@ -9,7 +9,7 @@ public class StepAdapterTest extends TestCase {
   public void testSimple() {
     try {
       new StepAdapter(Tensors.empty(), Tensors.empty(), null, Tensors.empty());
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }

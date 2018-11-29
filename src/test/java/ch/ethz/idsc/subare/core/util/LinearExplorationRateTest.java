@@ -9,7 +9,7 @@ public class LinearExplorationRateTest extends TestCase {
     LinearExplorationRate.of(10, 1, 1);
     try {
       LinearExplorationRate.of(10, .1, .2);
-      assertTrue(false);
+      fail();
     } catch (Exception e) {
       // ---
     }

@@ -18,7 +18,7 @@ public class PolynomialBasisTest extends TestCase {
     TensorUnaryOperator tuo = PolynomialBasis.create(4, Clip.function(50, 100));
     try {
       tuo.apply(RealScalar.ZERO);
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }

@@ -29,7 +29,7 @@ public class DiscountFunctionTest extends TestCase {
   public void testFail() {
     try {
       DiscountFunction.of(RealScalar.of(1.1));
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }
