@@ -25,7 +25,7 @@ public class FairArgMaxTest extends TestCase {
   public void testEmpty() {
     try {
       FairArgMax.of(Tensors.empty());
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }

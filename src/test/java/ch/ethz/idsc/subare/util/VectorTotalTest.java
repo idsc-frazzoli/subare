@@ -16,7 +16,7 @@ public class VectorTotalTest extends TestCase {
   public void testFail() {
     try {
       VectorTotal.FUNCTION.apply(HilbertMatrix.of(3));
-      assertTrue(false);
+      fail();
     } catch (Exception exception) {
       // ---
     }
