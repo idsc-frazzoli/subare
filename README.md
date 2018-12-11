@@ -329,6 +329,18 @@ The source code is attached to every release.
 
 Jan Hakenberg, Christian Fluri
 
+## Publications
+
+* *Learning to Operate a Fleet of Cars*
+by Christian Fluri, Claudio Ruch, Julian Zilly, Jan Hakenberg, and Emilio Frazzoli
+[link](https://www.research-collection.ethz.ch/handle/20.500.11850/304517)
+
+## References
+
+* *Reinforcement Learning: An Introduction*
+by Richard S. Sutton, and Andrew G. Barto
+[link](http://incompleteideas.net/book/the-book-2nd.html)
+
 ---
 
 ![ethz300](https://user-images.githubusercontent.com/4012178/45925071-bf9d3b00-bf0e-11e8-9d92-e30650fd6bf6.png)
