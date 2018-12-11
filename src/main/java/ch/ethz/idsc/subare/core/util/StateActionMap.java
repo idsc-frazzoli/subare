@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.util;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
@@ -11,8 +12,7 @@ import ch.ethz.idsc.subare.core.MoveInterface;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
-/** for deterministic {@link MoveInterface} to reduce and speed up
- * the computation of the effective actions */
+/** for deterministic {@link MoveInterface} to precompute and store the effective actions */
 public class StateActionMap {
   /** @param discreteModel
    * @param actions
@@ -47,13 +47,18 @@ public class StateActionMap {
     this.map = map;
   }
 
+  /** @param state
+   * @return unmodifiable tensor of actions */
   public Tensor actions(Tensor state) {
-    return map.get(state);
+    return Objects.requireNonNull(map.get(state));
   }
 
+  /** @param state
+   * @param actions
+   * @throws Exception if state already exists as key in this map */
   public void put(Tensor state, Tensor actions) {
     if (map.containsKey(state))
       throw new RuntimeException();
-    map.put(state, actions);
+    map.put(state, actions.unmodifiable());
   }
 }

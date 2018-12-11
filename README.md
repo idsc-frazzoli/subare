@@ -1,10 +1,8 @@
 # ch.ethz.idsc.subare <a href="https://travis-ci.org/idsc-frazzoli/subare"><img src="https://travis-ci.org/idsc-frazzoli/subare.svg?branch=master" alt="Build Status"></a>
 
-Java 8 implementation of algorithms, examples, and exercises from the 2nd edition of
+Library for in Java, version `0.2.1`
 
-[Sutton and Barto: Reinforcement Learning](http://incompleteideas.net/book/the-book-2nd.html)
-
-Version `0.2.1`
+Repository includes algorithm, examples, and exercises from the 2nd edition of [*Reinforcement Learning: An Introduction*](http://incompleteideas.net/book/the-book-2nd.html) by Richard S. Sutton, and Andrew G. Barto.
 
 Our implementation is inspired by the 
 [python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction)
@@ -15,7 +13,7 @@ Our implementation is different from the reference in two aspects:
 * the algorithms are implemented **separate** from the problem scenarios
 * the math is in **exact** precision which reproduces symmetries in the results in case the problem features symmetries
 
-List of algorithms:
+## Features
 
 * Iterative Policy Evaluation (parallel, in 4.1, p.59)
 * *Value Iteration* to determine V*(s) (parallel, in 4.4, p.65)
@@ -36,7 +34,20 @@ List of algorithms:
 * Semi-gradient Tabular Temporal Difference (in 9.3, p.164)
 * True Online Sarsa (in 12.8, p.309)
 
-## Examples from the book
+## Gallery
+
+<table>
+<tr>
+<td>
+
+![prisonersdilemma](https://user-images.githubusercontent.com/4012178/49791508-ed856500-fd30-11e8-960b-5a90f7ebb638.png)
+
+Repeated Prisoner's Dilemma
+
+</tr>
+</table>
+
+## Examples
 
 ### 4.1 Gridworld
 
@@ -331,15 +342,13 @@ Jan Hakenberg, Christian Fluri
 
 ## Publications
 
-* *Learning to Operate a Fleet of Cars*
+* [*Learning to Operate a Fleet of Cars*](https://www.research-collection.ethz.ch/handle/20.500.11850/304517)
 by Christian Fluri, Claudio Ruch, Julian Zilly, Jan Hakenberg, and Emilio Frazzoli
-[link](https://www.research-collection.ethz.ch/handle/20.500.11850/304517)
 
 ## References
 
-* *Reinforcement Learning: An Introduction*
+* [*Reinforcement Learning: An Introduction*](http://incompleteideas.net/book/the-book-2nd.html)
 by Richard S. Sutton, and Andrew G. Barto
-[link](http://incompleteideas.net/book/the-book-2nd.html)
 
 ---
 

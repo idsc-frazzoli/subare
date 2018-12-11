@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.qty.Boole;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Sign;
 
-/** Toy example for AMOD system. There are 3 virtual stations where taxis are travelling between those.
+/** Toy example for AMoD system. There are 3 virtual stations where taxis are travelling between those.
  * The goal is to have at least 1 taxi in each virtual station so that the availability is given. Customers arrive
  * at the virtual stations according to a given Poisson distribution and will be driven to another virtual station.
  * The actions control the rebalancing of the taxis among the virtual stations. The arrival time is approximated
@@ -61,7 +61,10 @@ public class VirtualStations implements MonteCarloInterface {
   }
 
   private void generateExactState() {
-    GlobalAssert.that(VEHICLES % NVNODES == 0);
+    { // to prevent warning
+      int check = VEHICLES % NVNODES;
+      GlobalAssert.that(check == 0);
+    }
     for (int i = 0; i < NVNODES; ++i) {
       Map<Integer, Integer> subMap = new HashMap<>();
       for (int j = 0; j < NVNODES; ++j) {

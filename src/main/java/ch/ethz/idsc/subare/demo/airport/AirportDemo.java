@@ -86,7 +86,7 @@ enum AirportDemo {
       }
       System.out.println("time for TrueOnlineSarsa: " + stopwatch.display_seconds() + "s");
     }
-    DiscreteQsa toQsa = toSarsa.qsa();
+    // DiscreteQsa toQsa = toSarsa.qsa();
     // System.out.println(toSarsa.getW());
     // toSarsa.printValues();
     // toSarsa.printPolicy();

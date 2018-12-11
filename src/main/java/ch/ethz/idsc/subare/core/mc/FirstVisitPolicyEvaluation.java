@@ -30,13 +30,13 @@ import ch.ethz.idsc.tensor.alg.Array;
  * for the gambler problem. */
 public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
   private final DiscreteModel discreteModel;
-  private final DiscreteVs vs;
+  // private final DiscreteVs vs;
   private final Map<Tensor, Average> map = new HashMap<>(); // TODO no good!
   private final DiscountFunction discountFunction;
 
   public FirstVisitPolicyEvaluation(DiscreteModel discreteModel, DiscreteVs vs) {
     this.discreteModel = discreteModel;
-    this.vs = vs; // TODO write results directly in vs!
+    // this.vs = vs; // TODO write results directly in vs!
     discountFunction = DiscountFunction.of(discreteModel.gamma());
   }
 
