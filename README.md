@@ -1,10 +1,10 @@
 # ch.ethz.idsc.subare <a href="https://travis-ci.org/idsc-frazzoli/subare"><img src="https://travis-ci.org/idsc-frazzoli/subare.svg?branch=master" alt="Build Status"></a>
 
-Library for in Java, version `0.2.1`
+Library for reinforcement learning in Java, version `0.2.1`
 
-Repository includes algorithm, examples, and exercises from the 2nd edition of [*Reinforcement Learning: An Introduction*](http://incompleteideas.net/book/the-book-2nd.html) by Richard S. Sutton, and Andrew G. Barto.
+Repository includes algorithms, examples, and exercises from the 2nd edition of [*Reinforcement Learning: An Introduction*](http://incompleteideas.net/book/the-book-2nd.html) by Richard S. Sutton, and Andrew G. Barto.
 
-Our implementation is inspired by the 
+Our implementation is inspired by the
 [python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction)
 by Shangtong Zhang.
 
@@ -13,7 +13,7 @@ Our implementation is different from the reference in two aspects:
 * the algorithms are implemented **separate** from the problem scenarios
 * the math is in **exact** precision which reproduces symmetries in the results in case the problem features symmetries
 
-## Features
+## Algorithms
 
 * Iterative Policy Evaluation (parallel, in 4.1, p.59)
 * *Value Iteration* to determine V*(s) (parallel, in 4.4, p.65)
