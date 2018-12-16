@@ -14,7 +14,7 @@ interface Raster {
   /** @return q function error scale for visualization */
   Scalar scaleQdelta();
 
-  /** @return dimension to join q function, loss, etc. */
+  /** @return either 0 or 1 as dimension to join q function, loss, etc. */
   int joinAlongDimension();
 
   /** @return magnification */

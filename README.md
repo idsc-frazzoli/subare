@@ -6,9 +6,7 @@ Repository includes algorithms, examples, and exercises from the 2nd edition of 
 
 Our implementation is inspired by the
 [python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction)
-by Shangtong Zhang.
-
-Our implementation is different from the reference in two aspects:
+by Shangtong Zhang, but differs from the reference in two aspects:
 
 * the algorithms are implemented **separate** from the problem scenarios
 * the math is in **exact** precision which reproduces symmetries in the results in case the problem features symmetries
@@ -42,7 +40,13 @@ Our implementation is different from the reference in two aspects:
 
 ![prisonersdilemma](https://user-images.githubusercontent.com/4012178/49791508-ed856500-fd30-11e8-960b-5a90f7ebb638.png)
 
-Repeated Prisoner's Dilemma
+Prisoner's Dilemma
+
+<td>
+
+![gambler_exact](https://user-images.githubusercontent.com/4012178/50052035-b7275b80-011d-11e9-8ea2-b466b90fb349.png)
+
+Exact Gambler
 
 </tr>
 </table>
