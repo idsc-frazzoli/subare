@@ -19,9 +19,9 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** Double Sarsa for gridworld */
@@ -47,7 +47,7 @@ enum Double_Gridworld {
         gridworld, //
         DefaultLearningRate.of(5, .51), //
         qsa1, qsa2, sac1, sac2, policy1, policy2);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150)) {
       for (int index = 0; index < batches; ++index) {
         if (batches - 10 < index)
           Infoline.print(gridworld, index, ref, qsa1);
@@ -60,7 +60,7 @@ enum Double_Gridworld {
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
     System.out.println("---");
     DiscreteVs vs = DiscreteUtils.createVs(gridworld, doubleSarsa.qsa());
-    Put.of(UserHome.file("gridworld_" + sarsaType), vs.values());
+    Put.of(HomeDirectory.file("gridworld_" + sarsaType), vs.values());
     Policy policyVs = PolicyType.GREEDY.bestEquiprobable(gridworld, vs, null);
     EpisodeInterface ei = EpisodeKickoff.single(gridworld, policyVs);
     while (ei.hasNext()) {

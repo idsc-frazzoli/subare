@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -13,6 +12,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.opt.ScalarTensorFunction;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -50,7 +50,7 @@ public class LearningCompetition {
     RESX = map.keySet().stream().mapToInt(point -> point.x).reduce(Math::max).getAsInt() + 1;
     int RESY = map.keySet().stream().mapToInt(point -> point.y).reduce(Math::max).getAsInt() + 1;
     Tensor image = Array.zeros(RESX + 1 + RESX, RESY, 4);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("bulk_" + name + ".gif"), period)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("bulk_" + name + ".gif"), period)) {
       for (int index = 0; index < epsilon.length(); ++index) {
         final int findex = index;
         long tic = System.currentTimeMillis();

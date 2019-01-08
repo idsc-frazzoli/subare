@@ -11,8 +11,8 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** Example 4.1, p.82 */
 enum MCES_Gridworld {
@@ -21,7 +21,7 @@ enum MCES_Gridworld {
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gridworld);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_qsa_mces.gif"), 250)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_qsa_mces.gif"), 250)) {
       final int batches = 20;
       StateActionCounter sac = new DiscreteStateActionCounter();
       EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gridworld, mces.qsa(), sac);

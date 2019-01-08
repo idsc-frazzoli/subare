@@ -7,8 +7,8 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** Example 4.1, p.82 */
 enum RSTQP_Gridworld {
@@ -19,7 +19,7 @@ enum RSTQP_Gridworld {
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         gridworld, qsa, ConstantLearningRate.one());
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_qsa_rstqp.gif"), 250)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_qsa_rstqp.gif"), 250)) {
       int batches = 10;
       for (int index = 0; index < batches; ++index) {
         gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));

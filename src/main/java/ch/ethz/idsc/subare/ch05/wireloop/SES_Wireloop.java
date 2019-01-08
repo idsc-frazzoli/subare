@@ -13,8 +13,8 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum SES_Wireloop {
   ;
@@ -39,7 +39,7 @@ enum SES_Wireloop {
       }
     };
     try (AnimationWriter gsw = AnimationWriter.of( //
-        UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100)) {
+        HomeDirectory.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100)) {
       int index = 0;
       while (exploringStartsStream.batchIndex() < batches) {
         exploringStartsStream.nextEpisode();

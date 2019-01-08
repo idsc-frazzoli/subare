@@ -9,8 +9,8 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /**  */
 enum CAMC_Gridworld { // TODO this looks like WIP
@@ -21,7 +21,7 @@ enum CAMC_Gridworld { // TODO this looks like WIP
     // final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     EpisodeVsEstimator camc = ConstantAlphaMonteCarloVs.create( //
         gridworld, DefaultLearningRate.of(3, .51));
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_vs_camc.gif"), 100)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_vs_camc.gif"), 100)) {
       final int batches = 50;
       // Tensor epsilon = Subdivide.of(.2, .05, batches);
       for (int index = 0; index < batches; ++index) {

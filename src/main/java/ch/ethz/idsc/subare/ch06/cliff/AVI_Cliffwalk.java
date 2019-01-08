@@ -12,9 +12,9 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.Export;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** action value iteration for cliff walk */
 enum AVI_Cliffwalk {
@@ -23,10 +23,10 @@ enum AVI_Cliffwalk {
     Cliffwalk cliffwalk = new Cliffwalk(12, 4);
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
     DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
-    Export.of(UserHome.Pictures("cliffwalk_qsa_avi.png"), //
+    Export.of(HomeDirectory.Pictures("cliffwalk_qsa_avi.png"), //
         StateActionRasters.qsa(new CliffwalkRaster(cliffwalk), DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = ActionValueIteration.of(cliffwalk);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("cliffwalk_qsa_avi.gif"), 200)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("cliffwalk_qsa_avi.gif"), 200)) {
       for (int index = 0; index < 20; ++index) {
         Infoline infoline = Infoline.print(cliffwalk, index, ref, avi.qsa());
         gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));

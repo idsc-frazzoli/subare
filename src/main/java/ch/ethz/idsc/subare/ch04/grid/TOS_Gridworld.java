@@ -17,10 +17,10 @@ import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.subare.util.Stopwatch;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum TOS_Gridworld {
   ;
@@ -41,7 +41,7 @@ enum TOS_Gridworld {
     TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(gridworld, LAMBDA, mapper, learningRate, w, sac, policy);
     final String name = sarsaType.name().toLowerCase();
     Stopwatch stopwatch = Stopwatch.started();
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gridworld_tos_" + name + ".gif"), 250)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_tos_" + name + ".gif"), 250)) {
       for (int batch = 0; batch < 100; ++batch) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
         policy.setQsa(trueOnlineSarsa.qsaInterface());

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
-import ch.ethz.idsc.subare.util.UserHome;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
 class AllPairsExport {
@@ -14,7 +14,7 @@ class AllPairsExport {
     // List<Supplier<Agent>> list = AgentSupplier.getOptimists(.01, .8, 30);
     // List<Supplier<Agent>> list = AgentSupplier.getUCBs(0, 6, 30);
     List<Supplier<Agent>> list = AgentSupplier.getEgreedyC(0.1, .8, 20);
-    Put.of(UserHome.file("egreedyc"), AllPairs.performance(list, 20, 500));
+    Put.of(HomeDirectory.file("egreedyc"), AllPairs.performance(list, 20, 500));
     System.out.println("done.");
   }
 }

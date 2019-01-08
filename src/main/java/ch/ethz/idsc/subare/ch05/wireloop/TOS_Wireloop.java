@@ -17,10 +17,10 @@ import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.Stopwatch;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum TOS_Wireloop {
   ;
@@ -45,7 +45,7 @@ enum TOS_Wireloop {
     TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(wireloop, LAMBDA, mapper, learningRate, w, sac, policy);
     final String algo = sarsaType.name().toLowerCase();
     Stopwatch stopwatch = Stopwatch.started();
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_tos_" + algo + ".gif"), 250)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "_tos_" + algo + ".gif"), 250)) {
       for (int batch = 0; batch < 20; ++batch) {
         // System.out.println("batch " + batch);
         policy.setQsa(trueOnlineSarsa.qsaInterface());

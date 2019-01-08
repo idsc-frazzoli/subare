@@ -12,8 +12,8 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.sca.Round;
 
 enum MCES_Gambler {
@@ -25,7 +25,7 @@ enum MCES_Gambler {
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gambler);
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, mces.qsa(), sac);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_mces.gif"), 200)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_mces.gif"), 200)) {
       int batches = 20;
       for (int index = 0; index < batches; ++index) {
         Infoline.print(gambler, index, ref, mces.qsa());

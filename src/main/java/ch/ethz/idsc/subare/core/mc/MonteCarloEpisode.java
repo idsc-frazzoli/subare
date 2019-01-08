@@ -33,7 +33,7 @@ public final class MonteCarloEpisode implements EpisodeInterface {
   }
 
   @Override // from EpisodeInterface
-  public final StepInterface step() {
+  public StepInterface step() {
     final Tensor prev = state;
     final Tensor action;
     if (openingActions.isEmpty()) {
@@ -49,7 +49,7 @@ public final class MonteCarloEpisode implements EpisodeInterface {
   }
 
   @Override // from EpisodeInterface
-  public final boolean hasNext() {
+  public boolean hasNext() {
     return !monteCarloInterface.isTerminal(state);
   }
 }

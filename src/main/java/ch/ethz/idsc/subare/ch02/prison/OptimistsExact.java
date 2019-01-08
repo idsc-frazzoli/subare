@@ -7,7 +7,6 @@ import java.util.stream.IntStream;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.OptimistAgent;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -18,6 +17,7 @@ import ch.ethz.idsc.tensor.img.ArrayPlot;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.Export;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
 class OptimistsExact extends AbstractExact {
@@ -64,8 +64,8 @@ class OptimistsExact extends AbstractExact {
     {
       Tensor tensor = Rescale.of(expectedRewards.get(Tensor.ALL, Tensor.ALL, 0));
       Tensor image = ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);
-      Export.of(UserHome.Pictures("opts.png"), ImageResize.nearest(image, 1));
+      Export.of(HomeDirectory.Pictures("opts.png"), ImageResize.nearest(image, 1));
     }
-    Put.of(UserHome.file("optimist"), res);
+    Put.of(HomeDirectory.file("optimist"), res);
   }
 }

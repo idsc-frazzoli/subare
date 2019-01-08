@@ -9,9 +9,9 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.io.Export;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** solving grid world
  * gives the value function for the optimal policy equivalent to
@@ -45,7 +45,7 @@ enum VI_Gridworld {
     DiscreteUtils.print(vi.vs());
     Policy policy = PolicyType.GREEDY.bestEquiprobable(gridworld, vi.vs(), null);
     Policies.print(policy, gridworld.states());
-    Export.of(UserHome.Pictures("gridworld_vs_vi.png"), //
+    Export.of(HomeDirectory.Pictures("gridworld_vs_vi.png"), //
         StateRasters.vs(gridworldStateRaster, DiscreteValueFunctions.rescaled(vi.vs())));
     // GridworldHelper.render(gridworld, vi.vs())
   }

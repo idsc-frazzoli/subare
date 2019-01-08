@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.UCBAgent;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -18,6 +17,7 @@ import ch.ethz.idsc.tensor.img.ArrayPlot;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.Export;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
 class UCBsExact extends AbstractExact {
@@ -63,8 +63,8 @@ class UCBsExact extends AbstractExact {
     {
       Tensor rescale = Rescale.of(expectedRewards.get(Tensor.ALL, Tensor.ALL, 0));
       Tensor image = ArrayPlot.of(rescale, ColorDataGradients.CLASSIC);
-      Export.of(UserHome.Pictures("ucbs.png"), ImageResize.nearest(image, 2));
+      Export.of(HomeDirectory.Pictures("ucbs.png"), ImageResize.nearest(image, 2));
     }
-    Put.of(UserHome.file("ucb"), res);
+    Put.of(HomeDirectory.file("ucb"), res);
   }
 }

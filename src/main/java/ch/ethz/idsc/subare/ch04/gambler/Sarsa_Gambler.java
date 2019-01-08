@@ -14,11 +14,11 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** Sarsa applied to gambler */
 enum Sarsa_Gambler {
@@ -33,9 +33,8 @@ enum Sarsa_Gambler {
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     // ---
-    UserHome.Pictures("").mkdir();
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
-    AnimationWriter gsc = AnimationWriter.of(UserHome.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
+    AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
+    AnimationWriter gsc = AnimationWriter.of(HomeDirectory.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
     // ---
     final Sarsa sarsa = sarsaType.supply(gambler, DefaultLearningRate.of(factor, exponent), qsa, sac, policy);
     // ---

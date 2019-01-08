@@ -30,6 +30,7 @@ import org.jfree.ui.RectangleInsets;
 import ch.ethz.idsc.subare.analysis.DiscreteModelErrorAnalysis;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.img.ColorDataLists;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 // TODO class contains non generic functionality, e.g. "Number episodes"
 public enum PlotUtils {
@@ -40,7 +41,7 @@ public enum PlotUtils {
   private static final int HEIGHT = 720;
 
   private static File directory() {
-    File directory = UserHome.Pictures("plots");
+    File directory = HomeDirectory.Pictures("plots");
     directory.mkdir();
     return directory;
   }

@@ -5,8 +5,8 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum IPE_Wireloop {
   ;
@@ -17,7 +17,7 @@ enum IPE_Wireloop {
     Policy policy = EquiprobablePolicy.create(wireloop);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         wireloop, policy);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ipe_iteration.gif"), 200)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "_ipe_iteration.gif"), 200)) {
       for (int count = 0; count < 20; ++count) {
         System.out.println(count);
         gsw.append(StateRasters.vs_rescale(wireloopRaster, ipe.vs()));

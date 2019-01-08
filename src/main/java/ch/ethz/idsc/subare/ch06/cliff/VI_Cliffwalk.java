@@ -13,11 +13,11 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.Export;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** value iteration for cliffwalk */
 enum VI_Cliffwalk {
@@ -32,7 +32,7 @@ enum VI_Cliffwalk {
     DiscreteVs vr = DiscreteUtils.createVs(cliffwalk, ref);
     Scalar error = DiscreteValueFunctions.distance(vs, vr);
     System.out.println("error=" + error);
-    Export.of(UserHome.Pictures("cliffwalk_qsa_vi.png"), //
+    Export.of(HomeDirectory.Pictures("cliffwalk_qsa_vi.png"), //
         StateRasters.vs_rescale(cliffwalkRaster, vi.vs()));
     // GreedyPolicy greedyPolicy = GreedyPolicy.bestEquiprobableGreedy(cliffWalk, values);
     // greedyPolicy.print(cliffWalk.states());
