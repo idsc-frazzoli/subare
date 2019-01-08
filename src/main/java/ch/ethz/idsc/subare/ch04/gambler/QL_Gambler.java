@@ -20,9 +20,9 @@ import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** Q-Learning applied to gambler with adaptive learning rate */
@@ -38,7 +38,7 @@ enum QL_Gambler {
     EGreedyPolicy policyEGreedy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
     policyEGreedy.setExplorationRate(LinearExplorationRate.of(batches, 0.1, 0.01));
     System.out.println(qsa.size());
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_ql.gif"), 100);
+    AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_ql.gif"), 100);
     LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
     Sarsa stepDigest = SarsaType.QLEARNING.supply(gambler, learningRate, qsa, sac, policyEGreedy);
     for (int index = 0; index < batches; ++index) {

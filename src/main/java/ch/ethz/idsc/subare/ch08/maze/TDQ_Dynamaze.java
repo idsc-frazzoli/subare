@@ -16,8 +16,8 @@ import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 enum TDQ_Dynamaze {
@@ -35,7 +35,7 @@ enum TDQ_Dynamaze {
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa, sac, policy);
     TabularDynaQ tabularDynaQ = new TabularDynaQ(sarsa, 10);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {
         // if (EPISODES - 10 < index)
         Infoline.print(dynamaze, index, ref, qsa);

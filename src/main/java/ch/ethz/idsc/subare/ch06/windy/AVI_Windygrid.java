@@ -11,9 +11,9 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.Export;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** action value iteration for cliff walk */
 enum AVI_Windygrid {
@@ -22,10 +22,10 @@ enum AVI_Windygrid {
     Windygrid windygrid = Windygrid.createFour();
     WindygridRaster windygridRaster = new WindygridRaster(windygrid);
     DiscreteQsa ref = WindygridHelper.getOptimalQsa(windygrid);
-    Export.of(UserHome.Pictures("windygrid_qsa_avi.png"), //
+    Export.of(HomeDirectory.Pictures("windygrid_qsa_avi.png"), //
         StateActionRasters.qsa_rescaled(windygridRaster, ref));
     ActionValueIteration avi = ActionValueIteration.of(windygrid);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_avi.gif"), 250)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("windygrid_qsa_avi.gif"), 250)) {
       for (int index = 0; index < 20; ++index) {
         Infoline infoline = Infoline.print(windygrid, index, ref, avi.qsa());
         gsw.append(StateActionRasters.qsaLossRef(windygridRaster, avi.qsa(), ref));

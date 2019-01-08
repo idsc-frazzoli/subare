@@ -5,8 +5,8 @@ import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** finding optimal policy to stay or hit
  * 
@@ -18,7 +18,7 @@ enum RSTQP_Blackjack {
     DiscreteQsa qsa = DiscreteQsa.build(blackjack);
     Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         blackjack, qsa, DefaultLearningRate.of(5, 0.51));
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("blackjack_rstqp.gif"), 250)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("blackjack_rstqp.gif"), 250)) {
       int batches = 60;
       for (int index = 0; index < batches; ++index) {
         for (int count = 0; count < 100; ++count)

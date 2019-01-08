@@ -8,10 +8,10 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** Example 5.3 p.108: Solving Blackjack
  * Figure 5.3 p.108
@@ -22,7 +22,7 @@ enum MCES_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("blackjack_mces.gif"), 250)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("blackjack_mces.gif"), 250)) {
       int batches = 10; // 40
       Tensor epsilon = Subdivide.of(.2, .05, batches);
       StateActionCounter sac = new DiscreteStateActionCounter();

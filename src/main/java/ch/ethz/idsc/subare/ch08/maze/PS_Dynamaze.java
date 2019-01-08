@@ -17,9 +17,9 @@ import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.StepExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 enum PS_Dynamaze {
@@ -40,7 +40,7 @@ enum PS_Dynamaze {
     Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa, sac, policy);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsa, 10, RealScalar.ZERO);
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures(name + "_ps_" + sarsaType + ".gif"), 250)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "_ps_" + sarsaType + ".gif"), 250)) {
       // ---
       StepExploringStarts stepExploringStarts = //
           new StepExploringStarts(dynamaze, prioritizedSweeping) {

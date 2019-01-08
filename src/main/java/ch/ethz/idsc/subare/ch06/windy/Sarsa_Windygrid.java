@@ -14,8 +14,8 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** determines q(s,a) function for equiprobable "random" policy */
 enum Sarsa_Windygrid {
@@ -30,8 +30,7 @@ enum Sarsa_Windygrid {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(windygrid, qsa, sac);
     Sarsa sarsa = sarsaType.supply(windygrid, learningRate, qsa, sac, policy);
-    UserHome.file("").mkdir();
-    try (AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100)) {
+    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100)) {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
         // sarsa.supplyPolicy(() -> policy);

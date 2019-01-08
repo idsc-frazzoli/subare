@@ -12,8 +12,8 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum Sarsa_Wireloop {
   ;
@@ -31,7 +31,7 @@ enum Sarsa_Wireloop {
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     Sarsa sarsa = sarsaType.supply(wireloop, DefaultLearningRate.of(3, 0.51), qsa, sac, policy);
     try (AnimationWriter gsw = AnimationWriter.of( //
-        UserHome.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250)) {
+        HomeDirectory.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250)) {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
         ExploringStarts.batch(wireloop, policy, nstep, sarsa);

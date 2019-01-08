@@ -10,9 +10,9 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.UserHome;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 // R1STQP algorithm is not suited for gambler's dilemma
 enum RSTQP_Gambler {
@@ -25,8 +25,8 @@ enum RSTQP_Gambler {
     Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of(gambler, qsa, //
         DefaultLearningRate.of(4, 0.71));
     ActionValueStatistics avs = new ActionValueStatistics(gambler);
-    AnimationWriter gsw = AnimationWriter.of(UserHome.Pictures("gambler_qsa_rstqp.gif"), 100);
-    AnimationWriter gsc = AnimationWriter.of(UserHome.Pictures("gambler_sac_rstqp.gif"), 200);
+    AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_rstqp.gif"), 100);
+    AnimationWriter gsc = AnimationWriter.of(HomeDirectory.Pictures("gambler_sac_rstqp.gif"), 200);
     int batches = 200;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(gambler, index, ref, qsa);
