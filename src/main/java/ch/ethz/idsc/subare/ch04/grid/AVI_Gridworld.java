@@ -38,12 +38,12 @@ enum AVI_Gridworld {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldRaster = new GridworldRaster(gridworld);
     ActionValueIteration avi = ActionValueIteration.of(gridworld);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_qsa_avi.gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gridworld_qsa_avi.gif"), 250)) {
       for (int count = 0; count < 7; ++count) {
-        gsw.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
+        animationWriter.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
         avi.step();
       }
-      gsw.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
+      animationWriter.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
     }
     // ---
     DiscreteUtils.print(avi.qsa());

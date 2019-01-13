@@ -30,13 +30,13 @@ enum SES_Cliffwalk {
     // Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
-    try (AnimationWriter gsw = AnimationWriter.of( //
+    try (AnimationWriter animationWriter = AnimationWriter.of( //
         HomeDirectory.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
       LearningRate learningRate = DefaultLearningRate.of(7, 0.61);
       StateActionCounter sac = new DiscreteStateActionCounter();
       EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(cliffwalk, qsa, sac);
       policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
-      Sarsa sarsa = sarsaType.supply(cliffwalk, learningRate, qsa, sac, policy);
+      Sarsa sarsa = sarsaType.sarsa(cliffwalk, learningRate, qsa, sac, policy);
       DequeExploringStarts exploringStartsStream = new DequeExploringStarts(cliffwalk, nstep, sarsa) {
         @Override
         public Policy batchPolicy(int batch) {
@@ -50,7 +50,7 @@ enum SES_Cliffwalk {
         // if (episode % 5 == 0)
         {
           Infoline infoline = Infoline.print(cliffwalk, episode, ref, qsa);
-          gsw.append(StateActionRasters.qsaLossRef(new CliffwalkRaster(cliffwalk), qsa, ref));
+          animationWriter.append(StateActionRasters.qsaLossRef(new CliffwalkRaster(cliffwalk), qsa, ref));
           if (infoline.isLossfree())
             break;
         }

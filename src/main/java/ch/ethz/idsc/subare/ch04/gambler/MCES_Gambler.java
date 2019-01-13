@@ -25,12 +25,12 @@ enum MCES_Gambler {
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gambler);
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, mces.qsa(), sac);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_mces.gif"), 200)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_mces.gif"), 200)) {
       int batches = 20;
       for (int index = 0; index < batches; ++index) {
         Infoline.print(gambler, index, ref, mces.qsa());
         ExploringStarts.batch(gambler, policy, mces);
-        gsw.append(StateActionRasters.qsaPolicyRef(gamblerRaster, mces.qsa(), ref));
+        animationWriter.append(StateActionRasters.qsaPolicyRef(gamblerRaster, mces.qsa(), ref));
       }
     }
     System.out.println("done");

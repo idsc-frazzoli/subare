@@ -29,15 +29,15 @@ enum Sarsa_Blackjack {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(blackjack, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.1, 0.01));
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("blackjack_qsa_" + sarsaType + ".gif"), 200)) {
-      Sarsa sarsa = sarsaType.supply(blackjack, DefaultLearningRate.of(2, 0.6), qsa, sac, policy);
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("blackjack_qsa_" + sarsaType + ".gif"), 200)) {
+      Sarsa sarsa = sarsaType.sarsa(blackjack, DefaultLearningRate.of(2, 0.6), qsa, sac, policy);
       for (int index = 0; index < batches; ++index) {
         // Scalar error = DiscreteQsas.distance(qsa, ref);
         System.out.println(index + " " + epsilon.Get(index).map(Round._2));
         // sarsa.supplyPolicy(() -> policy);
         for (int count = 0; count < 10; ++count)
           ExploringStarts.batch(blackjack, policy, sarsa);
-        gsw.append(BlackjackHelper.joinAll(blackjack, qsa));
+        animationWriter.append(BlackjackHelper.joinAll(blackjack, qsa));
       }
     }
   }

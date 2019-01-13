@@ -56,7 +56,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
    * @param qsa2
    * @param sac1
    * @param sac2 */
-  /* package */ DoubleSarsa( //
+  public DoubleSarsa( //
       SarsaEvaluation sarsaEvaluation, //
       DiscreteModel discreteModel, //
       LearningRate learningRate, //
@@ -65,8 +65,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
       StateActionCounter sac1, //
       StateActionCounter sac2, //
       PolicyBase policy1, //
-      PolicyBase policy2 //
-  ) {
+      PolicyBase policy2) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.sarsaEvaluation = sarsaEvaluation;
@@ -110,13 +109,13 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
     Policy1.sac().digest(first); // signal to LearningRate1
   }
 
-  @Override
+  @Override // from DiscreteQsaSupplier
   public DiscreteQsa qsa() {
     return DiscreteValueFunctions.weightedAverage( //
         (DiscreteQsa) qsa1, (DiscreteQsa) qsa2, sac1, sac2);
   }
 
-  @Override
+  @Override // from StateActionCounterSupplier
   public StateActionCounter sac() {
     return StateActionCounterUtil.getSummedSac(sac1, sac2, discreteModel);
   }

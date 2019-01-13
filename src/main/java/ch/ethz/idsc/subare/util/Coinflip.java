@@ -11,7 +11,7 @@ public class Coinflip {
   /** @param p_head
    * @return new instance of Coinflip with given probability p_head that tossHead() returns true */
   public static Coinflip of(Scalar p_head) {
-    return new Coinflip(p_head);
+    return new Coinflip(Clip.unit().requireInside(p_head));
   }
 
   /** Quote from Wikipedia:
@@ -20,7 +20,7 @@ public class Coinflip {
    * 
    * @return new instance of Coinflip for which tossHead() returns true with probability 1/2 */
   public static Coinflip fair() {
-    return of(RationalScalar.HALF);
+    return new Coinflip(RationalScalar.HALF);
   }
 
   // ---
@@ -28,7 +28,7 @@ public class Coinflip {
   private final float p_head;
 
   private Coinflip(Scalar p_head) {
-    this.p_head = Clip.unit().requireInside(p_head).number().floatValue();
+    this.p_head = p_head.number().floatValue();
   }
 
   /** returns true if the coin toss ended up with head */

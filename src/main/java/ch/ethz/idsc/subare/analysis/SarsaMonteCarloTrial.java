@@ -34,7 +34,7 @@ public class SarsaMonteCarloTrial implements MonteCarloTrial {
   private SarsaMonteCarloTrial(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa, StateActionCounter sac,
       PolicyBase policy, int digestDepth) {
     this.monteCarloInterface = monteCarloInterface;
-    sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa, sac, policy);
+    sarsa = sarsaType.sarsa(monteCarloInterface, learningRate, qsa, sac, policy);
     this.policy = policy;
     this.digestDepth = digestDepth;
     Sign.requirePositiveOrZero(RealScalar.of(digestDepth));

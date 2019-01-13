@@ -32,13 +32,13 @@ enum Sarsa_Cliffwalk {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(cliffwalk, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
-    Sarsa sarsa = sarsaType.supply(cliffwalk, DefaultLearningRate.of(7, 0.61), qsa, sac, policy);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("cliffwalk_qsa_" + sarsaType + ".gif"), 200)) {
+    Sarsa sarsa = sarsaType.sarsa(cliffwalk, DefaultLearningRate.of(7, 0.61), qsa, sac, policy);
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("cliffwalk_qsa_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {
         // if (batches - 10 < index)
         Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);
         ExploringStarts.batch(cliffwalk, policy, nstep, sarsa);
-        gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
+        animationWriter.append(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

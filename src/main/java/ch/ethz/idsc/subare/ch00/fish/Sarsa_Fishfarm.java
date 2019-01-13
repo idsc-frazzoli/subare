@@ -32,14 +32,14 @@ enum Sarsa_Fishfarm {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(fishfarm, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.5, 0.01));
-    Sarsa sarsa = sarsaType.supply(fishfarm, DefaultLearningRate.of(7, 0.61), qsa, sac, policy);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200)) {
+    Sarsa sarsa = sarsaType.sarsa(fishfarm, DefaultLearningRate.of(7, 0.61), qsa, sac, policy);
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {
         // if (batches - 10 < index)
         Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
         // sarsa.supplyPolicy(() -> policy);
         ExploringStarts.batch(fishfarm, policy, nstep, sarsa);
-        gsw.append(StateRasters.qsaLossRef(fishfarmRaster, qsa, ref));
+        animationWriter.append(StateRasters.qsaLossRef(fishfarmRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

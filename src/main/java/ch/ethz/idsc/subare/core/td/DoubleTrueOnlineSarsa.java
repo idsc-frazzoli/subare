@@ -48,7 +48,7 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCo
   /** eligibility trace z is a short-term memory, typically lasting less time than the length of an episode */
   private Tensor z;
 
-  /* package */ DoubleTrueOnlineSarsa( //
+  public DoubleTrueOnlineSarsa( //
       MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, Scalar lambda, //
       FeatureMapper featureMapper, //
       LearningRate learningRate, //

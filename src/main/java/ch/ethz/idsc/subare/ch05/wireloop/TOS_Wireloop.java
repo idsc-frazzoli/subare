@@ -16,11 +16,11 @@ import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
+import ch.ethz.idsc.tensor.io.Timing;
 
 enum TOS_Wireloop {
   ;
@@ -44,8 +44,8 @@ enum TOS_Wireloop {
     // LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.3), false); // the case without warmStart
     TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(wireloop, LAMBDA, mapper, learningRate, w, sac, policy);
     final String algo = sarsaType.name().toLowerCase();
-    Stopwatch stopwatch = Stopwatch.started();
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "_tos_" + algo + ".gif"), 250)) {
+    Timing timing = Timing.started();
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_tos_" + algo + ".gif"), 250)) {
       for (int batch = 0; batch < 20; ++batch) {
         // System.out.println("batch " + batch);
         policy.setQsa(trueOnlineSarsa.qsaInterface());
@@ -54,16 +54,16 @@ enum TOS_Wireloop {
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
         DiscreteQsa qsa = trueOnlineSarsa.qsa();
         Infoline infoline = Infoline.print(wireloop, batch, ref, qsa);
-        gsw.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
+        animationWriter.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
         if (infoline.isLossfree()) {
-          gsw.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
-          gsw.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
-          gsw.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
+          animationWriter.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
+          animationWriter.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
+          animationWriter.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
           break;
         }
       }
     }
-    System.out.println("Time for TrueOnlineSarsa: " + stopwatch.display_seconds() + "s");
+    System.out.println("Time for TrueOnlineSarsa: " + timing.seconds() + "s");
   }
 
   public static void main(String[] args) throws Exception {

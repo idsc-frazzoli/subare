@@ -21,7 +21,7 @@ enum MCES_Wireloop {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(wireloop);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "L_mces.gif"), 100)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "L_mces.gif"), 100)) {
       int batches = 10;
       StateActionCounter sac = new DiscreteStateActionCounter();
       EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(wireloop, mces.qsa(), sac);
@@ -31,7 +31,7 @@ enum MCES_Wireloop {
         for (int count = 0; count < 4; ++count) {
           ExploringStarts.batch(wireloop, policy, mces);
         }
-        gsw.append(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));
+        animationWriter.append(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));
         if (infoline.isLossfree())
           break;
       }

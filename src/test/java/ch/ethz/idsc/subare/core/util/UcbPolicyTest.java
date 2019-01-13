@@ -16,7 +16,7 @@ public class UcbPolicyTest extends TestCase {
     Airport airport = new Airport();
     DiscreteQsa qsa = DiscreteQsa.build(airport);
     StateActionCounter sac = new DiscreteStateActionCounter();
-    Sarsa sarsa = SarsaType.ORIGINAL.supply(airport, ConstantLearningRate.of(RealScalar.ZERO), //
+    Sarsa sarsa = SarsaType.ORIGINAL.sarsa(airport, ConstantLearningRate.of(RealScalar.ZERO), //
         qsa, sac, PolicyType.EGREEDY.bestEquiprobable(airport, qsa, sac));
     for (Tensor state : airport.states()) {
       for (Tensor action : airport.actions(state)) {
@@ -51,7 +51,7 @@ public class UcbPolicyTest extends TestCase {
     Airport airport = new Airport();
     DiscreteQsa qsa = DiscreteQsa.build(airport);
     StateActionCounter sac = new DiscreteStateActionCounter();
-    Sarsa sarsa = SarsaType.ORIGINAL.supply(airport, ConstantLearningRate.of(RealScalar.ZERO), //
+    Sarsa sarsa = SarsaType.ORIGINAL.sarsa(airport, ConstantLearningRate.of(RealScalar.ZERO), //
         qsa, sac, PolicyType.EGREEDY.bestEquiprobable(airport, qsa, sac));
     DiscreteQsa ucbInQsa = UcbUtils.getUcbInQsa(airport, qsa, sarsa.sac());
     for (Tensor state : airport.states()) {

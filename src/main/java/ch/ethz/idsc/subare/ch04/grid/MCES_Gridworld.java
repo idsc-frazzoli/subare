@@ -21,7 +21,7 @@ enum MCES_Gridworld {
     Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = GridworldHelper.getOptimalQsa(gridworld);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gridworld);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_qsa_mces.gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gridworld_qsa_mces.gif"), 250)) {
       final int batches = 20;
       StateActionCounter sac = new DiscreteStateActionCounter();
       EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gridworld, mces.qsa(), sac);
@@ -31,7 +31,7 @@ enum MCES_Gridworld {
         for (int count = 0; count < 1; ++count) {
           ExploringStarts.batch(gridworld, policy, mces);
         }
-        gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), mces.qsa(), ref));
+        animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), mces.qsa(), ref));
       }
     }
   }

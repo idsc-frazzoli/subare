@@ -14,13 +14,13 @@ enum VI_CarRental {
   public static void main(String[] args) throws Exception {
     CarRental carRental = new CarRental(20);
     ValueIteration vi = new ValueIteration(carRental);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("carrental_vi.gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("carrental_vi.gif"), 250)) {
       for (int count = 0; count <= 25; ++count) {
         System.out.println(count);
-        gsw.append(CarRentalHelper.joinAll(carRental, vi.vs()));
+        animationWriter.append(CarRentalHelper.joinAll(carRental, vi.vs()));
         vi.step();
       }
-      gsw.append(CarRentalHelper.joinAll(carRental, vi.vs()));
+      animationWriter.append(CarRentalHelper.joinAll(carRental, vi.vs()));
     }
   }
 }

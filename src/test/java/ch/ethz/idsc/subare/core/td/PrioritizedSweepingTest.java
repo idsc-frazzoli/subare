@@ -21,7 +21,7 @@ public class PrioritizedSweepingTest extends TestCase {
     DiscreteQsa qsa = DiscreteQsa.build(simpleTestModel, RealScalar.ZERO);
     StateActionCounter sac = new DiscreteStateActionCounter();
     PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(simpleTestModel, qsa, sac);
-    Sarsa sarsa = SarsaType.ORIGINAL.supply(simpleTestModel, learningRate, qsa, sac, policy);
+    Sarsa sarsa = SarsaType.ORIGINAL.sarsa(simpleTestModel, learningRate, qsa, sac, policy);
     PrioritizedSweeping ps = new PrioritizedSweeping(sarsa, 2, RealScalar.of(.1));
     ExploringStarts.batch(simpleTestModel, policy, ps);
     SimpleTestModels._checkExact(qsa);

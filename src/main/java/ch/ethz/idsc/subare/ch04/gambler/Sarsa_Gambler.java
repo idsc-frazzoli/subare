@@ -33,21 +33,21 @@ enum Sarsa_Gambler {
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     // ---
-    AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
-    AnimationWriter gsc = AnimationWriter.of(HomeDirectory.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
+    AnimationWriter animationWriter1 = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
+    AnimationWriter animationWriter2 = AnimationWriter.of(HomeDirectory.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
     // ---
-    final Sarsa sarsa = sarsaType.supply(gambler, DefaultLearningRate.of(factor, exponent), qsa, sac, policy);
+    final Sarsa sarsa = sarsaType.sarsa(gambler, DefaultLearningRate.of(factor, exponent), qsa, sac, policy);
     // ---
     for (int index = 0; index < batches; ++index) {
       Infoline.print(gambler, index, ref, qsa);
       ExploringStarts.batch(gambler, policy, 1, sarsa);
       // ---
-      gsw.append(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
-      gsc.append(StateActionRasters.qsa( //
+      animationWriter1.append(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
+      animationWriter2.append(StateActionRasters.qsa( //
           gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) sarsa.sac()).inQsa(gambler))));
     }
-    gsw.close();
-    gsc.close();
+    animationWriter1.close();
+    animationWriter2.close();
     GamblerHelper.play(gambler, qsa);
   }
 

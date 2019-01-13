@@ -25,10 +25,10 @@ enum AVI_Dynamaze {
     // Export.of(UserHome.Pictures("dynamaze_qsa_avi.png"), //
     // DynamazeHelper.render(windygrid, DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = ActionValueIteration.of(dynamaze);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "_qsa_avi.gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_qsa_avi.gif"), 250)) {
       for (int index = 0; index < 50; ++index) {
         Infoline infoline = Infoline.print(dynamaze, index, ref, avi.qsa());
-        gsw.append(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref));
+        animationWriter.append(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref));
         avi.step();
         if (infoline.isLossfree())
           break;

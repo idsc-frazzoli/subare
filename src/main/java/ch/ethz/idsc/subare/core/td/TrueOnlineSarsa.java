@@ -45,7 +45,7 @@ public class TrueOnlineSarsa implements TrueOnlineInterface, StateActionCounterS
   private Tensor z;
   private Scalar nextQOld;
 
-  /* package */ TrueOnlineSarsa( //
+  public TrueOnlineSarsa( //
       MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, //
       Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, //
       FeatureWeight w, StateActionCounter sac, PolicyBase policy) {

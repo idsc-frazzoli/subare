@@ -37,10 +37,10 @@ enum PS_Dynamaze {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(dynamaze, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.1, 0.01));
-    Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa, sac, policy);
+    Sarsa sarsa = sarsaType.sarsa(dynamaze, learningRate, qsa, sac, policy);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsa, 10, RealScalar.ZERO);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "_ps_" + sarsaType + ".gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_ps_" + sarsaType + ".gif"), 250)) {
       // ---
       StepExploringStarts stepExploringStarts = //
           new StepExploringStarts(dynamaze, prioritizedSweeping) {
@@ -52,7 +52,7 @@ enum PS_Dynamaze {
       while (stepExploringStarts.batchIndex() < batches) {
         Infoline infoline = Infoline.print(dynamaze, stepExploringStarts.batchIndex(), ref, qsa);
         stepExploringStarts.nextEpisode();
-        gsw.append(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref));
+        animationWriter.append(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

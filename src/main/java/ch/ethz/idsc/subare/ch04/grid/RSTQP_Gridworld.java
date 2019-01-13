@@ -19,10 +19,10 @@ enum RSTQP_Gridworld {
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         gridworld, qsa, ConstantLearningRate.one());
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_qsa_rstqp.gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gridworld_qsa_rstqp.gif"), 250)) {
       int batches = 10;
       for (int index = 0; index < batches; ++index) {
-        gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+        animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         Infoline.print(gridworld, index, ref, qsa);
         TabularSteps.batch(gridworld, gridworld, rstqp);
       }

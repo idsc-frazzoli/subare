@@ -47,14 +47,14 @@ enum Double_Gridworld {
         gridworld, //
         DefaultLearningRate.of(5, .51), //
         qsa1, qsa2, sac1, sac2, policy1, policy2);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150)) {
       for (int index = 0; index < batches; ++index) {
         if (batches - 10 < index)
           Infoline.print(gridworld, index, ref, qsa1);
         policy.setQsa(doubleSarsa.qsa());
         policy.setSac(sac);
         ExploringStarts.batch(gridworld, policy, nstep, doubleSarsa);
-        gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
+        animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
       }
     }
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));
