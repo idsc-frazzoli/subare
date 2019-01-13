@@ -32,7 +32,7 @@ enum Sarsa_Bandits {
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(bandits, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.6, 0.01));
     // ---
-    final Sarsa sarsa = sarsaType.supply(bandits, DefaultLearningRate.of(factor, exponent), qsa, sac, policy);
+    final Sarsa sarsa = sarsaType.sarsa(bandits, DefaultLearningRate.of(factor, exponent), qsa, sac, policy);
     // ---
     for (int index = 0; index < batches; ++index) {
       Scalar error1 = Loss.accumulation(bandits, ref, qsa);

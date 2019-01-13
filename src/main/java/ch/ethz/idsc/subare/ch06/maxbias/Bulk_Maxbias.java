@@ -42,7 +42,7 @@ enum Bulk_Maxbias {
         StateActionCounter sac = new DiscreteStateActionCounter();
         EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(maxbias, qsa, sac);
         policy.setExplorationRate(LinearExplorationRate.of(100, 0.2, 0.01));
-        Sarsa sarsa = sarsaType.supply(maxbias, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa, sac, policy);
+        Sarsa sarsa = sarsaType.sarsa(maxbias, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa, sac, policy);
         LearningContender learningContender = LearningContender.sarsa(maxbias, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;

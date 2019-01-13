@@ -50,7 +50,7 @@ public class LearningCompetition {
     RESX = map.keySet().stream().mapToInt(point -> point.x).reduce(Math::max).getAsInt() + 1;
     int RESY = map.keySet().stream().mapToInt(point -> point.y).reduce(Math::max).getAsInt() + 1;
     Tensor image = Array.zeros(RESX + 1 + RESX, RESY, 4);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("bulk_" + name + ".gif"), period)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("bulk_" + name + ".gif"), period)) {
       for (int index = 0; index < epsilon.length(); ++index) {
         final int findex = index;
         long tic = System.currentTimeMillis();
@@ -59,7 +59,7 @@ public class LearningCompetition {
         long delta = System.currentTimeMillis() - tic;
         System.out.println( //
             String.format("%3d %s sec", index, RealScalar.of(delta * 1e-3).map(Round._1)));
-        gsw.append(ImageResize.nearest(image, magnify));
+        animationWriter.append(ImageResize.nearest(image, magnify));
       }
     }
   }

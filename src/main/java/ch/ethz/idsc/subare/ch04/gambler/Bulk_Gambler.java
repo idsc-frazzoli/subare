@@ -42,7 +42,7 @@ enum Bulk_Gambler {
         StateActionCounter sac = new DiscreteStateActionCounter();
         EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
         policy.setExplorationRate(LinearExplorationRate.of(100, 0.2, 0.01));
-        Sarsa sarsa = sarsaType.supply(gambler, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa, sac, policy);
+        Sarsa sarsa = sarsaType.sarsa(gambler, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa, sac, policy);
         LearningContender learningContender = LearningContender.sarsa(gambler, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;

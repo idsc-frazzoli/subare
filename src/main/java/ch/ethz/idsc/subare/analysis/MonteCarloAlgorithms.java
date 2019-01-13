@@ -15,10 +15,10 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.io.Timing;
 import ch.ethz.idsc.tensor.red.Mean;
 
 public enum MonteCarloAlgorithms {
@@ -128,16 +128,16 @@ public enum MonteCarloAlgorithms {
   public Tensor analyseNTimes(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, List<DiscreteModelErrorAnalysis> errorAnalysis,
       int nTimes) {
     Tensor nSamples = Tensors.empty();
-    Stopwatch stopwatch = Stopwatch.started();
-    Stopwatch subWatch = Stopwatch.started();
+    Timing timing = Timing.started();
+    Timing subWatch = Timing.started();
     for (int i = 0; i < nTimes; ++i) {
       nSamples.append(analyseAlgorithm(monteCarloInterface, batches, optimalQsa, errorAnalysis));
-      if (subWatch.display_seconds() > 10.0) {
-        System.out.println(this.name() + " has finished trial " + i);
-        subWatch = Stopwatch.started();
+      if (subWatch.seconds() > 10.0) {
+        System.out.println(name() + " has finished trial " + i);
+        subWatch = Timing.started();
       }
     }
-    System.out.println("Time for executing " + this.name() + " " + nTimes + " times with " + batches + " batches: " + stopwatch.display_seconds() + "s");
+    System.out.println("Time for executing " + name() + " " + nTimes + " times with " + batches + " batches: " + timing.seconds() + "s");
     return Mean.of(nSamples);
   }
 

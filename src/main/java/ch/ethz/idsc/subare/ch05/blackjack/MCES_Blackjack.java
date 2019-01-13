@@ -22,7 +22,7 @@ enum MCES_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("blackjack_mces.gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("blackjack_mces.gif"), 250)) {
       int batches = 10; // 40
       Tensor epsilon = Subdivide.of(.2, .05, batches);
       StateActionCounter sac = new DiscreteStateActionCounter();
@@ -34,7 +34,7 @@ enum MCES_Blackjack {
         for (int count = 0; count < batches; ++count) {
           episodes += ExploringStarts.batchWithReplay(blackjack, policy, mces);
         }
-        gsw.append(BlackjackHelper.joinAll(blackjack, mces.qsa()));
+        animationWriter.append(BlackjackHelper.joinAll(blackjack, mces.qsa()));
         System.out.println(episodes);
       }
     }

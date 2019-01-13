@@ -30,7 +30,7 @@ enum Sarsa_Maxbias {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(maxbias, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.7, 0.1));
-    Sarsa sarsa = sarsaType.supply(maxbias, learningRate, qsa, sac, policy);
+    Sarsa sarsa = sarsaType.sarsa(maxbias, learningRate, qsa, sac, policy);
     ActionValueStatistics avs = new ActionValueStatistics(maxbias);
     for (int index = 0; index < batches; ++index) {
       if (batches - 10 < index)

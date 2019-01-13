@@ -17,10 +17,10 @@ import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.util.PlotUtils;
-import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.io.Timing;
 
 public enum MonteCarloAnalysis {
   ;
@@ -44,15 +44,15 @@ public enum MonteCarloAnalysis {
       PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac);
       final SarsaMonteCarloTrial sarsa = SarsaMonteCarloTrial.of(monteCarloInterface, SarsaType.QLEARNING, //
           ConstantLearningRate.of(RealScalar.of(0.05)), qsa, sac, policy, 1);
-      Stopwatch stopwatch = Stopwatch.started();
+      Timing timing = Timing.started();
       for (int index = 0; index < batches * 10; ++index)
         sarsa.executeBatch();
-      System.out.println("Time for optimal QSA approximation: " + stopwatch.display_seconds() + "s");
+      System.out.println("Time for optimal QSA approximation: " + timing.seconds() + "s");
       return sarsa.qsa();
     }
-    Stopwatch stopwatch = Stopwatch.started();
+    Timing timing = Timing.started();
     DiscreteQsa optimalQsa = ActionValueIterations.solve((StandardModel) monteCarloInterface, DecimalScalar.of(.0001));
-    System.out.println("Time for AVI: " + stopwatch.display_seconds() + "s");
+    System.out.println("Time for AVI: " + timing.seconds() + "s");
     return optimalQsa;
   }
 

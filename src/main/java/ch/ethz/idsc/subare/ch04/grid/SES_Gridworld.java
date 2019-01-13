@@ -31,10 +31,10 @@ enum SES_Gridworld {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gridworld, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
-    try (AnimationWriter gsw = AnimationWriter.of( //
+    try (AnimationWriter animationWriter = AnimationWriter.of( //
         HomeDirectory.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
       LearningRate learningRate = DefaultLearningRate.of(5, 1.1);
-      Sarsa sarsa = sarsaType.supply(gridworld, learningRate, qsa, sac, policy);
+      Sarsa sarsa = sarsaType.sarsa(gridworld, learningRate, qsa, sac, policy);
       DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
         @Override
         public Policy batchPolicy(int batch) {
@@ -46,7 +46,7 @@ enum SES_Gridworld {
         exploringStartsStream.nextEpisode();
         if (episode % 5 == 0) {
           Infoline infoline = Infoline.print(gridworld, episode, ref, qsa);
-          gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+          animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
           if (infoline.isLossfree())
             break;
         }

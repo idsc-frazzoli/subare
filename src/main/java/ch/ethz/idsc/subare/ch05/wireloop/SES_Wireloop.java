@@ -30,7 +30,7 @@ enum SES_Wireloop {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(wireloop, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.1, 0.01));
-    Sarsa sarsa = sarsaType.supply(wireloop, DefaultLearningRate.of(7, 1.11), qsa, sac, policy);
+    Sarsa sarsa = sarsaType.sarsa(wireloop, DefaultLearningRate.of(7, 1.11), qsa, sac, policy);
     DequeExploringStarts exploringStartsStream = new DequeExploringStarts(wireloop, nstep, sarsa) {
       @Override
       public Policy batchPolicy(int batch) {
@@ -38,14 +38,14 @@ enum SES_Wireloop {
         return policy;
       }
     };
-    try (AnimationWriter gsw = AnimationWriter.of( //
+    try (AnimationWriter animationWriter = AnimationWriter.of( //
         HomeDirectory.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100)) {
       int index = 0;
       while (exploringStartsStream.batchIndex() < batches) {
         exploringStartsStream.nextEpisode();
         if (index % 50 == 0) {
           Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
-          gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
+          animationWriter.append(WireloopHelper.render(wireloopRaster, ref, qsa));
           if (infoline.isLossfree())
             break;
         }

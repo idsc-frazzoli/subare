@@ -1,4 +1,4 @@
-// code by jph
+// code by fluric, jph
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
@@ -34,32 +34,48 @@ public enum SarsaType {
   // ---
   abstract SarsaEvaluation sarsaEvaluation(DiscreteModel discreteModel);
 
-  // TODO JAN rename function
-  public final Sarsa supply(DiscreteModel discreteModel, LearningRate learningRate, QsaInterface qsa, StateActionCounter sac, PolicyBase policy) {
+  public Sarsa sarsa( //
+      DiscreteModel discreteModel, //
+      LearningRate learningRate, //
+      QsaInterface qsa, //
+      StateActionCounter sac, //
+      PolicyBase policy) {
     return new Sarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate, qsa, sac, policy);
   }
 
-  public final DoubleSarsa doubleSarsa( //
-      DiscreteModel discreteModel, LearningRate learningRate, QsaInterface qsa1, QsaInterface qsa2, StateActionCounter sac1, StateActionCounter sac2,
+  public DoubleSarsa doubleSarsa( //
+      DiscreteModel discreteModel, //
+      LearningRate learningRate, //
+      QsaInterface qsa1, QsaInterface qsa2, //
+      StateActionCounter sac1, StateActionCounter sac2, //
       PolicyBase policy1, PolicyBase policy2) {
     return new DoubleSarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate, qsa1, qsa2, sac1, sac2, policy1, policy2);
   }
 
   /** @param monteCarloInterface
-   * @param lambda in [0, 1] Figure 12.14 in the book suggests that lambda in [0.8, 0.9] tends to be a good choice
-   * @param learningRate
-   * @param featureMapper
-   * @param w */
-  public final TrueOnlineSarsa trueOnline( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, FeatureWeight w, StateActionCounter sac,
+   * @param lambda in [0, 1] Figure 12.14 in the book suggests that lambda in [0.8, 0.9] tends to be a good choice */
+  public TrueOnlineSarsa trueOnline( //
+      MonteCarloInterface monteCarloInterface, //
+      Scalar lambda, //
+      FeatureMapper featureMapper, //
+      LearningRate learningRate, //
+      FeatureWeight w, //
+      StateActionCounter sac, //
       PolicyBase policy) {
     return new TrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate, w, sac, policy);
   }
 
-  public final DoubleTrueOnlineSarsa doubleTrueOnline( //
-      MonteCarloInterface monteCarloInterface, Scalar lambda, FeatureMapper featureMapper, //
-      LearningRate learningRate, FeatureWeight w1, FeatureWeight w2, StateActionCounter sac1, StateActionCounter sac2, PolicyBase policy1, PolicyBase policy2) {
-    return new DoubleTrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate, w1, w2, sac1, sac2,
-        policy1, policy2);
+  public DoubleTrueOnlineSarsa doubleTrueOnline( //
+      MonteCarloInterface monteCarloInterface, //
+      Scalar lambda, //
+      FeatureMapper featureMapper, //
+      LearningRate learningRate, //
+      FeatureWeight w1, FeatureWeight w2, //
+      StateActionCounter sac1, StateActionCounter sac2, //
+      PolicyBase policy1, PolicyBase policy2) {
+    return new DoubleTrueOnlineSarsa( //
+        monteCarloInterface, //
+        sarsaEvaluation(monteCarloInterface), //
+        lambda, featureMapper, learningRate, w1, w2, sac1, sac2, policy1, policy2);
   }
 }

@@ -15,7 +15,9 @@ public enum UnitClip implements ScalarUnaryOperator {
   // ---
   @Override
   public Scalar apply(Scalar scalar) {
-    return NumberQ.of(scalar) ? Clip.unit().apply(scalar) : scalar;
+    return NumberQ.of(scalar) //
+        ? Clip.unit().apply(scalar)
+        : scalar;
   }
 
   @SuppressWarnings("unchecked")

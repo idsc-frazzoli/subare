@@ -29,13 +29,13 @@ enum Sarsa_Wireloop {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(wireloop, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
-    Sarsa sarsa = sarsaType.supply(wireloop, DefaultLearningRate.of(3, 0.51), qsa, sac, policy);
-    try (AnimationWriter gsw = AnimationWriter.of( //
+    Sarsa sarsa = sarsaType.sarsa(wireloop, DefaultLearningRate.of(3, 0.51), qsa, sac, policy);
+    try (AnimationWriter animationWriter = AnimationWriter.of( //
         HomeDirectory.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250)) {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
         ExploringStarts.batch(wireloop, policy, nstep, sarsa);
-        gsw.append(WireloopHelper.render(wireloopRaster, ref, qsa));
+        animationWriter.append(WireloopHelper.render(wireloopRaster, ref, qsa));
         if (infoline.isLossfree())
           break;
       }

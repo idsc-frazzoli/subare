@@ -25,7 +25,7 @@ public class SarsaTest extends TestCase {
       DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
       StateActionCounter sac = new DiscreteStateActionCounter();
       PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac);
-      Sarsa sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa, sac, policy);
+      Sarsa sarsa = sarsaType.sarsa(monteCarloInterface, learningRate, qsa, sac, policy);
       assertFalse(sarsa.sac().isEncountered(StateAction.key(RealScalar.ZERO, RealScalar.ONE)));
       ExploringStarts.batch(monteCarloInterface, policy, 2, sarsa); // nstep > 1 required
       // DiscreteUtils.print(qsa);
@@ -41,7 +41,7 @@ public class SarsaTest extends TestCase {
       LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(.8));
       StateActionCounter sac = new DiscreteStateActionCounter();
       PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac);
-      Sarsa sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa, sac, policy);
+      Sarsa sarsa = sarsaType.sarsa(monteCarloInterface, learningRate, qsa, sac, policy);
       assertFalse(sarsa.sac().isEncountered(StateAction.key(RealScalar.ZERO, RealScalar.ONE)));
       ExploringStarts.batch(monteCarloInterface, policy, 2, sarsa); // nstep > 1 required
       // DiscreteUtils.print(qsa);
@@ -57,7 +57,7 @@ public class SarsaTest extends TestCase {
       DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
       StateActionCounter sac = new DiscreteStateActionCounter();
       PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(monteCarloInterface, qsa, sac);
-      Sarsa sarsa = sarsaType.supply(monteCarloInterface, learningRate, qsa, sac, policy);
+      Sarsa sarsa = sarsaType.sarsa(monteCarloInterface, learningRate, qsa, sac, policy);
       assertFalse(sarsa.sac().isEncountered(StateAction.key(RealScalar.ZERO, RealScalar.ONE)));
       ExploringStarts.batch(monteCarloInterface, policy, 2, sarsa); // nstep > 1 required
       // DiscreteUtils.print(qsa);

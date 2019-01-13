@@ -38,17 +38,17 @@ enum QL_Gambler {
     EGreedyPolicy policyEGreedy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
     policyEGreedy.setExplorationRate(LinearExplorationRate.of(batches, 0.1, 0.01));
     System.out.println(qsa.size());
-    AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_ql.gif"), 100);
-    LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
-    Sarsa stepDigest = SarsaType.QLEARNING.supply(gambler, learningRate, qsa, sac, policyEGreedy);
-    for (int index = 0; index < batches; ++index) {
-      Infoline.print(gambler, index, ref, qsa);
-      for (int count = 0; count < 1; ++count) {
-        ExploringStarts.batch(gambler, policy, 1, stepDigest);
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_ql.gif"), 100)) {
+      LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
+      Sarsa stepDigest = SarsaType.QLEARNING.sarsa(gambler, learningRate, qsa, sac, policyEGreedy);
+      for (int index = 0; index < batches; ++index) {
+        Infoline.print(gambler, index, ref, qsa);
+        for (int count = 0; count < 1; ++count) {
+          ExploringStarts.batch(gambler, policy, 1, stepDigest);
+        }
+        animationWriter.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
       }
-      gsw.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
     }
-    gsw.close();
     DiscreteUtils.print(qsa, Round._2);
     System.out.println("---");
     EpisodeInterface mce = EpisodeKickoff.single(gambler, policy);

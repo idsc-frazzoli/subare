@@ -26,15 +26,15 @@ enum AVI_Cliffwalk {
     Export.of(HomeDirectory.Pictures("cliffwalk_qsa_avi.png"), //
         StateActionRasters.qsa(new CliffwalkRaster(cliffwalk), DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = ActionValueIteration.of(cliffwalk);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("cliffwalk_qsa_avi.gif"), 200)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("cliffwalk_qsa_avi.gif"), 200)) {
       for (int index = 0; index < 20; ++index) {
         Infoline infoline = Infoline.print(cliffwalk, index, ref, avi.qsa());
-        gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
+        animationWriter.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
         avi.step();
         if (infoline.isLossfree())
           break;
       }
-      gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
+      animationWriter.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
     }
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
     DiscreteUtils.print(vs);

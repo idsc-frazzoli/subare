@@ -39,11 +39,11 @@ enum Sarsa_Gridworld {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gridworld, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250)) {
       LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
-      Sarsa sarsa = sarsaType.supply(gridworld, learningRate, qsa, sac, policy);
+      Sarsa sarsa = sarsaType.sarsa(gridworld, learningRate, qsa, sac, policy);
       for (int index = 0; index < batches; ++index) {
-        gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+        animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         Infoline.print(gridworld, index, ref, qsa);
         // sarsa.supplyPolicy(() -> policy);
         ExploringStarts.batch(gridworld, policy, nstep, sarsa);

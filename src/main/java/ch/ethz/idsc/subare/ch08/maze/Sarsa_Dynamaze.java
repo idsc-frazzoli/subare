@@ -32,15 +32,15 @@ enum Sarsa_Dynamaze {
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(dynamaze, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.3, 0.01));
     LearningRate learningRate = DefaultLearningRate.of(15, 0.51);
-    Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa, sac, policy);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200)) {
+    Sarsa sarsa = sarsaType.sarsa(dynamaze, learningRate, qsa, sac, policy);
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {
         // if (EPISODES - 10 < index)
         Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
         // sarsa.supplyPolicy(() -> policy);
         // for (int count = 0; count < 5; ++count)
         ExploringStarts.batch(dynamaze, policy, nstep, sarsa);
-        gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+        animationWriter.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
         if (infoline.isLossfree())
           break;
       }

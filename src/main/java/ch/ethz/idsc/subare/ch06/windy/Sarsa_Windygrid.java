@@ -29,14 +29,14 @@ enum Sarsa_Windygrid {
     LearningRate learningRate = DefaultLearningRate.of(3, 0.51);
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(windygrid, qsa, sac);
-    Sarsa sarsa = sarsaType.supply(windygrid, learningRate, qsa, sac, policy);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100)) {
+    Sarsa sarsa = sarsaType.sarsa(windygrid, learningRate, qsa, sac, policy);
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("windygrid_qsa_" + sarsaType + ".gif"), 100)) {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
         // sarsa.supplyPolicy(() -> policy);
         for (int count = 0; count < 10; ++count) // because there is only 1 start state
           ExploringStarts.batch(windygrid, policy, sarsa);
-        gsw.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
+        animationWriter.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

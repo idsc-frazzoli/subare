@@ -19,17 +19,17 @@ enum AVI_Fishfarm {
     // Export.of(UserHome.Pictures("cliffwalk_qsa_avi.png"), //
     // StateActionRasters.qsa(new CliffwalkRaster(cliffwalk), DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = ActionValueIteration.of(fishfarm);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("fishfarm_qsa_avi.gif"), 200)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("fishfarm_qsa_avi.gif"), 200)) {
       for (int index = 0; index < 20; ++index) {
         Infoline infoline = Infoline.print(fishfarm, index, ref, avi.qsa());
-        gsw.append(StateRasters.qsaLossRef(fishfarmRaster, avi.qsa(), ref));
+        animationWriter.append(StateRasters.qsaLossRef(fishfarmRaster, avi.qsa(), ref));
         avi.step();
         if (infoline.isErrorFree())
           break;
       }
-      gsw.append(StateRasters.qsaLossRef(fishfarmRaster, avi.qsa(), ref));
-      gsw.append(StateRasters.qsaLossRef(fishfarmRaster, avi.qsa(), ref));
-      gsw.append(StateRasters.qsaLossRef(fishfarmRaster, avi.qsa(), ref));
+      animationWriter.append(StateRasters.qsaLossRef(fishfarmRaster, avi.qsa(), ref));
+      animationWriter.append(StateRasters.qsaLossRef(fishfarmRaster, avi.qsa(), ref));
+      animationWriter.append(StateRasters.qsaLossRef(fishfarmRaster, avi.qsa(), ref));
     }
     // DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
     // vs.print();

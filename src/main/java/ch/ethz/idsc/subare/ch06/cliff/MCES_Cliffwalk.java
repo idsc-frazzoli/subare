@@ -22,7 +22,7 @@ enum MCES_Cliffwalk {
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(cliffwalk);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("cliffwalk_qsa_mces.gif"), 100)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("cliffwalk_qsa_mces.gif"), 100)) {
       int batches = 100;
       for (int index = 0; index < batches; ++index) {
         Infoline.print(cliffwalk, index, ref, mces.qsa());
@@ -31,7 +31,7 @@ enum MCES_Cliffwalk {
           PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(cliffwalk, mces.qsa(), sac);
           ExploringStarts.batch(cliffwalk, policy, mces);
         }
-        gsw.append(StateActionRasters.qsaLossRef(cliffwalkRaster, mces.qsa(), ref));
+        animationWriter.append(StateActionRasters.qsaLossRef(cliffwalkRaster, mces.qsa(), ref));
       }
     }
   }

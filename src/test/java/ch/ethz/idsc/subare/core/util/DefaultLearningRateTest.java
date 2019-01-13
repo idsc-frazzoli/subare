@@ -20,7 +20,7 @@ public class DefaultLearningRateTest extends TestCase {
     Gambler gambler = new Gambler(100, RealScalar.of(0.4));
     QsaInterface qsa = DiscreteQsa.build(gambler);
     StateActionCounter sac = new DiscreteStateActionCounter();
-    Sarsa sarsa = SarsaType.ORIGINAL.supply(gambler, learningRate, qsa, sac, PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac));
+    Sarsa sarsa = SarsaType.ORIGINAL.sarsa(gambler, learningRate, qsa, sac, PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac));
     Tensor state = Tensors.vector(1);
     Tensor action = Tensors.vector(0);
     Scalar first = learningRate.alpha(new StepAdapter(state, action, RealScalar.ZERO, state), sarsa.sac());

@@ -17,16 +17,16 @@ enum AVI_Wireloop {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     ActionValueIteration avi = ActionValueIteration.of(wireloop);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "L_avi.gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "L_avi.gif"), 250)) {
       int batches = 50;
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, avi.qsa());
-        gsw.append(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
+        animationWriter.append(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
         avi.step();
         if (infoline.isLossfree())
           break;
       }
-      gsw.append(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
+      animationWriter.append(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
     }
   }
 }

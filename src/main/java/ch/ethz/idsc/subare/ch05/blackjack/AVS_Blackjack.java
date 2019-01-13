@@ -25,7 +25,7 @@ enum AVS_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("blackjack_avs.gif"), 250)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("blackjack_avs.gif"), 250)) {
       int batches = 3; // 40
       Tensor epsilon = Subdivide.of(.2, .05, batches);
       StateActionCounter sac = new DiscreteStateActionCounter();
@@ -40,7 +40,7 @@ enum AVS_Blackjack {
         }
         ActionValueIteration avi = ActionValueIteration.of(blackjack, avs);
         avi.untilBelow(DecimalScalar.of(.0001), 3);
-        gsw.append( //
+        animationWriter.append( //
             Join.of( //
                 BlackjackHelper.joinAll(blackjack, mces.qsa()), //
                 BlackjackHelper.joinAll(blackjack, avi.qsa())));

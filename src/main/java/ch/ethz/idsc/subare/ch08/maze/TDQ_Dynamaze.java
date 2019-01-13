@@ -33,15 +33,15 @@ enum TDQ_Dynamaze {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(dynamaze, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
-    Sarsa sarsa = sarsaType.supply(dynamaze, learningRate, qsa, sac, policy);
+    Sarsa sarsa = sarsaType.sarsa(dynamaze, learningRate, qsa, sac, policy);
     TabularDynaQ tabularDynaQ = new TabularDynaQ(sarsa, 10);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200)) {
       for (int index = 0; index < batches; ++index) {
         // if (EPISODES - 10 < index)
         Infoline.print(dynamaze, index, ref, qsa);
         // for (int count = 0; count < 5; ++count)
         ExploringStarts.batch(dynamaze, policy, tabularDynaQ);
-        gsw.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+        animationWriter.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
       }
     }
   }

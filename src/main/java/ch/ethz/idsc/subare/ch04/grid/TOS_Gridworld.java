@@ -16,11 +16,11 @@ import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
-import ch.ethz.idsc.subare.util.Stopwatch;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
+import ch.ethz.idsc.tensor.io.Timing;
 
 enum TOS_Gridworld {
   ;
@@ -40,8 +40,8 @@ enum TOS_Gridworld {
     // LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.3), false); // the case without warmStart
     TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(gridworld, LAMBDA, mapper, learningRate, w, sac, policy);
     final String name = sarsaType.name().toLowerCase();
-    Stopwatch stopwatch = Stopwatch.started();
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures("gridworld_tos_" + name + ".gif"), 250)) {
+    Timing timing = Timing.started();
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gridworld_tos_" + name + ".gif"), 250)) {
       for (int batch = 0; batch < 100; ++batch) {
         // System.out.println("starting batch " + (index + 1) + " of " + batches);
         policy.setQsa(trueOnlineSarsa.qsaInterface());
@@ -50,16 +50,16 @@ enum TOS_Gridworld {
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
         DiscreteQsa qsa = trueOnlineSarsa.qsa();
         Infoline infoline = Infoline.print(gridworld, batch, ref, qsa);
-        gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+        animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         if (infoline.isLossfree()) {
-          gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
-          gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
-          gsw.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+          animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+          animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+          animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
           break;
         }
       }
     }
-    System.out.println("Time for TrueOnlineSarsa: " + stopwatch.display_seconds() + "s");
+    System.out.println("Time for TrueOnlineSarsa: " + timing.seconds() + "s");
   }
 
   public static void main(String[] args) throws Exception {

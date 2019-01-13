@@ -25,7 +25,7 @@ enum VI_RaceTrack {
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     Policy policy = PolicyType.GREEDY.bestEquiprobable(racetrack, vi.vs(), null);
-    try (AnimationWriter gsw = AnimationWriter.of(HomeDirectory.Pictures(name + ".gif"), 400)) {
+    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + ".gif"), 400)) {
       for (Tensor start : racetrack.statesStart) {
         Tensor image = racetrack.image();
         MonteCarloEpisode mce = new MonteCarloEpisode( //
@@ -43,7 +43,7 @@ enum VI_RaceTrack {
             image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
           }
         }
-        gsw.append(ImageResize.nearest(image, 6));
+        animationWriter.append(ImageResize.nearest(image, 6));
       }
     }
     System.out.println("gif created");

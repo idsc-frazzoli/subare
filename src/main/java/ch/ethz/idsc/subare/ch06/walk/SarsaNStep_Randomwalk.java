@@ -54,7 +54,7 @@ enum SarsaNStep_Randomwalk {
     LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(randomwalk, qsa, sac);
-    Sarsa sarsa = sarsaType.supply(randomwalk, learningRate, qsa, sac, policy);
+    Sarsa sarsa = sarsaType.sarsa(randomwalk, learningRate, qsa, sac, policy);
     Policy policyEqui = EquiprobablePolicy.create(randomwalk);
     for (int count = 0; count < 1000; ++count)
       ExploringStarts.batch(randomwalk, policyEqui, nstep, sarsa);
