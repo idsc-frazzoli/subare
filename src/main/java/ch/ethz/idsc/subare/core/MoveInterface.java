@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.core;
 
 import ch.ethz.idsc.tensor.Tensor;
 
+@FunctionalInterface
 public interface MoveInterface {
   /** the move function is not necessarily deterministic
    * 
