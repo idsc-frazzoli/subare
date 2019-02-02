@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.demo.airport;
 
 import java.util.Arrays;
 
+import ch.ethz.idsc.subare.analysis.BatchesPlotUtils;
 import ch.ethz.idsc.subare.analysis.DiscreteModelErrorAnalysis;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
@@ -21,7 +22,6 @@ import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.subare.util.PlotUtils;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -90,6 +90,6 @@ enum AirportDemo {
     // System.out.println(toSarsa.getW());
     // toSarsa.printValues();
     // toSarsa.printPolicy();
-    PlotUtils.createPlot(Arrays.asList(XYmc, XYsarsa, XYtoSarsa), Arrays.asList("MonteCarlo", "Sarsa", "TrueOnlineSarsa"), "Convergence_Airport");
+    BatchesPlotUtils.createPlot(Arrays.asList(XYmc, XYsarsa, XYtoSarsa), Arrays.asList("MonteCarlo", "Sarsa", "TrueOnlineSarsa"), "Convergence_Airport");
   }
 }

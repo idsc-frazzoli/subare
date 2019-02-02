@@ -29,7 +29,7 @@ public class StateActionMap {
         if (set.add(next))
           filter.append(action);
       }
-      if (filter.length() == 0)
+      if (Tensors.isEmpty(filter))
         throw new RuntimeException("no actions for " + state);
       map.put(state, filter.unmodifiable());
     }

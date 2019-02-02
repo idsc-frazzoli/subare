@@ -9,6 +9,7 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.red.Max;
 
 /* package */ class QLearningSarsaEvaluation implements SarsaEvaluation {
@@ -32,7 +33,7 @@ import ch.ethz.idsc.tensor.red.Max;
     Scalar value = RealScalar.ZERO;
     Tensor actions = Tensor.of(discreteModel.actions(state).stream() //
         .filter(action -> policy1.sac().isEncountered(StateAction.key(state, action))));
-    if (actions.length() == 0)
+    if (Tensors.isEmpty(actions))
       return RealScalar.ZERO;
     Tensor eval = Tensor.of(actions.stream().map(action -> policy1.qsaInterface().value(state, action)));
     FairArgMax fairArgMax = FairArgMax.of(eval);
