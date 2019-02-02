@@ -31,13 +31,13 @@ public class ListPlotBuilder {
   private static final Color COLOR_BACKGROUND_PAINT = Color.WHITE;
   private static final Color COLOR_GRIDLINE_PAINT = Color.LIGHT_GRAY;
   // ---
-  private final XYDataset dataset;
+  private final XYDataset xyDataset;
   private final JFreeChart jFreeChart;
 
-  public ListPlotBuilder(String diagramTitle, String axisLabelX, String axisLabelY, XYDataset dataset) {
-    this.dataset = dataset;
+  public ListPlotBuilder(String diagramTitle, String axisLabelX, String axisLabelY, XYDataset xyDataset) {
+    this.xyDataset = xyDataset;
     jFreeChart = ChartFactory.createXYLineChart( //
-        diagramTitle, axisLabelX, axisLabelY, dataset, PlotOrientation.VERTICAL, false, false, false); //
+        diagramTitle, axisLabelX, axisLabelY, xyDataset, PlotOrientation.VERTICAL, false, false, false); //
     setColors(ColorDataLists._097.cyclic());
     setStroke(new BasicStroke(2.0f));
     jFreeChart.getXYPlot().setRangeGridlinePaint(Color.LIGHT_GRAY);
@@ -56,12 +56,12 @@ public class ListPlotBuilder {
   }
 
   public void setColors(ColorDataIndexed colorDataIndexed) {
-    for (int k = 0; k < dataset.getSeriesCount(); ++k)
+    for (int k = 0; k < xyDataset.getSeriesCount(); ++k)
       jFreeChart.getXYPlot().getRenderer().setSeriesPaint(k, colorDataIndexed.getColor(k));
   }
 
   public void setStroke(Stroke stroke) {
-    for (int k = 0; k < dataset.getSeriesCount(); ++k)
+    for (int k = 0; k < xyDataset.getSeriesCount(); ++k)
       jFreeChart.getXYPlot().getRenderer().setSeriesStroke(k, stroke);
   }
 
