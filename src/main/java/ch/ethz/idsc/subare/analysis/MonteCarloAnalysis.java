@@ -16,7 +16,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.subare.util.PlotUtils;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -32,7 +31,7 @@ public enum MonteCarloAnalysis {
     for (MonteCarloAlgorithms monteCarloAlgorithms : algorithmList)
       algorithmResults.put(monteCarloAlgorithms.name(),
           monteCarloAlgorithms.analyseNTimes(monteCarloInterface, batches, optimalQsa, errorAnalysisList, trials));
-    PlotUtils.createPlot(algorithmResults,
+    BatchesPlotUtils.createPlot(algorithmResults,
         "Convergence_" + monteCarloInterface.getClass().getSimpleName().toString() + "_" + trials + "trials" + "_" + batches + "batches", errorAnalysisList);
   }
 

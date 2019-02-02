@@ -16,7 +16,7 @@ enum StaticHelper {
   static Tensor binaryVectors(int length, Tensor prefixes) {
     if (length == 0)
       return prefixes;
-    if (prefixes.length() == 0)
+    if (Tensors.isEmpty(prefixes))
       return binaryVectors(length - 1, Tensors.of(Tensors.vector(1), Tensors.vector(0)));
     Tensor extension = Tensors.empty();
     for (Tensor prefix : prefixes) {
@@ -27,7 +27,7 @@ enum StaticHelper {
   }
 
   static Tensor zeroVectors(int length, Tensor prefixes) {
-    if (prefixes.length() == 0)
+    if (Tensors.isEmpty(prefixes))
       return Tensors.of(Array.zeros(length));
     return Tensor.of(prefixes.stream().map(v -> Join.of(v, Array.zeros(length))));
   }
