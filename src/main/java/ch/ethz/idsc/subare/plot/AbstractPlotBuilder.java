@@ -1,4 +1,4 @@
-// code by jph, fluric
+// code by jph
 package ch.ethz.idsc.subare.plot;
 
 import java.awt.BasicStroke;
@@ -10,69 +10,18 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartTheme;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.DefaultDrawingSupplier;
 import org.jfree.chart.plot.PieLabelLinkStyle;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.chart.ui.RectangleEdge;
-import org.jfree.data.xy.XYDataset;
 
 import ch.ethz.idsc.tensor.img.ColorDataIndexed;
 import ch.ethz.idsc.tensor.img.ColorDataLists;
 import ch.ethz.idsc.tensor.sca.Clip;
 
-public class ListPlotBuilder {
+public abstract class AbstractPlotBuilder {
   static {
     ChartFactory.setChartTheme(createChartTheme(false));
-  }
-  private static final Color COLOR_BACKGROUND_PAINT = Color.WHITE;
-  private static final Color COLOR_GRIDLINE_PAINT = Color.LIGHT_GRAY;
-  // ---
-  private final XYDataset xyDataset;
-  private final JFreeChart jFreeChart;
-
-  public ListPlotBuilder(String diagramTitle, String axisLabelX, String axisLabelY, XYDataset xyDataset) {
-    this.xyDataset = xyDataset;
-    jFreeChart = ChartFactory.createXYLineChart( //
-        diagramTitle, axisLabelX, axisLabelY, xyDataset, PlotOrientation.VERTICAL, false, false, false); //
-    setColors(ColorDataLists._097.cyclic());
-    setStroke(new BasicStroke(2.0f));
-    jFreeChart.getXYPlot().setRangeGridlinePaint(Color.LIGHT_GRAY);
-    jFreeChart.getXYPlot().setDomainGridlinePaint(Color.LIGHT_GRAY);
-    jFreeChart.getPlot().setBackgroundPaint(COLOR_BACKGROUND_PAINT);
-    jFreeChart.getXYPlot().setRangeGridlinePaint(COLOR_GRIDLINE_PAINT);
-    jFreeChart.getXYPlot().getDomainAxis().setLowerMargin(0.0);
-    jFreeChart.getXYPlot().getDomainAxis().setUpperMargin(0.0);
-    LegendTitle legendTitle = new LegendTitle(jFreeChart.getXYPlot().getRenderer());
-    legendTitle.setPosition(RectangleEdge.TOP);
-    jFreeChart.addLegend(legendTitle);
-  }
-
-  public JFreeChart getJFreeChart() {
-    return jFreeChart;
-  }
-
-  public void setColors(ColorDataIndexed colorDataIndexed) {
-    for (int k = 0; k < xyDataset.getSeriesCount(); ++k)
-      jFreeChart.getXYPlot().getRenderer().setSeriesPaint(k, colorDataIndexed.getColor(k));
-  }
-
-  public void setStroke(Stroke stroke) {
-    for (int k = 0; k < xyDataset.getSeriesCount(); ++k)
-      jFreeChart.getXYPlot().getRenderer().setSeriesStroke(k, stroke);
-  }
-
-  public void setXAxis(Clip clip) {
-    NumberAxis numberAxis = (NumberAxis) jFreeChart.getXYPlot().getDomainAxis();
-    numberAxis.setRange(clip.min().number().doubleValue(), clip.max().number().doubleValue());
-  }
-
-  public void setYAxis(Clip clip) {
-    NumberAxis numberAxis = (NumberAxis) jFreeChart.getXYPlot().getRangeAxis();
-    numberAxis.setRange(clip.min().number().doubleValue(), clip.max().number().doubleValue());
   }
 
   private static ChartTheme createChartTheme(boolean shadow) {
@@ -106,4 +55,47 @@ public class ListPlotBuilder {
     standardChartTheme.setErrorIndicatorPaint(Color.RED);
     return standardChartTheme;
   }
+
+  // ---
+  protected String plotLabel = "";
+  protected String axisLabelX = null;
+  protected String axisLabelY = null;
+  protected ColorDataIndexed colorDataIndexed = ColorDataLists._097.cyclic();
+  protected Stroke stroke = new BasicStroke(1f);
+  protected Clip axisClipX = null;
+  protected Clip axisClipY = null;
+
+  /** Mathematica::PlotLabel
+   * 
+   * @param plotLabel */
+  public final void setPlotLabel(String plotLabel) {
+    this.plotLabel = plotLabel;
+  }
+
+  public final void setAxisLabelX(String axisLabelX) {
+    this.axisLabelX = axisLabelX;
+  }
+
+  public final void setAxisLabelY(String axisLabelY) {
+    this.axisLabelY = axisLabelY;
+  }
+
+  public final void setColors(ColorDataIndexed colorDataIndexed) {
+    this.colorDataIndexed = colorDataIndexed;
+  }
+
+  public final void setStroke(Stroke stroke) {
+    this.stroke = stroke;
+  }
+
+  public final void setAxisClipX(Clip axisClipX) {
+    this.axisClipX = axisClipX;
+  }
+
+  public final void setAxisClipY(Clip axisClipY) {
+    this.axisClipY = axisClipY;
+  }
+
+  /** @return new instance of JFreeChart that can be further configured by the application layer */
+  public abstract JFreeChart jFreeChart();
 }

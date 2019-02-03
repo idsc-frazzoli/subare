@@ -9,7 +9,7 @@ import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYDataset;
 
-import ch.ethz.idsc.subare.plot.ListPlotBuilder;
+import ch.ethz.idsc.subare.plot.ListPlot;
 import ch.ethz.idsc.subare.plot.XYDatasets;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.Tensor;
@@ -72,8 +72,12 @@ public enum BatchesPlotUtils {
     return savePlot(directory, filename, jFreeChart);
   }
 
-  private static JFreeChart create(String diagramTitle, String axisLabelX, String axisLabelY, XYDataset dataset) {
-    return new ListPlotBuilder(diagramTitle, axisLabelX, axisLabelY, dataset).getJFreeChart();
+  private static JFreeChart create(String diagramTitle, String axisLabelX, String axisLabelY, XYDataset xyDataset) {
+    ListPlot listPlot = new ListPlot(xyDataset);
+    listPlot.setPlotLabel(diagramTitle);
+    listPlot.setAxisLabelX(axisLabelX);
+    listPlot.setAxisLabelY(axisLabelY);
+    return listPlot.jFreeChart();
   }
 
   private static File savePlot(File directory, String fileTitle, JFreeChart jFreeChart) throws Exception {
