@@ -15,16 +15,12 @@ import org.jfree.data.category.CategoryDataset;
  * <a href="https://reference.wolfram.com/language/ref/Histogram.html">Histogram</a> */
 public class Histogram extends AbstractPlotBuilder {
   private final CategoryDataset categoryDataset;
+  private boolean isLegended = false;
 
-  /** @param bins vector or tensor containing vectors with the respective histogram values
-   * @param binSize used beforehand to produce bins
-   * @param axisLabelY
-   * @param axisLabelX
-   * @param labels for the respective histogram columns
-   * @return .png image file of the plot
-   * @throws Exception */
   public Histogram(CategoryDataset categoryDataset) {
     this.categoryDataset = categoryDataset;
+    for (int index = 0; index < categoryDataset.getRowCount(); ++index)
+      isLegended |= !categoryDataset.getRowKey(index).toString().isEmpty();
   }
 
   @Override
@@ -32,7 +28,7 @@ public class Histogram extends AbstractPlotBuilder {
     JFreeChart jFreeChart = ChartFactory.createBarChart( //
         plotLabel, axisLabelX, axisLabelY, categoryDataset, //
         PlotOrientation.VERTICAL, //
-        true, // legend
+        isLegended, // legend
         false, // tooltips
         false); // urls
     jFreeChart.getCategoryPlot().getDomainAxis().setLowerMargin(0.0);
@@ -47,12 +43,12 @@ public class Histogram extends AbstractPlotBuilder {
     BarRenderer barRenderer = new BarRenderer();
     barRenderer.setDrawBarOutline(true);
     jFreeChart.getCategoryPlot().setRenderer(barRenderer);
-    for (int i = 0; i < categoryDataset.getRowCount(); ++i) {
-      jFreeChart.getCategoryPlot().getRenderer().setSeriesPaint(i, colorDataIndexed.getColor(i));
-      jFreeChart.getCategoryPlot().getRenderer().setSeriesOutlinePaint(i, colorDataIndexed.getColor(i).darker());
+    for (int index = 0; index < categoryDataset.getRowCount(); ++index) {
+      jFreeChart.getCategoryPlot().getRenderer().setSeriesPaint(index, colorDataIndexed.getColor(index));
+      jFreeChart.getCategoryPlot().getRenderer().setSeriesOutlinePaint(index, colorDataIndexed.getColor(index).darker());
     }
-    for (int i = 0; i < categoryDataset.getRowCount(); ++i)
-      jFreeChart.getCategoryPlot().getRenderer().setSeriesOutlineStroke(i, stroke);
+    for (int index = 0; index < categoryDataset.getRowCount(); ++index)
+      jFreeChart.getCategoryPlot().getRenderer().setSeriesOutlineStroke(index, stroke);
     return jFreeChart;
   }
 }

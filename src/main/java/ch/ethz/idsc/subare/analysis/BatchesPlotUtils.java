@@ -7,10 +7,9 @@ import java.util.Map;
 
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
-import org.jfree.data.xy.XYDataset;
 
 import ch.ethz.idsc.subare.plot.ListPlot;
-import ch.ethz.idsc.subare.plot.XYDatasets;
+import ch.ethz.idsc.subare.plot.XYSeriesList;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
@@ -31,10 +30,10 @@ public enum BatchesPlotUtils {
    * @param XYs
    * @param names */
   public static void createPlot(List<Tensor> XYs, List<String> names, String path) {
-    XYDataset xyDataset = XYDatasets.create(XYs, names);
+    XYSeriesList xySeriesList = StaticHelper.create(XYs, names);
     // return a new chart containing the overlaid plot...
     try {
-      plot(path, path, "Number batches", "Error", xyDataset, directory());
+      plot(path, path, "Number batches", "Error", xySeriesList, directory());
     } catch (Exception e) {
       System.err.println();
       e.printStackTrace();
@@ -43,11 +42,11 @@ public enum BatchesPlotUtils {
 
   public static void createPlot(Map<String, Tensor> map, String path, List<DiscreteModelErrorAnalysis> errorAnalysisList) {
     for (int index = 0; index < errorAnalysisList.size(); ++index) {
-      XYDataset xyDataset = XYDatasets.create(map, index);
+      XYSeriesList xySeriesList = StaticHelper.create(map, index);
       // return a new chart containing the overlaid plot...
       String subPath = path + "_" + errorAnalysisList.get(index).name().toLowerCase();
       try {
-        plot(subPath, subPath, "Number batches", "Error", xyDataset, directory());
+        plot(subPath, subPath, "Number batches", "Error", xySeriesList, directory());
       } catch (Exception e) {
         System.err.println();
         e.printStackTrace();
@@ -56,10 +55,10 @@ public enum BatchesPlotUtils {
   }
 
   public static void createPlot(Map<String, Tensor> map, String path) {
-    XYDataset xyDataset = XYDatasets.create(map);
+    XYSeriesList xySeriesList = StaticHelper.create(map);
     // return a new chart containing the overlaid plot...
     try {
-      plot(path, path, "Number batches", "Error", xyDataset, directory());
+      plot(path, path, "Number batches", "Error", xySeriesList, directory());
     } catch (Exception e) {
       System.err.println();
       e.printStackTrace();
@@ -67,13 +66,13 @@ public enum BatchesPlotUtils {
   }
 
   private static File plot( //
-      String filename, String diagramTitle, String axisLabelX, String axisLabelY, XYDataset dataset, File directory) throws Exception {
-    JFreeChart jFreeChart = create(diagramTitle, axisLabelX, axisLabelY, dataset);
+      String filename, String diagramTitle, String axisLabelX, String axisLabelY, XYSeriesList xySeriesList, File directory) throws Exception {
+    JFreeChart jFreeChart = create(diagramTitle, axisLabelX, axisLabelY, xySeriesList);
     return savePlot(directory, filename, jFreeChart);
   }
 
-  private static JFreeChart create(String diagramTitle, String axisLabelX, String axisLabelY, XYDataset xyDataset) {
-    ListPlot listPlot = new ListPlot(xyDataset);
+  private static JFreeChart create(String diagramTitle, String axisLabelX, String axisLabelY, XYSeriesList xySeriesList) {
+    ListPlot listPlot = new ListPlot(xySeriesList);
     listPlot.setPlotLabel(diagramTitle);
     listPlot.setAxisLabelX(axisLabelX);
     listPlot.setAxisLabelY(axisLabelY);
