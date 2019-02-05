@@ -57,7 +57,7 @@ public abstract class AbstractPlotBuilder {
   }
 
   // ---
-  protected String plotLabel = "";
+  protected String plotLabel = null;
   protected String axisLabelX = null;
   protected String axisLabelY = null;
   protected ColorDataIndexed colorDataIndexed = ColorDataLists._097.cyclic();
@@ -72,10 +72,16 @@ public abstract class AbstractPlotBuilder {
     this.plotLabel = plotLabel;
   }
 
+  /** Mathematica::AxesLabel
+   * 
+   * @param axisLabelX */
   public final void setAxisLabelX(String axisLabelX) {
     this.axisLabelX = axisLabelX;
   }
 
+  /** Mathematica::AxesLabel
+   * 
+   * @param axisLabelX */
   public final void setAxisLabelY(String axisLabelY) {
     this.axisLabelY = axisLabelY;
   }
