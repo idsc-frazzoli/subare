@@ -23,7 +23,8 @@ public class VisualRowTest extends TestCase {
 
   public void testFailNull() {
     try {
-      new VisualSet(null);
+      VisualSet visualSet = new VisualSet(null);
+      visualSet.setAxesLabelX("");
       fail();
     } catch (Exception exception) {
       // ---

@@ -17,7 +17,7 @@ import ch.ethz.idsc.tensor.img.ColorDataLists;
 
 public class VisualSet {
   static {
-    ChartFactory.setChartTheme(ChartTheme.STANDARD);
+    ChartFactory.setChartTheme(DefaultChartTheme.STANDARD);
     // BarRenderer.setDefaultBarPainter(new StandardBarPainter());
     // BarRenderer.setDefaultShadowsVisible(false);
   }
