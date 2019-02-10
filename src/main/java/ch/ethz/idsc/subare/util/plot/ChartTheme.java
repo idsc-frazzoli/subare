@@ -1,5 +1,5 @@
 /* amodeus - Copyright (c) 2018, ETH Zurich, Institute for Dynamic Systems and Control */
-package ch.ethz.idsc.subare.plot;
+package ch.ethz.idsc.subare.util.plot;
 
 import java.awt.Color;
 import java.awt.Font;

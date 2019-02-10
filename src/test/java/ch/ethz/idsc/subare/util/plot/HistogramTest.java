@@ -1,11 +1,11 @@
 /* amodeus - Copyright (c) 2019, ETH Zurich, Institute for Dynamic Systems and Control */
-package ch.ethz.idsc.subare.plot;
+package ch.ethz.idsc.subare.util.plot;
 
 import junit.framework.TestCase;
 
-public class ListPlotTest extends TestCase {
-  public void testSimple() {
+public class HistogramTest extends TestCase {
+  public void testEmpty() {
     VisualSet visualSet = new VisualSet();
-    ListPlot.of(visualSet);
+    Histogram.of(visualSet);
   }
 }

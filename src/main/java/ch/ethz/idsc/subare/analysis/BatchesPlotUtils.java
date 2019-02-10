@@ -8,9 +8,9 @@ import java.util.Map;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 
-import ch.ethz.idsc.subare.plot.ListPlot;
-import ch.ethz.idsc.subare.plot.VisualSet;
 import ch.ethz.idsc.subare.util.GlobalAssert;
+import ch.ethz.idsc.subare.util.plot.ListPlot;
+import ch.ethz.idsc.subare.util.plot.VisualSet;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 

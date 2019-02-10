@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import ch.ethz.idsc.subare.plot.VisualRow;
-import ch.ethz.idsc.subare.plot.VisualSet;
+import ch.ethz.idsc.subare.util.plot.VisualRow;
+import ch.ethz.idsc.subare.util.plot.VisualSet;
 import ch.ethz.idsc.tensor.Tensor;
 
 /* package */ enum StaticHelper {

@@ -1,5 +1,5 @@
 /* amodeus - Copyright (c) 2019, ETH Zurich, Institute for Dynamic Systems and Control */
-package ch.ethz.idsc.subare.plot;
+package ch.ethz.idsc.subare.util.plot;
 
 import java.util.ArrayList;
 import java.util.Collections;
