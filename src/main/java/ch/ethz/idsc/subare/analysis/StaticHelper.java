@@ -6,38 +6,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jfree.data.xy.XYSeries;
-
-import ch.ethz.idsc.subare.plot.XYSeriesList;
+import ch.ethz.idsc.subare.plot.VisualRow;
+import ch.ethz.idsc.subare.plot.VisualSet;
 import ch.ethz.idsc.tensor.Tensor;
 
 /* package */ enum StaticHelper {
   ;
-  public static XYSeriesList create(String string, Tensor xy) {
+  public static VisualSet create(String string, Tensor xy) {
     return create(Collections.singletonMap(string, xy));
   }
 
-  public static XYSeriesList create(Map<String, Tensor> map) {
+  public static VisualSet create(Map<String, Tensor> map) {
     return create(map, 0);
   }
 
-  public static XYSeriesList create(Map<String, Tensor> map, int index) {
-    XYSeriesList xySeriesList = new XYSeriesList();
+  public static VisualSet create(Map<String, Tensor> map, int index) {
+    VisualSet visualSet = new VisualSet();
     for (Entry<String, Tensor> entry : map.entrySet()) {
-      XYSeries xySeries = xySeriesList.add(entry.getValue());
-      xySeries.setKey(entry.getKey());
+      VisualRow visualRow = visualSet.add(entry.getValue());
+      visualRow.setLabel(entry.getKey());
     }
-    return xySeriesList;
+    return visualSet;
   }
 
-  public static XYSeriesList create(List<Tensor> list, List<String> names) {
+  public static VisualSet create(List<Tensor> list, List<String> names) {
     if (list.size() != names.size())
       throw new RuntimeException();
-    XYSeriesList xySeriesList = new XYSeriesList();
+    VisualSet visualSet = new VisualSet();
     for (int i = 0; i < names.size(); ++i) {
-      XYSeries xySeries = xySeriesList.add(list.get(i));
-      xySeries.setKey(names.get(i));
+      VisualRow visualRow = visualSet.add(list.get(i));
+      visualRow.setLabel(names.get(i));
     }
-    return xySeriesList;
+    return visualSet;
   }
 }

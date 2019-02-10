@@ -3,9 +3,9 @@ package ch.ethz.idsc.subare.plot;
 
 import junit.framework.TestCase;
 
-public class ListPlotTest extends TestCase {
-  public void testSimple() {
+public class StackedHistogramTest extends TestCase {
+  public void testEmpty() {
     VisualSet visualSet = new VisualSet();
-    ListPlot.of(visualSet);
+    StackedHistogram.of(visualSet);
   }
 }

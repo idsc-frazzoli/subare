@@ -9,7 +9,7 @@ import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 
 import ch.ethz.idsc.subare.plot.ListPlot;
-import ch.ethz.idsc.subare.plot.XYSeriesList;
+import ch.ethz.idsc.subare.plot.VisualSet;
 import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
@@ -30,7 +30,7 @@ public enum BatchesPlotUtils {
    * @param XYs
    * @param names */
   public static void createPlot(List<Tensor> XYs, List<String> names, String path) {
-    XYSeriesList xySeriesList = StaticHelper.create(XYs, names);
+    VisualSet xySeriesList = StaticHelper.create(XYs, names);
     // return a new chart containing the overlaid plot...
     try {
       plot(path, path, "Number batches", "Error", xySeriesList, directory());
@@ -42,7 +42,7 @@ public enum BatchesPlotUtils {
 
   public static void createPlot(Map<String, Tensor> map, String path, List<DiscreteModelErrorAnalysis> errorAnalysisList) {
     for (int index = 0; index < errorAnalysisList.size(); ++index) {
-      XYSeriesList xySeriesList = StaticHelper.create(map, index);
+      VisualSet xySeriesList = StaticHelper.create(map, index);
       // return a new chart containing the overlaid plot...
       String subPath = path + "_" + errorAnalysisList.get(index).name().toLowerCase();
       try {
@@ -55,7 +55,7 @@ public enum BatchesPlotUtils {
   }
 
   public static void createPlot(Map<String, Tensor> map, String path) {
-    XYSeriesList xySeriesList = StaticHelper.create(map);
+    VisualSet xySeriesList = StaticHelper.create(map);
     // return a new chart containing the overlaid plot...
     try {
       plot(path, path, "Number batches", "Error", xySeriesList, directory());
@@ -66,17 +66,20 @@ public enum BatchesPlotUtils {
   }
 
   private static File plot( //
-      String filename, String diagramTitle, String axisLabelX, String axisLabelY, XYSeriesList xySeriesList, File directory) throws Exception {
+      String filename, String diagramTitle, String axisLabelX, String axisLabelY, VisualSet xySeriesList, File directory) throws Exception {
     JFreeChart jFreeChart = create(diagramTitle, axisLabelX, axisLabelY, xySeriesList);
     return savePlot(directory, filename, jFreeChart);
   }
 
-  private static JFreeChart create(String diagramTitle, String axisLabelX, String axisLabelY, XYSeriesList xySeriesList) {
-    ListPlot listPlot = new ListPlot(xySeriesList);
-    listPlot.setPlotLabel(diagramTitle);
-    listPlot.setAxisLabelX(axisLabelX);
-    listPlot.setAxisLabelY(axisLabelY);
-    return listPlot.jFreeChart();
+  private static JFreeChart create(String diagramTitle, String axisLabelX, String axisLabelY, VisualSet visualSet) {
+    visualSet.setPlotLabel(diagramTitle);
+    visualSet.setDomainAxisLabel(axisLabelX);
+    visualSet.setRangeAxisLabel(axisLabelY);
+    // ListPlot listPlot = new ListPlot(xySeriesList);
+    // listPlot.setPlotLabel();
+    // listPlot.setAxisLabelX(axisLabelX);
+    // listPlot.setAxisLabelY(axisLabelY);
+    return ListPlot.of(visualSet);
   }
 
   private static File savePlot(File directory, String fileTitle, JFreeChart jFreeChart) throws Exception {
