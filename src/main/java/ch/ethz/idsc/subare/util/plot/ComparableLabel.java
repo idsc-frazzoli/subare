@@ -1,5 +1,5 @@
-// code by jph
-package ch.ethz.idsc.subare.plot;
+/* amodeus - Copyright (c) 2019, ETH Zurich, Institute for Dynamic Systems and Control */
+package ch.ethz.idsc.subare.util.plot;
 
 import java.util.Objects;
 
@@ -14,7 +14,7 @@ import java.util.Objects;
   }
 
   @Override
-  public final int compareTo(ComparableLabel comparableLabel) {
+  public int compareTo(ComparableLabel comparableLabel) {
     return Integer.compare(index, comparableLabel.index);
   }
 
