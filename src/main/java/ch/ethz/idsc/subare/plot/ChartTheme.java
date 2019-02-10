@@ -11,18 +11,23 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 
 /* package */ class ChartTheme {
+  private static final Color TRANSPARENT = new Color(0, 0, 0, 0);
+
   private static StandardChartTheme getChartTheme(StandardChartTheme standardChartTheme) {
     standardChartTheme.setExtraLargeFont(new Font(Font.DIALOG, Font.BOLD, 24));
     standardChartTheme.setLargeFont(new Font(Font.DIALOG, Font.PLAIN, 18));
     standardChartTheme.setRegularFont(new Font(Font.DIALOG, Font.PLAIN, 14));
     standardChartTheme.setSmallFont(new Font(Font.DIALOG, Font.PLAIN, 10));
+    // ---
+    standardChartTheme.setChartBackgroundPaint(TRANSPARENT);
+    standardChartTheme.setPlotBackgroundPaint(TRANSPARENT);
+    standardChartTheme.setLegendBackgroundPaint(TRANSPARENT);
+    // ---
     standardChartTheme.setTitlePaint(Color.BLACK);
     standardChartTheme.setSubtitlePaint(Color.BLACK);
-    standardChartTheme.setLegendBackgroundPaint(Color.WHITE);
     standardChartTheme.setLegendItemPaint(Color.BLACK);
-    standardChartTheme.setChartBackgroundPaint(Color.WHITE);
+    // ---
     standardChartTheme.setDrawingSupplier(new DefaultDrawingSupplier());
-    standardChartTheme.setPlotBackgroundPaint(Color.WHITE);
     standardChartTheme.setPlotOutlinePaint(Color.BLACK);
     standardChartTheme.setLabelLinkStyle(PieLabelLinkStyle.STANDARD);
     standardChartTheme.setDomainGridlinePaint(Color.LIGHT_GRAY);

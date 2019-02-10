@@ -16,8 +16,8 @@ public enum ListPlot {
     XYSeriesCollection xySeriesCollection = StaticHelper.xySeriesCollection(visualSet);
     JFreeChart jFreeChart = ChartFactory.createXYLineChart( //
         visualSet.getPlotLabel(), //
-        visualSet.getDomainAxisLabel(), //
-        visualSet.getRangeAxisLabel(), //
+        visualSet.getAxesLabelX(), //
+        visualSet.getAxesLabelY(), //
         xySeriesCollection, PlotOrientation.VERTICAL, //
         visualSet.hasLegend(), // legend
         false, // tooltips

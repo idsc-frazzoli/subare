@@ -30,10 +30,10 @@ public enum BatchesPlotUtils {
    * @param XYs
    * @param names */
   public static void createPlot(List<Tensor> XYs, List<String> names, String path) {
-    VisualSet xySeriesList = StaticHelper.create(XYs, names);
+    VisualSet visualSet = StaticHelper.create(XYs, names);
     // return a new chart containing the overlaid plot...
     try {
-      plot(path, path, "Number batches", "Error", xySeriesList, directory());
+      plot(path, path, "Number batches", "Error", visualSet, directory());
     } catch (Exception e) {
       System.err.println();
       e.printStackTrace();
@@ -42,11 +42,11 @@ public enum BatchesPlotUtils {
 
   public static void createPlot(Map<String, Tensor> map, String path, List<DiscreteModelErrorAnalysis> errorAnalysisList) {
     for (int index = 0; index < errorAnalysisList.size(); ++index) {
-      VisualSet xySeriesList = StaticHelper.create(map, index);
+      VisualSet visualSet = StaticHelper.create(map, index);
       // return a new chart containing the overlaid plot...
       String subPath = path + "_" + errorAnalysisList.get(index).name().toLowerCase();
       try {
-        plot(subPath, subPath, "Number batches", "Error", xySeriesList, directory());
+        plot(subPath, subPath, "Number batches", "Error", visualSet, directory());
       } catch (Exception e) {
         System.err.println();
         e.printStackTrace();
@@ -55,10 +55,9 @@ public enum BatchesPlotUtils {
   }
 
   public static void createPlot(Map<String, Tensor> map, String path) {
-    VisualSet xySeriesList = StaticHelper.create(map);
-    // return a new chart containing the overlaid plot...
+    VisualSet visualSet = StaticHelper.create(map);
     try {
-      plot(path, path, "Number batches", "Error", xySeriesList, directory());
+      plot(path, path, "Number batches", "Error", visualSet, directory());
     } catch (Exception e) {
       System.err.println();
       e.printStackTrace();
@@ -66,27 +65,23 @@ public enum BatchesPlotUtils {
   }
 
   private static File plot( //
-      String filename, String diagramTitle, String axisLabelX, String axisLabelY, VisualSet xySeriesList, File directory) throws Exception {
-    JFreeChart jFreeChart = create(diagramTitle, axisLabelX, axisLabelY, xySeriesList);
+      String filename, //
+      String diagramTitle, //
+      String axisLabelX, //
+      String axisLabelY, //
+      VisualSet visualSet, File directory) throws Exception {
+    visualSet.setPlotLabel(diagramTitle);
+    visualSet.setAxesLabelX(axisLabelX);
+    visualSet.setAxesLabelY(axisLabelY);
+    JFreeChart jFreeChart = ListPlot.of(visualSet);
     return savePlot(directory, filename, jFreeChart);
   }
 
-  private static JFreeChart create(String diagramTitle, String axisLabelX, String axisLabelY, VisualSet visualSet) {
-    visualSet.setPlotLabel(diagramTitle);
-    visualSet.setDomainAxisLabel(axisLabelX);
-    visualSet.setRangeAxisLabel(axisLabelY);
-    // ListPlot listPlot = new ListPlot(xySeriesList);
-    // listPlot.setPlotLabel();
-    // listPlot.setAxisLabelX(axisLabelX);
-    // listPlot.setAxisLabelY(axisLabelY);
-    return ListPlot.of(visualSet);
-  }
-
   private static File savePlot(File directory, String fileTitle, JFreeChart jFreeChart) throws Exception {
-    File fileChart = new File(directory, fileTitle + ".png");
-    ChartUtils.saveChartAsPNG(fileChart, jFreeChart, WIDTH, HEIGHT);
-    GlobalAssert.that(fileChart.isFile());
+    File file = new File(directory, fileTitle + ".png");
+    ChartUtils.saveChartAsPNG(file, jFreeChart, WIDTH, HEIGHT);
+    GlobalAssert.that(file.isFile());
     System.out.println("Exported " + fileTitle + ".png to " + directory);
-    return fileChart;
+    return file;
   }
 }

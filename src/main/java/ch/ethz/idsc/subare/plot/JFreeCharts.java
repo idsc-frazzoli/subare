@@ -19,8 +19,8 @@ import ch.ethz.idsc.tensor.Scalar;
   public static JFreeChart barChart(VisualSet visualSet, boolean stacked, Function<Scalar, String> naming) {
     JFreeChart jFreeChart = ChartFactory.createBarChart( //
         visualSet.getPlotLabel(), //
-        visualSet.getDomainAxisLabel(), //
-        visualSet.getRangeAxisLabel(), //
+        visualSet.getAxesLabelX(), //
+        visualSet.getAxesLabelY(), //
         StaticHelper.defaultCategoryDataset(visualSet, naming), //
         PlotOrientation.VERTICAL, visualSet.hasLegend(), true, false);
     BarRenderer barRenderer = stacked //
@@ -36,14 +36,14 @@ import ch.ethz.idsc.tensor.Scalar;
     JFreeChart jFreeChart = stacked //
         ? ChartFactory.createStackedXYAreaChart( //
             visualSet.getPlotLabel(), //
-            visualSet.getDomainAxisLabel(), //
-            visualSet.getRangeAxisLabel(), //
+            visualSet.getAxesLabelX(), //
+            visualSet.getAxesLabelY(), //
             tableXYDataset, //
             PlotOrientation.VERTICAL, visualSet.hasLegend(), true, false)
         : ChartFactory.createXYLineChart( //
             visualSet.getPlotLabel(), //
-            visualSet.getDomainAxisLabel(), //
-            visualSet.getRangeAxisLabel(), //
+            visualSet.getAxesLabelX(), //
+            visualSet.getAxesLabelY(), //
             tableXYDataset, //
             PlotOrientation.VERTICAL, visualSet.hasLegend(), true, false);
     formatLines(visualSet, (AbstractXYItemRenderer) jFreeChart.getXYPlot().getRenderer());

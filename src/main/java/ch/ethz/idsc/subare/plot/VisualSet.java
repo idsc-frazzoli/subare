@@ -25,8 +25,8 @@ public class VisualSet {
   private final List<VisualRow> visualRows = new ArrayList<>();
   private final ColorDataIndexed colorDataIndexed;
   private String plotLabel = "";
-  private String domainAxisLabel = "";
-  private String rangeAxisLabel = "";
+  private String axesLabelX = "";
+  private String axesLabelY = "";
 
   public VisualSet(ColorDataIndexed colorDataIndexed) {
     this.colorDataIndexed = Objects.requireNonNull(colorDataIndexed);
@@ -66,13 +66,13 @@ public class VisualSet {
     return plotLabel;
   }
 
-  public String getDomainAxisLabel() {
-    return domainAxisLabel;
+  public String getAxesLabelX() {
+    return axesLabelX;
   }
 
   /** @return name of codomain/target set */
-  public String getRangeAxisLabel() {
-    return rangeAxisLabel;
+  public String getAxesLabelY() {
+    return axesLabelY;
   }
 
   public boolean hasLegend() {
@@ -85,12 +85,12 @@ public class VisualSet {
     plotLabel = string;
   }
 
-  public void setDomainAxisLabel(String string) {
-    domainAxisLabel = string;
+  public void setAxesLabelX(String string) {
+    axesLabelX = string;
   }
 
-  public void setRangeAxisLabel(String string) {
-    rangeAxisLabel = string;
+  public void setAxesLabelY(String string) {
+    axesLabelY = string;
   }
   // TODO is there a way to make better use of similarity?
 }

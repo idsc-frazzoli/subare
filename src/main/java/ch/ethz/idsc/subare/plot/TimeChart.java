@@ -15,7 +15,7 @@ public enum TimeChart {
   public static JFreeChart of(VisualSet visualSet, boolean stacked) {
     JFreeChart jFreeChart = JFreeCharts.fromXYTable(visualSet, stacked, StaticHelper.timeTableXYDataset(visualSet));
     DateAxis domainAxis = new DateAxis();
-    domainAxis.setLabel(visualSet.getDomainAxisLabel());
+    domainAxis.setLabel(visualSet.getAxesLabelX());
     domainAxis.setTickUnit(new DateTickUnit(DateTickUnitType.SECOND, 1));
     domainAxis.setAutoTickUnitSelection(true);
     jFreeChart.getXYPlot().setDomainAxis(domainAxis);
