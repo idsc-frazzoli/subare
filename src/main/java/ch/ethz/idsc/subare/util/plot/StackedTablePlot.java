@@ -8,6 +8,6 @@ public enum StackedTablePlot {
   /** @param visualSet
    * @return */
   public static JFreeChart of(VisualSet visualSet) {
-    return JFreeCharts.fromXYTable(visualSet, true, StaticHelper.categoryTableXYDataset(visualSet));
+    return JFreeChartFactory.fromXYTable(visualSet, true, DatasetFactory.categoryTableXYDataset(visualSet));
   }
 }

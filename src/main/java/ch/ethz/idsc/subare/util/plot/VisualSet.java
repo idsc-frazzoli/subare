@@ -10,8 +10,8 @@ import org.jfree.chart.ChartFactory;
 
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.alg.MatrixQ;
 import ch.ethz.idsc.tensor.alg.Transpose;
+import ch.ethz.idsc.tensor.alg.VectorQ;
 import ch.ethz.idsc.tensor.img.ColorDataIndexed;
 import ch.ethz.idsc.tensor.img.ColorDataLists;
 
@@ -37,11 +37,14 @@ public class VisualSet {
     this(ColorDataLists._097.cyclic());
   }
 
-  /** @param points of the form {{x1, y1}, {x2, y2}, ..., {xn, yn}}
-   * @return */
+  /** @param points of the form {{x1, y1}, {x2, y2}, ..., {xn, yn}}.
+   * The special case when points == {} is also allowed.
+   * @return instance of the visual row, that was added to this visual set
+   * @throws Exception if given points is not of the right form */
   public VisualRow add(Tensor points) {
     final int index = visualRows.size();
-    VisualRow visualRow = new VisualRow(MatrixQ.require(points), index);
+    points.stream().forEach(row -> VectorQ.requireLength(row, 2));
+    VisualRow visualRow = new VisualRow(points, index);
     visualRow.setColor(colorDataIndexed.getColor(index));
     visualRows.add(visualRow);
     return visualRow;

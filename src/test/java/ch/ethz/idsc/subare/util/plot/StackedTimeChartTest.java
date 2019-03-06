@@ -1,18 +1,18 @@
-/* amodeus - Copyright (c) 2019, ETH Zurich, Institute for Dynamic Systems and Control */
+// code by jph
 package ch.ethz.idsc.subare.util.plot;
 
 import ch.ethz.idsc.tensor.Tensors;
 import junit.framework.TestCase;
 
-public class StackedHistogramTest extends TestCase {
+public class StackedTimeChartTest extends TestCase {
   public void testEmpty() {
     VisualSet visualSet = new VisualSet();
-    TestHelper.draw(StackedHistogram.of(visualSet));
+    TestHelper.draw(StackedTimeChart.of(visualSet));
   }
 
   public void testEmptyRow() {
     VisualSet visualSet = new VisualSet();
     visualSet.add(Tensors.empty());
-    TestHelper.draw(StackedHistogram.of(visualSet));
+    TestHelper.draw(StackedTimeChart.of(visualSet));
   }
 }

@@ -1,4 +1,4 @@
-/* amodeus - Copyright (c) 2019, ETH Zurich, Institute for Dynamic Systems and Control */
+// code by jph
 package ch.ethz.idsc.subare.util.plot;
 
 import java.io.File;

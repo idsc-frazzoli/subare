@@ -15,7 +15,7 @@ public enum ListPlot {
   /** @param visualSet
    * @return */
   public static JFreeChart of(VisualSet visualSet) {
-    XYSeriesCollection xySeriesCollection = StaticHelper.xySeriesCollection(visualSet);
+    XYSeriesCollection xySeriesCollection = DatasetFactory.xySeriesCollection(visualSet);
     JFreeChart jFreeChart = ChartFactory.createXYLineChart( //
         visualSet.getPlotLabel(), //
         visualSet.getAxesLabelX(), //

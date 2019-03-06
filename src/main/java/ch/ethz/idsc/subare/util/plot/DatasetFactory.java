@@ -17,7 +17,9 @@ import org.jfree.data.xy.XYSeriesCollection;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/* package */ enum StaticHelper {
+/** functionality to convert {@link VisualSet} to a dataset
+ * for the instantiation of a JFreeChart object */
+/* package */ enum DatasetFactory {
   ;
   /** Quote from the JFreeChart javadoc: "[XYSeries] represents a sequence of zero
    * or more data items in the form (x, y). By default, items in the series will be
