@@ -67,4 +67,26 @@ public class VisualSetTest extends TestCase {
       // ---
     }
   }
+
+  public void testFailUnstructured() {
+    VisualSet visualSet = new VisualSet();
+    try {
+      visualSet.add(Tensors.fromString("{{1,2},{3,4},{5,6},{3}}"));
+      fail();
+    } catch (Exception exception) {
+      // ---
+    }
+    try {
+      visualSet.add(Tensors.fromString("{{1,2},{3,4},{5,6},4}"));
+      fail();
+    } catch (Exception exception) {
+      // ---
+    }
+    try {
+      visualSet.add(Tensors.fromString("{{1,2,3},{3,4,2},{5,6,3},{3,5,3}}"));
+      fail();
+    } catch (Exception exception) {
+      // ---
+    }
+  }
 }

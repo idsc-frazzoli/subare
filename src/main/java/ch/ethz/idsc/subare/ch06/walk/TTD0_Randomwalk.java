@@ -13,7 +13,7 @@ import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.LinearApproximationVs;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** tabular temporal difference (0) to learn value of states
@@ -43,6 +43,6 @@ enum TTD0_Randomwalk {
     some(randomwalk, DiscreteVs.build(randomwalk.states()));
     int order = 2;
     some(randomwalk, //
-        LinearApproximationVs.create(PolynomialBasis.create(order, Clip.function(0, 6)), Array.zeros(order)));
+        LinearApproximationVs.create(PolynomialBasis.create(order, Clips.interval(0, 6)), Array.zeros(order)));
   }
 }

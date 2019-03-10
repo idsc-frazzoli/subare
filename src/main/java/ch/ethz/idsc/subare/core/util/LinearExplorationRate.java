@@ -6,7 +6,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 import ch.ethz.idsc.tensor.sca.Sign;
 
 /** using formula: epsilon = Max(minimum, maximum-(maximum-minimum)*N/decayInterval)
@@ -27,8 +27,8 @@ public class LinearExplorationRate implements ExplorationRate {
 
   private LinearExplorationRate(Scalar decayInterval, Scalar maximum, Scalar minimum) {
     this.decayInterval = Sign.requirePositive(decayInterval);
-    this.minimum = Clip.unit().requireInside(minimum);
-    this.maximum = Clip.unit().requireInside(maximum);
+    this.minimum = Clips.unit().requireInside(minimum);
+    this.maximum = Clips.unit().requireInside(maximum);
     Sign.requirePositiveOrZero(maximum.subtract(minimum));
   }
 

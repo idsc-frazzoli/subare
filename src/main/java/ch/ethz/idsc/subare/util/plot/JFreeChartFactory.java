@@ -14,14 +14,15 @@ import org.jfree.data.xy.TableXYDataset;
 
 import ch.ethz.idsc.tensor.Scalar;
 
-/* package */ enum JFreeCharts {
+/** functionality to create an instance of a JFreeChart from a {@link VisualSet} */
+/* package */ enum JFreeChartFactory {
   ;
   public static JFreeChart barChart(VisualSet visualSet, boolean stacked, Function<Scalar, String> naming) {
     JFreeChart jFreeChart = ChartFactory.createBarChart( //
         visualSet.getPlotLabel(), //
         visualSet.getAxesLabelX(), //
         visualSet.getAxesLabelY(), //
-        StaticHelper.defaultCategoryDataset(visualSet, naming), //
+        DatasetFactory.defaultCategoryDataset(visualSet, naming), //
         PlotOrientation.VERTICAL, visualSet.hasLegend(), true, false);
     BarRenderer barRenderer = stacked //
         ? new StackedBarRenderer()

@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.util.Objects;
 
+import ch.ethz.idsc.tensor.ScalarQ;
 import ch.ethz.idsc.tensor.Tensor;
 
 public class VisualRow {
@@ -18,9 +19,10 @@ public class VisualRow {
 
   /** Mathematica::ListPlot[points]
    * 
-   * @param points of the form {{x1, y1}, {x2, y2}, ..., {xn, yn}}
-   * @return */
+   * @param points of the form {{x1, y1}, {x2, y2}, ..., {xn, yn}}.
+   * The special case when points == {} is also allowed. */
   VisualRow(Tensor points, int index) {
+    ScalarQ.thenThrow(points);
     this.points = points;
     this.comparableLabel = new ComparableLabel(index);
   }

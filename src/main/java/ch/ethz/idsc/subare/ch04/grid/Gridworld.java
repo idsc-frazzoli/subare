@@ -10,13 +10,14 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 /** Example 4.1, p.76 */
 public class Gridworld extends DeterministicStandardModel implements MonteCarloInterface {
   private static final Scalar NEGATIVE_ONE = RealScalar.ONE.negate();
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
-  private static final Clip CLIP = Clip.function(0, 3);
+  private static final Clip CLIP = Clips.interval(0, 3);
   final int NX = 4;
   final int NY = 4;
   // ---

@@ -1,6 +1,7 @@
 /* amodeus - Copyright (c) 2019, ETH Zurich, Institute for Dynamic Systems and Control */
 package ch.ethz.idsc.subare.util.plot;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,7 +15,7 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.pdf.UniformDistribution;
 
-enum SkewPlotDemo {
+/* package */ enum Demo {
   ;
   static void demoPlots(File folder, boolean labels) throws IOException {
     folder.mkdirs();
@@ -39,44 +40,38 @@ enum SkewPlotDemo {
     // ChartFactory.setChartTheme(ChartTheme.STANDARD);
     {
       visualSet.setPlotLabel(StackedHistogram.class.getSimpleName());
-      JFreeChart jFreeChart = StackedHistogram.of(visualSet);
-      File file = new File(folder, StackedHistogram.class.getSimpleName() + ".png");
-      ChartUtils.saveChartAsPNG(file, jFreeChart, 500, 300);
+      export(folder, StackedHistogram.of(visualSet));
     }
     {
       visualSet.setPlotLabel(Histogram.class.getSimpleName());
-      JFreeChart jFreeChart = Histogram.of(visualSet);
-      File file = new File(folder, Histogram.class.getSimpleName() + ".png");
-      ChartUtils.saveChartAsPNG(file, jFreeChart, 500, 300);
+      export(folder, Histogram.of(visualSet));
     }
     {
       visualSet.setPlotLabel(TimeChart.class.getSimpleName());
-      JFreeChart jFreeChart = TimeChart.of(visualSet);
-      File file = new File(folder, TimeChart.class.getSimpleName() + ".png");
-      ChartUtils.saveChartAsPNG(file, jFreeChart, 500, 300);
+      export(folder, TimeChart.of(visualSet));
     }
     {
       visualSet.setPlotLabel(StackedTimeChart.class.getSimpleName());
-      JFreeChart jFreeChart = StackedTimeChart.of(visualSet);
-      File file = new File(folder, StackedTimeChart.class.getSimpleName() + ".png");
-      ChartUtils.saveChartAsPNG(file, jFreeChart, 500, 300);
+      export(folder, StackedTimeChart.of(visualSet));
     }
     {
       visualSet.setPlotLabel(ListPlot.class.getSimpleName());
-      JFreeChart jFreeChart = ListPlot.of(visualSet);
-      File file = new File(folder, ListPlot.class.getSimpleName() + ".png");
-      ChartUtils.saveChartAsPNG(file, jFreeChart, 500, 300);
+      export(folder, ListPlot.of(visualSet));
     }
     {
       visualSet.setPlotLabel(StackedTablePlot.class.getSimpleName());
-      JFreeChart jFreeChart = StackedTablePlot.of(visualSet);
-      File file = new File(folder, StackedTablePlot.class.getSimpleName() + ".png");
-      ChartUtils.saveChartAsPNG(file, jFreeChart, 500, 300);
+      export(folder, StackedTablePlot.of(visualSet));
     }
   }
 
+  private static void export(File folder, JFreeChart jFreeChart) throws IOException {
+    File file = new File(folder, jFreeChart.getTitle().getText() + ".png");
+    jFreeChart.setBackgroundPaint(Color.WHITE);
+    ChartUtils.saveChartAsPNG(file, jFreeChart, 500, 300);
+  }
+
   public static void main(String[] args) throws IOException {
-    demoPlots(HomeDirectory.Pictures("subare", "2"), false);
-    demoPlots(HomeDirectory.Pictures("subare", "3"), true);
+    demoPlots(HomeDirectory.Pictures("subare", "labels_0"), false);
+    demoPlots(HomeDirectory.Pictures("subare", "labels_1"), true);
   }
 }

@@ -10,6 +10,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 import junit.framework.TestCase;
 
 public class AirportTest extends TestCase {
@@ -29,7 +30,7 @@ public class AirportTest extends TestCase {
     Tensor actions = airport.actions(state);
     assertEquals(actions.length(), 12);
     int probes = 3000;
-    Clip clip = Clip.function(-2, 2);
+    Clip clip = Clips.interval(-2, 2);
     for (Tensor action : actions) {
       Tensor next = airport.move(state, action);
       assertEquals(next.get(0), RealScalar.of(2));

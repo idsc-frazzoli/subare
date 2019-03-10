@@ -13,6 +13,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 import ch.ethz.idsc.tensor.sca.Round;
 
 class Fishfarm extends DeterministicStandardModel implements MonteCarloInterface {
@@ -26,7 +27,7 @@ class Fishfarm extends DeterministicStandardModel implements MonteCarloInterface
     this.period = period;
     this.max_fish = max_fish;
     TERMINAL_LIMIT = RealScalar.of(max_fish * 0.9);
-    clip = Clip.function(1, max_fish);
+    clip = Clips.interval(1, max_fish);
     states = Flatten.of(Array.of(Tensors::vector, period + 1, max_fish + 1), 1).unmodifiable();
     // states.append(Tensors.vector(0));
     // states.append(Tensors.vector(period, 1));

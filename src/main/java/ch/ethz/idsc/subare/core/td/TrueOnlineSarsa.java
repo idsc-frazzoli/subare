@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Times;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 /** implementation of box "True Online Sarsa(lambda) for estimating w'x approx. q_pi or q_*
  * 
@@ -57,7 +57,7 @@ public class TrueOnlineSarsa implements TrueOnlineInterface, StateActionCounterS
     this.featureMapper = featureMapper;
     this.w = w;
     this.policy = policy;
-    gamma_lambda = Times.of(gamma, Clip.unit().requireInside(lambda));
+    gamma_lambda = Times.of(gamma, Clips.unit().requireInside(lambda));
     featureSize = featureMapper.featureSize();
     resetEligibility();
   }

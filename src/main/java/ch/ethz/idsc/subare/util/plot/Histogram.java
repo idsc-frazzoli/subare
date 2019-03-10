@@ -18,10 +18,10 @@ public enum Histogram {
   }
 
   /* package */ static JFreeChart of(VisualSet visualSet, boolean stacked) {
-    return JFreeCharts.barChart(visualSet, stacked, Scalar::toString);
+    return JFreeChartFactory.barChart(visualSet, stacked, Scalar::toString);
   }
 
   public static JFreeChart of(VisualSet visualSet, Function<Scalar, String> naming) {
-    return JFreeCharts.barChart(visualSet, false, naming);
+    return JFreeChartFactory.barChart(visualSet, false, naming);
   }
 }

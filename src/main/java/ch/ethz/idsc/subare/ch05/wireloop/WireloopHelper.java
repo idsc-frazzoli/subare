@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.io.ResourceData;
 import ch.ethz.idsc.tensor.opt.TensorScalarFunction;
 import ch.ethz.idsc.tensor.sca.Chop;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 public enum WireloopHelper {
   ;
@@ -57,7 +57,7 @@ public enum WireloopHelper {
     DiscreteVs loss = Loss.perState(wireloopRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().stream() //
         .map(tensor -> tensor.multiply(wireloopRaster.scaleLoss())) //
-        .map(Clip.unit()::of));
+        .map(Clips.unit()::of));
     Tensor image2 = StateRasters.vs(wireloopRaster, loss);
     Tensor image3 = renderActions((Wireloop) wireloopRaster.discreteModel(), qsa);
     List<Integer> dimensions = Dimensions.of(image1);

@@ -18,6 +18,7 @@ import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Times;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 import ch.ethz.idsc.tensor.sca.Sign;
 
 /** Example 4.2: Jack's Car Rental
@@ -55,7 +56,7 @@ class CarRental implements StandardModel, SampleModel {
 
   public CarRental(int maxCars) {
     this.maxCars = maxCars;
-    CLIP = Clip.function(0, maxCars);
+    CLIP = Clips.interval(0, maxCars);
     states = Flatten.of(Array.of(Tensors::vector, maxCars + 1, maxCars + 1), 1).unmodifiable();
   }
 

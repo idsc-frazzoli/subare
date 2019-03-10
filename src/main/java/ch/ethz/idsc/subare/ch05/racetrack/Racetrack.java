@@ -22,6 +22,7 @@ import ch.ethz.idsc.tensor.alg.Transpose;
 import ch.ethz.idsc.tensor.opt.Interpolation;
 import ch.ethz.idsc.tensor.opt.NearestInterpolation;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 import ch.ethz.idsc.tensor.sca.Decrement;
 
 /** Exercise 5.8 p.111: Racetrack (programming)
@@ -67,8 +68,8 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     interpolation = NearestInterpolation.of(Transpose.of(image.get(Tensor.ALL, Tensor.ALL, 2)));
     List<Integer> list = Dimensions.of(image);
     dimensions = Tensors.vector(list.get(1), list.get(0)).map(Decrement.ONE);
-    clipPositionY = Clip.function(RealScalar.ZERO, dimensions.Get(1));
-    clipSpeed = Clip.function(0, maxSpeed);
+    clipPositionY = Clips.interval(RealScalar.ZERO, dimensions.Get(1));
+    clipSpeed = Clips.interval(0, maxSpeed);
     for (int y = 0; y < list.get(0); ++y)
       for (int x = 0; x < list.get(1); ++x) {
         final Tensor rgba = image.get(y, x).unmodifiable();
