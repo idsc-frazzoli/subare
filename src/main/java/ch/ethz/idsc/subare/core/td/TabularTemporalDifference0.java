@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 /** Tabular TD(0) for estimating value of policy
  * using eq (6.2) on p.95
@@ -31,7 +31,7 @@ public class TabularTemporalDifference0 implements StepDigest {
   public TabularTemporalDifference0( //
       VsInterface vs, Scalar gamma, LearningRate learningRate, StateActionCounter sac) {
     this.vs = vs;
-    this.gamma = Clip.unit().requireInside(gamma);
+    this.gamma = Clips.unit().requireInside(gamma);
     this.learningRate = learningRate;
     this.sac = sac;
   }

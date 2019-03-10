@@ -5,7 +5,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.alg.Series;
 import ch.ethz.idsc.tensor.opt.TensorScalarFunction;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 /** provides different implementation for adding the discounted rewards:
  * in case gamma == 1, the rewards are simply added, else the horner scheme is used */
@@ -16,7 +16,7 @@ public interface DiscountFunction extends TensorScalarFunction {
   static DiscountFunction of(Scalar gamma) {
     if (gamma.equals(RealScalar.ONE))
       return StaticHelper.TOTAL;
-    Clip.unit().requireInside(gamma);
+    Clips.unit().requireInside(gamma);
     return rewards -> Series.of(rewards).apply(gamma);
   }
 }

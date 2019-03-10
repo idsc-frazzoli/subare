@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Mean;
 import ch.ethz.idsc.tensor.red.Times;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCounterSupplier {
   private final Coinflip coinflip = Coinflip.fair();
@@ -64,7 +64,7 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCo
     this.policy2 = policy2;
     this.gamma = monteCarloInterface.gamma();
     this.featureMapper = featureMapper;
-    gamma_lambda = Times.of(gamma, Clip.unit().requireInside(lambda));
+    gamma_lambda = Times.of(gamma, Clips.unit().requireInside(lambda));
     this.w1 = w1;
     this.w2 = w2;
     resetEligibility();

@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.img.ArrayPlot;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 public enum StateRasters {
   ;
@@ -77,7 +77,7 @@ public enum StateRasters {
     DiscreteVs loss = Loss.perState(stateRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().stream() //
         .map(tensor -> tensor.multiply(stateRaster.scaleLoss())) //
-        .map(Clip.unit()::of));
+        .map(Clips.unit()::of));
     Tensor image2 = _render(stateRaster, loss);
     Tensor image3 = _vs(stateRaster, DiscreteValueFunctions.logisticDifference(qsa, ref, stateRaster.scaleQdelta()));
     List<Integer> list = Dimensions.of(image1);

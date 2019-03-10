@@ -11,6 +11,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 /** Example 3.8 p.64: Gridworld
  * 
@@ -20,7 +21,7 @@ class Gridworld extends DeterministicStandardModel implements MonteCarloInterfac
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'
   private static final Tensor WARP2_ANTE = Tensors.vector(0, 3); // B
   private static final Tensor WARP2_POST = Tensors.vector(2, 3); // B'
-  private static final Clip CLIP = Clip.function(0, 4);
+  private static final Clip CLIP = Clips.interval(0, 4);
   // ---
   private final Tensor states = Flatten.of(Array.of(Tensors::vector, 5, 5), 1).unmodifiable();
   final Tensor actions = Tensors.matrix(new Number[][] { //

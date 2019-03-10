@@ -5,13 +5,13 @@ import java.util.Random;
 
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 public class Coinflip {
   /** @param p_head
    * @return new instance of Coinflip with given probability p_head that tossHead() returns true */
   public static Coinflip of(Scalar p_head) {
-    return new Coinflip(Clip.unit().requireInside(p_head));
+    return new Coinflip(Clips.unit().requireInside(p_head));
   }
 
   /** Quote from Wikipedia:

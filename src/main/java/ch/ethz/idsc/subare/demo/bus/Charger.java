@@ -13,6 +13,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 import ch.ethz.idsc.tensor.sca.Increment;
 
 class Charger extends DeterministicStandardModel implements TerminalInterface {
@@ -25,7 +26,7 @@ class Charger extends DeterministicStandardModel implements TerminalInterface {
   public Charger(TripProfile tripProfile, int capacity) {
     this.tripProfile = tripProfile;
     states = Flatten.of(Array.of(Tensors::vector, tripProfile.length(), capacity), 1).unmodifiable();
-    clipCapacity = Clip.function(0, capacity - 1);
+    clipCapacity = Clips.interval(0, capacity - 1);
     dimension = new Dimension(tripProfile.length(), capacity);
   }
 

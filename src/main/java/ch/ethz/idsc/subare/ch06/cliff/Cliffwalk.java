@@ -13,6 +13,7 @@ import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.qty.Boole;
 import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 import ch.ethz.idsc.tensor.sca.Sign;
 
 /** Example 6.6 p. 132, cliff walking */
@@ -46,8 +47,8 @@ public class Cliffwalk extends DeterministicStandardModel implements MonteCarloI
     MY = NY - 1;
     START = Tensors.vector(0, MY).unmodifiable();
     GOAL = Tensors.vector(MX, MY).unmodifiable();
-    CLIP_X = Clip.function(0, MX);
-    CLIP_Y = Clip.function(0, MY);
+    CLIP_X = Clips.interval(0, MX);
+    CLIP_Y = Clips.interval(0, MY);
     Tensor pre = Tensors.empty();
     for (Tensor coord : Flatten.of(Array.of(Tensors::vector, NX, NY), 1))
       if (!isCliff(coord))

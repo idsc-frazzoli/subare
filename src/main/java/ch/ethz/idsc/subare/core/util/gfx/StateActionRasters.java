@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
-import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 // TODO all non-terminal function should be package visibility
 public enum StateActionRasters {
@@ -106,7 +106,7 @@ public enum StateActionRasters {
     DiscreteQsa loss = Loss.asQsa(stateActionRaster.discreteModel(), ref, qsa);
     loss = loss.create(loss.values().stream() //
         .map(tensor -> tensor.multiply(stateActionRaster.scaleLoss())) //
-        .map(Clip.unit()::of));
+        .map(Clips.unit()::of));
     Tensor image2 = _render(stateActionRaster, loss);
     Tensor image3 = _render(stateActionRaster, DiscreteValueFunctions.logisticDifference(qsa, ref));
     List<Integer> list = Dimensions.of(image1);

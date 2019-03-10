@@ -11,6 +11,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
 import ch.ethz.idsc.tensor.sca.Clip;
+import ch.ethz.idsc.tensor.sca.Clips;
 
 /** Example 6.5 p.130: Windy Gridworld
  * 
@@ -22,8 +23,8 @@ public class Windygrid extends DeterministicStandardModel implements MonteCarloI
   static final Tensor START = Tensors.vector(0, 3);
   static final Tensor GOAL = Tensors.vector(7, 3).unmodifiable();
   private static final Tensor WIND = Tensors.vector(0, 0, 0, 1, 1, 1, 2, 2, 1, 0).negate();
-  private static final Clip CLIP_X = Clip.function(0, 9);
-  private static final Clip CLIP_Y = Clip.function(0, 6);
+  private static final Clip CLIP_X = Clips.interval(0, 9);
+  private static final Clip CLIP_Y = Clips.interval(0, 6);
   // ---
   private final Tensor states = Flatten.of(Array.of(Tensors::vector, NX, NY), 1).unmodifiable();
   final Tensor actions;
