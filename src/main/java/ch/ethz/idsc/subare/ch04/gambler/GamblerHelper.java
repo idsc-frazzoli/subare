@@ -17,7 +17,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.sca.Round;
 
-enum GamblerHelper {
+/* package */ enum GamblerHelper {
   ;
   static DiscreteQsa getOptimalQsa(Gambler gambler) {
     return ActionValueIterations.solve(gambler, DecimalScalar.of(.0001));

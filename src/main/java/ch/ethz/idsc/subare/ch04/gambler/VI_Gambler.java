@@ -22,7 +22,7 @@ import ch.ethz.idsc.tensor.sca.N;
  * all other optimal actions
  * 
  * chapter 4, example 3 */
-enum VI_Gambler {
+/* package */ enum VI_Gambler {
   ;
   public static void main(String[] args) {
     Gambler gambler = Gambler.createDefault();

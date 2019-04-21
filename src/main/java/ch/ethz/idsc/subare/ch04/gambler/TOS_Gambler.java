@@ -22,7 +22,7 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Timing;
 
-enum TOS_Gambler {
+/* package */ enum TOS_Gambler {
   ;
   private static final Scalar LAMBDA = RealScalar.of(0.3);
 

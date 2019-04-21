@@ -21,7 +21,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 
 /** Sarsa applied to gambler for different learning rate parameters */
-enum Bulk_Gambler {
+/* package */ enum Bulk_Gambler {
   ;
   static void handle(SarsaType sarsaType, int nstep) throws Exception {
     Gambler gambler = new Gambler(20, RationalScalar.of(4, 10)); // 20, 4/10

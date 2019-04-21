@@ -16,7 +16,7 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.sca.Round;
 
-enum MCES_Gambler {
+/* package */ enum MCES_Gambler {
   ;
   public static void main(String[] args) throws Exception {
     Gambler gambler = Gambler.createDefault();

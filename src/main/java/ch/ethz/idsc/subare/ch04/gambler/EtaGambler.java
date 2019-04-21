@@ -17,7 +17,7 @@ import ch.ethz.idsc.tensor.red.VectorTotal;
 import ch.ethz.idsc.tensor.sca.Increment;
 import ch.ethz.idsc.tensor.sca.Sign;
 
-enum EtaGambler {
+/* package */ enum EtaGambler {
   ;
   public static void main(String[] args) {
     Gambler gambler = new Gambler(10, RationalScalar.of(4, 10));

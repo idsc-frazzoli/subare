@@ -14,7 +14,8 @@ import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
-class Gambler_Ex4_04 {
+/* package */ enum Gambler_Ex4_04 {
+  ;
   public static void main(String[] args) throws IOException {
     Gambler gambler = Gambler.createDefault();
     ValueIteration vi = new ValueIteration(gambler, gambler);

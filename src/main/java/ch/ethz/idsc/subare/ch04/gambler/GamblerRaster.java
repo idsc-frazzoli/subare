@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-class GamblerRaster implements StateActionRaster {
+/* package */ class GamblerRaster implements StateActionRaster {
   private final Gambler gambler;
   private final int offset;
 

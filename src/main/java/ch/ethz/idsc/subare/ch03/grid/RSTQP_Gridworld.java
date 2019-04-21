@@ -9,7 +9,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.tensor.DecimalScalar;
 
-enum RSTQP_Gridworld {
+/* package */ enum RSTQP_Gridworld {
   ;
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
