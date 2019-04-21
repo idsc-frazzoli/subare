@@ -9,7 +9,8 @@ import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
-class AllPairsExport {
+/* package */ enum AllPairsExport {
+  ;
   public static void main(String[] args) throws IOException {
     // List<Supplier<Agent>> list = AgentSupplier.getOptimists(.01, .8, 30);
     // List<Supplier<Agent>> list = AgentSupplier.getUCBs(0, 6, 30);

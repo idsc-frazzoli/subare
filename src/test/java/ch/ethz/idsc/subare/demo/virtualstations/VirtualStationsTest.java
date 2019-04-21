@@ -12,26 +12,26 @@ public class VirtualStationsTest extends TestCase {
   // each state the time interval followed by the NVnodes many virtual node informations
   // per time interval there are 2^NVnodes many different states (the end state is an additional interval)
   public void testStateSize() {
-    VirtualStations vs = new VirtualStations();
-    vs.states().forEach(v -> assertEquals(v.length(), vs.getNVnodes() + 1));
-    assertEquals(vs.states().length(), (int) ((vs.getTimeIntervals() + 1) * Math.pow(2, vs.getNVnodes())));
+    VirtualStations virtualStations = new VirtualStations();
+    virtualStations.states().forEach(v -> assertEquals(v.length(), virtualStations.getNVnodes() + 1));
+    assertEquals(virtualStations.states().length(), (int) ((virtualStations.getTimeIntervals() + 1) * Math.pow(2, virtualStations.getNVnodes())));
   }
 
   // startStates all contain the lowest inveral number 0
   public void testStartState() {
-    VirtualStations vs = new VirtualStations();
-    Tensor startStates = vs.startStates();
+    VirtualStations virtualStations = new VirtualStations();
+    Tensor startStates = virtualStations.startStates();
     startStates.forEach(v -> assertEquals(v.Get(0), RealScalar.ZERO));
   }
 
   public void testActions() {
-    VirtualStations vs = new VirtualStations();
-    for (Tensor state : vs.states()) {
-      Tensor actions = vs.actions(state);
-      if (vs.isTerminal(state)) {
+    VirtualStations virtualStations = new VirtualStations();
+    for (Tensor state : virtualStations.states()) {
+      Tensor actions = virtualStations.actions(state);
+      if (virtualStations.isTerminal(state)) {
         assertEquals(actions.length(), 1);
       } else {
-        Scalar expected = Power.of(RealScalar.of(2), Total.of(state.extract(1, state.length())).Get().multiply(RealScalar.of(vs.getNVnodes() - 1)));
+        Scalar expected = Power.of(RealScalar.of(2), Total.of(state.extract(1, state.length())).Get().multiply(RealScalar.of(virtualStations.getNVnodes() - 1)));
         Scalar actual = RealScalar.of(actions.length());
         assertEquals(expected, actual);
       }
@@ -39,9 +39,9 @@ public class VirtualStationsTest extends TestCase {
   }
 
   public void testTerminalStates() {
-    VirtualStations vs = new VirtualStations();
-    for (Tensor state : vs.states()) {
-      assertEquals(vs.isTerminal(state), state.Get(0).equals(RealScalar.of(vs.getTimeIntervals())));
+    VirtualStations virtualStations = new VirtualStations();
+    for (Tensor state : virtualStations.states()) {
+      assertEquals(virtualStations.isTerminal(state), state.Get(0).equals(RealScalar.of(virtualStations.getTimeIntervals())));
     }
   }
 }

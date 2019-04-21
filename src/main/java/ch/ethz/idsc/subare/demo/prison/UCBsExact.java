@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
-class UCBsExact extends AbstractExact {
+/* package */ class UCBsExact extends AbstractExact {
   public UCBsExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
     super(sup1, sup2, epochs);
     // ---

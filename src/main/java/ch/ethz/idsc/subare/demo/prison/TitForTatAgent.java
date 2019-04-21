@@ -6,7 +6,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
-class TitForTatAgent extends Agent {
+/* package */ class TitForTatAgent extends Agent {
   private int nextAction = 1;
 
   @Override

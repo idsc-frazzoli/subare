@@ -109,13 +109,10 @@ public class VirtualStations implements MonteCarloInterface {
       return Tensors.of(Tensors.of(RealScalar.ZERO));
     // ---
     Tensor prefix = Tensors.empty();
-    for (int i = 0; i < NVNODES; ++i) {
-      if (Sign.isPositive(state.Get(i + 1))) {
-        prefix = StaticHelper.binaryVectors(NVNODES - 1, prefix);
-      } else {
-        prefix = StaticHelper.zeroVectors(NVNODES - 1, prefix);
-      }
-    }
+    for (int i = 0; i < NVNODES; ++i)
+      prefix = Sign.isPositive(state.Get(i + 1)) //
+          ? StaticHelper.binaryVectors(NVNODES - 1, prefix)
+          : StaticHelper.zeroVectors(NVNODES - 1, prefix);
     return prefix;
   }
 

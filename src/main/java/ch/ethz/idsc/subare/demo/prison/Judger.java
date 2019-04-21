@@ -6,10 +6,10 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.sca.Chop;
 
-class Judger {
-  final Tensor reward;
-  final Agent a1;
-  final Agent a2;
+/* package */ class Judger {
+  private final Tensor reward;
+  private final Agent a1;
+  private final Agent a2;
 
   Judger(Tensor r1, Agent a1, Agent a2) {
     this.reward = r1;

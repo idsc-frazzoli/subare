@@ -11,10 +11,10 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 
 abstract class AbstractExact {
-  final Supplier<Agent> sup1;
-  final Supplier<Agent> sup2;
-  final int epochs;
-  Tensor expected = Array.zeros(2);
+  private final Supplier<Agent> sup1;
+  private final Supplier<Agent> sup2;
+  private final int epochs;
+  private Tensor expected = Array.zeros(2);
 
   public AbstractExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
     this.sup1 = sup1;

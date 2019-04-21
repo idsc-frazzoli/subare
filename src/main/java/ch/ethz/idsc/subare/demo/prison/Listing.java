@@ -7,7 +7,8 @@ import java.util.function.Supplier;
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.tensor.Tensor;
 
-class Listing {
+/* package */ enum Listing {
+  ;
   public static void main(String[] args) {
     List<Supplier<Agent>> list = AgentSupplier.mixed;
     Tensor matrix = AllPairs.performance(list, 20, 100);
