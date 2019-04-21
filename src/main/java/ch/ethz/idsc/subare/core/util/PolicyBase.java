@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.tensor.Tensor;
 
+// TODO define interface that extends "Policy, QsaInterfaceSupplier, StateActionCounterSupplier"
 public abstract class PolicyBase implements Policy, QsaInterfaceSupplier, StateActionCounterSupplier {
   protected final DiscreteModel discreteModel;
   // ---
@@ -52,5 +53,5 @@ public abstract class PolicyBase implements Policy, QsaInterfaceSupplier, StateA
    * @return vector of actions that are equally optimal */
   public abstract Tensor getBestActions(Tensor state);
 
-  public abstract PolicyBase copyOf(PolicyBase policyBase);
+  public abstract PolicyBase copy();
 }

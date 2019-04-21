@@ -41,11 +41,18 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, St
   private final LearningRate learningRate;
   private final PolicyBase policy;
 
-  /** @param discreteModel
-   * @param qsa
+  /** @param sarsaEvaluation
+   * @param discreteModel
    * @param learningRate
-   * @param sarsaEvaluation */
-  public Sarsa(SarsaEvaluation sarsaEvaluation, DiscreteModel discreteModel, LearningRate learningRate, QsaInterface qsa, StateActionCounter sac,
+   * @param qsa
+   * @param sac
+   * @param policy */
+  public Sarsa( //
+      SarsaEvaluation sarsaEvaluation, //
+      DiscreteModel discreteModel, //
+      LearningRate learningRate, //
+      QsaInterface qsa, //
+      StateActionCounter sac, //
       PolicyBase policy) {
     this.sarsaEvaluation = sarsaEvaluation;
     discountFunction = DiscountFunction.of(discreteModel.gamma());

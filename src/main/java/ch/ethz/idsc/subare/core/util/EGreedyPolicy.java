@@ -7,7 +7,6 @@ import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.FairArgMax;
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -76,11 +75,10 @@ public class EGreedyPolicy extends PolicyBase {
     return epsilon.divide(RealScalar.of(nonOptimalCount));
   }
 
-  @Override
-  public PolicyBase copyOf(PolicyBase policyBase) {
-    GlobalAssert.that(policyBase instanceof EGreedyPolicy);
-    EGreedyPolicy newPolicy = new EGreedyPolicy(policyBase.discreteModel, policyBase.qsa, policyBase.sac);
-    newPolicy.setExplorationRate(((EGreedyPolicy) policyBase).explorationRate);
-    return newPolicy;
+  @Override // from PolicyBase
+  public EGreedyPolicy copy() {
+    EGreedyPolicy eGreedyPolicy = new EGreedyPolicy(discreteModel, qsa, sac);
+    eGreedyPolicy.setExplorationRate(explorationRate);
+    return eGreedyPolicy;
   }
 }

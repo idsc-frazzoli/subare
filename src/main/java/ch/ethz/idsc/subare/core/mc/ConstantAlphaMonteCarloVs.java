@@ -42,7 +42,7 @@ public class ConstantAlphaMonteCarloVs implements EpisodeVsEstimator {
     this.sac = sac;
   }
 
-  @Override
+  @Override // from EpisodeDigest
   public void digest(EpisodeInterface episodeInterface) {
     Tensor rewards = Tensors.empty();
     List<StepInterface> trajectory = new ArrayList<>();
@@ -64,7 +64,7 @@ public class ConstantAlphaMonteCarloVs implements EpisodeVsEstimator {
     }
   }
 
-  @Override
+  @Override // from DiscreteVsSupplier
   public DiscreteVs vs() {
     return (DiscreteVs) vs;
   }

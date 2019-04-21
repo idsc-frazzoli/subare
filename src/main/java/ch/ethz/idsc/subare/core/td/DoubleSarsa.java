@@ -80,7 +80,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
 
   /** @return policy with respect to (qsa1 + qsa2) / 2 and sac1+sac2 */
   public PolicyBase getPolicy() {
-    PolicyBase copy = policy1.copyOf(policy1);
+    PolicyBase copy = policy1.copy();
     copy.setQsa(DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2));
     copy.setSac(StateActionCounterUtil.getSummedSac(sac1, sac2, discreteModel));
     return copy;

@@ -26,7 +26,7 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
     super(standardModel, vs, sac);
   }
 
-  @Override
+  @Override // from PolicyBase
   public Tensor getBestActions(Tensor state) {
     Tensor actions = discreteModel.actions(state);
     Tensor va = Tensor.of(actions.stream().parallel() //
@@ -48,12 +48,13 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
   @Override
   public Scalar probability(Tensor state, Tensor action) {
     Index index = Index.build(getBestActions(state));
-    final int optimalCount = index.size();
-    return index.containsKey(action) ? RationalScalar.of(1, optimalCount) : RealScalar.ZERO;
+    return index.containsKey(action) //
+        ? RationalScalar.of(1, index.size())
+        : RealScalar.ZERO;
   }
 
-  @Override
-  public PolicyBase copyOf(PolicyBase policyBase) {
-    return new UcbPolicy(policyBase.discreteModel, policyBase.qsa, policyBase.sac);
+  @Override // from PolicyBase
+  public UcbPolicy copy() {
+    return new UcbPolicy(discreteModel, qsa, sac);
   }
 }

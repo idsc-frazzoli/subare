@@ -96,7 +96,7 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCo
 
   /** @return policy with respect to (w1 + w2) / 2 and sac1+sac2 */
   public PolicyBase getPolicy() {
-    PolicyBase copy = policy1.copyOf(policy1);
+    PolicyBase copy = policy1.copy();
     copy.setQsa(qsaInterface());
     copy.setSac(StateActionCounterUtil.getSummedSac(sac1, sac2, monteCarloInterface));
     return copy;

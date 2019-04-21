@@ -1,7 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02.bandits;
 
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -26,8 +25,8 @@ class Bandits {
     Scalar mean = (Scalar) Mean.of(data);
     Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
     prep = temp.divide(StandardDeviation.ofVector(temp));
-    GlobalAssert.that(Chop._10.allZero(Mean.of(prep)));
-    GlobalAssert.that(Chop._10.close(Variance.ofVector(prep), RealScalar.ONE));
+    Chop._10.requireClose(Mean.of(prep), RealScalar.ZERO);
+    Chop._10.requireClose(Variance.ofVector(prep), RealScalar.ONE);
   }
 
   Scalar min = RealScalar.ZERO;
