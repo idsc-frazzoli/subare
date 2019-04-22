@@ -31,7 +31,8 @@ public class VirtualStationsTest extends TestCase {
       if (virtualStations.isTerminal(state)) {
         assertEquals(actions.length(), 1);
       } else {
-        Scalar expected = Power.of(RealScalar.of(2), Total.of(state.extract(1, state.length())).Get().multiply(RealScalar.of(virtualStations.getNVnodes() - 1)));
+        Scalar expected = Power.of(RealScalar.of(2),
+            Total.of(state.extract(1, state.length())).Get().multiply(RealScalar.of(virtualStations.getNVnodes() - 1)));
         Scalar actual = RealScalar.of(actions.length());
         assertEquals(expected, actual);
       }

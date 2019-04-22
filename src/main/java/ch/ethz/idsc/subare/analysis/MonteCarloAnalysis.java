@@ -31,7 +31,7 @@ public enum MonteCarloAnalysis {
     for (MonteCarloAlgorithms monteCarloAlgorithms : algorithmList)
       algorithmResults.put(monteCarloAlgorithms.name(),
           monteCarloAlgorithms.analyseNTimes(monteCarloInterface, batches, optimalQsa, errorAnalysisList, trials));
-    BatchesPlotUtils.createPlot(algorithmResults,
+    StaticHelper.createPlot(algorithmResults,
         "Convergence_" + monteCarloInterface.getClass().getSimpleName().toString() + "_" + trials + "trials" + "_" + batches + "batches", errorAnalysisList);
   }
 
