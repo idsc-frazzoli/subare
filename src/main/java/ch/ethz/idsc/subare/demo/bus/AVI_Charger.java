@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
-enum AVI_Charger {
+/* package */ enum AVI_Charger {
   ;
   public static void main(String[] args) throws IOException {
     TripProfile tripProfile = new ConstantDrawTrip(24, 3);

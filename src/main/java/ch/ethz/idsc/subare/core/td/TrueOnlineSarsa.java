@@ -13,6 +13,7 @@ import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyExt;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -33,7 +34,7 @@ public class TrueOnlineSarsa implements TrueOnlineInterface, StateActionCounterS
   private final FeatureMapper featureMapper;
   private final LearningRate learningRate;
   private final SarsaEvaluation evaluationType;
-  private final PolicyBase policy;
+  private final PolicyExt policy;
   /** feature weight vector w is a long-term memory, accumulating over the lifetime of the system */
   private final FeatureWeight w;
   private final StateActionCounter sac;
@@ -48,7 +49,7 @@ public class TrueOnlineSarsa implements TrueOnlineInterface, StateActionCounterS
   public TrueOnlineSarsa( //
       MonteCarloInterface monteCarloInterface, SarsaEvaluation evaluationType, //
       Scalar lambda, FeatureMapper featureMapper, LearningRate learningRate, //
-      FeatureWeight w, StateActionCounter sac, PolicyBase policy) {
+      FeatureWeight w, StateActionCounter sac, PolicyExt policy) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
     this.learningRate = learningRate;
@@ -88,7 +89,7 @@ public class TrueOnlineSarsa implements TrueOnlineInterface, StateActionCounterS
 
   @Override // from StepDigest
   public final void digest(StepInterface stepInterface) {
-    policy.setQsa(qsaInterface());
+    ((PolicyBase) policy).setQsa(qsaInterface());
     Tensor prevState = stepInterface.prevState();
     Tensor prevAction = stepInterface.action();
     Tensor nextState = stepInterface.nextState();

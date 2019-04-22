@@ -7,7 +7,7 @@ import ch.ethz.idsc.tensor.sca.Abs;
 import ch.ethz.idsc.tensor.sca.Mod;
 import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
-class Sawtooth implements ScalarUnaryOperator {
+/* package */ class Sawtooth implements ScalarUnaryOperator {
   private final Mod mod;
 
   public Sawtooth(int half_period) {

@@ -97,7 +97,8 @@ import ch.ethz.idsc.tensor.io.Timing;
       visualSet.add(XYtoSarsa).setLabel("TrueOnlineSarsa");
       JFreeChart jFreeChart = ListPlot.of(visualSet);
       jFreeChart.setBackgroundPaint(Color.WHITE);
-      ChartUtils.saveChartAsPNG(HomeDirectory.Pictures(AirportDemo.class.getSimpleName()), jFreeChart, 1280, 720);
+      ChartUtils.saveChartAsPNG( //
+          HomeDirectory.Pictures(AirportDemo.class.getSimpleName() + ".png"), jFreeChart, 1280, 720);
     }
     // DiscreteQsa toQsa = toSarsa.qsa();
     // System.out.println(toSarsa.getW());

@@ -15,7 +15,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.adapter.DequeDigestAdapter;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.LearningRate;
-import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyExt;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -39,7 +39,7 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, St
   private final QsaInterface qsa;
   private final StateActionCounter sac;
   private final LearningRate learningRate;
-  private final PolicyBase policy;
+  private final PolicyExt policy;
 
   /** @param sarsaEvaluation
    * @param discreteModel
@@ -53,7 +53,7 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, St
       LearningRate learningRate, //
       QsaInterface qsa, //
       StateActionCounter sac, //
-      PolicyBase policy) {
+      PolicyExt policy) {
     this.sarsaEvaluation = sarsaEvaluation;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.sac = sac;
