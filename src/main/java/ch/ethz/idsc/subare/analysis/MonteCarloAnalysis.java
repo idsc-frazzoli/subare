@@ -21,7 +21,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.Timing;
 
-public enum MonteCarloAnalysis {
+/* package */ enum MonteCarloAnalysis {
   ;
   public static void analyse(MonteCarloInterface monteCarloInterface, int trials, int batches, List<MonteCarloAlgorithms> algorithmList,
       List<DiscreteModelErrorAnalysis> errorAnalysisList) throws Exception {

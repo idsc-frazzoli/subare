@@ -5,9 +5,9 @@ package ch.ethz.idsc.subare.ch01.tic;
 import java.io.Serializable;
 import java.util.Arrays;
 
-class State implements Serializable {
-  public static String[] sym = { "0", "x", "*" };
-  public static State empty = new State(new int[9]);
+/* package */ class State implements Serializable {
+  public static final String[] SYMBOL = { "0", "x", "*" };
+  public static final State EMPTY = new State(new int[9]);
 
   public static int hashing(int value) {
     return value == -1 ? 2 : value;
@@ -46,8 +46,10 @@ class State implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return hashCode == ((State) obj).hashCode;
+  public boolean equals(Object object) {
+    return object instanceof State //
+        ? hashCode == ((State) object).hashCode
+        : false;
   }
 
   boolean isEnd() {
@@ -57,8 +59,7 @@ class State implements Serializable {
   State nextState(int pos, int symbol) {
     int[] copy = Arrays.copyOf(data, 9);
     copy[pos] = symbol;
-    State newState = new State(copy);
-    return newState;
+    return new State(copy);
   }
 
   public static final int[] indexrotated = { 2, 5, 8, 1, 4, 7, 0, 3, 6 };
@@ -80,22 +81,22 @@ class State implements Serializable {
 
   @Override
   public String toString() {
-    StringBuilder myStringBuilder = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder();
     for (int del = 0; del < 3; ++del) {
       for (int ofs = 0; ofs < 3; ++ofs) {
-        myStringBuilder.append(sym[hashing(data[3 * del + ofs])]);
-        myStringBuilder.append(" ");
+        stringBuilder.append(SYMBOL[hashing(data[3 * del + ofs])]);
+        stringBuilder.append(" ");
       }
-      myStringBuilder.append(" | ");
+      stringBuilder.append(" | ");
       if (del == 0) {
-        myStringBuilder.append("hash=" + hashCode());
+        stringBuilder.append("hash=" + hashCode());
       }
       if (del < 2) {
-        myStringBuilder.append('\n');
+        stringBuilder.append('\n');
       }
     }
     if (winner != null)
-      myStringBuilder.append("winner=" + winner + "\n");
-    return myStringBuilder.toString();
+      stringBuilder.append("winner=" + winner + "\n");
+    return stringBuilder.toString();
   }
 }

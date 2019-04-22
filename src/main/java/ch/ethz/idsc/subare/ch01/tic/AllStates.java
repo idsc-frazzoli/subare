@@ -16,7 +16,7 @@ class AllStates {
   private final Map<State, State> equivalence = new HashMap<>();
 
   private AllStates() {
-    State newState = State.empty;
+    State newState = State.EMPTY;
     allStates.put(newState.hashCode, newState);
     getAllStatesImpl(newState, 1);
     for (State state : allStates.values())

@@ -25,7 +25,9 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
  * Section 2.1 p.28 */
 /* package */ class Bandits implements StandardModel, MonteCarloInterface {
   private static final TensorUnaryOperator NORMALIZE = Normalize.with(StandardDeviation::ofVector);
+  /** state before choosing bandit */
   static final Tensor START = RealScalar.ZERO;
+  /** terminal state after choosing bandit */
   static final Tensor END = RealScalar.ONE;
   // ---
   private final List<Distribution> distributions = new ArrayList<>();

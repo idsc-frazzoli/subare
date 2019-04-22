@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch01.tic;
 
 import java.util.Arrays;
 
-class WinnerStatus {
+/* package */ class WinnerStatus {
   final int data[];
   private Integer private_winner = null;
   final Integer winner;

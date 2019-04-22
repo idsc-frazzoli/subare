@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch01.tic;
 
 import java.util.Scanner;
 
-class HumanAgent extends Agent {
+/* package */ class HumanAgent extends Agent {
   HumanAgent(int symbol) {
     super(symbol);
   }

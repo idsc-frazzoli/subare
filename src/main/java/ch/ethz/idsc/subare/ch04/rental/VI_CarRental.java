@@ -9,7 +9,7 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
  * Figure 4.2
  * 
  * p.87-88 */
-enum VI_CarRental {
+/* package */ enum VI_CarRental {
   ;
   public static void main(String[] args) throws Exception {
     CarRental carRental = new CarRental(20);

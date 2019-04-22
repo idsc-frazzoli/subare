@@ -11,7 +11,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-class CarRentalRaster implements StateRaster {
+/* package */ class CarRentalRaster implements StateRaster {
   private final CarRental carRental;
 
   public CarRentalRaster(CarRental carRental) {

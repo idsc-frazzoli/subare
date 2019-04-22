@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.img.ArrayPlot;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 
-enum CarRentalHelper {
+/* package */ enum CarRentalHelper {
   ;
   public static Tensor render(CarRental carRental, DiscreteVs vs) {
     // TODO use createRaster
