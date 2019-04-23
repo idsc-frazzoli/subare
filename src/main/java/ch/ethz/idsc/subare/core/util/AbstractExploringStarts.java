@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.Policy;
 
-abstract class AbstractExploringStarts {
+/* package */ abstract class AbstractExploringStarts {
   private final MonteCarloInterface monteCarloInterface;
   private int batchIndex = -1; // incremented from constructor
   private Policy policy; // must be private

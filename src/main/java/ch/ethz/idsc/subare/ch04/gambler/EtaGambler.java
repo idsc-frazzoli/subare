@@ -13,7 +13,6 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.ArrayPad;
 import ch.ethz.idsc.tensor.alg.Normalize;
 import ch.ethz.idsc.tensor.red.Total;
-import ch.ethz.idsc.tensor.red.VectorTotal;
 import ch.ethz.idsc.tensor.sca.Increment;
 import ch.ethz.idsc.tensor.sca.Sign;
 
@@ -27,8 +26,8 @@ import ch.ethz.idsc.tensor.sca.Sign;
     Tensor values = //
         ArrayPad.of(Array.zeros(9).map(Increment.ONE), Arrays.asList(1), Arrays.asList(1));
     values.map(Sign::requirePositiveOrZero);
-    values = Normalize.with(VectorTotal.FUNCTION).apply(values);
-    Scalar scalar = VectorTotal.FUNCTION.apply(values);
+    values = Normalize.with(Total::ofVector).apply(values);
+    Scalar scalar = Total.ofVector(values);
     System.out.println("sum=" + scalar);
     DiscreteVs vs = DiscreteVs.build(gambler.states(), values);
     for (int count = 0; count < 10; ++count) {

@@ -9,7 +9,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-class AbstractSarsaEvaluation implements SarsaEvaluation {
+/* package */ class AbstractSarsaEvaluation implements SarsaEvaluation {
   final DiscreteModel discreteModel;
 
   public AbstractSarsaEvaluation(DiscreteModel discreteModel) {

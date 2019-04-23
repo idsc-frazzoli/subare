@@ -15,7 +15,6 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Total;
-import ch.ethz.idsc.tensor.red.VectorTotal;
 import ch.ethz.idsc.tensor.sca.Ramp;
 
 /** A two node problem with an airport and a center. Passengers arrive at the airport and can be driven to
@@ -31,11 +30,11 @@ public class Airport implements StandardModel, MonteCarloInterface {
   private static final Scalar CUSTOMER_REWARD = RealScalar.of(30);
   // i.e. CUSTOMER_PROB.Get(0) is the probability that 0 customers are waiting
   private static final Tensor CUSTOMER_HIST = Tensors.vector(1, 2, 4, 3);
-  private static final Tensor CUSTOMER_PROB = Normalize.with(VectorTotal.FUNCTION).apply(CUSTOMER_HIST);
+  private static final Tensor CUSTOMER_PROB = Normalize.with(Total::ofVector).apply(CUSTOMER_HIST);
   // ---
   private final Tensor states;
   // for EmpiricalDistribution#fromUnscaledPDF the numbers don't have to add up to 1
-  private static final Distribution distribution = EmpiricalDistribution.fromUnscaledPDF(CUSTOMER_HIST);
+  private static final Distribution DISTRIBUTION = EmpiricalDistribution.fromUnscaledPDF(CUSTOMER_HIST);
 
   // TODO defined parameters for complexity of scenario: # time steps, # taxis ...
   public Airport() {
@@ -90,7 +89,7 @@ public class Airport implements StandardModel, MonteCarloInterface {
   public Scalar reward(Tensor state, Tensor action, Tensor next) { // deterministic
     if (isTerminal(state))
       return RealScalar.ZERO;
-    Scalar customers = RandomVariate.of(distribution); // either 0, 1, 2, 3
+    Scalar customers = RandomVariate.of(DISTRIBUTION); // either 0, 1, 2, 3
     // deal with rebalancing costs
     Scalar reward = action.Get(0).multiply(REBALANCE_COST);
     reward = reward.add(Ramp.of(action.Get(1).subtract(customers)).multiply(REBALANCE_COST));

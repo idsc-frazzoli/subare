@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.Tensors;
 
 /** utility class to implement "Model" for deterministic environments
  * in Tabular Dyna-Q p.172 */
-class DeterministicEnvironment implements StepDigest {
+/* package */ class DeterministicEnvironment implements StepDigest {
   private static final Random RANDOM = new Random();
   // ---
   private final Map<Tensor, StepInterface> map = new HashMap<>();
