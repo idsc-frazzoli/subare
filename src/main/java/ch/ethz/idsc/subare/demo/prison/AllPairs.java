@@ -12,7 +12,8 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Mean;
 
-class AllPairs {
+/* package */ enum AllPairs {
+  ;
   static Tensor performance(List<Supplier<Agent>> list, int runs, int epochs) {
     final int size = list.size();
     Tensor matrix = Array.zeros(size, size);

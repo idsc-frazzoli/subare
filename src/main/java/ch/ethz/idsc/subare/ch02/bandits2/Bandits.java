@@ -10,7 +10,9 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.alg.Normalize;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.opt.TensorUnaryOperator;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.Expectation;
 import ch.ethz.idsc.tensor.pdf.NormalDistribution;
@@ -21,47 +23,48 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
 
 /** "A k-armed Bandit Problem"
  * Section 2.1 p.28 */
-class Bandits implements StandardModel, MonteCarloInterface {
+/* package */ class Bandits implements StandardModel, MonteCarloInterface {
+  private static final TensorUnaryOperator NORMALIZE = Normalize.with(StandardDeviation::ofVector);
+  /** state before choosing bandit */
   static final Tensor START = RealScalar.ZERO;
+  /** terminal state after choosing bandit */
   static final Tensor END = RealScalar.ONE;
   // ---
   private final List<Distribution> distributions = new ArrayList<>();
 
   /** @param k number of arms of bandit */
   public Bandits(int k) {
-    Distribution STANDARD = NormalDistribution.standard();
-    Tensor data = RandomVariate.of(STANDARD, k);
+    Tensor data = RandomVariate.of(NormalDistribution.standard(), k);
     Scalar mean = (Scalar) Mean.of(data);
-    Tensor temp = data.map(x -> x.subtract(mean)).unmodifiable();
-    Tensor prep = temp.divide(StandardDeviation.ofVector(temp));
+    Tensor prep = NORMALIZE.apply(data.map(x -> x.subtract(mean)));
     for (int index = 0; index < k; ++index)
       distributions.add(NormalDistribution.of(prep.Get(index), RealScalar.ONE));
   }
 
-  @Override
+  @Override // from StateActionModel
   public Tensor states() {
     return Tensors.of(START, END);
   }
 
-  @Override
+  @Override // from StateActionModel
   public Tensor actions(Tensor state) {
     if (isTerminal(state))
       return Tensors.vector(0);
     return Range.of(0, distributions.size());
   }
 
-  @Override
+  @Override // from DiscreteModel
   public Scalar gamma() {
     return RealScalar.ONE;
   }
 
   /**************************************************/
-  @Override
+  @Override // from MoveInterface
   public Tensor move(Tensor state, Tensor action) {
     return END;
   }
 
-  @Override
+  @Override // from RewardInterface
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (isTerminal(state))
       return RealScalar.ZERO;
@@ -81,17 +84,17 @@ class Bandits implements StandardModel, MonteCarloInterface {
   }
 
   /**************************************************/
-  @Override
+  @Override // from TransitionInterface
   public Tensor transitions(Tensor state, Tensor action) {
     return Tensors.of(END);
   }
 
-  @Override
+  @Override // from TransitionInterface
   public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
     return KroneckerDelta.of(next, END);
   }
 
-  @Override
+  @Override // from ActionValueInterface
   public Scalar expectedReward(Tensor state, Tensor action) {
     if (isTerminal(state))
       return RealScalar.ZERO;

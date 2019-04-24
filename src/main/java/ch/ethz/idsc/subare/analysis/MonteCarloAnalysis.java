@@ -21,7 +21,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.Timing;
 
-public enum MonteCarloAnalysis {
+/* package */ enum MonteCarloAnalysis {
   ;
   public static void analyse(MonteCarloInterface monteCarloInterface, int trials, int batches, List<MonteCarloAlgorithms> algorithmList,
       List<DiscreteModelErrorAnalysis> errorAnalysisList) throws Exception {
@@ -31,7 +31,7 @@ public enum MonteCarloAnalysis {
     for (MonteCarloAlgorithms monteCarloAlgorithms : algorithmList)
       algorithmResults.put(monteCarloAlgorithms.name(),
           monteCarloAlgorithms.analyseNTimes(monteCarloInterface, batches, optimalQsa, errorAnalysisList, trials));
-    BatchesPlotUtils.createPlot(algorithmResults,
+    StaticHelper.createPlot(algorithmResults,
         "Convergence_" + monteCarloInterface.getClass().getSimpleName().toString() + "_" + trials + "trials" + "_" + batches + "batches", errorAnalysisList);
   }
 

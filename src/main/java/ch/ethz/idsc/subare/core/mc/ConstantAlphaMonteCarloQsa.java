@@ -25,7 +25,9 @@ public class ConstantAlphaMonteCarloQsa implements EpisodeQsaEstimator {
   private final LearningRate learningRate;
   private final StateActionCounter sac;
 
-  /** @param discreteModel */
+  /** @param discreteModel
+   * @param learningRate
+   * @param sac */
   public ConstantAlphaMonteCarloQsa(DiscreteModel discreteModel, LearningRate learningRate, StateActionCounter sac) {
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     qsa = DiscreteQsa.build(discreteModel); // <- "arbitrary"
@@ -33,7 +35,7 @@ public class ConstantAlphaMonteCarloQsa implements EpisodeQsaEstimator {
     this.sac = sac;
   }
 
-  @Override
+  @Override // from EpisodeDigest
   public void digest(EpisodeInterface episodeInterface) {
     Tensor rewards = Tensors.empty();
     List<StepInterface> trajectory = new ArrayList<>();
@@ -56,7 +58,7 @@ public class ConstantAlphaMonteCarloQsa implements EpisodeQsaEstimator {
     }
   }
 
-  @Override
+  @Override // from DiscreteQsaSupplier
   public DiscreteQsa qsa() {
     return qsa;
   }

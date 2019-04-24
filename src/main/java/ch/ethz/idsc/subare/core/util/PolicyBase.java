@@ -2,16 +2,12 @@
 package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.QsaInterface;
-import ch.ethz.idsc.subare.core.QsaInterfaceSupplier;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.StateActionCounter;
-import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.VsInterface;
-import ch.ethz.idsc.tensor.Tensor;
 
-public abstract class PolicyBase implements Policy, QsaInterfaceSupplier, StateActionCounterSupplier {
+public abstract class PolicyBase implements PolicyExt {
   protected final DiscreteModel discreteModel;
   // ---
   protected StateActionCounter sac;
@@ -47,10 +43,4 @@ public abstract class PolicyBase implements Policy, QsaInterfaceSupplier, StateA
   public final StateActionCounter sac() {
     return sac;
   }
-
-  /** @param state
-   * @return vector of actions that are equally optimal */
-  public abstract Tensor getBestActions(Tensor state);
-
-  public abstract PolicyBase copyOf(PolicyBase policyBase);
 }

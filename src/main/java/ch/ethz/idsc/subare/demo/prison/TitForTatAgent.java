@@ -2,12 +2,11 @@
 package ch.ethz.idsc.subare.demo.prison;
 
 import ch.ethz.idsc.subare.ch02.Agent;
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
-class TitForTatAgent extends Agent {
+/* package */ class TitForTatAgent extends Agent {
   private int nextAction = 1;
 
   @Override
@@ -31,7 +30,7 @@ class TitForTatAgent extends Agent {
       nextAction = 1;
       return;
     }
-    GlobalAssert.that(false);
+    throw new RuntimeException();
   }
 
   @Override

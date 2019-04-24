@@ -4,17 +4,16 @@ package ch.ethz.idsc.subare.demo.prison;
 import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 
-abstract class AbstractExact {
-  final Supplier<Agent> sup1;
-  final Supplier<Agent> sup2;
-  final int epochs;
-  Tensor expected = Array.zeros(2);
+/* package */ abstract class AbstractExact {
+  private final Supplier<Agent> sup1;
+  private final Supplier<Agent> sup2;
+  private final int epochs;
+  private Tensor expected = Array.zeros(2);
 
   public AbstractExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
     this.sup1 = sup1;
@@ -40,11 +39,16 @@ abstract class AbstractExact {
     a2.setOpeningSequence(a2open);
     Tensor tensor = Training.train(a1, a2, epochs);
     // assert that no randomness was involved in the training
-    GlobalAssert.that(a1.getRandomizedDecisionCount() == 0);
-    if (a2.getRandomizedDecisionCount() != 0) {
-      System.out.println(SummaryString.of(a2));
+    if (a1.getRandomizedDecisionCount() != 0) {
+      System.out.println(a1.getAbsDesc());
+      System.out.println(SummaryString.of(a1));
+      throw new RuntimeException();
     }
-    GlobalAssert.that(a2.getRandomizedDecisionCount() == 0);
+    if (a2.getRandomizedDecisionCount() != 0) {
+      System.out.println(a2.getAbsDesc());
+      System.out.println(SummaryString.of(a2));
+      throw new RuntimeException();
+    }
     return tensor;
   }
 }

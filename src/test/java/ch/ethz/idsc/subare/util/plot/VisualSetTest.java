@@ -1,11 +1,18 @@
 /* amodeus - Copyright (c) 2019, ETH Zurich, Institute for Dynamic Systems and Control */
 package ch.ethz.idsc.subare.util.plot;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Transpose;
+import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.pdf.UniformDistribution;
 import junit.framework.TestCase;
@@ -46,6 +53,19 @@ public class VisualSetTest extends TestCase {
     row2.setLabel("row 2");
     assertEquals(set.getVisualRow(0).getLabelString(), "row 1");
     assertEquals(set.getVisualRow(1).getLabelString(), "row 2");
+  }
+
+  public void testEmptyPass() throws IOException {
+    VisualSet visualSet = new VisualSet();
+    visualSet.add(Tensors.empty());
+    JFreeChart jFreeChart = ListPlot.of(visualSet);
+    File file = HomeDirectory.Downloads(VisualSetTest.class.getSimpleName() + ".png");
+    assertFalse(file.exists());
+    ChartUtils.saveChartAsPNG(file, jFreeChart, 100, 100);
+    assertTrue(file.isFile());
+    assertTrue(file.canWrite());
+    file.delete();
+    assertFalse(file.exists());
   }
 
   public void testFailScalar() {

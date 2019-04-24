@@ -19,11 +19,10 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** Double Sarsa for maximization bias */
-enum Double_Bandits {
+/* package */ enum Double_Bandits {
   ;
-  static void handle(SarsaType sarsaType, int n) throws Exception {
+  static void handle(Bandits bandits, SarsaType sarsaType, int n) throws Exception {
     System.out.println("double " + sarsaType);
-    Bandits bandits = new Bandits(20);
     final DiscreteQsa ref = BanditsHelper.getOptimalQsa(bandits);
     int batches = 100;
     Tensor epsilon = Subdivide.of(.3, .01, batches); // used in egreedy
@@ -56,8 +55,9 @@ enum Double_Bandits {
   }
 
   public static void main(String[] args) throws Exception {
-    handle(SarsaType.QLEARNING, 1);
-    handle(SarsaType.EXPECTED, 3);
-    handle(SarsaType.QLEARNING, 2);
+    Bandits bandits = new Bandits(20);
+    handle(bandits, SarsaType.QLEARNING, 1);
+    handle(bandits, SarsaType.EXPECTED, 3);
+    handle(bandits, SarsaType.QLEARNING, 2);
   }
 }

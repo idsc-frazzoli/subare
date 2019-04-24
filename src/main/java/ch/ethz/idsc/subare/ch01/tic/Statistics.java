@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch01.tic;
 
 import java.util.Arrays;
 
-class Statistics {
+/* package */ class Statistics {
   double[] data;
   int size;
 

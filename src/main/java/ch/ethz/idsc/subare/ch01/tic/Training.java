@@ -1,7 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch01.tic;
 
-class Training {
+/* package */ enum Training {
+  ;
   public static void train(int epochs) {
     Agent player1 = new Agent(1);
     player1.setRates(0.15, 0.1);

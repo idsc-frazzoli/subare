@@ -15,7 +15,7 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 // R1STQP algorithm is not suited for gambler's dilemma
-enum RSTQP_Gambler {
+/* package */ enum RSTQP_Gambler {
   ;
   public static void main(String[] args) throws Exception {
     Gambler gambler = new Gambler(20, RationalScalar.of(4, 10));

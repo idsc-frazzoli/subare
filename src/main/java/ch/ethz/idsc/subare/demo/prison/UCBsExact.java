@@ -13,6 +13,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Rescale;
+import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.img.ArrayPlot;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
@@ -20,7 +21,7 @@ import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
-class UCBsExact extends AbstractExact {
+/* package */ class UCBsExact extends AbstractExact {
   public UCBsExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
     super(sup1, sup2, epochs);
     // ---
@@ -31,16 +32,14 @@ class UCBsExact extends AbstractExact {
   }
 
   public static void showOne() {
-    Supplier<Agent> sup1 = //
-        () -> new UCBAgent(2, RationalScalar.of(10, 10));
-    Supplier<Agent> sup2 = //
-        () -> new UCBAgent(2, RationalScalar.of(8, 10));
+    Supplier<Agent> sup1 = () -> new UCBAgent(2, RationalScalar.of(10, 10));
+    Supplier<Agent> sup2 = () -> new UCBAgent(2, RationalScalar.of(8, 10));
     UCBsExact exact = new UCBsExact(sup1, sup2, 200);
     System.out.println(exact.getExpectedRewards());
   }
 
   public static void main(String[] args) throws IOException {
-    Tensor init = Tensors.vector(i -> RationalScalar.of(40 + i, 80), 80); // 80
+    Tensor init = Subdivide.of(RationalScalar.of(3, 5), RationalScalar.of(3, 2), 240);
     Tensor expectedRewards = Array.zeros(init.length(), init.length());
     int px = 0;
     Tensor res = Tensors.empty();
@@ -48,10 +47,8 @@ class UCBsExact extends AbstractExact {
       Tensor row = Tensors.empty();
       int py = 0;
       for (Tensor c1 : init) {
-        Supplier<Agent> sup1 = //
-            () -> new UCBAgent(2, (Scalar) c0);
-        Supplier<Agent> sup2 = //
-            () -> new UCBAgent(2, (Scalar) c1);
+        Supplier<Agent> sup1 = () -> new UCBAgent(2, (Scalar) c0);
+        Supplier<Agent> sup2 = () -> new UCBAgent(2, (Scalar) c1);
         UCBsExact exact = new UCBsExact(sup1, sup2, 50);
         row.append(Join.of(Tensors.of(c0, c1), exact.getExpectedRewards()));
         expectedRewards.set(exact.getExpectedRewards(), px, py);

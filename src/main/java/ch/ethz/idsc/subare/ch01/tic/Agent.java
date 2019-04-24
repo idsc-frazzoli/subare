@@ -14,10 +14,10 @@ import java.util.TreeMap;
 import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RealScalar;
 
-class Agent {
+/* package */ class Agent {
   double stepSize;
   // double exploreRate;
-  private Coinflip coinflip;
+  private Coinflip coinflip = Coinflip.fair();
   List<State> states = new ArrayList<>();
   final int symbol;
   Estimation estimation = new Estimation();

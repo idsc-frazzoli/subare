@@ -21,7 +21,7 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** Sarsa applied to gambler */
-enum Sarsa_Gambler {
+/* package */ enum Sarsa_Gambler {
   ;
   static void train(Gambler gambler, SarsaType sarsaType, //
       int batches, Scalar factor, Scalar exponent) throws Exception {

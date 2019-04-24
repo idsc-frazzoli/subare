@@ -17,6 +17,7 @@ import ch.ethz.idsc.tensor.pdf.PoissonDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.qty.Boole;
 import ch.ethz.idsc.tensor.red.Total;
+import ch.ethz.idsc.tensor.sca.Chop;
 import ch.ethz.idsc.tensor.sca.Sign;
 
 /** Toy example for AMoD system. There are 3 virtual stations where taxis are travelling between those.
@@ -108,13 +109,10 @@ public class VirtualStations implements MonteCarloInterface {
       return Tensors.of(Tensors.of(RealScalar.ZERO));
     // ---
     Tensor prefix = Tensors.empty();
-    for (int i = 0; i < NVNODES; ++i) {
-      if (Sign.isPositive(state.Get(i + 1))) {
-        prefix = StaticHelper.binaryVectors(NVNODES - 1, prefix);
-      } else {
-        prefix = StaticHelper.zeroVectors(NVNODES - 1, prefix);
-      }
-    }
+    for (int i = 0; i < NVNODES; ++i)
+      prefix = Sign.isPositive(state.Get(i + 1)) //
+          ? StaticHelper.binaryVectors(NVNODES - 1, prefix)
+          : StaticHelper.zeroVectors(NVNODES - 1, prefix);
     return prefix;
   }
 
@@ -125,7 +123,7 @@ public class VirtualStations implements MonteCarloInterface {
   @Override
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state)) {
-      GlobalAssert.that(action.equals(Tensors.of(RealScalar.ZERO)));
+      Chop.NONE.requireClose(action, Tensors.vector(0));
       return state;
     }
     // move arriving taxis

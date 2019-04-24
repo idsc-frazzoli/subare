@@ -2,14 +2,14 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyExt;
 import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-class AbstractSarsaEvaluation implements SarsaEvaluation {
+/* package */ class AbstractSarsaEvaluation implements SarsaEvaluation {
   final DiscreteModel discreteModel;
 
   public AbstractSarsaEvaluation(DiscreteModel discreteModel) {
@@ -17,7 +17,7 @@ class AbstractSarsaEvaluation implements SarsaEvaluation {
   }
 
   @Override
-  public final Scalar evaluate(Tensor state, PolicyBase policy) {
+  public final Scalar evaluate(Tensor state, PolicyExt policy) {
     return discreteModel.actions(state).stream() //
         .anyMatch(action -> policy.sac().isEncountered(StateAction.key(state, action))) //
             ? crossEvaluate(state, policy, policy)
@@ -25,7 +25,7 @@ class AbstractSarsaEvaluation implements SarsaEvaluation {
   }
 
   @Override
-  public Scalar crossEvaluate(Tensor state, PolicyBase policy1, PolicyBase policy2) {
+  public Scalar crossEvaluate(Tensor state, PolicyExt policy1, PolicyExt policy2) {
     Tensor action = new PolicyWrap(policy1).next(state, discreteModel);
     return policy2.qsaInterface().value(state, action);
   }

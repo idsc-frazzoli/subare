@@ -26,7 +26,7 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** Q-Learning applied to gambler with adaptive learning rate */
-enum QL_Gambler {
+/* package */ enum QL_Gambler {
   ;
   static void handle() throws Exception {
     Gambler gambler = Gambler.createDefault();

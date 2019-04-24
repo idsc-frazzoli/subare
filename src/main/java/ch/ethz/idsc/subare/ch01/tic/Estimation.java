@@ -10,7 +10,7 @@ import java.util.Objects;
 /** A value function specifies what is good in the long run.
  * Roughly speaking, the value of a state is the total amount of reward
  * an agent can expect to accumulate over the future, starting from that state. */
-class Estimation implements Serializable {
+/* package */ class Estimation implements Serializable {
   private final Map<State, Double> map = new HashMap<>();
 
   /** Assuming we always play Xs, then for

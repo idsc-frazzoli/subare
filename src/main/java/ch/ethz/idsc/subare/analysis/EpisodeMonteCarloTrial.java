@@ -9,7 +9,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
 
-public class EpisodeMonteCarloTrial implements MonteCarloTrial {
+/* package */ class EpisodeMonteCarloTrial implements MonteCarloTrial {
   private final MonteCarloInterface monteCarloInterface;
   private final MonteCarloExploringStarts mces;
   private final PolicyBase policy;

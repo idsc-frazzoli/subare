@@ -3,7 +3,8 @@ package ch.ethz.idsc.subare.demo.prison;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 
-class SummaryString {
+/* package */ enum SummaryString {
+  ;
   public static String of(Agent agent) {
     int rnd = agent.getRandomizedDecisionCount();
     double avg = agent.getRewardAverage().number().doubleValue();

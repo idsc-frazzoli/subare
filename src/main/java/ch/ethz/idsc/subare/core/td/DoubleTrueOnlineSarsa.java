@@ -13,6 +13,7 @@ import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyExt;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.subare.core.util.StateActionCounterUtil;
 import ch.ethz.idsc.subare.util.Coinflip;
@@ -33,8 +34,8 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCo
   private final LearningRate learningRate;
   private final StateActionCounter sac1;
   private final StateActionCounter sac2;
-  private final PolicyBase policy1;
-  private final PolicyBase policy2;
+  private final PolicyExt policy1;
+  private final PolicyExt policy2;
   // ---
   private final SarsaEvaluation evaluationType;
   private final Scalar gamma;
@@ -54,7 +55,7 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCo
       LearningRate learningRate, //
       FeatureWeight w1, FeatureWeight w2, //
       StateActionCounter sac1, StateActionCounter sac2, //
-      PolicyBase policy1, PolicyBase policy2) {
+      PolicyExt policy1, PolicyExt policy2) {
     this.monteCarloInterface = monteCarloInterface;
     this.evaluationType = evaluationType;
     this.learningRate = learningRate;
@@ -96,7 +97,7 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCo
 
   /** @return policy with respect to (w1 + w2) / 2 and sac1+sac2 */
   public PolicyBase getPolicy() {
-    PolicyBase copy = policy1.copyOf(policy1);
+    PolicyBase copy = (PolicyBase) policy1.copy();
     copy.setQsa(qsaInterface());
     copy.setSac(StateActionCounterUtil.getSummedSac(sac1, sac2, monteCarloInterface));
     return copy;
@@ -109,14 +110,14 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCo
 
   @Override // from StepDigest
   public final void digest(StepInterface stepInterface) {
-    policy1.setQsa(qsaInterface(w1.get()));
-    policy2.setQsa(qsaInterface(w2.get()));
+    ((PolicyBase) policy1).setQsa(qsaInterface(w1.get()));
+    ((PolicyBase) policy2).setQsa(qsaInterface(w2.get()));
     // randomly select which w to read and write
     boolean flip = coinflip.tossHead(); // flip coin, probability 0.5 each
     FeatureWeight W1 = flip ? w2 : w1;
     StateActionCounter Sac1 = flip ? sac2 : sac1; // for updating
-    PolicyBase Policy1 = flip ? policy1 : policy2;
-    PolicyBase Policy2 = flip ? policy2 : policy1;
+    PolicyExt Policy1 = flip ? policy1 : policy2;
+    PolicyExt Policy2 = flip ? policy2 : policy1;
     // ---
     Tensor prevState = stepInterface.prevState();
     Tensor prevAction = stepInterface.action();

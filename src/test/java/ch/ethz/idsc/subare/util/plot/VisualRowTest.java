@@ -21,10 +21,10 @@ public class VisualRowTest extends TestCase {
     assertEquals(visualSet.visualRows().size(), 2);
   }
 
+  @SuppressWarnings("unused")
   public void testFailNull() {
     try {
-      VisualSet visualSet = new VisualSet(null);
-      visualSet.setAxesLabelX("");
+      new VisualSet(null);
       fail();
     } catch (Exception exception) {
       // ---

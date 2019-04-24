@@ -20,7 +20,7 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 
-public class TrueOnlineMonteCarloTrial implements MonteCarloTrial {
+/* package */ class TrueOnlineMonteCarloTrial implements MonteCarloTrial {
   private static final Scalar ALPHA = RealScalar.of(0.05);
   private static final Scalar LAMBDA = RealScalar.of(0.3);
 

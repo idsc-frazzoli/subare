@@ -15,6 +15,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyExt;
 import ch.ethz.idsc.subare.core.util.StateActionCounterUtil;
 import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.Scalar;
@@ -45,8 +46,8 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   private final LearningRate learningRate;
   private final StateActionCounter sac1;
   private final StateActionCounter sac2;
-  private final PolicyBase policy1;
-  private final PolicyBase policy2;
+  private final PolicyExt policy1;
+  private final PolicyExt policy2;
 
   /** @param sarsaEvaluation
    * @param discreteModel
@@ -64,8 +65,8 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
       QsaInterface qsa2, //
       StateActionCounter sac1, //
       StateActionCounter sac2, //
-      PolicyBase policy1, //
-      PolicyBase policy2) {
+      PolicyExt policy1, //
+      PolicyExt policy2) {
     this.discreteModel = discreteModel;
     discountFunction = DiscountFunction.of(discreteModel.gamma());
     this.sarsaEvaluation = sarsaEvaluation;
@@ -80,7 +81,7 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
 
   /** @return policy with respect to (qsa1 + qsa2) / 2 and sac1+sac2 */
   public PolicyBase getPolicy() {
-    PolicyBase copy = policy1.copyOf(policy1);
+    PolicyBase copy = (PolicyBase) policy1.copy();
     copy.setQsa(DiscreteValueFunctions.average((DiscreteQsa) qsa1, (DiscreteQsa) qsa2));
     copy.setSac(StateActionCounterUtil.getSummedSac(sac1, sac2, discreteModel));
     return copy;
@@ -90,8 +91,8 @@ public class DoubleSarsa extends DequeDigestAdapter implements DiscreteQsaSuppli
   public void digest(Deque<StepInterface> deque) {
     // randomly select which qsa to read and write
     boolean flip = coinflip.tossHead(); // flip coin, probability 0.5 each
-    PolicyBase Policy1 = flip ? policy2 : policy1;
-    PolicyBase Policy2 = flip ? policy1 : policy2;
+    PolicyExt Policy1 = flip ? policy2 : policy1;
+    PolicyExt Policy2 = flip ? policy1 : policy2;
     // ---
     Tensor rewards = Tensor.of(deque.stream().map(StepInterface::reward));
     Tensor nextState = deque.getLast().nextState();

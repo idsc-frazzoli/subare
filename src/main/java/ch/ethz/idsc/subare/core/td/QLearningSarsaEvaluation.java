@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.core.td;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyExt;
 import ch.ethz.idsc.subare.core.util.StateAction;
 import ch.ethz.idsc.subare.util.FairArgMax;
 import ch.ethz.idsc.tensor.RationalScalar;
@@ -20,7 +20,7 @@ import ch.ethz.idsc.tensor.red.Max;
   }
 
   @Override // from SarsaEvaluation
-  public Scalar evaluate(Tensor state, PolicyBase policy) {
+  public Scalar evaluate(Tensor state, PolicyExt policy) {
     return discreteModel.actions(state).stream() //
         .filter(action -> policy.sac().isEncountered(StateAction.key(state, action))) //
         .map(action -> policy.qsaInterface().value(state, action)) //
@@ -29,7 +29,7 @@ import ch.ethz.idsc.tensor.red.Max;
   }
 
   @Override // from SarsaEvaluation
-  public Scalar crossEvaluate(Tensor state, PolicyBase policy1, PolicyBase policy2) {
+  public Scalar crossEvaluate(Tensor state, PolicyExt policy1, PolicyExt policy2) {
     Scalar value = RealScalar.ZERO;
     Tensor actions = Tensor.of(discreteModel.actions(state).stream() //
         .filter(action -> policy1.sac().isEncountered(StateAction.key(state, action))));

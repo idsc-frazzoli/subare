@@ -6,7 +6,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 /** Julian's idea: Prisoners' Dilemma */
-class Training {
+/* package */ enum Training {
+  ;
   /** rewards average at 2 */
   static final Tensor r2 = Tensors.matrixInt(new int[][] { //
       { 1, 4 }, //

@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.LearningRate;
-import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyExt;
 import ch.ethz.idsc.tensor.Scalar;
 
 public enum SarsaType {
@@ -39,7 +39,7 @@ public enum SarsaType {
       LearningRate learningRate, //
       QsaInterface qsa, //
       StateActionCounter sac, //
-      PolicyBase policy) {
+      PolicyExt policy) {
     return new Sarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate, qsa, sac, policy);
   }
 
@@ -48,7 +48,7 @@ public enum SarsaType {
       LearningRate learningRate, //
       QsaInterface qsa1, QsaInterface qsa2, //
       StateActionCounter sac1, StateActionCounter sac2, //
-      PolicyBase policy1, PolicyBase policy2) {
+      PolicyExt policy1, PolicyExt policy2) {
     return new DoubleSarsa(sarsaEvaluation(discreteModel), discreteModel, learningRate, qsa1, qsa2, sac1, sac2, policy1, policy2);
   }
 
@@ -61,7 +61,7 @@ public enum SarsaType {
       LearningRate learningRate, //
       FeatureWeight w, //
       StateActionCounter sac, //
-      PolicyBase policy) {
+      PolicyExt policy) {
     return new TrueOnlineSarsa(monteCarloInterface, sarsaEvaluation(monteCarloInterface), lambda, featureMapper, learningRate, w, sac, policy);
   }
 
@@ -72,7 +72,7 @@ public enum SarsaType {
       LearningRate learningRate, //
       FeatureWeight w1, FeatureWeight w2, //
       StateActionCounter sac1, StateActionCounter sac2, //
-      PolicyBase policy1, PolicyBase policy2) {
+      PolicyExt policy1, PolicyExt policy2) {
     return new DoubleTrueOnlineSarsa( //
         monteCarloInterface, //
         sarsaEvaluation(monteCarloInterface), //

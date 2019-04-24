@@ -2,14 +2,14 @@
 package ch.ethz.idsc.subare.demo.prison;
 
 import ch.ethz.idsc.subare.ch02.Agent;
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.sca.Chop;
 
-class Judger {
-  final Tensor reward;
-  final Agent a1;
-  final Agent a2;
+/* package */ class Judger {
+  private final Tensor reward;
+  private final Agent a1;
+  private final Agent a2;
 
   Judger(Tensor r1, Agent a1, Agent a2) {
     this.reward = r1;
@@ -26,7 +26,7 @@ class Judger {
 
   /** @return tensor of rewards averaged over number of actions */
   Tensor ranking() {
-    GlobalAssert.that(a1.getCount().equals(a2.getCount()));
+    Chop.NONE.requireClose(a1.getCount(), a2.getCount());
     return Tensors.of(a1.getRewardTotal(), a2.getRewardTotal()).divide(a1.getCount());
   }
 }

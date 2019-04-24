@@ -16,7 +16,8 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 
-class AgentSupplier {
+/* package */ enum AgentSupplier {
+  ;
   public static final List<Supplier<Agent>> mixed = Arrays.asList( //
       // () -> new ConstantAgent(2, 0), //
       // () -> new ConstantAgent(2, 1), //

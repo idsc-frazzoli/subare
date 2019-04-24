@@ -17,10 +17,11 @@ import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
+import ch.ethz.idsc.subare.core.util.PolicyExt;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.RealScalar;
 
-public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
+/* package */ class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
   public static DoubleSarsaMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType) {
     DiscreteQsa qsa1 = DiscreteQsa.build(monteCarloInterface);
     DiscreteQsa qsa2 = DiscreteQsa.build(monteCarloInterface);
@@ -43,7 +44,7 @@ public class DoubleSarsaMonteCarloTrial implements MonteCarloTrial {
       LearningRate learningRate, //
       DiscreteQsa qsa1, DiscreteQsa qsa2, //
       StateActionCounter sac1, StateActionCounter sac2, //
-      PolicyBase policy1, PolicyBase policy2) {
+      PolicyExt policy1, PolicyExt policy2) {
     this.monteCarloInterface = monteCarloInterface;
     doubleSarsa = sarsaType.doubleSarsa(monteCarloInterface, //
         learningRate, qsa1, qsa2, sac1, sac2, policy1, policy2);

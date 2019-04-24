@@ -23,7 +23,7 @@ class Judger {
   void reset() {
     p1.reset();
     p2.reset();
-    currentState = State.empty;
+    currentState = State.EMPTY;
     currentPlayer = null;
   }
 
