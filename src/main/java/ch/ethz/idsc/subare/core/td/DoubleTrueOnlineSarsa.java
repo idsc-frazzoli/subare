@@ -4,10 +4,7 @@ package ch.ethz.idsc.subare.core.td;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionCounter;
-import ch.ethz.idsc.subare.core.StateActionCounterSupplier;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.core.TrueOnlineInterface;
-import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.FeatureMapper;
 import ch.ethz.idsc.subare.core.util.FeatureQsaAdapter;
 import ch.ethz.idsc.subare.core.util.FeatureWeight;
@@ -24,22 +21,14 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Mean;
 import ch.ethz.idsc.tensor.red.Times;
-import ch.ethz.idsc.tensor.sca.Clips;
 
-public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCounterSupplier {
+public class DoubleTrueOnlineSarsa extends AbstractTrueOnlineSarsa {
   private final Coinflip coinflip = Coinflip.fair();
   // ---
-  private final MonteCarloInterface monteCarloInterface;
-  private final FeatureMapper featureMapper;
-  private final LearningRate learningRate;
   private final StateActionCounter sac1;
   private final StateActionCounter sac2;
   private final PolicyExt policy1;
   private final PolicyExt policy2;
-  // ---
-  private final SarsaEvaluation evaluationType;
-  private final Scalar gamma;
-  private final Scalar gamma_lambda;
   // ---
   /** feature weight vectors w1 and w2 are a long-term memory, accumulating over the lifetime of the system */
   private FeatureWeight w1;
@@ -56,32 +45,14 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCo
       FeatureWeight w1, FeatureWeight w2, //
       StateActionCounter sac1, StateActionCounter sac2, //
       PolicyExt policy1, PolicyExt policy2) {
-    this.monteCarloInterface = monteCarloInterface;
-    this.evaluationType = evaluationType;
-    this.learningRate = learningRate;
+    super(monteCarloInterface, evaluationType, lambda, learningRate, featureMapper);
     this.sac1 = sac1;
     this.sac2 = sac2;
     this.policy1 = policy1;
     this.policy2 = policy2;
-    this.gamma = monteCarloInterface.gamma();
-    this.featureMapper = featureMapper;
-    gamma_lambda = Times.of(gamma, Clips.unit().requireInside(lambda));
     this.w1 = w1;
     this.w2 = w2;
     resetEligibility();
-  }
-
-  /** Returns the Qsa according to the current feature weights.
-   * Only use this function, when the state-action space is small enough. */
-  @Override // from DiscreteQsaSupplier
-  public final DiscreteQsa qsa() {
-    DiscreteQsa qsa = DiscreteQsa.build(monteCarloInterface);
-    for (Tensor state : monteCarloInterface.states())
-      for (Tensor action : monteCarloInterface.actions(state)) {
-        Tensor stateActionPair = StateAction.key(state, action);
-        qsa.assign(state, action, featureMapper.getFeature(stateActionPair).dot(getW()).Get());
-      }
-    return qsa;
   }
 
   /** faster when only part of the qsa is required */
@@ -104,6 +75,7 @@ public class DoubleTrueOnlineSarsa implements TrueOnlineInterface, StateActionCo
   }
 
   /** @return unmodifiable weight vector w */
+  @Override
   public final Tensor getW() {
     return Mean.of(Tensors.of(w1.get(), w2.get())).unmodifiable();
   }

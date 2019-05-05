@@ -18,7 +18,8 @@ import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Sign;
 
-/* package */ class SarsaMonteCarloTrial implements MonteCarloTrial {
+/** class is used externally */
+public class SarsaMonteCarloTrial implements MonteCarloTrial {
   public static SarsaMonteCarloTrial of(MonteCarloInterface monteCarloInterface, SarsaType sarsaType, LearningRate learningRate, DiscreteQsa qsa,
       StateActionCounter sac, PolicyBase policy, int digestDepth) {
     return new SarsaMonteCarloTrial(monteCarloInterface, sarsaType, learningRate, qsa, sac, policy, digestDepth);
