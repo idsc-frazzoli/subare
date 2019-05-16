@@ -21,7 +21,7 @@ import ch.ethz.idsc.tensor.sca.Clips;
   private static final Tensor WARP1_POST = Tensors.vector(4, 1); // A'
   private static final Tensor WARP2_ANTE = Tensors.vector(0, 3); // B
   private static final Tensor WARP2_POST = Tensors.vector(2, 3); // B'
-  private static final Clip CLIP = Clips.interval(0, 4);
+  private static final Clip CLIP = Clips.positive(4);
   // ---
   private final Tensor states = Flatten.of(Array.of(Tensors::vector, 5, 5), 1).unmodifiable();
   final Tensor actions = Tensors.matrix(new Number[][] { //
