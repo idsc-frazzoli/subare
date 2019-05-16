@@ -43,6 +43,6 @@ enum TTD0_Randomwalk {
     some(randomwalk, DiscreteVs.build(randomwalk.states()));
     int order = 2;
     some(randomwalk, //
-        LinearApproximationVs.create(PolynomialBasis.create(order, Clips.interval(0, 6)), Array.zeros(order)));
+        LinearApproximationVs.create(PolynomialBasis.create(order, Clips.positive(6)), Array.zeros(order)));
   }
 }

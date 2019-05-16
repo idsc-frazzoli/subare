@@ -26,7 +26,7 @@ import ch.ethz.idsc.tensor.sca.Increment;
   public Charger(TripProfile tripProfile, int capacity) {
     this.tripProfile = tripProfile;
     states = Flatten.of(Array.of(Tensors::vector, tripProfile.length(), capacity), 1).unmodifiable();
-    clipCapacity = Clips.interval(0, capacity - 1);
+    clipCapacity = Clips.positive(capacity - 1);
     dimension = new Dimension(tripProfile.length(), capacity);
   }
 

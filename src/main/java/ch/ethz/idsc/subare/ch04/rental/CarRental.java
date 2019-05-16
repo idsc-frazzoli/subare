@@ -56,7 +56,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
 
   public CarRental(int maxCars) {
     this.maxCars = maxCars;
-    CLIP = Clips.interval(0, maxCars);
+    CLIP = Clips.positive(maxCars);
     states = Flatten.of(Array.of(Tensors::vector, maxCars + 1, maxCars + 1), 1).unmodifiable();
   }
 

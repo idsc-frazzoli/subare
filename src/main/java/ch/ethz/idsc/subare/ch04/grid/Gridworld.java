@@ -17,7 +17,7 @@ public class Gridworld extends DeterministicStandardModel implements MonteCarloI
   private static final Scalar NEGATIVE_ONE = RealScalar.ONE.negate();
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
-  private static final Clip CLIP = Clips.interval(0, 3);
+  private static final Clip CLIP = Clips.positive(3);
   final int NX = 4;
   final int NY = 4;
   // ---

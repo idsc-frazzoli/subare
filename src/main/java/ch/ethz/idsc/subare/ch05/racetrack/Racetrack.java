@@ -68,8 +68,8 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
     interpolation = NearestInterpolation.of(Transpose.of(image.get(Tensor.ALL, Tensor.ALL, 2)));
     List<Integer> list = Dimensions.of(image);
     dimensions = Tensors.vector(list.get(1), list.get(0)).map(Decrement.ONE);
-    clipPositionY = Clips.interval(RealScalar.ZERO, dimensions.Get(1));
-    clipSpeed = Clips.interval(0, maxSpeed);
+    clipPositionY = Clips.positive(dimensions.Get(1));
+    clipSpeed = Clips.positive(maxSpeed);
     for (int y = 0; y < list.get(0); ++y)
       for (int x = 0; x < list.get(1); ++x) {
         final Tensor rgba = image.get(y, x).unmodifiable();

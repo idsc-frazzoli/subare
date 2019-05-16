@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 
 public class LinearApproximationVsTest extends TestCase {
   public void testSimple() {
-    TensorUnaryOperator represent = CosineBasis.create(5, Clips.interval(0, 20));
+    TensorUnaryOperator represent = CosineBasis.create(5, Clips.positive(20));
     VsInterface vs = LinearApproximationVs.create(represent, Tensors.vector(0, 1, 0, 0, 0));
     Scalar value = vs.value(RealScalar.of(10));
     assertTrue(Chop._13.allZero(value));

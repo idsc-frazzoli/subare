@@ -30,7 +30,7 @@ public class AirportTest extends TestCase {
     Tensor actions = airport.actions(state);
     assertEquals(actions.length(), 12);
     int probes = 3000;
-    Clip clip = Clips.interval(-2, 2);
+    Clip clip = Clips.absolute(2);
     for (Tensor action : actions) {
       Tensor next = airport.move(state, action);
       assertEquals(next.get(0), RealScalar.of(2));

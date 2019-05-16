@@ -47,8 +47,8 @@ public class Cliffwalk extends DeterministicStandardModel implements MonteCarloI
     MY = NY - 1;
     START = Tensors.vector(0, MY).unmodifiable();
     GOAL = Tensors.vector(MX, MY).unmodifiable();
-    CLIP_X = Clips.interval(0, MX);
-    CLIP_Y = Clips.interval(0, MY);
+    CLIP_X = Clips.positive(MX);
+    CLIP_Y = Clips.positive(MY);
     Tensor pre = Tensors.empty();
     for (Tensor coord : Flatten.of(Array.of(Tensors::vector, NX, NY), 1))
       if (!isCliff(coord))
