@@ -1,4 +1,4 @@
-/* amodeus - Copyright (c) 2018, ETH Zurich, Institute for Dynamic Systems and Control */
+// code by gjoel, jph
 package ch.ethz.idsc.subare.util.plot;
 
 import java.awt.Color;

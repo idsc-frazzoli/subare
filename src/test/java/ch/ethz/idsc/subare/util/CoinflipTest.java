@@ -22,9 +22,9 @@ public class CoinflipTest extends TestCase {
       counters[1] += coinflip1.tossHead() ? 1 : 0;
       counters[2] += coinflip2.tossHead() ? 1 : 0;
     }
-    assertTrue(Chop.below(1e-2).close(RationalScalar.of(counters[0], rounds), headProbability0));
-    assertTrue(Chop.below(1e-2).close(RationalScalar.of(counters[1], rounds), headProbability1));
-    assertTrue(Chop.below(1e-2).close(RationalScalar.of(counters[2], rounds), headProbability2));
+    assertTrue(Chop._02.close(RationalScalar.of(counters[0], rounds), headProbability0));
+    assertTrue(Chop._02.close(RationalScalar.of(counters[1], rounds), headProbability1));
+    assertTrue(Chop._02.close(RationalScalar.of(counters[2], rounds), headProbability2));
   }
 
   public void testInstances() {
