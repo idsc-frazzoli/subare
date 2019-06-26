@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.Scalar;
 
+@FunctionalInterface
 public interface LearningRate {
   /** successive calls to the function give the same result.
    * 
