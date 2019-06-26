@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.core;
 
 import ch.ethz.idsc.tensor.Tensor;
 
+@FunctionalInterface
 public interface TerminalInterface {
   /** Remark:
    * the list of possible actions from a terminal state should have length == 1
