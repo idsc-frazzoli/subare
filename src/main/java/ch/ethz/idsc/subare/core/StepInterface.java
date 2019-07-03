@@ -5,7 +5,7 @@ import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
-/** class provides the four entries (s,a,r,s')
+/** class provides the four entries (s, a, r, s')
  * 
  * instances of implementations are required to be immutable
  * Example: {@link StepAdapter} */

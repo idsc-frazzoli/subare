@@ -12,6 +12,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.io.Timing;
 import ch.ethz.idsc.tensor.red.Max;
 
 /** value iteration: "policy evaluation is stopped after just one sweep"
@@ -56,12 +57,11 @@ public class ValueIteration implements DiscreteVsSupplier {
 
   public void untilBelow(Scalar threshold, int flips) {
     Scalar past = null;
-    final long tic = System.nanoTime();
+    Timing timing = Timing.started();
     while (true) {
       step();
       final Scalar delta = DiscreteValueFunctions.distance(vs_new, vs_old);
-      final long toc = System.nanoTime();
-      if (3e9 < toc - tic)
+      if (3e9 < timing.nanoSeconds())
         System.out.println(past + " -> " + delta + " " + alternate);
       if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {

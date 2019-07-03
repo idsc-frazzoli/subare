@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.red.KroneckerDelta;
 public abstract class DeterministicStandardModel implements StandardModel, SampleModel {
   @Override
   public final Scalar expectedReward(Tensor state, Tensor action) {
-    // reward(s,a,s') == expectedReward(s,a)
+    // reward(s, a, s') == expectedReward(s, a)
     return reward(state, action, move(state, action)); // deterministic reward
   }
 

@@ -14,16 +14,16 @@ public class ActionValueAdapter {
   }
 
   /** function implements the formula
-   * Sum_{s',r} p(s',r | s,a) * [r + gamma * v_*(s')]
+   * Sum_{s', r} p(s', r | s, a) * [r + gamma * v_*(s')]
    * 
    * general term in bellman equation:
-   * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
+   * Sum_{s', r} p(s', r | s, a) * (r + gamma * v_pi(s'))
    * 
    * where
    * v_*(s) == max_a q_*(s, a)
    * 
    * general term in bellman equation:
-   * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
+   * Sum_{s', r} p(s', r | s, a) * (r + gamma * v_pi(s'))
    * for deterministic move and reward the formula simplifies to
    * 1 * (r + gamma * v_pi(s'))
    * 

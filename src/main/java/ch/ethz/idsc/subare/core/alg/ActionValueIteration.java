@@ -12,6 +12,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.io.Timing;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.sca.N;
 import ch.ethz.idsc.tensor.sca.Sign;
@@ -72,12 +73,11 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
   public void untilBelow(Scalar threshold, int flips) {
     Sign.requirePositive(threshold);
     Scalar past = null;
-    final long tic = System.nanoTime();
+    Timing timing = Timing.started();
     while (true) {
       step();
       final Scalar delta = DiscreteValueFunctions.distance(qsa_new, (DiscreteQsa) qsa_old);
-      final long toc = System.nanoTime();
-      if (3e9 < toc - tic) // print info if iteration takes longer than 3 seconds
+      if (3e9 < timing.nanoSeconds()) // print info if iteration takes longer than 3 seconds
         System.out.println(past + " -> " + delta + " " + alternate);
       if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {

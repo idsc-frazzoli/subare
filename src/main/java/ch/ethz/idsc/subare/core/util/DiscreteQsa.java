@@ -18,7 +18,7 @@ import ch.ethz.idsc.tensor.red.Min;
 
 public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Serializable {
   /** @param stateActionModel
-   * @return qsa with q(s,a) == 0 for all state-action pairs */
+   * @return qsa with q(s, a) == 0 for all state-action pairs */
   public static DiscreteQsa build(StateActionModel stateActionModel) {
     Index index = DiscreteUtils.build(stateActionModel, stateActionModel.states());
     return new DiscreteQsa(index, Array.zeros(index.size()));

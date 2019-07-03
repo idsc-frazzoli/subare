@@ -13,6 +13,7 @@ import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
+import ch.ethz.idsc.tensor.io.Timing;
 import ch.ethz.idsc.tensor.opt.ScalarTensorFunction;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -53,12 +54,11 @@ public class LearningCompetition {
     try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("bulk_" + name + ".gif"), period)) {
       for (int index = 0; index < epsilon.length(); ++index) {
         final int findex = index;
-        long tic = System.currentTimeMillis();
+        Timing timing = Timing.started();
         map.entrySet().stream().parallel().forEach(entry -> //
         processEntry(image, entry.getKey(), entry.getValue(), findex));
-        long delta = System.currentTimeMillis() - tic;
         System.out.println( //
-            String.format("%3d %s sec", index, RealScalar.of(delta * 1e-3).map(Round._1)));
+            String.format("%3d %s sec", index, RealScalar.of(timing.seconds()).map(Round._1)));
         animationWriter.append(ImageResize.nearest(image, magnify));
       }
     }

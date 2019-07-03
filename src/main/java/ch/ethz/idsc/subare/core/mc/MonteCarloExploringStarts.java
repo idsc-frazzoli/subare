@@ -79,7 +79,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator, StateActi
       }
     }
     // TODO more efficient update of average
-    // compute average(Returns(s,a))
+    // compute average(Returns(s, a))
     for (StepInterface stepInterface : trajectory) {
       Tensor key = StateAction.key(stepInterface);
       if (!map.containsKey(key))

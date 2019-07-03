@@ -18,7 +18,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
-/** determines q(s,a) function for equiprobable "random" policy */
+/** determines q(s, a) function for equiprobable "random" policy */
 enum Sarsa_Dynamaze {
   ;
   static void handle(SarsaType sarsaType, int nstep, int batches) throws Exception {

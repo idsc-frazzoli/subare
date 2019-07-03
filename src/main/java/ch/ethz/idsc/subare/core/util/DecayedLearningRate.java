@@ -19,8 +19,8 @@ import ch.ethz.idsc.tensor.sca.Sign;
  * p.35 equation (2.7)
  * 
  * conditions required for convergence with probability 1:
- * sum_n alpha_n(s,a)^1 == infinity
- * sum_n alpha_n(s,a)^2 < infinity
+ * sum_n alpha_n(s, a)^1 == infinity
+ * sum_n alpha_n(s, a)^2 < infinity
  * 
  * Example:
  * in the Gambler problem the following values seem to work well

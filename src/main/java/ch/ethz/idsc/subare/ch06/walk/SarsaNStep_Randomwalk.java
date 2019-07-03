@@ -19,7 +19,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 
 /** Example 7.1
  * 
- * determines state action value function q(s,a).
+ * determines state action value function q(s, a).
  * initial policy is irrelevant because each state allows only one action.
  * 
  * <pre>

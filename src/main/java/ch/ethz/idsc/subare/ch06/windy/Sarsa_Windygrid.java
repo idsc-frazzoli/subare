@@ -17,7 +17,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
-/** determines q(s,a) function for equiprobable "random" policy */
+/** determines q(s, a) function for equiprobable "random" policy */
 enum Sarsa_Windygrid {
   ;
   static void handle(SarsaType sarsaType, int batches) throws Exception {

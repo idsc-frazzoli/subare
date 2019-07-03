@@ -11,11 +11,12 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.io.Timing;
 
 /** general bellman equation:
- * v_pi(s) == Sum_a pi(a|s) * Sum_{s',r} p(s',r | s,a) * (r + gamma * v_pi(s'))
+ * v_pi(s) == Sum_a pi(a|s) * Sum_{s', r} p(s', r | s, a) * (r + gamma * v_pi(s'))
  * bellman optimality equation:
- * v_*(s) == max_a Sum_{s',r} p(s',r | s,a) * (r + gamma * v_*(s')) */
+ * v_*(s) == max_a Sum_{s', r} p(s', r | s, a) * (r + gamma * v_*(s')) */
 public class IterativePolicyEvaluation {
   private final StandardModel standardModel;
   private final ActionValueAdapter actionValueAdapter;
@@ -55,12 +56,11 @@ public class IterativePolicyEvaluation {
 
   public void until(Scalar threshold, int flips) {
     Scalar past = null;
-    final long tic = System.nanoTime();
+    Timing timing = Timing.started();
     while (true) {
       step();
       Scalar delta = DiscreteValueFunctions.distance(vs_new, vs_old);
-      final long toc = System.nanoTime();
-      if (3e9 < toc - tic)
+      if (3e9 < timing.nanoSeconds())
         System.out.println(past + " -> " + delta + " " + alternate);
       if (past != null && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {

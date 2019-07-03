@@ -21,15 +21,15 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.TensorRuntimeException;
 
-/** class digests (s,a,r,s') and maintains a statistic to estimate
+/** class digests (s, a, r, s') and maintains a statistic to estimate
  * 
- * 1) (s,a) -> E[r]
- * 2) (s,a) -> union of move(s,a) == all possible states that can follow (s,a)
- * 3) (s,a) -> p(s'|s,a)
+ * 1) (s, a) -> E[r]
+ * 2) (s, a) -> union of move(s, a) == all possible states that can follow (s, a)
+ * 3) (s, a) -> p(s'|s, a)
  * 
  * the three (estimated) functions constitute {@link ActionValueInterface}
  * 
- * (s,a,r,s') originate from episodes, or single step trials */
+ * (s, a, r, s') originate from episodes, or single step trials */
 public class ActionValueStatistics implements DequeDigest, EpisodeDigest, ActionValueInterface {
   private final Map<Tensor, TransitionTracker> transitionTrackers = new HashMap<>();
   private final DiscreteModel discreteModel;

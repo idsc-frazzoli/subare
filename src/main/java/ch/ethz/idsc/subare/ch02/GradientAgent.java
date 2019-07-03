@@ -22,7 +22,7 @@ public class GradientAgent extends Agent {
   @Override
   public int protected_takeAction() {
     Tensor pi = SoftmaxLayer.of(Ht);
-    final double rnd = RANDOM.nextDouble(); // value in [0,1)
+    final double rnd = RANDOM.nextDouble(); // value in [0, 1)
     notifyAboutRandomizedDecision();
     double sum = 0;
     Integer a = null;

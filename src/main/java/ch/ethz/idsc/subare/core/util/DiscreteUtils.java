@@ -43,7 +43,7 @@ public enum DiscreteUtils {
                 .reduce(binaryOperator).get()))); // <- assumes greedy policy
   }
 
-  /** compute state value function v(s) based on given action-value function q(s,a)
+  /** compute state value function v(s) based on given action-value function q(s, a)
    * 
    * @param stateActionModel
    * @param qsa
