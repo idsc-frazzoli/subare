@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.demo.bus;
 
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.sca.Abs;
 import ch.ethz.idsc.tensor.sca.Mod;
 import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
@@ -16,6 +15,6 @@ import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
   @Override
   public Scalar apply(Scalar t) {
-    return Abs.of(mod.apply(t));
+    return mod.apply(t).abs();
   }
 }
