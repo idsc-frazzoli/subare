@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
-import ch.ethz.idsc.subare.util.GlobalAssert;
-import ch.ethz.idsc.tensor.Scalars;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Mean;
+import ch.ethz.idsc.tensor.sca.Chop;
 
 /* package */ enum AllPairs {
   ;
@@ -25,10 +25,11 @@ import ch.ethz.idsc.tensor.red.Mean;
           Agent a2 = list.get(i2).get();
           table.append(Training.train(a1, a2, epochs));
         }
-        GlobalAssert.that(table.length() == runs);
+        if (table.length() != runs)
+          throw new RuntimeException();
         Tensor mean = Mean.of(table);
-        GlobalAssert.that(Scalars.isZero(matrix.Get(i1, i2)));
-        GlobalAssert.that(Scalars.isZero(matrix.Get(i2, i1)));
+        Chop.NONE.requireClose(matrix.Get(i1, i2), RealScalar.ZERO);
+        Chop.NONE.requireClose(matrix.Get(i2, i1), RealScalar.ZERO);
         matrix.set(mean.Get(0), i1, i2);
         matrix.set(mean.Get(1), i2, i1);
       }

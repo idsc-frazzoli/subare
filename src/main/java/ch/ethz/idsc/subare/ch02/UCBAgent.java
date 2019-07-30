@@ -1,8 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.DoubleScalar;
+import ch.ethz.idsc.tensor.IntegerQ;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -10,6 +10,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Total;
 import ch.ethz.idsc.tensor.sca.Log;
+import ch.ethz.idsc.tensor.sca.Sign;
 import ch.ethz.idsc.tensor.sca.Sqrt;
 
 /** Section 2.6 "upper-confidence-bound action selection" */
@@ -39,8 +40,7 @@ public class UCBAgent extends FairMaxAgent {
         // if an action hasn't been taken yet, bias towards this action is infinite
         bias = DoubleScalar.POSITIVE_INFINITY;
       else {
-        Scalar count = Total.of(Na).Get();
-        GlobalAssert.that(0 < (Integer) count.number());
+        Scalar count = Sign.requirePositive(IntegerQ.require(Total.of(Na).Get()));
         Scalar logt = Log.of(count);
         bias = c.multiply(Sqrt.of(logt.divide(Nta)));
       }
