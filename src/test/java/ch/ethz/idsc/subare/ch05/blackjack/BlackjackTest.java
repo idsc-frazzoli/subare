@@ -43,7 +43,8 @@ public class BlackjackTest extends TestCase {
     }
     Map<Tensor, Long> map = Tally.of(tally);
     // {1=6574, 2=2537, 3=759, 4=121, 5=8, 7=1}
+    // {2=2497, 1=6623, 6=1, 5=18, 4=138, 3=723}
     assertTrue(5 <= map.size());
-    // System.out.println("" + Tally.of(tally));
+    System.out.println("" + Tally.of(tally));
   }
 }

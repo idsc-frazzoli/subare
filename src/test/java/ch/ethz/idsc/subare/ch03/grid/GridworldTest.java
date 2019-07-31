@@ -39,7 +39,6 @@ public class GridworldTest extends TestCase {
     for (int index = 0; index < 40; ++index) {
       TabularSteps.batch(gridworld, gridworld, rstqp);
       error = DiscreteValueFunctions.distance(ref, qsa);
-      // System.out.println(error);
     }
     assertTrue(Scalars.lessThan(error, RealScalar.of(3)));
   }

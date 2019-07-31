@@ -22,7 +22,6 @@ public class ChargerTest extends TestCase {
     Charger charger = new Charger(tripProfile, 7);
     final int time = 2;
     Scalar drawn = tripProfile.unitsDrawn(time);
-    // System.out.println(drawn);
     Tensor res = charger.move(Tensors.vector(2, 3), RealScalar.of(3));
     assertEquals(res.Get(1), RealScalar.of(3 + 3).subtract(drawn));
   }
