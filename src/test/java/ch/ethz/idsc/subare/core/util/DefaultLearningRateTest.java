@@ -27,7 +27,6 @@ public class DefaultLearningRateTest extends TestCase {
     assertEquals(first, RealScalar.ONE);
     sarsa.sac().digest(new StepAdapter(state, action, RealScalar.ZERO, state));
     Scalar second = learningRate.alpha(new StepAdapter(state, action, RealScalar.ZERO, state), sarsa.sac());
-    // System.out.println(second);
     assertTrue(Scalars.lessThan(second, first));
   }
 

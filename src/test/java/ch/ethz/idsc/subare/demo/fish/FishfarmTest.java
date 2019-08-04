@@ -11,7 +11,6 @@ public class FishfarmTest extends TestCase {
   public void testActions() {
     Fishfarm fishfarm = new Fishfarm(20, 10);
     Tensor actions = fishfarm.actions(Tensors.vector(2, 6));
-    // System.out.println(actions);
     assertEquals(actions, Range.of(0, 6 + 1));
   }
 

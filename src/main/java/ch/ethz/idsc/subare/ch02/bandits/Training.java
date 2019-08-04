@@ -1,10 +1,6 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02.bandits;
 
-import java.io.IOException;
-import java.util.Map;
-
-import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.subare.ch02.EGreedyAgent;
 import ch.ethz.idsc.subare.ch02.GradientAgent;
 import ch.ethz.idsc.subare.ch02.OptimistAgent;
@@ -13,7 +9,6 @@ import ch.ethz.idsc.subare.ch02.UCBAgent;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.Tensor;
 
 /** chapter 2:
  * Multi-arm Bandits */
@@ -38,10 +33,11 @@ import ch.ethz.idsc.tensor.Tensor;
     return judger;
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     Judger judger = train(100);
     judger.ranking();
-    Map<Agent, Tensor> map = judger.map();
+    // Map<Agent, Tensor> map =
+    judger.map();
     // VisualSet visualSet = new VisualSet();
     // for (Entry<Agent, Tensor> entry : map.entrySet()) {
     // // VisualRow visualRow =

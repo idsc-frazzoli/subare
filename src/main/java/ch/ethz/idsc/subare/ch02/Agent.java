@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -43,7 +42,8 @@ public abstract class Agent {
   protected abstract void protected_feedback(int a, Scalar value);
 
   public final void feedback(int a, Scalar value) {
-    GlobalAssert.that(a == actionReminder);
+    if (a != actionReminder)
+      throw new RuntimeException(a + " " + actionReminder);
     total = total.add(value);
     actions.append(RealScalar.of(a));
     ++count;

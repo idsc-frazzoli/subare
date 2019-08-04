@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.util;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -13,11 +12,9 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
 
 public class FairArgMax implements Serializable {
-  private static final Random RANDOM = new Random();
-
   /** @param tensor
    * @return
-   * @throws exception if tensor is empty */
+   * @throws Exception if tensor is empty, or a scalar */
   public static FairArgMax of(Tensor tensor) {
     return new FairArgMax(tensor);
   }
@@ -34,11 +31,7 @@ public class FairArgMax implements Serializable {
   }
 
   public int nextRandomIndex() {
-    return nextRandomIndex(RANDOM);
-  }
-
-  public int nextRandomIndex(Random random) {
-    return list.get(random.nextInt(list.size()));
+    return RandomChoice.of(list);
   }
 
   public boolean isUnique() {

@@ -3,7 +3,6 @@ package ch.ethz.idsc.subare.demo.airport;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -15,6 +14,7 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.red.Total;
+import ch.ethz.idsc.tensor.sca.Chop;
 import ch.ethz.idsc.tensor.sca.Ramp;
 
 /** A two node problem with an airport and a center. Passengers arrive at the airport and can be driven to
@@ -45,7 +45,7 @@ public class Airport implements StandardModel, MonteCarloInterface {
         states.append(Tensors.vector(t, v, VEHICLES - v));
       }
     }
-    GlobalAssert.that(Total.of(states.get(0)).equals(RealScalar.of(VEHICLES)));
+    Chop.NONE.requireClose(Total.of(states.get(0)), RealScalar.of(VEHICLES));
     this.states = states.unmodifiable();
   }
 
@@ -77,7 +77,7 @@ public class Airport implements StandardModel, MonteCarloInterface {
   @Override
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state)) {
-      GlobalAssert.that(action.equals(Tensors.of(RealScalar.ZERO)));
+      Chop.NONE.requireClose(action, Tensors.of(RealScalar.ZERO));
       return state;
     }
     Scalar delta = action.Get(0).subtract(action.Get(1));
@@ -140,7 +140,7 @@ public class Airport implements StandardModel, MonteCarloInterface {
   @Override
   public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
     if (isTerminal(state)) {
-      GlobalAssert.that(move(state, action).equals(next));
+      Chop.NONE.requireClose(move(state, action), next);
       return RealScalar.ONE;
     }
     if (move(state, action).equals(next))

@@ -9,19 +9,18 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.sca.Chop;
 import junit.framework.TestCase;
 
 public class CarRentalTest extends TestCase {
   public void testActions() {
     CarRental carRental = new CarRental(20);
     assertEquals(carRental.actions(Tensors.vector(3, 1)), Range.of(-3, 1 + 1));
-    // System.out.println(Pretty.of(cr.actions(Tensors.vector(3, 1))));
   }
 
   public void testActions2() {
     CarRental carRental = new CarRental(20);
     assertEquals(carRental.actions(Tensors.vector(10, 10)), Range.of(-5, 5 + 1));
-    // System.out.println(Pretty.of(cr.actions(Tensors.vector(10, 10))));
   }
 
   public void testTransitionProb() {
@@ -29,9 +28,8 @@ public class CarRentalTest extends TestCase {
     Tensor state = Tensors.vector(2, 3);
     Tensor action = RealScalar.of(-1);
     Tensor next = Tensors.vector(3, 2);
-    @SuppressWarnings("unused")
     Scalar prob = carRental.transitionProbability(state, action, next);
-    // System.out.println(prob);
+    Chop._03.requireClose(prob, RealScalar.of(0.01849));
   }
 
   public void testTransitionProb1() {
@@ -39,9 +37,8 @@ public class CarRentalTest extends TestCase {
     Tensor state = Tensors.vector(2, 3);
     Tensor action = RealScalar.of(-1);
     Tensor next = Tensors.vector(10, 10);
-    @SuppressWarnings("unused")
     Scalar prob = carRental.transitionProbability(state, action, next);
-    // System.out.println(prob);
+    Chop._09.requireClose(prob, RealScalar.of(2.053630315535358E-7));
   }
 
   public void testTransitionsProb() {

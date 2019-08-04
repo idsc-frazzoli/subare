@@ -22,15 +22,6 @@ public class FairArgMaxTest extends TestCase {
     assertEquals(set.size(), 3);
   }
 
-  public void testEmpty() {
-    try {
-      FairArgMax.of(Tensors.empty());
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
-  }
-
   public void testInfty() {
     Tensor d = Tensors.of( //
         DoubleScalar.POSITIVE_INFINITY, RealScalar.ONE, //
@@ -39,5 +30,23 @@ public class FairArgMaxTest extends TestCase {
     assertEquals(fairArgMax.optionsCount(), 3);
     List<Integer> list = fairArgMax.options();
     assertEquals(list, Arrays.asList(0, 2, 3));
+  }
+
+  public void testEmptyFail() {
+    try {
+      FairArgMax.of(Tensors.empty());
+      fail();
+    } catch (Exception exception) {
+      // ---
+    }
+  }
+
+  public void testScalarFail() {
+    try {
+      FairArgMax.of(RealScalar.ONE);
+      fail();
+    } catch (Exception exception) {
+      // ---
+    }
   }
 }

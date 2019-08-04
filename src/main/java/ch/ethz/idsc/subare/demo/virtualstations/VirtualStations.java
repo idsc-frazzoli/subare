@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
-import ch.ethz.idsc.subare.util.GlobalAssert;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -64,7 +63,8 @@ public class VirtualStations implements MonteCarloInterface {
   private void generateExactState() {
     { // to prevent warning
       int check = VEHICLES % NVNODES;
-      GlobalAssert.that(check == 0);
+      if (check != 0)
+        throw new RuntimeException();
     }
     for (int i = 0; i < NVNODES; ++i) {
       Map<Integer, Integer> subMap = new HashMap<>();
