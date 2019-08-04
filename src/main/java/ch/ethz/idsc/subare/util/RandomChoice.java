@@ -12,16 +12,18 @@ public enum RandomChoice {
   ;
   private static final Random RANDOM = new Random();
 
-  /** @param list
-   * @return */
-  public static <T> T of(List<T> list) {
-    return list.get(RANDOM.nextInt(list.size()));
-  }
-
   /** @param tensor
-   * @return */
+   * @return random entry of tensor
+   * @throws Exception if given tensor is empty */
   @SuppressWarnings("unchecked")
   public static <T extends Tensor> T of(Tensor tensor) {
     return (T) tensor.get(RANDOM.nextInt(tensor.length()));
+  }
+
+  /** @param list
+   * @return random entry of list
+   * @throws Exception if given list is empty */
+  public static <T> T of(List<T> list) {
+    return list.get(RANDOM.nextInt(list.size()));
   }
 }

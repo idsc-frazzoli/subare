@@ -2,12 +2,16 @@
 package ch.ethz.idsc.subare.util;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.alg.UnitVector;
+import ch.ethz.idsc.tensor.mat.IdentityMatrix;
 import junit.framework.TestCase;
 
 public class RandomChoiceTest extends TestCase {
@@ -25,7 +29,15 @@ public class RandomChoiceTest extends TestCase {
     assertTrue(scalar.equals(RealScalar.of(2)) || scalar.equals(RealScalar.of(5)));
   }
 
-  public void testTensorEmptyFail() {
+  public void testIdentityMatrix() {
+    Tensor tensor = RandomChoice.of(IdentityMatrix.of(3));
+    assertTrue( //
+        tensor.equals(UnitVector.of(3, 0)) || //
+            tensor.equals(UnitVector.of(3, 1)) || //
+            tensor.equals(UnitVector.of(3, 2)));
+  }
+
+  public void testTensorFail() {
     try {
       RandomChoice.of(Tensors.vector());
       fail();
@@ -34,6 +46,15 @@ public class RandomChoiceTest extends TestCase {
     }
     try {
       RandomChoice.of(RealScalar.ONE);
+      fail();
+    } catch (Exception exception) {
+      // ---
+    }
+  }
+
+  public void testListEmptyFail() {
+    try {
+      RandomChoice.of(Collections.emptyList());
       fail();
     } catch (Exception exception) {
       // ---
