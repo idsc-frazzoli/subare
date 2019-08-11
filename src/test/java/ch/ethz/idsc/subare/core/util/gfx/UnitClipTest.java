@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.util;
+package ch.ethz.idsc.subare.core.util.gfx;
 
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;

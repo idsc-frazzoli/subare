@@ -16,7 +16,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteStateActionCounter;
 import ch.ethz.idsc.subare.core.util.StateAction;
-import ch.ethz.idsc.subare.util.Average;
+import ch.ethz.idsc.subare.util.AverageTracker;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -33,7 +33,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator, StateActi
   private final Scalar gamma;
   private final DiscreteQsa qsa;
   private final StateActionCounter sac;
-  private final Map<Tensor, Average> map = new HashMap<>();
+  private final Map<Tensor, AverageTracker> map = new HashMap<>();
 
   /** @param discreteModel */
   public MonteCarloExploringStarts(DiscreteModel discreteModel) {
@@ -83,11 +83,11 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator, StateActi
     for (StepInterface stepInterface : trajectory) {
       Tensor key = StateAction.key(stepInterface);
       if (!map.containsKey(key))
-        map.put(key, new Average());
+        map.put(key, new AverageTracker());
       map.get(key).track(gains.get(key));
     }
     { // update
-      for (Entry<Tensor, Average> entry : map.entrySet()) {
+      for (Entry<Tensor, AverageTracker> entry : map.entrySet()) {
         Tensor key = entry.getKey();
         Tensor state = key.get(0);
         Tensor action = key.get(1);

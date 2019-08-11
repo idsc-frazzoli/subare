@@ -13,7 +13,7 @@ import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.EpisodeVsEstimator;
 import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.subare.util.Average;
+import ch.ethz.idsc.subare.util.AverageTracker;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -31,7 +31,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
   private final DiscreteModel discreteModel;
   // private final DiscreteVs vs;
-  private final Map<Tensor, Average> map = new HashMap<>(); // TODO no good!
+  private final Map<Tensor, AverageTracker> map = new HashMap<>(); // TODO no good!
   private final DiscountFunction discountFunction;
 
   public FirstVisitPolicyEvaluation(DiscreteModel discreteModel, DiscreteVs vs) {
@@ -63,7 +63,7 @@ public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
     for (StepInterface stepInterface : trajectory) {
       Tensor stateP = stepInterface.prevState();
       if (!map.containsKey(stateP))
-        map.put(stateP, new Average());
+        map.put(stateP, new AverageTracker());
       map.get(stateP).track(gains.get(stateP));
     }
   }
@@ -73,7 +73,7 @@ public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
     Tensor states = discreteModel.states();
     Index index = Index.build(states);
     Tensor values = Array.zeros(index.size());
-    for (Entry<Tensor, Average> entry : map.entrySet())
+    for (Entry<Tensor, AverageTracker> entry : map.entrySet())
       values.set(entry.getValue().Get(), index.of(entry.getKey()));
     return new DiscreteVs(index, values);
   }
