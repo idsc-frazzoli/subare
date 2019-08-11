@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.StepInterface;
-import ch.ethz.idsc.subare.util.Average;
+import ch.ethz.idsc.subare.util.AverageTracker;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -16,7 +16,7 @@ import ch.ethz.idsc.tensor.Tensor;
  * 
  * utility class for {@link ActionValueStatistics} */
 /* package */ class TransitionTracker implements StepDigest {
-  private final Average average = new Average();
+  private final AverageTracker average = new AverageTracker();
   private final Map<Tensor, Integer> map = new LinkedHashMap<>();
   private int total = 0;
 

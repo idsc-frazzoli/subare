@@ -1,5 +1,5 @@
 // code by jph
-package ch.ethz.idsc.subare.util;
+package ch.ethz.idsc.subare.core.util.gfx;
 
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.NumberQ;
@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
 /** clips scalars to interval [0, 1] excluding scalars that do not satisfy {@link NumberQ}
  * such as {@link DoubleScalar#POSITIVE_INFINITY} and {@link DoubleScalar#INDETERMINATE} */
-public enum UnitClip implements ScalarUnaryOperator {
+/* package */ enum UnitClip implements ScalarUnaryOperator {
   FUNCTION;
   // ---
   @Override

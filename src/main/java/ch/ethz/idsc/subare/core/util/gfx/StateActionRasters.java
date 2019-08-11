@@ -13,7 +13,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.subare.util.UnitClip;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -89,7 +88,7 @@ public enum StateActionRasters {
   public static Tensor qsaPolicyRef(StateActionRaster stateActionRaster, DiscreteQsa qsa, DiscreteQsa ref) {
     Tensor image1 = _render(stateActionRaster, DiscreteValueFunctions.rescaled(qsa));
     // return ImageResize.nearest(image1, stateActionRaster.magnify());
-    // System.out.println(image1.block(Arrays.asList(0,0), Arrays.asList(2,2)));
+    // System.out.println(image1.block(Arrays.asList(0, 0), Arrays.asList(2, 2)));
     Policy policy = PolicyType.GREEDY.bestEquiprobable(stateActionRaster.discreteModel(), qsa, null);
     Tensor image2 = _render(stateActionRaster, policy);
     Scalar qdelta = stateActionRaster.scaleQdelta();

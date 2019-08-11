@@ -8,7 +8,7 @@ import ch.ethz.idsc.tensor.Tensor;
 
 /** consumes Tensor/Scalar and tracks average
  * without the overhead of storing all input. */
-public class Average {
+public class AverageTracker {
   private Tensor average = null;
   private Scalar count = RealScalar.ZERO;
 
