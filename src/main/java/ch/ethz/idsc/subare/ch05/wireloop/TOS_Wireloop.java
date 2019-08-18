@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
@@ -19,6 +21,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Timing;
 
@@ -45,7 +48,8 @@ enum TOS_Wireloop {
     TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(wireloop, LAMBDA, mapper, learningRate, w, sac, policy);
     final String algo = sarsaType.name().toLowerCase();
     Timing timing = Timing.started();
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_tos_" + algo + ".gif"), 250)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + "_tos_" + algo + ".gif"), 250, TimeUnit.MILLISECONDS)) {
       for (int batch = 0; batch < 20; ++batch) {
         // System.out.println("batch " + batch);
         policy.setQsa(trueOnlineSarsa.qsaInterface());

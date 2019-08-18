@@ -2,6 +2,8 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch08.maze;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.PrioritizedSweeping;
@@ -19,6 +21,7 @@ import ch.ethz.idsc.subare.core.util.StepExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** determines q(s, a) function for equiprobable "random" policy */
@@ -40,8 +43,8 @@ enum PS_Dynamaze {
     Sarsa sarsa = sarsaType.sarsa(dynamaze, learningRate, qsa, sac, policy);
     PrioritizedSweeping prioritizedSweeping = new PrioritizedSweeping( //
         sarsa, 10, RealScalar.ZERO);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_ps_" + sarsaType + ".gif"), 250)) {
-      // ---
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + "_ps_" + sarsaType + ".gif"), 250, TimeUnit.MILLISECONDS)) {
       StepExploringStarts stepExploringStarts = //
           new StepExploringStarts(dynamaze, prioritizedSweeping) {
             @Override

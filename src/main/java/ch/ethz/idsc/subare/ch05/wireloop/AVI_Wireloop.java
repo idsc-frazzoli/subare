@@ -1,10 +1,13 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum AVI_Wireloop {
@@ -17,7 +20,8 @@ enum AVI_Wireloop {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     ActionValueIteration avi = ActionValueIteration.of(wireloop);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "L_avi.gif"), 250)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + "L_avi.gif"), 250, TimeUnit.MILLISECONDS)) {
       int batches = 50;
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, avi.qsa());

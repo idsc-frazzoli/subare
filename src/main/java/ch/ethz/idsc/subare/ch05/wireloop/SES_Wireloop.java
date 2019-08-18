@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
@@ -14,6 +16,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum SES_Wireloop {
@@ -38,8 +41,8 @@ enum SES_Wireloop {
         return policy;
       }
     };
-    try (AnimationWriter animationWriter = AnimationWriter.of( //
-        HomeDirectory.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100)) {
+    try (AnimationWriter animationWriter = new GifAnimationWriter( //
+        HomeDirectory.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 100, TimeUnit.MILLISECONDS)) {
       int index = 0;
       while (exploringStartsStream.batchIndex() < batches) {
         exploringStartsStream.nextEpisode();

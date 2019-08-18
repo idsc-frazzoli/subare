@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.SarsaType;
 import ch.ethz.idsc.subare.core.td.TrueOnlineSarsa;
@@ -19,6 +21,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Timing;
 
@@ -40,7 +43,8 @@ import ch.ethz.idsc.tensor.io.Timing;
     TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(gambler, LAMBDA, mapper, learningRate, w, sac, policy);
     final String name = sarsaType.name().toLowerCase();
     Timing timing = Timing.started();
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gambler_tos_" + name + ".gif"), 250)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("gambler_tos_" + name + ".gif"), 250, TimeUnit.MILLISECONDS)) {
       for (int batch = 0; batch < 100; ++batch) {
         // System.out.println("batch " + batch);
         policy.setQsa(trueOnlineSarsa.qsaInterface());

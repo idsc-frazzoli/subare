@@ -2,6 +2,8 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch06.cliff;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -17,6 +19,7 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -33,7 +36,8 @@ enum Sarsa_Cliffwalk {
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(cliffwalk, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     Sarsa sarsa = sarsaType.sarsa(cliffwalk, DefaultLearningRate.of(7, 0.61), qsa, sac, policy);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("cliffwalk_qsa_" + sarsaType + ".gif"), 200)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("cliffwalk_qsa_" + sarsaType + ".gif"), 200, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < batches; ++index) {
         // if (batches - 10 < index)
         Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);

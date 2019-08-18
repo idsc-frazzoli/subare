@@ -2,6 +2,7 @@
 package ch.ethz.idsc.subare.ch05.racetrack;
 
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StepInterface;
@@ -13,6 +14,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Primitives;
 
@@ -25,7 +27,8 @@ enum VI_RaceTrack {
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     Policy policy = PolicyType.GREEDY.bestEquiprobable(racetrack, vi.vs(), null);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + ".gif"), 400)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + ".gif"), 400, TimeUnit.MILLISECONDS)) {
       for (Tensor start : racetrack.statesStart) {
         Tensor image = racetrack.image();
         MonteCarloEpisode mce = new MonteCarloEpisode( //

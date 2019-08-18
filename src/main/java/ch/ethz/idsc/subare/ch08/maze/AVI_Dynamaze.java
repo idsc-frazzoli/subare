@@ -2,6 +2,8 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch08.maze;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -12,6 +14,7 @@ import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** action value iteration for cliff walk */
@@ -25,7 +28,8 @@ enum AVI_Dynamaze {
     // Export.of(UserHome.Pictures("dynamaze_qsa_avi.png"), //
     // DynamazeHelper.render(windygrid, DiscreteValueFunctions.rescaled(ref)));
     ActionValueIteration avi = ActionValueIteration.of(dynamaze);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_qsa_avi.gif"), 250)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + "_qsa_avi.gif"), 250, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < 50; ++index) {
         Infoline infoline = Infoline.print(dynamaze, index, ref, avi.qsa());
         animationWriter.append(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref));

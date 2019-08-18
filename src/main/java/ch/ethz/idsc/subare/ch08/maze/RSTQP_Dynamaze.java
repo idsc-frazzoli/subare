@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch08.maze;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -9,6 +11,7 @@ import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /**  */
@@ -22,7 +25,8 @@ enum RSTQP_Dynamaze {
     DiscreteQsa qsa = DiscreteQsa.build(dynamaze);
     Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         dynamaze, qsa, ConstantLearningRate.of(RealScalar.ONE));
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_qsa_rstqp.gif"), 250)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + "_qsa_rstqp.gif"), 250, TimeUnit.MILLISECONDS)) {
       int batches = 50;
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);

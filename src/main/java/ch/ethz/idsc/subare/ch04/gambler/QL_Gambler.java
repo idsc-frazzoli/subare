@@ -1,6 +1,8 @@
 // code by jz
 package ch.ethz.idsc.subare.ch04.gambler;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StateActionCounter;
@@ -22,6 +24,7 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -38,7 +41,8 @@ import ch.ethz.idsc.tensor.sca.Round;
     EGreedyPolicy policyEGreedy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
     policyEGreedy.setExplorationRate(LinearExplorationRate.of(batches, 0.1, 0.01));
     System.out.println(qsa.size());
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_ql.gif"), 100)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_ql.gif"), 100, TimeUnit.MILLISECONDS)) {
       LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
       Sarsa stepDigest = SarsaType.QLEARNING.sarsa(gambler, learningRate, qsa, sac, policyEGreedy);
       for (int index = 0; index < batches; ++index) {

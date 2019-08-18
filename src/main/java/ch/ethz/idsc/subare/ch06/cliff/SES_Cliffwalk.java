@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.cliff;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
@@ -16,6 +18,7 @@ import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
@@ -30,8 +33,8 @@ enum SES_Cliffwalk {
     // Gridworld gridworld = new Gridworld();
     final DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     DiscreteQsa qsa = DiscreteQsa.build(cliffwalk);
-    try (AnimationWriter animationWriter = AnimationWriter.of( //
-        HomeDirectory.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
+    try (AnimationWriter animationWriter = new GifAnimationWriter( //
+        HomeDirectory.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250, TimeUnit.MILLISECONDS)) {
       LearningRate learningRate = DefaultLearningRate.of(7, 0.61);
       StateActionCounter sac = new DiscreteStateActionCounter();
       EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(cliffwalk, qsa, sac);

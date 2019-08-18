@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch06.windy;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -8,6 +10,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** the R1STQP algorithm is cheating on the Windygrid
@@ -22,7 +25,8 @@ enum RSTQP_Windygrid {
     DiscreteQsa qsa = DiscreteQsa.build(windygrid);
     Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
         windygrid, qsa, ConstantLearningRate.one());
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("windygrid_qsa_rstqp.gif"), 250)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("windygrid_qsa_rstqp.gif"), 250, TimeUnit.MILLISECONDS)) {
       int batches = 40;
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(windygrid, index, ref, qsa);

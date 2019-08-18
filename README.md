@@ -1,6 +1,6 @@
 # ch.ethz.idsc.subare <a href="https://travis-ci.org/idsc-frazzoli/subare"><img src="https://travis-ci.org/idsc-frazzoli/subare.svg?branch=master" alt="Build Status"></a>
 
-Library for reinforcement learning in Java, version `0.3.4`
+Library for reinforcement learning in Java, version `0.3.5`
 
 Repository includes algorithms, examples, and exercises from the 2nd edition of [*Reinforcement Learning: An Introduction*](http://incompleteideas.net/book/the-book-2nd.html) by Richard S. Sutton, and Andrew G. Barto.
 
@@ -319,25 +319,26 @@ Exact expected reward of two adversarial Upper-Confidence-Bound agents depending
 
 Specify `dependency` and `repository` of the tensor library in the `pom.xml` file of your maven project:
 
-    <dependencies>
-      <dependency>
-        <groupId>ch.ethz.idsc</groupId>
-        <artifactId>subare</artifactId>
-        <version>0.3.4</version>
-      </dependency>
-    </dependencies>
-    
-    <repositories>
-      <repository>
-        <id>subare-mvn-repo</id>
-        <url>https://raw.github.com/idsc-frazzoli/subare/mvn-repo/</url>
-        <snapshots>
-          <enabled>true</enabled>
-          <updatePolicy>always</updatePolicy>
-        </snapshots>
-      </repository>
-    </repositories>
+```xml
+<dependencies>
+  <dependency>
+    <groupId>ch.ethz.idsc</groupId>
+    <artifactId>subare</artifactId>
+    <version>0.3.5</version>
+  </dependency>
+</dependencies>
 
+<repositories>
+  <repository>
+    <id>subare-mvn-repo</id>
+    <url>https://raw.github.com/idsc-frazzoli/subare/mvn-repo/</url>
+    <snapshots>
+      <enabled>true</enabled>
+      <updatePolicy>always</updatePolicy>
+    </snapshots>
+  </repository>
+</repositories>
+```
 The source code is attached to every release.
 
 ## Contributors

@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StateActionCounter;
@@ -22,6 +24,7 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
@@ -39,7 +42,8 @@ enum Sarsa_Gridworld {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gridworld, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("gridworld_" + sarsaType + "" + nstep + ".gif"), 250, TimeUnit.MILLISECONDS)) {
       LearningRate learningRate = DefaultLearningRate.of(2, 0.6);
       Sarsa sarsa = sarsaType.sarsa(gridworld, learningRate, qsa, sac, policy);
       for (int index = 0; index < batches; ++index) {

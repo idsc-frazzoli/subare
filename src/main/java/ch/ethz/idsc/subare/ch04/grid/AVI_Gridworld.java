@@ -2,12 +2,15 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch04.grid;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** solving grid world
@@ -38,7 +41,8 @@ enum AVI_Gridworld {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldRaster = new GridworldRaster(gridworld);
     ActionValueIteration avi = ActionValueIteration.of(gridworld);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gridworld_qsa_avi.gif"), 250)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("gridworld_qsa_avi.gif"), 250, TimeUnit.MILLISECONDS)) {
       for (int count = 0; count < 7; ++count) {
         animationWriter.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
         avi.step();

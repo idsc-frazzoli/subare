@@ -2,6 +2,8 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch08.maze;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -17,6 +19,7 @@ import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** determines q(s, a) function for equiprobable "random" policy */
@@ -35,7 +38,8 @@ enum TDQ_Dynamaze {
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     Sarsa sarsa = sarsaType.sarsa(dynamaze, learningRate, qsa, sac, policy);
     TabularDynaQ tabularDynaQ = new TabularDynaQ(sarsa, 10);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + "_tdq_" + sarsaType + ".gif"), 200, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < batches; ++index) {
         // if (EPISODES - 10 < index)
         Infoline.print(dynamaze, index, ref, qsa);
