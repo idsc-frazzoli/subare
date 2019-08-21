@@ -44,7 +44,7 @@ enum Sarsa_Dynamaze {
         // sarsa.supplyPolicy(() -> policy);
         // for (int count = 0; count < 5; ++count)
         ExploringStarts.batch(dynamaze, policy, nstep, sarsa);
-        animationWriter.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+        animationWriter.write(StateRasters.vs_rescale(dynamazeRaster, qsa));
         if (infoline.isLossfree())
           break;
       }

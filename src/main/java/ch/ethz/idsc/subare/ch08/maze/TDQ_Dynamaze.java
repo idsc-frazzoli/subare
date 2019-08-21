@@ -45,7 +45,7 @@ enum TDQ_Dynamaze {
         Infoline.print(dynamaze, index, ref, qsa);
         // for (int count = 0; count < 5; ++count)
         ExploringStarts.batch(dynamaze, policy, tabularDynaQ);
-        animationWriter.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+        animationWriter.write(StateRasters.vs_rescale(dynamazeRaster, qsa));
       }
     }
   }

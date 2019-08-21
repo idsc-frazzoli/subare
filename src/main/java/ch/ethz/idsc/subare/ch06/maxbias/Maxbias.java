@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.pdf.Distribution;
@@ -93,8 +94,9 @@ public class Maxbias implements StandardModel, MonteCarloInterface {
 
   @Override
   public Scalar transitionProbability(Tensor state, Tensor action, Tensor next) {
-    if (!move(state, action).equals(next))
-      throw new RuntimeException();
-    return KroneckerDelta.of(move(state, action), next);
+    // TODO this implementation does not make sense
+    if (move(state, action).equals(next))
+      return KroneckerDelta.of(move(state, action), next);
+    throw TensorRuntimeException.of(state, action, next);
   }
 }

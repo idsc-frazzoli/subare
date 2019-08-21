@@ -41,7 +41,7 @@ enum Sarsa_Blackjack {
         // sarsa.supplyPolicy(() -> policy);
         for (int count = 0; count < 10; ++count)
           ExploringStarts.batch(blackjack, policy, sarsa);
-        animationWriter.append(BlackjackHelper.joinAll(blackjack, qsa));
+        animationWriter.write(BlackjackHelper.joinAll(blackjack, qsa));
       }
     }
   }

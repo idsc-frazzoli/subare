@@ -43,7 +43,7 @@ enum Sarsa_Fishfarm {
         Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
         // sarsa.supplyPolicy(() -> policy);
         ExploringStarts.batch(fishfarm, policy, nstep, sarsa);
-        animationWriter.append(StateRasters.qsaLossRef(fishfarmRaster, qsa, ref));
+        animationWriter.write(StateRasters.qsaLossRef(fishfarmRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

@@ -42,7 +42,7 @@ enum Sarsa_Cliffwalk {
         // if (batches - 10 < index)
         Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);
         ExploringStarts.batch(cliffwalk, policy, nstep, sarsa);
-        animationWriter.append(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

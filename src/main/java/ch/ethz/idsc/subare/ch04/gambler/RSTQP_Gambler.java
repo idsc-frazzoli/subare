@@ -34,8 +34,8 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(gambler, index, ref, qsa);
       TabularSteps.batch(gambler, gambler, rstqp, avs);
-      animationWriter1.append(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
-      animationWriter2.append(StateActionRasters.qsa( //
+      animationWriter1.write(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
+      animationWriter2.write(StateActionRasters.qsa( //
           gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) rstqp.sac()).inQsa(gambler))));
       if (infoline.isLossfree())
         break;

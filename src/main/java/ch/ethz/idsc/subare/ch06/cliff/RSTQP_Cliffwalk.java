@@ -31,7 +31,7 @@ enum RSTQP_Cliffwalk {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(cliffwalk, index, ref, qsa);
         TabularSteps.batch(cliffwalk, cliffwalk, rstqp);
-        animationWriter.append(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

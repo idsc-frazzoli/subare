@@ -32,7 +32,7 @@ enum RSTQP_Wireloop {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
         TabularSteps.batch(wireloop, wireloop, rstqp);
-        animationWriter.append(WireloopHelper.render(wireloopRaster, ref, qsa));
+        animationWriter.write(WireloopHelper.render(wireloopRaster, ref, qsa));
         if (infoline.isLossfree())
           break;
       }

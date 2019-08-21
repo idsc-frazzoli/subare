@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.red.Max;
@@ -35,7 +36,7 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
 
   private DiscreteQsa(Index index, Tensor values) {
     if (index.size() != values.length())
-      throw new RuntimeException();
+      throw TensorRuntimeException.of(index.keys(), values);
     this.index = index;
     this.values = values;
   }

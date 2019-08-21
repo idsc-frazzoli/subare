@@ -53,11 +53,11 @@ import ch.ethz.idsc.tensor.io.Timing;
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
         DiscreteQsa qsaRef = trueOnlineSarsa.qsa();
         Infoline infoline = Infoline.print(gambler, batch, ref, qsaRef);
-        animationWriter.append(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
         if (infoline.isLossfree()) {
-          animationWriter.append(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
-          animationWriter.append(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
-          animationWriter.append(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
+          animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
+          animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
+          animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
           break;
         }
       }

@@ -44,10 +44,10 @@ enum AVI_Gridworld {
     try (AnimationWriter animationWriter = //
         new GifAnimationWriter(HomeDirectory.Pictures("gridworld_qsa_avi.gif"), 250, TimeUnit.MILLISECONDS)) {
       for (int count = 0; count < 7; ++count) {
-        animationWriter.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
+        animationWriter.write(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
         avi.step();
       }
-      animationWriter.append(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
+      animationWriter.write(StateActionRasters.qsa(gridworldRaster, DiscreteValueFunctions.rescaled(avi.qsa())));
     }
     // ---
     DiscreteUtils.print(avi.qsa());

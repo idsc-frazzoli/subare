@@ -38,7 +38,7 @@ enum Sarsa_Wireloop {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
         ExploringStarts.batch(wireloop, policy, nstep, sarsa);
-        animationWriter.append(WireloopHelper.render(wireloopRaster, ref, qsa));
+        animationWriter.write(WireloopHelper.render(wireloopRaster, ref, qsa));
         if (infoline.isLossfree())
           break;
       }

@@ -26,10 +26,10 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
       for (int index = 0; index < 13; ++index) {
         DiscreteQsa qsa = avi.qsa();
         Infoline.print(gambler, index, ref, qsa);
-        animationWriter.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
+        animationWriter.write(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
         avi.step();
       }
-      animationWriter.append(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), avi.qsa(), ref)));
+      animationWriter.write(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), avi.qsa(), ref)));
     }
   }
 }

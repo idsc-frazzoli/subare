@@ -31,7 +31,7 @@ enum RSTQP_Dynamaze {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
         TabularSteps.batch(dynamaze, dynamaze, rstqp);
-        animationWriter.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+        animationWriter.write(StateRasters.vs_rescale(dynamazeRaster, qsa));
         if (infoline.isLossfree())
           break;
       }

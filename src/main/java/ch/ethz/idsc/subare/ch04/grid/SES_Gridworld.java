@@ -49,7 +49,7 @@ enum SES_Gridworld {
         exploringStartsStream.nextEpisode();
         if (episode % 5 == 0) {
           Infoline infoline = Infoline.print(gridworld, episode, ref, qsa);
-          animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+          animationWriter.write(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
           if (infoline.isLossfree())
             break;
         }

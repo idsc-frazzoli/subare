@@ -58,7 +58,7 @@ enum Double_Gridworld {
         policy.setQsa(doubleSarsa.qsa());
         policy.setSac(sac);
         ExploringStarts.batch(gridworld, policy, nstep, doubleSarsa);
-        animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
       }
     }
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

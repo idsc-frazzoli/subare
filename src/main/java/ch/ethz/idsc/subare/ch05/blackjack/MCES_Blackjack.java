@@ -38,7 +38,7 @@ enum MCES_Blackjack {
         for (int count = 0; count < batches; ++count) {
           episodes += ExploringStarts.batchWithReplay(blackjack, policy, mces);
         }
-        animationWriter.append(BlackjackHelper.joinAll(blackjack, mces.qsa()));
+        animationWriter.write(BlackjackHelper.joinAll(blackjack, mces.qsa()));
         System.out.println(episodes);
       }
     }

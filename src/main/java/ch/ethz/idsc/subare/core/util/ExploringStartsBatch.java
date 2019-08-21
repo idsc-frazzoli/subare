@@ -40,7 +40,7 @@ import ch.ethz.idsc.tensor.Tensor;
     Tensor state = key.get(0); // first state
     Tensor action = key.get(1); // first action
     if (monteCarloInterface.isTerminal(state)) // consistency check
-      throw new RuntimeException();
+      throw new IllegalStateException();
     Queue<Tensor> queue = new ArrayDeque<>();
     queue.add(action);
     ++index;

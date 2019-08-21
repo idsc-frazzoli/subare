@@ -35,7 +35,7 @@ enum MCES_Gridworld {
         for (int count = 0; count < 1; ++count) {
           ExploringStarts.batch(gridworld, policy, mces);
         }
-        animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), mces.qsa(), ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), mces.qsa(), ref));
       }
     }
   }

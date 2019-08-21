@@ -43,7 +43,7 @@ public abstract class Agent {
 
   public final void feedback(int a, Scalar value) {
     if (a != actionReminder)
-      throw new RuntimeException(a + " " + actionReminder);
+      throw new IllegalArgumentException(a + " " + actionReminder);
     total = total.add(value);
     actions.append(RealScalar.of(a));
     ++count;

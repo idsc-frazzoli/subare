@@ -48,7 +48,7 @@ enum SES_Wireloop {
         exploringStartsStream.nextEpisode();
         if (index % 50 == 0) {
           Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
-          animationWriter.append(WireloopHelper.render(wireloopRaster, ref, qsa));
+          animationWriter.write(WireloopHelper.render(wireloopRaster, ref, qsa));
           if (infoline.isLossfree())
             break;
         }

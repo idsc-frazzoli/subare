@@ -35,7 +35,7 @@ enum MCES_Cliffwalk {
           PolicyBase policy = PolicyType.EGREEDY.bestEquiprobable(cliffwalk, mces.qsa(), sac);
           ExploringStarts.batch(cliffwalk, policy, mces);
         }
-        animationWriter.append(StateActionRasters.qsaLossRef(cliffwalkRaster, mces.qsa(), ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(cliffwalkRaster, mces.qsa(), ref));
       }
     }
   }

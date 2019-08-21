@@ -9,7 +9,7 @@ import ch.ethz.idsc.tensor.Tensors;
 /* package */ enum Training {
   ;
   /** rewards average at 2 */
-  static final Tensor r2 = Tensors.matrixInt(new int[][] { //
+  static final Tensor R2 = Tensors.matrixInt(new int[][] { //
       { 1, 4 }, //
       { 0, 3 } });
 
@@ -18,7 +18,7 @@ import ch.ethz.idsc.tensor.Tensors;
    * @param epochs
    * @return tensor of rewards averaged over number of actions */
   static Tensor train(Agent a1, Agent a2, int epochs) {
-    Judger judger = new Judger(r2, a1, a2);
+    Judger judger = new Judger(R2, a1, a2);
     for (int round = 0; round < epochs; ++round)
       judger.play();
     return judger.ranking();

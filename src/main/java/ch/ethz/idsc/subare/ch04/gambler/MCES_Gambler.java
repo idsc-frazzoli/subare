@@ -34,7 +34,7 @@ import ch.ethz.idsc.tensor.sca.Round;
       for (int index = 0; index < batches; ++index) {
         Infoline.print(gambler, index, ref, mces.qsa());
         ExploringStarts.batch(gambler, policy, mces);
-        animationWriter.append(StateActionRasters.qsaPolicyRef(gamblerRaster, mces.qsa(), ref));
+        animationWriter.write(StateActionRasters.qsaPolicyRef(gamblerRaster, mces.qsa(), ref));
       }
     }
     System.out.println("done");

@@ -27,7 +27,7 @@ enum RSTQP_Blackjack {
       for (int index = 0; index < batches; ++index) {
         for (int count = 0; count < 100; ++count)
           TabularSteps.batch(blackjack, blackjack, rstqp);
-        animationWriter.append(BlackjackHelper.joinAll(blackjack, qsa));
+        animationWriter.write(BlackjackHelper.joinAll(blackjack, qsa));
       }
     }
   }

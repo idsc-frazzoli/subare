@@ -45,8 +45,8 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
       Infoline.print(gambler, index, ref, qsa);
       ExploringStarts.batch(gambler, policy, 1, sarsa);
       // ---
-      animationWriter1.append(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
-      animationWriter2.append(StateActionRasters.qsa( //
+      animationWriter1.write(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
+      animationWriter2.write(StateActionRasters.qsa( //
           gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) sarsa.sac()).inQsa(gambler))));
     }
     animationWriter1.close();

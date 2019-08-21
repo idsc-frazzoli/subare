@@ -62,7 +62,7 @@ public class LearningCompetition {
         processEntry(image, entry.getKey(), entry.getValue(), findex));
         System.out.println( //
             String.format("%3d %s sec", index, RealScalar.of(timing.seconds()).map(Round._1)));
-        animationWriter.append(ImageResize.nearest(image, magnify));
+        animationWriter.write(ImageResize.nearest(image, magnify));
       }
     }
   }

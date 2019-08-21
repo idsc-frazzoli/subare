@@ -32,7 +32,7 @@ enum AVI_Dynamaze {
         new GifAnimationWriter(HomeDirectory.Pictures(name + "_qsa_avi.gif"), 250, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < 50; ++index) {
         Infoline infoline = Infoline.print(dynamaze, index, ref, avi.qsa());
-        animationWriter.append(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref));
+        animationWriter.write(StateRasters.qsaLossRef(dynamazeRaster, avi.qsa(), ref));
         avi.step();
         if (infoline.isLossfree())
           break;

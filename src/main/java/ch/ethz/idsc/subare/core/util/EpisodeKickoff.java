@@ -22,7 +22,7 @@ public enum EpisodeKickoff {
 
   public static EpisodeInterface single(MonteCarloInterface monteCarloInterface, Policy policy, Tensor start) {
     if (monteCarloInterface.isTerminal(start))
-      throw new RuntimeException();
+      throw new IllegalStateException();
     return new MonteCarloEpisode(monteCarloInterface, policy, start, new ArrayDeque<>());
   }
 }

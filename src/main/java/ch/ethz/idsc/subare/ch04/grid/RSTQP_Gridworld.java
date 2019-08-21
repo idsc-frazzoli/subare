@@ -26,7 +26,7 @@ enum RSTQP_Gridworld {
         new GifAnimationWriter(HomeDirectory.Pictures("gridworld_qsa_rstqp.gif"), 250, TimeUnit.MILLISECONDS)) {
       int batches = 10;
       for (int index = 0; index < batches; ++index) {
-        animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
         Infoline.print(gridworld, index, ref, qsa);
         TabularSteps.batch(gridworld, gridworld, rstqp);
       }

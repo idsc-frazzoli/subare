@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 
 /** index is similar to a database index over the 0-level entries of the tensor.
  * the index allows fast checks for containment and gives the position of the key
@@ -39,9 +40,9 @@ public class Index implements Serializable {
   }
 
   public int of(Tensor row) {
-    if (!containsKey(row))
-      throw new RuntimeException("unknown key=" + row);
-    return map.get(row);
+    if (containsKey(row))
+      return map.get(row);
+    throw TensorRuntimeException.of(row);
   }
 
   public int size() {

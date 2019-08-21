@@ -9,6 +9,7 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.alg.Range;
@@ -112,6 +113,6 @@ public class Gambler implements StandardModel, MonteCarloInterface {
       return P_win;
     if (state.subtract(action).equals(next))
       return RealScalar.ONE.subtract(P_win);
-    throw new RuntimeException();
+    throw TensorRuntimeException.of(state, action, next);
   }
 }

@@ -35,7 +35,7 @@ enum MCES_Wireloop {
         for (int count = 0; count < 4; ++count) {
           ExploringStarts.batch(wireloop, policy, mces);
         }
-        animationWriter.append(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));
+        animationWriter.write(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));
         if (infoline.isLossfree())
           break;
       }

@@ -40,7 +40,7 @@ enum Sarsa_Windygrid {
         // sarsa.supplyPolicy(() -> policy);
         for (int count = 0; count < 10; ++count) // because there is only 1 start state
           ExploringStarts.batch(windygrid, policy, sarsa);
-        animationWriter.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

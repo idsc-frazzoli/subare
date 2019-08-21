@@ -21,10 +21,10 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
         new GifAnimationWriter(HomeDirectory.Pictures("carrental_vi.gif"), 250, TimeUnit.MILLISECONDS)) {
       for (int count = 0; count <= 25; ++count) {
         System.out.println(count);
-        animationWriter.append(CarRentalHelper.joinAll(carRental, vi.vs()));
+        animationWriter.write(CarRentalHelper.joinAll(carRental, vi.vs()));
         vi.step();
       }
-      animationWriter.append(CarRentalHelper.joinAll(carRental, vi.vs()));
+      animationWriter.write(CarRentalHelper.joinAll(carRental, vi.vs()));
     }
   }
 }

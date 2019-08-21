@@ -35,7 +35,7 @@ enum CAMC_Gridworld { // TODO this looks like WIP
           // EGreedyPolicy.bestEquiprobable(gridworld, camc.vs(), epsilon.Get(index));
           ExploringStarts.batch(gridworld, policy, camc);
         }
-        animationWriter.append(StateRasters.vs(gridworldRaster, DiscreteValueFunctions.rescaled(camc.vs())));
+        animationWriter.write(StateRasters.vs(gridworldRaster, DiscreteValueFunctions.rescaled(camc.vs())));
       }
     }
   }

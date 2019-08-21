@@ -31,7 +31,7 @@ enum RSTQP_Windygrid {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(windygrid, index, ref, qsa);
         TabularSteps.batch(windygrid, windygrid, rstqp);
-        animationWriter.append(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(windygridRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

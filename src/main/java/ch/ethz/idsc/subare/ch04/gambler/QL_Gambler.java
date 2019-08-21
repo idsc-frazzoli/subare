@@ -50,7 +50,7 @@ import ch.ethz.idsc.tensor.sca.Round;
         for (int count = 0; count < 1; ++count) {
           ExploringStarts.batch(gambler, policy, 1, stepDigest);
         }
-        animationWriter.append(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
+        animationWriter.write(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
       }
     }
     DiscreteUtils.print(qsa, Round._2);

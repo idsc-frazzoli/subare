@@ -25,12 +25,12 @@ enum AVI_Wireloop {
       int batches = 50;
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, avi.qsa());
-        animationWriter.append(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
+        animationWriter.write(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
         avi.step();
         if (infoline.isLossfree())
           break;
       }
-      animationWriter.append(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
+      animationWriter.write(WireloopHelper.render(wireloopRaster, ref, avi.qsa()));
     }
   }
 }

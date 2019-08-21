@@ -58,11 +58,11 @@ enum TOS_Wireloop {
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
         DiscreteQsa qsa = trueOnlineSarsa.qsa();
         Infoline infoline = Infoline.print(wireloop, batch, ref, qsa);
-        animationWriter.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
+        animationWriter.write(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
         if (infoline.isLossfree()) {
-          animationWriter.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
-          animationWriter.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
-          animationWriter.append(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
+          animationWriter.write(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
+          animationWriter.write(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
+          animationWriter.write(StateRasters.qsaLossRef(new WireloopRaster(wireloop), qsa, ref));
           break;
         }
       }

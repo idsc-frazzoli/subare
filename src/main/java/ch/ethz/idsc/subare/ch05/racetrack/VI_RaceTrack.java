@@ -46,7 +46,7 @@ enum VI_RaceTrack {
             image.set(Tensors.vector(128, 128, 128, 255), index[0], index[1]);
           }
         }
-        animationWriter.append(ImageResize.nearest(image, 6));
+        animationWriter.write(ImageResize.nearest(image, 6));
       }
     }
     System.out.println("gif created");

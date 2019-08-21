@@ -31,7 +31,7 @@ enum RSTQP_Fishfarm {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
         TabularSteps.batch(fishfarm, fishfarm, rstqp);
-        animationWriter.append(StateRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
+        animationWriter.write(StateRasters.qsaLossRef(cliffwalkRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

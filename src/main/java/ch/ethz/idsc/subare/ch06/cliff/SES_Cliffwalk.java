@@ -53,7 +53,7 @@ enum SES_Cliffwalk {
         // if (episode % 5 == 0)
         {
           Infoline infoline = Infoline.print(cliffwalk, episode, ref, qsa);
-          animationWriter.append(StateActionRasters.qsaLossRef(new CliffwalkRaster(cliffwalk), qsa, ref));
+          animationWriter.write(StateActionRasters.qsaLossRef(new CliffwalkRaster(cliffwalk), qsa, ref));
           if (infoline.isLossfree())
             break;
         }

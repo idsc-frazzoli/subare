@@ -55,7 +55,7 @@ enum PS_Dynamaze {
       while (stepExploringStarts.batchIndex() < batches) {
         Infoline infoline = Infoline.print(dynamaze, stepExploringStarts.batchIndex(), ref, qsa);
         stepExploringStarts.nextEpisode();
-        animationWriter.append(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref));
+        animationWriter.write(StateRasters.qsaLossRef(dynamazeRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

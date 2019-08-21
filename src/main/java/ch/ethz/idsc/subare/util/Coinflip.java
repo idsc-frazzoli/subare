@@ -8,8 +8,9 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Clips;
 
 public class Coinflip {
-  /** @param p_head
-   * @return new instance of Coinflip with given probability p_head that tossHead() returns true */
+  /** @param p_head in the interval [0, 1]
+   * @return new instance of Coinflip with given probability p_head that {@link #tossHead()} returns true
+   * @throws Exception if given probability is not inside the unit interval */
   public static Coinflip of(Scalar p_head) {
     return new Coinflip(Clips.unit().requireInside(p_head));
   }
@@ -18,7 +19,7 @@ public class Coinflip {
    * "a fair coin is an idealized randomizing device with two states
    * (usually named "heads" and "tails") which are equally likely to occur."
    * 
-   * @return new instance of Coinflip for which tossHead() returns true with probability 1/2 */
+   * @return new instance of Coinflip for which {@link #tossHead()} returns true with probability 1/2 */
   public static Coinflip fair() {
     return new Coinflip(RationalScalar.HALF);
   }

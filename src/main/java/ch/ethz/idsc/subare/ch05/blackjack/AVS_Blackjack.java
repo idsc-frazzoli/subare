@@ -44,7 +44,7 @@ enum AVS_Blackjack {
         }
         ActionValueIteration avi = ActionValueIteration.of(blackjack, avs);
         avi.untilBelow(DecimalScalar.of(.0001), 3);
-        animationWriter.append( //
+        animationWriter.write( //
             Join.of( //
                 BlackjackHelper.joinAll(blackjack, mces.qsa()), //
                 BlackjackHelper.joinAll(blackjack, avi.qsa())));

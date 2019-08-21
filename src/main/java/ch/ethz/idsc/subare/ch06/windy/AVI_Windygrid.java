@@ -32,7 +32,7 @@ enum AVI_Windygrid {
         new GifAnimationWriter(HomeDirectory.Pictures("windygrid_qsa_avi.gif"), 250, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < 20; ++index) {
         Infoline infoline = Infoline.print(windygrid, index, ref, avi.qsa());
-        animationWriter.append(StateActionRasters.qsaLossRef(windygridRaster, avi.qsa(), ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(windygridRaster, avi.qsa(), ref));
         avi.step();
         if (infoline.isLossfree())
           break;

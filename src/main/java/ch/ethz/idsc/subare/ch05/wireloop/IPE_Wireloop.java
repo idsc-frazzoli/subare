@@ -24,7 +24,7 @@ enum IPE_Wireloop {
         new GifAnimationWriter(HomeDirectory.Pictures(name + "_ipe_iteration.gif"), 200, TimeUnit.MILLISECONDS)) {
       for (int count = 0; count < 20; ++count) {
         System.out.println(count);
-        animationWriter.append(StateRasters.vs_rescale(wireloopRaster, ipe.vs()));
+        animationWriter.write(StateRasters.vs_rescale(wireloopRaster, ipe.vs()));
         for (int ep = 0; ep < 5; ++ep)
           ipe.step();
       }

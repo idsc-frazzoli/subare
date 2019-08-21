@@ -33,12 +33,12 @@ enum AVI_Cliffwalk {
         new GifAnimationWriter(HomeDirectory.Pictures("cliffwalk_qsa_avi.gif"), 200, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < 20; ++index) {
         Infoline infoline = Infoline.print(cliffwalk, index, ref, avi.qsa());
-        animationWriter.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
         avi.step();
         if (infoline.isLossfree())
           break;
       }
-      animationWriter.append(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
+      animationWriter.write(StateActionRasters.qsaLossRef(cliffwalkRaster, avi.qsa(), ref));
     }
     DiscreteVs vs = DiscreteUtils.createVs(cliffwalk, ref);
     DiscreteUtils.print(vs);
