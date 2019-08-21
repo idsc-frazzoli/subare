@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -18,6 +20,7 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** Sarsa applied to gambler */
@@ -33,8 +36,8 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     // ---
-    AnimationWriter animationWriter1 = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150);
-    AnimationWriter animationWriter2 = AnimationWriter.of(HomeDirectory.Pictures("gambler_sac_" + sarsaType + ".gif"), 150);
+    AnimationWriter animationWriter1 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150, TimeUnit.MILLISECONDS);
+    AnimationWriter animationWriter2 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_sac_" + sarsaType + ".gif"), 150, TimeUnit.MILLISECONDS);
     // ---
     final Sarsa sarsa = sarsaType.sarsa(gambler, DefaultLearningRate.of(factor, exponent), qsa, sac, policy);
     // ---
@@ -42,8 +45,8 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
       Infoline.print(gambler, index, ref, qsa);
       ExploringStarts.batch(gambler, policy, 1, sarsa);
       // ---
-      animationWriter1.append(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
-      animationWriter2.append(StateActionRasters.qsa( //
+      animationWriter1.write(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
+      animationWriter2.write(StateActionRasters.qsa( //
           gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) sarsa.sac()).inQsa(gambler))));
     }
     animationWriter1.close();

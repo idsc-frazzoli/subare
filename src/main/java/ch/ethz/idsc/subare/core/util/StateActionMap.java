@@ -10,6 +10,7 @@ import java.util.Set;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.MoveInterface;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.Tensors;
 
 /** for deterministic {@link MoveInterface} to precompute and store the effective actions */
@@ -30,7 +31,7 @@ public class StateActionMap {
           filter.append(action);
       }
       if (Tensors.isEmpty(filter))
-        throw new RuntimeException("no actions for " + state);
+        throw TensorRuntimeException.of(state); // missing actions
       map.put(state, filter.unmodifiable());
     }
     return new StateActionMap(map);
@@ -58,7 +59,7 @@ public class StateActionMap {
    * @throws Exception if state already exists as key in this map */
   public void put(Tensor state, Tensor actions) {
     if (map.containsKey(state))
-      throw new RuntimeException();
+      throw TensorRuntimeException.of(state);
     map.put(state, actions.unmodifiable());
   }
 }

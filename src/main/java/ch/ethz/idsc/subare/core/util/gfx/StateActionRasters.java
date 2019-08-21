@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.util.gfx;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
@@ -37,7 +38,7 @@ public enum StateActionRasters {
     for (Tensor state : discreteModel.states())
       for (Tensor action : discreteModel.actions(state)) {
         Point point = stateActionRaster.point(state, action);
-        if (point != null)
+        if (Objects.nonNull(point))
           tensor.set(qsa.value(state, action), point.y, point.x);
       }
     // Clip.UNIT.apply(scalar)

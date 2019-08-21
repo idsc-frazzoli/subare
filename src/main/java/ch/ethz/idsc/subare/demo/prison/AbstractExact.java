@@ -42,12 +42,12 @@ import ch.ethz.idsc.tensor.alg.Array;
     if (a1.getRandomizedDecisionCount() != 0) {
       System.out.println(a1.getAbsDesc());
       System.out.println(SummaryString.of(a1));
-      throw new RuntimeException();
+      throw new IllegalStateException();
     }
     if (a2.getRandomizedDecisionCount() != 0) {
       System.out.println(a2.getAbsDesc());
       System.out.println(SummaryString.of(a2));
-      throw new RuntimeException();
+      throw new IllegalStateException();
     }
     return tensor;
   }

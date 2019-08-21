@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.EpisodeInterface;
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StateActionCounter;
@@ -21,6 +23,7 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
@@ -47,14 +50,15 @@ enum Double_Gridworld {
         gridworld, //
         DefaultLearningRate.of(5, .51), //
         qsa1, qsa2, sac1, sac2, policy1, policy2);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("gridworld_double_" + sarsaType + "" + nstep + ".gif"), 150, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < batches; ++index) {
         if (batches - 10 < index)
           Infoline.print(gridworld, index, ref, qsa1);
         policy.setQsa(doubleSarsa.qsa());
         policy.setSac(sac);
         ExploringStarts.batch(gridworld, policy, nstep, doubleSarsa);
-        animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
+        animationWriter.write(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa1, ref));
       }
     }
     // qsa.print(Round.toMultipleOf(DecimalScalar.of(.01)));

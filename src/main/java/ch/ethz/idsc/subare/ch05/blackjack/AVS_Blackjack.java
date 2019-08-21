@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.blackjack;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
@@ -15,6 +17,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** finding optimal policy to stay or hit
@@ -25,7 +28,8 @@ enum AVS_Blackjack {
   public static void main(String[] args) throws Exception {
     Blackjack blackjack = new Blackjack();
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(blackjack);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("blackjack_avs.gif"), 250)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("blackjack_avs.gif"), 250, TimeUnit.MILLISECONDS)) {
       int batches = 3; // 40
       Tensor epsilon = Subdivide.of(.2, .05, batches);
       StateActionCounter sac = new DiscreteStateActionCounter();
@@ -40,7 +44,7 @@ enum AVS_Blackjack {
         }
         ActionValueIteration avi = ActionValueIteration.of(blackjack, avs);
         avi.untilBelow(DecimalScalar.of(.0001), 3);
-        animationWriter.append( //
+        animationWriter.write( //
             Join.of( //
                 BlackjackHelper.joinAll(blackjack, mces.qsa()), //
                 BlackjackHelper.joinAll(blackjack, avi.qsa())));

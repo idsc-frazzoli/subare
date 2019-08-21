@@ -1,11 +1,14 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum IPE_Wireloop {
@@ -17,10 +20,11 @@ enum IPE_Wireloop {
     Policy policy = EquiprobablePolicy.create(wireloop);
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         wireloop, policy);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "_ipe_iteration.gif"), 200)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + "_ipe_iteration.gif"), 200, TimeUnit.MILLISECONDS)) {
       for (int count = 0; count < 20; ++count) {
         System.out.println(count);
-        animationWriter.append(StateRasters.vs_rescale(wireloopRaster, ipe.vs()));
+        animationWriter.write(StateRasters.vs_rescale(wireloopRaster, ipe.vs()));
         for (int ep = 0; ep < 5; ++ep)
           ipe.step();
       }

@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.gambler;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ActionValueStatistics;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
@@ -12,6 +14,7 @@ import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 // R1STQP algorithm is not suited for gambler's dilemma
@@ -25,14 +28,14 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
     Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of(gambler, qsa, //
         DefaultLearningRate.of(4, 0.71));
     ActionValueStatistics avs = new ActionValueStatistics(gambler);
-    AnimationWriter animationWriter1 = AnimationWriter.of(HomeDirectory.Pictures("gambler_qsa_rstqp.gif"), 100);
-    AnimationWriter animationWriter2 = AnimationWriter.of(HomeDirectory.Pictures("gambler_sac_rstqp.gif"), 200);
+    AnimationWriter animationWriter1 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_rstqp.gif"), 100, TimeUnit.MILLISECONDS);
+    AnimationWriter animationWriter2 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_sac_rstqp.gif"), 200, TimeUnit.MILLISECONDS);
     int batches = 200;
     for (int index = 0; index < batches; ++index) {
       Infoline infoline = Infoline.print(gambler, index, ref, qsa);
       TabularSteps.batch(gambler, gambler, rstqp, avs);
-      animationWriter1.append(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
-      animationWriter2.append(StateActionRasters.qsa( //
+      animationWriter1.write(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
+      animationWriter2.write(StateActionRasters.qsa( //
           gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) rstqp.sac()).inQsa(gambler))));
       if (infoline.isLossfree())
         break;

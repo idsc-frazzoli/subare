@@ -2,6 +2,8 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.demo.fish;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -17,6 +19,7 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -33,13 +36,14 @@ enum Sarsa_Fishfarm {
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(fishfarm, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.5, 0.01));
     Sarsa sarsa = sarsaType.sarsa(fishfarm, DefaultLearningRate.of(7, 0.61), qsa, sac, policy);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("fishfarm_qsa_" + sarsaType + ".gif"), 200, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < batches; ++index) {
         // if (batches - 10 < index)
         Infoline infoline = Infoline.print(fishfarm, index, ref, qsa);
         // sarsa.supplyPolicy(() -> policy);
         ExploringStarts.batch(fishfarm, policy, nstep, sarsa);
-        animationWriter.append(StateRasters.qsaLossRef(fishfarmRaster, qsa, ref));
+        animationWriter.write(StateRasters.qsaLossRef(fishfarmRaster, qsa, ref));
         if (infoline.isLossfree())
           break;
       }

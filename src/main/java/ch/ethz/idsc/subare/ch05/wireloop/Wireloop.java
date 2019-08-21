@@ -72,9 +72,9 @@ class Wireloop extends DeterministicStandardModel implements MonteCarloInterface
 
   @Override
   public Tensor actions(Tensor state) {
-    if (isTerminal(state))
-      return ACTIONS_TERMINAL; // list of actions {...} with only single action = {0, 0}
-    return ACTIONS;
+    return isTerminal(state) //
+        ? ACTIONS_TERMINAL // list of actions {...} with only single action = {0, 0}
+        : ACTIONS;
   }
 
   @Override

@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.blackjack;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -14,6 +16,7 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.sca.Round;
 
@@ -29,7 +32,8 @@ enum Sarsa_Blackjack {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(blackjack, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.1, 0.01));
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("blackjack_qsa_" + sarsaType + ".gif"), 200)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("blackjack_qsa_" + sarsaType + ".gif"), 200, TimeUnit.MILLISECONDS)) {
       Sarsa sarsa = sarsaType.sarsa(blackjack, DefaultLearningRate.of(2, 0.6), qsa, sac, policy);
       for (int index = 0; index < batches; ++index) {
         // Scalar error = DiscreteQsas.distance(qsa, ref);
@@ -37,7 +41,7 @@ enum Sarsa_Blackjack {
         // sarsa.supplyPolicy(() -> policy);
         for (int count = 0; count < 10; ++count)
           ExploringStarts.batch(blackjack, policy, sarsa);
-        animationWriter.append(BlackjackHelper.joinAll(blackjack, qsa));
+        animationWriter.write(BlackjackHelper.joinAll(blackjack, qsa));
       }
     }
   }

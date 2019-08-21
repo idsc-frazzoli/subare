@@ -64,8 +64,7 @@ public class ActionValueStatistics implements DequeDigest, EpisodeDigest, Action
       stepInterface = episodeInterface.step();
       digest(stepInterface);
     }
-    if (Objects.isNull(stepInterface))
-      throw new RuntimeException(); // episode start should not be terminal
+    Objects.requireNonNull(stepInterface); // episode start should not be terminal
     // digestTerminal(stepInterface.nextState()); // terminal state, already handled in constructor
   }
 

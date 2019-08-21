@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.util;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -12,6 +13,7 @@ import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Timing;
 import ch.ethz.idsc.tensor.opt.ScalarTensorFunction;
@@ -51,7 +53,8 @@ public class LearningCompetition {
     RESX = map.keySet().stream().mapToInt(point -> point.x).reduce(Math::max).getAsInt() + 1;
     int RESY = map.keySet().stream().mapToInt(point -> point.y).reduce(Math::max).getAsInt() + 1;
     Tensor image = Array.zeros(RESX + 1 + RESX, RESY, 4);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures("bulk_" + name + ".gif"), period)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures("bulk_" + name + ".gif"), period, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < epsilon.length(); ++index) {
         final int findex = index;
         Timing timing = Timing.started();
@@ -59,7 +62,7 @@ public class LearningCompetition {
         processEntry(image, entry.getKey(), entry.getValue(), findex));
         System.out.println( //
             String.format("%3d %s sec", index, RealScalar.of(timing.seconds()).map(Round._1)));
-        animationWriter.append(ImageResize.nearest(image, magnify));
+        animationWriter.write(ImageResize.nearest(image, magnify));
       }
     }
   }

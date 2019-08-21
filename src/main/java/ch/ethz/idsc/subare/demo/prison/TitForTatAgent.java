@@ -21,7 +21,7 @@ import ch.ethz.idsc.tensor.Tensors;
 
   @Override
   protected void protected_feedback(int a, Scalar value) {
-    Tensor rew = Training.r2.get(a);
+    Tensor rew = Training.R2.get(a);
     if (rew.Get(0).equals(value)) {
       nextAction = 0;
       return;

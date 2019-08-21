@@ -18,25 +18,25 @@ public class Gridworld extends DeterministicStandardModel implements MonteCarloI
   private static final Tensor TERMINATE1 = Tensors.vector(0, 0); // A
   private static final Tensor TERMINATE2 = Tensors.vector(3, 3); // A'
   private static final Clip CLIP = Clips.positive(3);
-  final int NX = 4;
-  final int NY = 4;
-  // ---
-  private final Tensor states = Flatten.of(Array.of(Tensors::vector, NX, NY), 1).unmodifiable();
-  final Tensor actions = Tensors.matrix(new Number[][] { //
+  private static final Tensor ACTIONS = Tensors.matrix(new Number[][] { //
       { -1, 0 }, //
       { +1, 0 }, //
       { 0, -1 }, //
       { 0, +1 } //
   }).unmodifiable();
+  static final int NX = 4;
+  static final int NY = 4;
+  // ---
+  private static final Tensor STATES = Flatten.of(Array.of(Tensors::vector, NX, NY), 1).unmodifiable();
 
   @Override
   public Tensor states() {
-    return states;
+    return STATES;
   }
 
   @Override
   public Tensor actions(Tensor state) {
-    return actions;
+    return ACTIONS;
   }
 
   @Override
@@ -62,11 +62,12 @@ public class Gridworld extends DeterministicStandardModel implements MonteCarloI
   /**************************************************/
   @Override // from MonteCarloInterface
   public Tensor startStates() {
-    return Tensor.of(states.stream().filter(state -> !isTerminal(state)));
+    return Tensor.of(STATES.stream().filter(state -> !isTerminal(state)));
   }
 
   @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
-    return state.equals(TERMINATE1) || state.equals(TERMINATE2);
+    return state.equals(TERMINATE1) //
+        || state.equals(TERMINATE2);
   }
 }

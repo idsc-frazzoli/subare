@@ -79,10 +79,8 @@ import ch.ethz.idsc.tensor.sca.Sign;
 
   Tensor night_move(Tensor state, Tensor action) {
     Tensor next = state.add(Tensors.of(action, action.negate()));
-    if (Sign.isNegative(next.Get(0)))
-      throw new RuntimeException();
-    if (Sign.isNegative(next.Get(1)))
-      throw new RuntimeException();
+    Sign.requirePositiveOrZero(next.Get(0));
+    Sign.requirePositiveOrZero(next.Get(1));
     return next;
   }
 

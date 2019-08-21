@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.red.KroneckerDelta;
 public class InfiniteVariance implements StandardModel, MonteCarloInterface {
   static final Scalar BACK = RealScalar.ZERO;
   static final Scalar END = RealScalar.ONE;
-  static final Scalar PROB = RealScalar.of(.1);
+  static final Scalar PROB = RealScalar.of(0.1);
   private final Tensor states = Tensors.vector(0, 1).unmodifiable();
   private final Tensor actions = Tensors.of(BACK, END).unmodifiable(); // increment
   private final Coinflip coinflip = Coinflip.of(PROB);
@@ -81,7 +81,9 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
     if (action.equals(END))
       return KroneckerDelta.of(END, next);
     // action == BACK
-    return next.equals(BACK) ? RealScalar.ONE.subtract(PROB) : PROB;
+    return next.equals(BACK) //
+        ? RealScalar.ONE.subtract(PROB)
+        : PROB;
   }
 
   @Override // from ActionValueInterface

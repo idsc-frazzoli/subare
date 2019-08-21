@@ -31,9 +31,7 @@ public class GradientAgent extends Agent {
       if (rnd < sum && a == null)
         a = k;
     }
-    Scalar zer = Chop._10.of(RealScalar.of(1 - sum));
-    if (!zer.equals(RealScalar.ZERO))
-      throw new RuntimeException();
+    Chop._10.requireClose(RealScalar.of(sum), RealScalar.ONE);
     return a;
   }
 
@@ -47,7 +45,7 @@ public class GradientAgent extends Agent {
       Scalar prob = k == a //
           ? RealScalar.of(1).subtract(pa) // 1 - pi(At)
           : pa.negate(); // - pi(At)
-      Ht.set(HA -> HA.add(alpha.multiply(delta).multiply(prob)), k);
+      Ht.set(alpha.multiply(delta).multiply(prob)::add, k);
     }
   }
 

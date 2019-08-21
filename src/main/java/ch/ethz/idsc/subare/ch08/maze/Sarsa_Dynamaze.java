@@ -2,6 +2,8 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.ch08.maze;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -16,6 +18,7 @@ import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** determines q(s, a) function for equiprobable "random" policy */
@@ -33,14 +36,15 @@ enum Sarsa_Dynamaze {
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.3, 0.01));
     LearningRate learningRate = DefaultLearningRate.of(15, 0.51);
     Sarsa sarsa = sarsaType.sarsa(dynamaze, learningRate, qsa, sac, policy);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + "n" + nstep + "_qsa_" + sarsaType + ".gif"), 200, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < batches; ++index) {
         // if (EPISODES - 10 < index)
         Infoline infoline = Infoline.print(dynamaze, index, ref, qsa);
         // sarsa.supplyPolicy(() -> policy);
         // for (int count = 0; count < 5; ++count)
         ExploringStarts.batch(dynamaze, policy, nstep, sarsa);
-        animationWriter.append(StateRasters.vs_rescale(dynamazeRaster, qsa));
+        animationWriter.write(StateRasters.vs_rescale(dynamazeRaster, qsa));
         if (infoline.isLossfree())
           break;
       }

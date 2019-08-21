@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
@@ -13,6 +15,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum Sarsa_Wireloop {
@@ -30,12 +33,12 @@ enum Sarsa_Wireloop {
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(wireloop, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     Sarsa sarsa = sarsaType.sarsa(wireloop, DefaultLearningRate.of(3, 0.51), qsa, sac, policy);
-    try (AnimationWriter animationWriter = AnimationWriter.of( //
-        HomeDirectory.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250)) {
+    try (AnimationWriter animationWriter = new GifAnimationWriter( //
+        HomeDirectory.Pictures(name + "L_qsa_" + sarsaType + "" + nstep + ".gif"), 250, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < batches; ++index) {
         Infoline infoline = Infoline.print(wireloop, index, ref, qsa);
         ExploringStarts.batch(wireloop, policy, nstep, sarsa);
-        animationWriter.append(WireloopHelper.render(wireloopRaster, ref, qsa));
+        animationWriter.write(WireloopHelper.render(wireloopRaster, ref, qsa));
         if (infoline.isLossfree())
           break;
       }

@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.wireloop;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.mc.MonteCarloExploringStarts;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -11,6 +13,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum MCES_Wireloop {
@@ -21,7 +24,8 @@ enum MCES_Wireloop {
     WireloopRaster wireloopRaster = new WireloopRaster(wireloop);
     DiscreteQsa ref = WireloopHelper.getOptimalQsa(wireloop);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(wireloop);
-    try (AnimationWriter animationWriter = AnimationWriter.of(HomeDirectory.Pictures(name + "L_mces.gif"), 100)) {
+    try (AnimationWriter animationWriter = //
+        new GifAnimationWriter(HomeDirectory.Pictures(name + "L_mces.gif"), 100, TimeUnit.MILLISECONDS)) {
       int batches = 10;
       StateActionCounter sac = new DiscreteStateActionCounter();
       EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(wireloop, mces.qsa(), sac);
@@ -31,7 +35,7 @@ enum MCES_Wireloop {
         for (int count = 0; count < 4; ++count) {
           ExploringStarts.batch(wireloop, policy, mces);
         }
-        animationWriter.append(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));
+        animationWriter.write(WireloopHelper.render(wireloopRaster, ref, mces.qsa()));
         if (infoline.isLossfree())
           break;
       }

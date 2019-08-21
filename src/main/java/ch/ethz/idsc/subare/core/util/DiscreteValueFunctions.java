@@ -68,8 +68,8 @@ public enum DiscreteValueFunctions {
 
   // helper function
   private static Tensor _difference(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
-    if (!_isCompatible(tvi1, tvi2))
-      throw new RuntimeException();
-    return tvi1.values().subtract(tvi2.values());
+    if (_isCompatible(tvi1, tvi2))
+      return tvi1.values().subtract(tvi2.values());
+    throw new IllegalArgumentException();
   }
 }

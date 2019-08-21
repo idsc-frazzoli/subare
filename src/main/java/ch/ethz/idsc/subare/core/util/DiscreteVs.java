@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.alg.Array;
 
 public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializable {
@@ -31,7 +32,7 @@ public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializa
    * @param values */
   public DiscreteVs(Index index, Tensor values) {
     if (index.size() != values.length())
-      throw new RuntimeException();
+      throw TensorRuntimeException.of(index.keys(), values);
     this.index = index;
     this.values = values;
   }
@@ -43,7 +44,7 @@ public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializa
 
   @Override // from VsInterface
   public void increment(Tensor state, Scalar delta) {
-    values.set(value -> value.add(delta), index.of(state));
+    values.set(delta::add, index.of(state));
   }
 
   public void assign(Tensor state, Scalar value) {

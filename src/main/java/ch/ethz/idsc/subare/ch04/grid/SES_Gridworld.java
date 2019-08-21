@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch04.grid;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
@@ -16,6 +18,7 @@ import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
+import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** 1, or N-step Original/Expected Sarsa, and QLearning for gridworld
@@ -31,8 +34,8 @@ enum SES_Gridworld {
     StateActionCounter sac = new DiscreteStateActionCounter();
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gridworld, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
-    try (AnimationWriter animationWriter = AnimationWriter.of( //
-        HomeDirectory.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250)) {
+    try (AnimationWriter animationWriter = new GifAnimationWriter( //
+        HomeDirectory.Pictures("gridworld_ses_" + sarsaType + "" + nstep + ".gif"), 250, TimeUnit.MILLISECONDS)) {
       LearningRate learningRate = DefaultLearningRate.of(5, 1.1);
       Sarsa sarsa = sarsaType.sarsa(gridworld, learningRate, qsa, sac, policy);
       DequeExploringStarts exploringStartsStream = new DequeExploringStarts(gridworld, nstep, sarsa) {
@@ -46,7 +49,7 @@ enum SES_Gridworld {
         exploringStartsStream.nextEpisode();
         if (episode % 5 == 0) {
           Infoline infoline = Infoline.print(gridworld, episode, ref, qsa);
-          animationWriter.append(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
+          animationWriter.write(StateActionRasters.qsaLossRef(new GridworldRaster(gridworld), qsa, ref));
           if (infoline.isLossfree())
             break;
         }

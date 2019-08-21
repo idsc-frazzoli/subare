@@ -9,6 +9,7 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.alg.Range;
@@ -23,7 +24,7 @@ import ch.ethz.idsc.tensor.red.Min;
  * [no further references are provided in the book] */
 public class Gambler implements StandardModel, MonteCarloInterface {
   private final Tensor states;
-  final Scalar TERMINAL_W;
+  private final Scalar last;
   private final Scalar P_win;
   private final Coinflip coinflip;
 
@@ -35,7 +36,7 @@ public class Gambler implements StandardModel, MonteCarloInterface {
    * @param P_win probabilty of winning a coin toss */
   public Gambler(int max, Scalar P_win) {
     states = Range.of(0, max + 1).unmodifiable();
-    TERMINAL_W = (Scalar) Last.of(states);
+    last = (Scalar) Last.of(states);
     this.P_win = P_win;
     coinflip = Coinflip.of(P_win);
   }
@@ -55,7 +56,7 @@ public class Gambler implements StandardModel, MonteCarloInterface {
     // if the state is non-terminal, 0 < cash < 100.
     // otherwise the player can stall (the iteration) forever.
     Scalar stateS = state.Get();
-    return Range.of(1, Min.of(stateS, TERMINAL_W.subtract(stateS)).number().intValue() + 1);
+    return Range.of(1, Min.of(stateS, last.subtract(stateS)).number().intValue() + 1);
   }
 
   @Override
@@ -73,7 +74,9 @@ public class Gambler implements StandardModel, MonteCarloInterface {
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) { // deterministic
-    return isTerminal(state) ? RealScalar.ZERO : KroneckerDelta.of(next, TERMINAL_W);
+    return isTerminal(state) //
+        ? RealScalar.ZERO
+        : KroneckerDelta.of(next, last);
   }
 
   /**************************************************/
@@ -84,24 +87,24 @@ public class Gambler implements StandardModel, MonteCarloInterface {
 
   @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
-    return state.equals(RealScalar.ZERO) || state.equals(TERMINAL_W);
+    return state.equals(RealScalar.ZERO) || state.equals(last);
   }
 
   /**************************************************/
   @Override
   public Scalar expectedReward(Tensor state, Tensor action) {
-    if (isTerminal(state))
-      return RealScalar.ZERO;
-    return KroneckerDelta.of(state.add(action), TERMINAL_W).multiply(P_win); // P_win * 1, or 0
+    return isTerminal(state) //
+        ? RealScalar.ZERO
+        : KroneckerDelta.of(state.add(action), last).multiply(P_win); // P_win * 1, or 0
   }
 
   @Override
   public Tensor transitions(Tensor state, Tensor action) {
-    if (isTerminal(state))
-      return Tensors.of(state); // next \in {state}
-    return Tensors.of( //
-        state.add(action), // with probability P_win
-        state.subtract(action)); // with probability 1 - P_win
+    return isTerminal(state) //
+        ? Tensors.of(state)
+        : Tensors.of( //
+            state.add(action), // with probability P_win
+            state.subtract(action)); // with probability 1 - P_win
   }
 
   @Override
@@ -112,6 +115,6 @@ public class Gambler implements StandardModel, MonteCarloInterface {
       return P_win;
     if (state.subtract(action).equals(next))
       return RealScalar.ONE.subtract(P_win);
-    throw new RuntimeException();
+    throw TensorRuntimeException.of(state, action, next);
   }
 }

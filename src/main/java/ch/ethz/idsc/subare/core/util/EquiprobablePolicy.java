@@ -11,7 +11,7 @@ import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
 
@@ -20,9 +20,10 @@ public class EquiprobablePolicy implements Policy {
   /** @param stateActionModel
    * @return */
   public static Policy create(StateActionModel stateActionModel) {
-    return new EquiprobablePolicy(stateActionModel);
+    return new EquiprobablePolicy(Objects.requireNonNull(stateActionModel));
   }
 
+  // ---
   private final StateActionModel stateActionModel;
   private final Map<Tensor, Index> map = new HashMap<>();
 
@@ -37,17 +38,15 @@ public class EquiprobablePolicy implements Policy {
       index = Index.build(stateActionModel.actions(state));
       map.put(state, index);
     }
-    if (!index.containsKey(action)) // alternatively return 0
-      throw new RuntimeException("action invalid " + action);
-    return RationalScalar.of(1, index.size());
+    if (index.containsKey(action)) // alternatively return 0
+      return RationalScalar.of(1, index.size());
+    throw TensorRuntimeException.of(state, action); // action invalid
   }
 
   @Override
   public Distribution getDistribution(Tensor state) {
-    Tensor pdf = Tensors.empty();
-    for (Tensor action : stateActionModel.actions(state)) {
-      pdf.append(probability(state, action));
-    }
+    Tensor pdf = Tensor.of(stateActionModel.actions(state).stream() //
+        .map(action -> probability(state, action)));
     return EmpiricalDistribution.fromUnscaledPDF(pdf);
   }
 }
