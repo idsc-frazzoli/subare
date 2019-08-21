@@ -19,7 +19,7 @@ class GridworldRaster implements StateRaster, StateActionRaster {
 
   public GridworldRaster(Gridworld gridworld) {
     this.gridworld = gridworld;
-    indexActions = Index.build(gridworld.actions);
+    indexActions = Index.build(gridworld.actions(null));
   }
 
   @Override
@@ -29,7 +29,7 @@ class GridworldRaster implements StateRaster, StateActionRaster {
 
   @Override
   public Dimension dimensionStateRaster() {
-    return new Dimension(gridworld.NX, gridworld.NY);
+    return new Dimension(Gridworld.NX, Gridworld.NY);
   }
 
   @Override
@@ -39,7 +39,7 @@ class GridworldRaster implements StateRaster, StateActionRaster {
 
   @Override
   public Dimension dimensionStateActionRaster() {
-    return new Dimension((gridworld.NX + 1) * 4 - 1, gridworld.NY);
+    return new Dimension((Gridworld.NX + 1) * 4 - 1, Gridworld.NY);
   }
 
   @Override
@@ -47,7 +47,7 @@ class GridworldRaster implements StateRaster, StateActionRaster {
     int sx = state.Get(0).number().intValue();
     int sy = state.Get(1).number().intValue();
     int a = indexActions.of(action);
-    return new Point(sx + (gridworld.NX + 1) * a, sy);
+    return new Point(sx + (Gridworld.NX + 1) * a, sy);
   }
 
   @Override

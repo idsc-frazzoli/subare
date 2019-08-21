@@ -106,9 +106,9 @@ class Blackjack implements MonteCarloInterface {
 
   @Override // from RewardInterface
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    if (!isTerminal(state) && isTerminal(next))
-      return next.Get(0); // transition into terminal state
-    return RealScalar.ZERO;
+    return !isTerminal(state) && isTerminal(next) //
+        ? next.Get(0) // transition into terminal state
+        : RealScalar.ZERO;
   }
 
   /**************************************************/

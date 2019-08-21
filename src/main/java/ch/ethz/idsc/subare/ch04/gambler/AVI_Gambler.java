@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.io.Export;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
@@ -15,9 +16,16 @@ import ch.ethz.idsc.tensor.io.Put;
 /* package */ enum AVI_Gambler {
   ;
   public static void main(String[] args) throws Exception {
-    Gambler gambler = Gambler.createDefault();
-    GamblerRaster gamblerRaster = new GamblerRaster(gambler);
+    Gambler gambler = new Gambler(100, RealScalar.of(0.35));
+    GamblerRaster gamblerRaster = new GamblerRaster(gambler) {
+      @Override
+      public int magnify() {
+        return 1;
+      }
+    };
     DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
+    Export.of(HomeDirectory.Pictures("gambler_qsa.png"), //
+        StateActionRasters.qsa(gamblerRaster, ref));
     Export.of(HomeDirectory.Pictures("gambler_qsa_avi.png"), //
         StateActionRasters.qsaPolicy(gamblerRaster, ref));
     DiscreteVs vs = DiscreteUtils.createVs(gambler, ref);

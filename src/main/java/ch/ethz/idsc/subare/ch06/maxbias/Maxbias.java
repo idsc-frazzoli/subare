@@ -62,9 +62,9 @@ public class Maxbias implements StandardModel, MonteCarloInterface {
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    if (state.equals(STATE_B))
-      return RandomVariate.of(distribution);
-    return RealScalar.ZERO;
+    return state.equals(STATE_B) //
+        ? RandomVariate.of(distribution)
+        : RealScalar.ZERO;
   }
 
   /**************************************************/
@@ -82,9 +82,9 @@ public class Maxbias implements StandardModel, MonteCarloInterface {
   /**************************************************/
   @Override
   public Scalar expectedReward(Tensor state, Tensor action) {
-    if (state.equals(STATE_B))
-      return MEAN;
-    return RealScalar.ZERO;
+    return state.equals(STATE_B) //
+        ? MEAN
+        : RealScalar.ZERO;
   }
 
   @Override

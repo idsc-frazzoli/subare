@@ -7,10 +7,11 @@ import junit.framework.TestCase;
 
 public class GamblerTest extends TestCase {
   public void testActions() {
-    Gambler ga = new Gambler(100, RealScalar.of(0.4));
-    assertEquals(ga.actions(RealScalar.ZERO), Tensors.fromString("{0}"));
-    assertEquals(ga.actions(RealScalar.of(1)), Tensors.fromString("{1}"));
-    assertEquals(ga.actions(ga.TERMINAL_W), Tensors.fromString("{0}"));
+    Gambler gambler = new Gambler(100, RealScalar.of(0.4));
+    assertEquals(gambler.actions(RealScalar.ZERO), Tensors.vector(0));
+    assertEquals(gambler.actions(RealScalar.of(1)), Tensors.vector(1));
+    assertEquals(gambler.actions(RealScalar.of(2)), Tensors.vector(1, 2));
+    assertEquals(gambler.actions(RealScalar.of(100)), Tensors.vector(0));
   }
 
   public void testActions2() {

@@ -22,14 +22,14 @@ import ch.ethz.idsc.tensor.sca.Clips;
   private static final Tensor WARP2_ANTE = Tensors.vector(0, 3); // B
   private static final Tensor WARP2_POST = Tensors.vector(2, 3); // B'
   private static final Clip CLIP = Clips.positive(4);
-  // ---
-  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 5, 5), 1).unmodifiable();
-  final Tensor actions = Tensors.matrix(new Number[][] { //
+  private static final Tensor ACTIONS = Tensors.matrix(new Number[][] { //
       { 0, -1 }, //
       { 0, +1 }, //
       { -1, 0 }, //
       { +1, 0 } //
   }).unmodifiable();
+  // ---
+  private final Tensor states = Flatten.of(Array.of(Tensors::vector, 5, 5), 1).unmodifiable();
 
   @Override
   public Tensor states() {
@@ -38,7 +38,7 @@ import ch.ethz.idsc.tensor.sca.Clips;
 
   @Override
   public Tensor actions(Tensor state) {
-    return actions;
+    return ACTIONS;
   }
 
   @Override

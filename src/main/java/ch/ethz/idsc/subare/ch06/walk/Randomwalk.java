@@ -10,6 +10,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.alg.Range;
+import ch.ethz.idsc.tensor.qty.Boole;
 
 /** Example 6.2: Random Walk, p.133 */
 class Randomwalk implements MonteCarloInterface {
@@ -48,9 +49,7 @@ class Randomwalk implements MonteCarloInterface {
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    if (!isTerminal(state) && next.equals(terminate2))
-      return RealScalar.ONE;
-    return RealScalar.ZERO;
+    return Boole.of(!isTerminal(state) && next.equals(terminate2));
   }
 
   @Override
@@ -70,6 +69,7 @@ class Randomwalk implements MonteCarloInterface {
 
   @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
-    return state.equals(TERMINATE1) || state.equals(terminate2);
+    return state.equals(TERMINATE1) //
+        || state.equals(terminate2);
   }
 }
