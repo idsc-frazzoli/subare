@@ -1,6 +1,6 @@
 # ch.ethz.idsc.subare <a href="https://travis-ci.org/idsc-frazzoli/subare"><img src="https://travis-ci.org/idsc-frazzoli/subare.svg?branch=master" alt="Build Status"></a>
 
-Library for reinforcement learning in Java, version `0.3.5`
+Library for reinforcement learning in Java, version `0.3.6`
 
 Repository includes algorithms, examples, and exercises from the 2nd edition of [*Reinforcement Learning: An Introduction*](http://incompleteideas.net/book/the-book-2nd.html) by Richard S. Sutton, and Andrew G. Barto.
 
@@ -324,7 +324,7 @@ Specify `dependency` and `repository` of the tensor library in the `pom.xml` fil
   <dependency>
     <groupId>ch.ethz.idsc</groupId>
     <artifactId>subare</artifactId>
-    <version>0.3.5</version>
+    <version>0.3.6</version>
   </dependency>
 </dependencies>
 

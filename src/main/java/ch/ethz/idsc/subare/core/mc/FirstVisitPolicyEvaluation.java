@@ -74,7 +74,7 @@ public class FirstVisitPolicyEvaluation implements EpisodeVsEstimator {
     Index index = Index.build(states);
     Tensor values = Array.zeros(index.size());
     for (Entry<Tensor, AverageTracker> entry : map.entrySet())
-      values.set(entry.getValue().Get(), index.of(entry.getKey()));
+      values.set((Scalar) entry.getValue(), index.of(entry.getKey()));
     return new DiscreteVs(index, values);
   }
 }

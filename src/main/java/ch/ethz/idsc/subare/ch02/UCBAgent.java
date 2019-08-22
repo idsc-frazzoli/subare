@@ -40,7 +40,7 @@ public class UCBAgent extends FairMaxAgent {
         // if an action hasn't been taken yet, bias towards this action is infinite
         bias = DoubleScalar.POSITIVE_INFINITY;
       else {
-        Scalar count = Sign.requirePositive(IntegerQ.require(Total.of(Na).Get()));
+        Scalar count = Sign.requirePositive(IntegerQ.require((Scalar) Total.of(Na)));
         Scalar logt = Log.of(count);
         bias = c.multiply(Sqrt.of(logt.divide(Nta)));
       }

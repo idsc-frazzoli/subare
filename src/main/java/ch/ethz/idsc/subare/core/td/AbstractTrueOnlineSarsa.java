@@ -40,7 +40,7 @@ abstract class AbstractTrueOnlineSarsa implements TrueOnlineInterface, StateActi
     for (Tensor state : monteCarloInterface.states())
       for (Tensor action : monteCarloInterface.actions(state)) {
         Tensor stateActionPair = StateAction.key(state, action);
-        qsa.assign(state, action, featureMapper.getFeature(stateActionPair).dot(getW()).Get());
+        qsa.assign(state, action, (Scalar) featureMapper.getFeature(stateActionPair).dot(getW()));
       }
     return qsa;
   }
