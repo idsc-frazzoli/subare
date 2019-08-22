@@ -15,25 +15,25 @@ public class AverageTrackerTest extends TestCase {
   public void testAverage() {
     AverageTracker avg = new AverageTracker();
     avg.track(RealScalar.of(3));
-    assertEquals(avg.Get(), RealScalar.of(3));
+    assertEquals(avg.getScalar(), RealScalar.of(3));
     avg.track(RealScalar.of(1));
-    assertEquals(avg.Get(), RealScalar.of(2));
+    assertEquals(avg.getScalar(), RealScalar.of(2));
     avg.track(RealScalar.of(1));
-    assertTrue(Chop._10.allZero(avg.Get().subtract(RealScalar.of(5. / 3))));
+    assertTrue(Chop._10.allZero(avg.getScalar().subtract(RealScalar.of(5. / 3))));
   }
 
   public void testMean() {
     Tensor vec = Tensors.vector(3, 2, 9, 19, 99, 29, 30);
     AverageTracker avg = new AverageTracker();
     vec.stream().forEach(scalar -> avg.track(scalar));
-    assertEquals(avg.Get(), Mean.of(vec));
+    assertEquals(avg.getScalar(), Mean.of(vec));
   }
 
   public void testMean2() {
     Tensor vec = Tensors.vector(3, 2, 9, 19, 99, 29, 30);
     AverageTracker avg = new AverageTracker();
     vec.stream().map(Scalar.class::cast).forEach(avg::track);
-    assertEquals(avg.Get(), Mean.of(vec));
+    assertEquals(avg.getScalar(), Mean.of(vec));
   }
 
   public void testEmpty() {

@@ -71,12 +71,12 @@ public class TrueOnlineSarsa extends AbstractTrueOnlineSarsa {
     Scalar alpha = learningRate.alpha(stepInterface, sac);
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
-    Scalar prevQ = w.get().dot(x).Get();
+    Scalar prevQ = (Scalar) w.get().dot(x);
     Scalar nextQ = evaluationType.evaluate(nextState, policy);
     Scalar delta = reward.add(gamma.multiply(nextQ)).subtract(prevQ);
     // eq (12.11)
     z = z.multiply(gamma_lambda) //
-        .add(x.multiply(RealScalar.ONE.subtract(alpha_gamma_lambda.multiply(z.dot(x).Get()))));
+        .add(x.multiply(RealScalar.ONE.subtract(z.dot(x).multiply(alpha_gamma_lambda))));
     // ---
     Scalar diffQ = prevQ.subtract(nextQOld);
     Tensor scalez = z.multiply(alpha.multiply(delta.add(diffQ)));

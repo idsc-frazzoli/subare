@@ -33,7 +33,7 @@ public class AverageTracker {
   }
 
   /** @return {@link #get()} cast to {@link Scalar} */
-  public Scalar Get() {
+  public Scalar getScalar() {
     return (Scalar) average;
   }
 
