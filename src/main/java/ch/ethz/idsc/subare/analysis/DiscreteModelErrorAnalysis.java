@@ -15,13 +15,13 @@ public enum DiscreteModelErrorAnalysis {
   LINEAR_QSA() {
     @Override
     public Scalar getError(DiscreteModel discreteModel, DiscreteQsa refQsa, DiscreteQsa currentQsa) {
-      return DiscreteValueFunctions.distance(refQsa, currentQsa).Get();
+      return DiscreteValueFunctions.distance(refQsa, currentQsa);
     }
   },
   SQUARE_QSA() {
     @Override
     public Scalar getError(DiscreteModel discreteModel, DiscreteQsa refQsa, DiscreteQsa currentQsa) {
-      return Power.of(DiscreteValueFunctions.distance(refQsa, currentQsa, Norm._2).Get(), 2);
+      return Power.of(DiscreteValueFunctions.distance(refQsa, currentQsa, Norm._2), 2);
     }
   },
   LINEAR_POLICY() {

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
 
@@ -23,9 +22,9 @@ public class FairArgMax implements Serializable {
   private final List<Integer> list;
 
   private FairArgMax(Tensor tensor) {
-    Scalar max = tensor.stream().reduce(Max::of).get().Get();
+    Tensor max = tensor.stream().reduce(Max::of).get();
     list = IntStream.range(0, tensor.length()) //
-        .filter(index -> tensor.Get(index).equals(max)) //
+        .filter(index -> tensor.get(index).equals(max)) //
         .boxed() //
         .collect(Collectors.toList());
   }

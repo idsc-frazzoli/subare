@@ -4,7 +4,6 @@ package ch.ethz.idsc.subare.util;
 import java.io.Serializable;
 import java.util.stream.IntStream;
 
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.sca.Chop;
@@ -23,9 +22,9 @@ public class RobustArgMax implements Serializable {
    * @return indices of entries that are close to the maximum entry in vector
    * @throws Exception if vector is empty, or not a tensor of rank 1 */
   public IntStream options(Tensor vector) {
-    Scalar max = vector.stream().reduce(Max::of).get().Get();
+    Tensor max = vector.stream().reduce(Max::of).get();
     return IntStream.range(0, vector.length()) //
-        .filter(index -> chop.close(vector.Get(index), max));
+        .filter(index -> chop.close(vector.get(index), max));
   }
 
   /** in the spirit of ArgMax which returns the first of equally maximal indices.

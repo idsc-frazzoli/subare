@@ -26,7 +26,7 @@ import ch.ethz.idsc.tensor.sca.Clips;
 
   public Bandits(int n) {
     Tensor data = RandomVariate.of(STANDARD, n);
-    Scalar mean = (Scalar) Mean.of(data);
+    Scalar mean = Mean.of(data).Get();
     prep = NORMALIZE.apply(data.map(x -> x.subtract(mean)));
     Chop._10.requireClose(Mean.of(prep), RealScalar.ZERO);
     Chop._10.requireClose(Variance.ofVector(prep), RealScalar.ONE);

@@ -34,7 +34,7 @@ import ch.ethz.idsc.tensor.Tensor;
   }
 
   public Scalar expectedReward() {
-    return average.Get();
+    return average.getScalar();
   }
 
   public Tensor transitions() {

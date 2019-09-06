@@ -61,7 +61,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator, StateActi
       Tensor accumulate = Accumulate.of(rewards);
       for (Entry<Tensor, Integer> entry : first.entrySet()) {
         Tensor key = entry.getKey();
-        Scalar alt = (Scalar) Last.of(accumulate);
+        Scalar alt = Last.of(accumulate);
         final int fromIndex = entry.getValue();
         if (0 < fromIndex)
           alt = alt.subtract(accumulate.Get(fromIndex - 1));
@@ -91,7 +91,7 @@ public class MonteCarloExploringStarts implements EpisodeQsaEstimator, StateActi
         Tensor key = entry.getKey();
         Tensor state = key.get(0);
         Tensor action = key.get(1);
-        Scalar value = entry.getValue().Get();
+        Scalar value = entry.getValue().getScalar();
         // System.out.println(value);
         qsa.assign(state, action, value);
       }

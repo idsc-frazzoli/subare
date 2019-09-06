@@ -27,7 +27,9 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
 
   public static DiscreteQsa build(MonteCarloInterface monteCarloInterface, Scalar init) {
     Index index = DiscreteUtils.build(monteCarloInterface, monteCarloInterface.states());
-    return new DiscreteQsa(index, Tensors.vector(i -> monteCarloInterface.isTerminal(index.get(i).get(0)) ? RealScalar.ZERO : init, index.size()));
+    return new DiscreteQsa(index, Tensors.vector(i -> monteCarloInterface.isTerminal(index.get(i).get(0)) //
+        ? RealScalar.ZERO
+        : init, index.size()));
   }
 
   // ---
