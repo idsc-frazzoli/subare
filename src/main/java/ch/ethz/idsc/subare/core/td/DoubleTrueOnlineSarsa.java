@@ -100,7 +100,7 @@ public class DoubleTrueOnlineSarsa extends AbstractTrueOnlineSarsa {
     Scalar alpha = learningRate.alpha(stepInterface, Sac1);
     Scalar alpha_gamma_lambda = Times.of(alpha, gamma_lambda);
     Tensor x = featureMapper.getFeature(StateAction.key(prevState, prevAction));
-    Scalar prevQ = (Scalar) W1.get().dot(x);
+    Scalar prevQ = W1.get().dot(x).Get();
     Scalar nextQ = evaluationType.crossEvaluate(nextState, Policy1, Policy2);
     Scalar delta = reward.add(gamma.multiply(nextQ)).subtract(prevQ);
     // eq (12.11)

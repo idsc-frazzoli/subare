@@ -20,7 +20,7 @@ public class FeatureQsaAdapter implements QsaInterface {
   @Override // from QsaInterface
   public Scalar value(Tensor state, Tensor action) {
     Tensor stateAction = StateAction.key(state, action);
-    return (Scalar) w.dot(featureMapper.getFeature(stateAction));
+    return w.dot(featureMapper.getFeature(stateAction)).Get();
   }
 
   @Override // from QsaInterface

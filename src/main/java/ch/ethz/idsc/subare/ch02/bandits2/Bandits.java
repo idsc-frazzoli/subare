@@ -35,7 +35,7 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
   /** @param k number of arms of bandit */
   public Bandits(int k) {
     Tensor data = RandomVariate.of(NormalDistribution.standard(), k);
-    Scalar mean = (Scalar) Mean.of(data);
+    Scalar mean = Mean.of(data).Get();
     Tensor prep = NORMALIZE.apply(data.map(x -> x.subtract(mean)));
     for (int index = 0; index < k; ++index)
       distributions.add(NormalDistribution.of(prep.Get(index), RealScalar.ONE));

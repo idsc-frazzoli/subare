@@ -62,7 +62,7 @@ public class UCBAgent extends FairMaxAgent {
   protected Tensor protected_QValues() {
     Tensor dec = getQVector();
     boolean inf = dec.flatten(-1) //
-        .filter(t -> Double.isInfinite(((Scalar) t).number().doubleValue())) //
+        .filter(t -> Double.isInfinite(t.Get().number().doubleValue())) //
         .findFirst().isPresent();
     return inf ? Qt : dec;
   }

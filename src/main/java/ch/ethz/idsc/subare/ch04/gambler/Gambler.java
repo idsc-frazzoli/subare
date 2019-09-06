@@ -36,7 +36,7 @@ public class Gambler implements StandardModel, MonteCarloInterface {
    * @param P_win probabilty of winning a coin toss */
   public Gambler(int max, Scalar P_win) {
     states = Range.of(0, max + 1).unmodifiable();
-    last = (Scalar) Last.of(states);
+    last = Last.of(states);
     this.P_win = P_win;
     coinflip = Coinflip.of(P_win);
   }

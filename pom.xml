@@ -4,7 +4,7 @@
 
 	<groupId>ch.ethz.idsc</groupId>
 	<artifactId>subare</artifactId>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<packaging>jar</packaging>
 
 	<name>subare</name>
@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>ch.ethz.idsc</groupId>
 			<artifactId>tensor</artifactId>
-			<version>0.7.8</version>
+			<version>0.7.9</version>
 		</dependency>
 
 		<dependency>

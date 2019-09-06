@@ -34,7 +34,7 @@ public class AverageTracker {
 
   /** @return {@link #get()} cast to {@link Scalar} */
   public Scalar getScalar() {
-    return (Scalar) average;
+    return average.Get();
   }
 
   @Override

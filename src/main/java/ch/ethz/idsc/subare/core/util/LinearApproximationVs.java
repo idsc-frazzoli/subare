@@ -28,7 +28,7 @@ public class LinearApproximationVs implements VsInterface, Serializable {
   @Override // from VsInterface
   public Scalar value(Tensor state) {
     Tensor gradient = represent.apply(state);
-    return (Scalar) gradient.dot(weight);
+    return gradient.dot(weight).Get();
   }
 
   @Override // from VsInterface

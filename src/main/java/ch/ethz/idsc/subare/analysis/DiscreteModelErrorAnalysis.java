@@ -27,7 +27,7 @@ public enum DiscreteModelErrorAnalysis {
   LINEAR_POLICY() {
     @Override
     public Scalar getError(DiscreteModel discreteModel, DiscreteQsa refQsa, DiscreteQsa currentQsa) {
-      return (Scalar) Total.of(Loss.asQsa(discreteModel, refQsa, currentQsa).values());
+      return Total.of(Loss.asQsa(discreteModel, refQsa, currentQsa).values()).Get();
     }
   },
   SQUARE_POLICY() {
