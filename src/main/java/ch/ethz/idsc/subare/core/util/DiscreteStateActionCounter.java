@@ -31,12 +31,16 @@ public class DiscreteStateActionCounter implements StateActionCounter, Serializa
 
   @Override
   public Scalar stateActionCount(Tensor key) {
-    return stateActionMap.containsKey(key) ? RealScalar.of(stateActionMap.get(key)) : RealScalar.ZERO;
+    return stateActionMap.containsKey(key) //
+        ? RealScalar.of(stateActionMap.get(key))
+        : RealScalar.ZERO;
   }
 
   @Override
   public Scalar stateCount(Tensor state) {
-    return stateMap.containsKey(state) ? RealScalar.of(stateMap.get(state)) : RealScalar.ZERO;
+    return stateMap.containsKey(state) //
+        ? RealScalar.of(stateMap.get(state))
+        : RealScalar.ZERO;
   }
 
   @Override
