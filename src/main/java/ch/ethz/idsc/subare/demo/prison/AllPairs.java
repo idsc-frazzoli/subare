@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
@@ -28,8 +27,8 @@ import ch.ethz.idsc.tensor.sca.Chop;
         if (table.length() != runs)
           throw new RuntimeException();
         Tensor mean = Mean.of(table);
-        Chop.NONE.requireClose(matrix.Get(i1, i2), RealScalar.ZERO);
-        Chop.NONE.requireClose(matrix.Get(i2, i1), RealScalar.ZERO);
+        Chop.NONE.requireAllZero(matrix.Get(i1, i2));
+        Chop.NONE.requireAllZero(matrix.Get(i2, i1));
         matrix.set(mean.Get(0), i1, i2);
         matrix.set(mean.Get(1), i2, i1);
       }

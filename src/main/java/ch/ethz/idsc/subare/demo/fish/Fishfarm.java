@@ -79,7 +79,9 @@ class Fishfarm extends DeterministicStandardModel implements MonteCarloInterface
     if (!isTerminal(next))
       return fish;
     Scalar remain = next.Get(1);
-    Scalar penalty = Scalars.lessEquals(TERMINAL_LIMIT, remain) ? RealScalar.ZERO : RealScalar.of(-1000);
+    Scalar penalty = Scalars.lessEquals(TERMINAL_LIMIT, remain) //
+        ? RealScalar.ZERO
+        : RealScalar.of(-1000);
     return fish.add(penalty);
   }
 
