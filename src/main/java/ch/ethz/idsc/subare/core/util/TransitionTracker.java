@@ -42,8 +42,8 @@ import ch.ethz.idsc.tensor.Tensor;
   }
 
   public Scalar transitionProbability(Tensor next) {
-    if (!map.containsKey(next))
-      return RealScalar.ZERO;
-    return RationalScalar.of(map.get(next), total);
+    return map.containsKey(next) //
+        ? RationalScalar.of(map.get(next), total)
+        : RealScalar.ZERO;
   }
 }

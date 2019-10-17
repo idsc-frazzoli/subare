@@ -8,6 +8,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.qty.Boole;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
 /** Example 5.5 p.106: Infinite Variance */
@@ -39,9 +40,7 @@ public class InfiniteVariance implements StandardModel, MonteCarloInterface {
   /**************************************************/
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    if (action.equals(BACK) && isTerminal(next))
-      return RealScalar.ONE;
-    return RealScalar.ZERO;
+    return Boole.of(action.equals(BACK) && isTerminal(next));
   }
 
   @Override // from MoveInterface

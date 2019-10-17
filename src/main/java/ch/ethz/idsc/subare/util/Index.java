@@ -4,14 +4,17 @@ package ch.ethz.idsc.subare.util;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.TensorRuntimeException;
 
 /** index is similar to a database index over the 0-level entries of the tensor.
  * the index allows fast checks for containment and gives the position of the key
  * in the original tensor of keys */
 public class Index implements Serializable {
+  /** @param tensor
+   * @return
+   * @throws Exception if given tensor is a scalar */
   public static Index build(Tensor tensor) {
     return new Index(tensor);
   }
@@ -39,10 +42,11 @@ public class Index implements Serializable {
     return map.containsKey(key);
   }
 
-  public int of(Tensor row) {
-    if (containsKey(row))
-      return map.get(row);
-    throw TensorRuntimeException.of(row);
+  /** @param key
+   * @return
+   * @throws Exception if key does not exist in index */
+  public int of(Tensor key) {
+    return Objects.requireNonNull(map.get(key));
   }
 
   public int size() {

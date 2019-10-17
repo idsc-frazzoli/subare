@@ -8,7 +8,6 @@ import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
-import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
@@ -105,7 +104,7 @@ public class ActionValueIteration implements DiscreteQsaSupplier {
   // helper function
   private Scalar jacobiMax(Tensor state, Tensor action) {
     Scalar ersa = actionValueInterface.expectedReward(state, action);
-    Scalar eqsa = RealScalar.ZERO;
+    Scalar eqsa = ersa.zero();
     for (Tensor next : actionValueInterface.transitions(state, action)) {
       Scalar prob = actionValueInterface.transitionProbability(state, action, next);
       Scalar max = discreteModel.actions(next).stream() //
