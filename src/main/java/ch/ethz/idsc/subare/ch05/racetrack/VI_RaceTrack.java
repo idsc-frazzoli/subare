@@ -35,6 +35,7 @@ enum VI_RaceTrack {
             racetrack, policy, start, new LinkedList<>());
         while (mce.hasNext()) {
           StepInterface stepInterface = mce.step();
+          // TODO does not handle collision state!
           {
             Tensor state = stepInterface.prevState();
             int[] index = Primitives.toIntArray(state);

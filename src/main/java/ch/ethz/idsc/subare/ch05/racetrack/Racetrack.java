@@ -44,6 +44,7 @@ class Racetrack extends DeterministicStandardModel implements MonteCarloInterfac
   static final Tensor BLACK = Tensors.vector(0, 0, 0, 255);
   static final Scalar MINUS_ONE = RealScalar.ONE.negate();
   // ---
+  // TODO bad style
   private static final Tensor STATE_COLLISION = Tensors.vector(9999);
   // ---
   private final Clip clipPositionY;
