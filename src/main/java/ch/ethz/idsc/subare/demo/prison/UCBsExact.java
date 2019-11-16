@@ -22,8 +22,8 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
 /* package */ class UCBsExact extends AbstractExact {
-  public UCBsExact(Supplier<Agent> sup1, Supplier<Agent> sup2, int epochs) {
-    super(sup1, sup2, epochs);
+  public UCBsExact(Supplier<Agent> sup1, Supplier<Agent> sup2) {
+    super(sup1, sup2);
     // ---
     contribute(new Integer[] { 0 }, new Integer[] { 0 });
     contribute(new Integer[] { 0 }, new Integer[] { 1 });
@@ -34,7 +34,7 @@ import ch.ethz.idsc.tensor.io.Put;
   public static void showOne() {
     Supplier<Agent> sup1 = () -> new UCBAgent(2, RationalScalar.of(10, 10));
     Supplier<Agent> sup2 = () -> new UCBAgent(2, RationalScalar.of(8, 10));
-    UCBsExact exact = new UCBsExact(sup1, sup2, 200);
+    UCBsExact exact = new UCBsExact(sup1, sup2);
     System.out.println(exact.getExpectedRewards());
   }
 
@@ -49,7 +49,7 @@ import ch.ethz.idsc.tensor.io.Put;
       for (Tensor c1 : init) {
         Supplier<Agent> sup1 = () -> new UCBAgent(2, (Scalar) c0);
         Supplier<Agent> sup2 = () -> new UCBAgent(2, (Scalar) c1);
-        UCBsExact exact = new UCBsExact(sup1, sup2, 50);
+        UCBsExact exact = new UCBsExact(sup1, sup2);
         row.append(Join.of(Tensors.of(c0, c1), exact.getExpectedRewards()));
         expectedRewards.set(exact.getExpectedRewards(), px, py);
         ++py;
