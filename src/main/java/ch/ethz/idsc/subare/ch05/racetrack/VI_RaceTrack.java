@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch05.racetrack;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
@@ -18,24 +19,23 @@ import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Primitives;
 
-enum VI_RaceTrack {
+/* package */ enum VI_RaceTrack {
   ;
-  public static void main(String[] args) throws Exception {
-    final String name = "track2";
-    Racetrack racetrack = RacetrackHelper.create(name, 5);
+  public static void make(String name, int maxSpeed, File file) throws Exception {
+    Racetrack racetrack = RacetrackHelper.create(name, maxSpeed);
     ValueIteration vi = new ValueIteration(racetrack, racetrack);
     vi.untilBelow(DecimalScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     Policy policy = PolicyType.GREEDY.bestEquiprobable(racetrack, vi.vs(), null);
     try (AnimationWriter animationWriter = //
-        new GifAnimationWriter(HomeDirectory.Pictures(name + ".gif"), 400, TimeUnit.MILLISECONDS)) {
+        new GifAnimationWriter(file, 400, TimeUnit.MILLISECONDS)) {
       for (Tensor start : racetrack.statesStart) {
+        System.out.println(start);
         Tensor image = racetrack.image();
         MonteCarloEpisode mce = new MonteCarloEpisode( //
             racetrack, policy, start, new LinkedList<>());
         while (mce.hasNext()) {
           StepInterface stepInterface = mce.step();
-          // TODO does not handle collision state!
           {
             Tensor state = stepInterface.prevState();
             int[] index = Primitives.toIntArray(state);
@@ -51,5 +51,9 @@ enum VI_RaceTrack {
       }
     }
     System.out.println("gif created");
+  }
+
+  public static void main(String[] args) throws Exception {
+    make("track2", 5, HomeDirectory.Pictures(VI_RaceTrack.class.getSimpleName() + ".gif"));
   }
 }

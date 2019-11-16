@@ -28,9 +28,7 @@ public final class OptimistAgent extends FairMaxAgent {
   @Override
   protected void protected_feedback(int a, Scalar r) {
     // (2.4) with constant StepSize
-    Qt.set(QA -> QA.add( //
-        r.subtract(QA).multiply(alpha) //
-    ), a);
+    Qt.set(QA -> QA.add(r.subtract(QA).multiply(alpha)), a);
   }
 
   @Override
