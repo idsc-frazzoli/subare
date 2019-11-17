@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch06.windy;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.adapter.DeterministicStandardModel;
 import ch.ethz.idsc.subare.core.util.StateActionMap;
+import ch.ethz.idsc.subare.core.util.StateActionMaps;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -57,7 +58,7 @@ public class Windygrid extends DeterministicStandardModel implements MonteCarloI
 
   private Windygrid(Tensor actions) {
     this.actions = actions.unmodifiable();
-    stateActionMap = StateActionMap.build(this, actions, this);
+    stateActionMap = StateActionMaps.build(states, actions, this);
   }
 
   @Override
