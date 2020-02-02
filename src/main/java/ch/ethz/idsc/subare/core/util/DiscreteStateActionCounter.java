@@ -21,7 +21,7 @@ public class DiscreteStateActionCounter implements StateActionCounter, Serializa
   private final Map<Tensor, Integer> stateActionMap = new HashMap<>();
   private final Map<Tensor, Integer> stateMap = new HashMap<>();
 
-  @Override
+  @Override // from StepDigest
   public void digest(StepInterface stepInterface) {
     Tensor key = StateAction.key(stepInterface);
     Tensor state = stepInterface.prevState();
@@ -29,21 +29,21 @@ public class DiscreteStateActionCounter implements StateActionCounter, Serializa
     stateActionMap.put(key, stateActionMap.containsKey(key) ? stateActionMap.get(key) + 1 : 1);
   }
 
-  @Override
+  @Override // from StateActionCounter
   public Scalar stateActionCount(Tensor key) {
     return stateActionMap.containsKey(key) //
         ? RealScalar.of(stateActionMap.get(key))
         : RealScalar.ZERO;
   }
 
-  @Override
+  @Override // from StateActionCounter
   public Scalar stateCount(Tensor state) {
     return stateMap.containsKey(state) //
         ? RealScalar.of(stateMap.get(state))
         : RealScalar.ZERO;
   }
 
-  @Override
+  @Override // from StateActionCounter
   public boolean isEncountered(Tensor key) {
     return stateActionMap.containsKey(key);
   }

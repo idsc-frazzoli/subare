@@ -32,30 +32,30 @@ import ch.ethz.idsc.tensor.sca.Round;
 /* package */ enum QL_Gambler {
   ;
   static void handle() throws Exception {
-    Gambler gambler = Gambler.createDefault();
-    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
+    GamblerModel gamblerModel = GamblerModel.createDefault();
+    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gamblerModel);
     int batches = 100;
-    Policy policy = EquiprobablePolicy.create(gambler);
-    DiscreteQsa qsa = DiscreteQsa.build(gambler);
+    Policy policy = EquiprobablePolicy.create(gamblerModel);
+    DiscreteQsa qsa = DiscreteQsa.build(gamblerModel);
     StateActionCounter sac = new DiscreteStateActionCounter();
-    EGreedyPolicy policyEGreedy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
+    EGreedyPolicy policyEGreedy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gamblerModel, qsa, sac);
     policyEGreedy.setExplorationRate(LinearExplorationRate.of(batches, 0.1, 0.01));
     System.out.println(qsa.size());
     try (AnimationWriter animationWriter = //
         new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_ql.gif"), 100, TimeUnit.MILLISECONDS)) {
       LearningRate learningRate = DefaultLearningRate.of(2, 0.51);
-      Sarsa stepDigest = SarsaType.QLEARNING.sarsa(gambler, learningRate, qsa, sac, policyEGreedy);
+      Sarsa stepDigest = SarsaType.QLEARNING.sarsa(gamblerModel, learningRate, qsa, sac, policyEGreedy);
       for (int index = 0; index < batches; ++index) {
-        Infoline.print(gambler, index, ref, qsa);
+        Infoline.print(gamblerModel, index, ref, qsa);
         for (int count = 0; count < 1; ++count) {
-          ExploringStarts.batch(gambler, policy, 1, stepDigest);
+          ExploringStarts.batch(gamblerModel, policy, 1, stepDigest);
         }
-        animationWriter.write(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
+        animationWriter.write(StateActionRasters.qsaPolicyRef(new GamblerRaster(gamblerModel), qsa, ref));
       }
     }
     DiscreteUtils.print(qsa, Round._2);
     System.out.println("---");
-    EpisodeInterface mce = EpisodeKickoff.single(gambler, policy);
+    EpisodeInterface mce = EpisodeKickoff.single(gamblerModel, policy);
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

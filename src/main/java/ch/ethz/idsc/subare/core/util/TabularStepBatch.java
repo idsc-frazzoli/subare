@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** only suitable for models with all states as start states */
-class TabularStepBatch {
+/* package */ class TabularStepBatch {
   private final SampleModel sampleModel;
   private final List<Tensor> list;
   private int index = 0;

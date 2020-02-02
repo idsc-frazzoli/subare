@@ -11,19 +11,21 @@ import ch.ethz.idsc.tensor.red.Variance;
 import ch.ethz.idsc.tensor.sca.Chop;
 import junit.framework.TestCase;
 
-public class BanditsTest extends TestCase {
+public class BanditsModelTest extends TestCase {
   public void testMean() {
     int num = 10;
-    Bandits bandits = new Bandits(num);
-    Tensor means = Tensors.vector(k -> bandits.expectedReward(Bandits.START, RealScalar.of(k)), num);
+    BanditsModel banditsModel = new BanditsModel(num);
+    Tensor means = Tensors.vector(k -> banditsModel.expectedReward(BanditsModel.START, RealScalar.of(k)), num);
     assertTrue(Chop._10.allZero(Mean.of(means)));
+    Tensor starts = banditsModel.startStates();
+    assertEquals(starts.length(), 1);
   }
 
   public void testExact() {
     int num = 20;
-    Bandits bandits = new Bandits(num);
-    DiscreteQsa ref = BanditsHelper.getOptimalQsa(bandits);
-    Tensor expected = Tensors.vector(i -> ref.value(Bandits.START, RealScalar.of(i)), num);
+    BanditsModel banditsModel = new BanditsModel(num);
+    DiscreteQsa ref = BanditsHelper.getOptimalQsa(banditsModel);
+    Tensor expected = Tensors.vector(i -> ref.value(BanditsModel.START, RealScalar.of(i)), num);
     Scalar mean = Mean.of(expected).Get();
     assertTrue(Chop._10.allZero(mean));
     Scalar var = Variance.ofVector(expected).Get();

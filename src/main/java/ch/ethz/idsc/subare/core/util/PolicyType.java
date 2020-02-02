@@ -44,8 +44,8 @@ public enum PolicyType {
     public PolicyBase bestEquiprobable(StandardModel standardModel, VsInterface vs, StateActionCounter sac) {
       return new UcbPolicy(standardModel, vs, sac);
     }
-  }, //
-  ;
+  };
+
   public abstract PolicyBase bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac);
 
   public abstract PolicyBase bestEquiprobable(StandardModel standardModel, VsInterface vs, StateActionCounter sac);

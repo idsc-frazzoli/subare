@@ -14,13 +14,13 @@ import ch.ethz.idsc.tensor.sca.N;
 /* package */ enum FVPE_Gambler {
   ;
   public static void main(String[] args) {
-    final Gambler gambler = Gambler.createDefault();
-    final DiscreteVs ref = GamblerHelper.getOptimalVs(gambler);
-    final Policy policy = PolicyType.GREEDY.bestEquiprobable(gambler, ref, null);
+    GamblerModel gamblerModel = GamblerModel.createDefault();
+    DiscreteVs ref = GamblerHelper.getOptimalVs(gamblerModel);
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(gamblerModel, ref, null);
     FirstVisitPolicyEvaluation fvpe = new FirstVisitPolicyEvaluation( //
-        gambler, null);
+        gamblerModel, null);
     for (int count = 0; count < 100; ++count) {
-      ExploringStarts.batch(gambler, policy, fvpe);
+      ExploringStarts.batch(gamblerModel, policy, fvpe);
       DiscreteVs vs = fvpe.vs();
       Scalar diff = DiscreteValueFunctions.distance(vs, ref);
       System.out.println(count + " " + N.DOUBLE.of(diff));

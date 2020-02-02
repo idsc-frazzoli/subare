@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ch.ethz.idsc.subare.ch02.Agent;
-import ch.ethz.idsc.subare.ch02.FairMaxAgent;
+import ch.ethz.idsc.subare.ch02.FairArgAgent;
 import ch.ethz.idsc.subare.ch02.OptimistAgent;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
@@ -37,9 +37,9 @@ class Judger {
   }
 
   public static void main(String[] args) {
-    FairMaxAgent a1 = new OptimistAgent(3, RealScalar.of(5), RealScalar.of(.1));
-    FairMaxAgent a2 = new OptimistAgent(3, RealScalar.of(5), RealScalar.of(.1));
-    FairMaxAgent a3 = new OptimistAgent(3, RealScalar.of(5), RealScalar.of(.1));
+    FairArgAgent a1 = new OptimistAgent(3, RealScalar.of(5), RealScalar.of(.1));
+    FairArgAgent a2 = new OptimistAgent(3, RealScalar.of(5), RealScalar.of(.1));
+    FairArgAgent a3 = new OptimistAgent(3, RealScalar.of(5), RealScalar.of(.1));
     a1.setOpeningSequence(0);
     a2.setOpeningSequence(1);
     a3.setOpeningSequence(2);

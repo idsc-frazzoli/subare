@@ -6,7 +6,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 
 /** Section 2.5 "Optimistic Initial Values" */
-public final class OptimistAgent extends FairMaxAgent {
+public final class OptimistAgent extends FairArgAgent {
   final Scalar Q0;
   final Tensor Qt;
   final Scalar alpha;

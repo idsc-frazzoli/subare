@@ -24,8 +24,8 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
 /* package */ enum Bulk_Gambler {
   ;
   static void handle(SarsaType sarsaType, int nstep) throws Exception {
-    Gambler gambler = new Gambler(20, RationalScalar.of(4, 10)); // 20, 4/10
-    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler); // true q-function, for error measurement
+    GamblerModel gamblerModel = new GamblerModel(20, RationalScalar.of(4, 10)); // 20, 4/10
+    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gamblerModel); // true q-function, for error measurement
     // ---
     final Scalar errorcap = RealScalar.of(20); // 15
     final Scalar losscap = RealScalar.of(.25); // .5
@@ -38,12 +38,12 @@ import ch.ethz.idsc.tensor.alg.Subdivide;
     for (Tensor factor : Subdivide.of(.1, 10, 8)) { // .5 16
       int y = 0;
       for (Tensor exponent : Subdivide.of(.51, 1.3, 8)) { // .51 2
-        DiscreteQsa qsa = DiscreteQsa.build(gambler);
+        DiscreteQsa qsa = DiscreteQsa.build(gamblerModel);
         StateActionCounter sac = new DiscreteStateActionCounter();
-        EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
+        EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gamblerModel, qsa, sac);
         policy.setExplorationRate(LinearExplorationRate.of(100, 0.2, 0.01));
-        Sarsa sarsa = sarsaType.sarsa(gambler, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa, sac, policy);
-        LearningContender learningContender = LearningContender.sarsa(gambler, sarsa);
+        Sarsa sarsa = sarsaType.sarsa(gamblerModel, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa, sac, policy);
+        LearningContender learningContender = LearningContender.sarsa(gamblerModel, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;
       }

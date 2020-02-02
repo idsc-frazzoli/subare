@@ -16,19 +16,19 @@ import ch.ethz.idsc.tensor.io.Put;
 /* package */ enum AVI_Gambler {
   ;
   public static void main(String[] args) throws Exception {
-    Gambler gambler = new Gambler(100, RealScalar.of(0.35));
-    GamblerRaster gamblerRaster = new GamblerRaster(gambler) {
+    GamblerModel gamblerModel = new GamblerModel(100, RealScalar.of(0.35));
+    GamblerRaster gamblerRaster = new GamblerRaster(gamblerModel) {
       @Override
       public int magnify() {
         return 1;
       }
     };
-    DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
+    DiscreteQsa ref = GamblerHelper.getOptimalQsa(gamblerModel);
     Export.of(HomeDirectory.Pictures("gambler_qsa.png"), //
         StateActionRasters.qsa(gamblerRaster, ref));
     Export.of(HomeDirectory.Pictures("gambler_qsa_avi.png"), //
         StateActionRasters.qsaPolicy(gamblerRaster, ref));
-    DiscreteVs vs = DiscreteUtils.createVs(gambler, ref);
+    DiscreteVs vs = DiscreteUtils.createVs(gamblerModel, ref);
     Put.of(HomeDirectory.file("ex403_vs_values"), vs.values());
     System.out.println("done.");
   }

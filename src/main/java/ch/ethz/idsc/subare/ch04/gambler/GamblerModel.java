@@ -22,19 +22,19 @@ import ch.ethz.idsc.tensor.red.Min;
  * or the terminal cash has been reached
  * 
  * [no further references are provided in the book] */
-public class Gambler implements StandardModel, MonteCarloInterface {
+public class GamblerModel implements StandardModel, MonteCarloInterface {
   private final Tensor states;
   private final Scalar last;
   private final Scalar P_win;
   private final Coinflip coinflip;
 
-  public static Gambler createDefault() {
-    return new Gambler(100, RationalScalar.of(4, 10));
+  public static GamblerModel createDefault() {
+    return new GamblerModel(100, RationalScalar.of(4, 10));
   }
 
   /** @param max stake
    * @param P_win probabilty of winning a coin toss */
-  public Gambler(int max, Scalar P_win) {
+  public GamblerModel(int max, Scalar P_win) {
     states = Range.of(0, max + 1).unmodifiable();
     last = Last.of(states);
     this.P_win = P_win;

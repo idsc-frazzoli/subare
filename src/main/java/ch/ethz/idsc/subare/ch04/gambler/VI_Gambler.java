@@ -25,15 +25,15 @@ import ch.ethz.idsc.tensor.sca.N;
 /* package */ enum VI_Gambler {
   ;
   public static void main(String[] args) {
-    Gambler gambler = Gambler.createDefault();
-    DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    ValueIteration vi = new ValueIteration(gambler, gambler);
+    GamblerModel gamblerModel = GamblerModel.createDefault();
+    DiscreteQsa ref = GamblerHelper.getOptimalQsa(gamblerModel);
+    ValueIteration vi = new ValueIteration(gamblerModel, gamblerModel);
     vi.untilBelow(RealScalar.of(1e-20));
     final DiscreteVs vs = vi.vs();
-    final DiscreteVs vr = DiscreteUtils.createVs(gambler, ref);
+    final DiscreteVs vr = DiscreteUtils.createVs(gamblerModel, ref);
     Scalar diff = DiscreteValueFunctions.distance(vs, vr);
     System.out.println("error=" + N.DOUBLE.of(diff));
-    Policy policy = PolicyType.GREEDY.bestEquiprobable(gambler, ref, null);
-    Policies.print(policy, gambler.states());
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(gamblerModel, ref, null);
+    Policies.print(policy, gamblerModel.states());
   }
 }

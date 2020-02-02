@@ -123,6 +123,7 @@ import ch.ethz.idsc.tensor.red.Mean;
     }
   }, //
   ;
+
   abstract MonteCarloTrial create(MonteCarloInterface monteCarloInterface);
 
   public Tensor analyseNTimes(MonteCarloInterface monteCarloInterface, int batches, DiscreteQsa optimalQsa, List<DiscreteModelErrorAnalysis> errorAnalysis,

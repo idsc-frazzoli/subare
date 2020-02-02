@@ -5,11 +5,12 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 
-/** a policy is a function that maps a state-action pair to a real number
+/** a policy is a function that maps a state-action pair to a real number,
+ * i.e. the probability that a given action is taken when in given state.
  * 
- * the domain is identical to that of a {@link QsaInterface}
+ * <p>The domain is identical to that of a {@link QsaInterface}
  * 
- * since a PolicyInterface outputs probabilities, the additional constraint holds:
+ * <p>Since a PolicyInterface outputs probabilities, the additional constraint holds:
  * sum_a pi(a|s) == 1 for all states s */
 public interface Policy {
   /** @param state

@@ -21,22 +21,22 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
 /* package */ enum RSTQP_Gambler {
   ;
   public static void main(String[] args) throws Exception {
-    Gambler gambler = new Gambler(20, RationalScalar.of(4, 10));
-    GamblerRaster gamblerRaster = new GamblerRaster(gambler);
-    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    DiscreteQsa qsa = DiscreteQsa.build(gambler);
-    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of(gambler, qsa, //
+    GamblerModel gamblerModel = new GamblerModel(20, RationalScalar.of(4, 10));
+    GamblerRaster gamblerRaster = new GamblerRaster(gamblerModel);
+    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gamblerModel);
+    DiscreteQsa qsa = DiscreteQsa.build(gamblerModel);
+    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of(gamblerModel, qsa, //
         DefaultLearningRate.of(4, 0.71));
-    ActionValueStatistics avs = new ActionValueStatistics(gambler);
+    ActionValueStatistics avs = new ActionValueStatistics(gamblerModel);
     AnimationWriter animationWriter1 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_rstqp.gif"), 100, TimeUnit.MILLISECONDS);
     AnimationWriter animationWriter2 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_sac_rstqp.gif"), 200, TimeUnit.MILLISECONDS);
     int batches = 200;
     for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(gambler, index, ref, qsa);
-      TabularSteps.batch(gambler, gambler, rstqp, avs);
+      Infoline infoline = Infoline.print(gamblerModel, index, ref, qsa);
+      TabularSteps.batch(gamblerModel, gamblerModel, rstqp, avs);
       animationWriter1.write(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
       animationWriter2.write(StateActionRasters.qsa( //
-          gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) rstqp.sac()).inQsa(gambler))));
+          gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) rstqp.sac()).inQsa(gamblerModel))));
       if (infoline.isLossfree())
         break;
     }

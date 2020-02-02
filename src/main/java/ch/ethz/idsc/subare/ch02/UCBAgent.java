@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
 import ch.ethz.idsc.tensor.sca.Sqrt;
 
 /** Section 2.6 "upper-confidence-bound action selection" */
-public class UCBAgent extends FairMaxAgent {
+public class UCBAgent extends FairArgAgent {
   final Scalar c;
   final Tensor Na;
   final Tensor Qt;

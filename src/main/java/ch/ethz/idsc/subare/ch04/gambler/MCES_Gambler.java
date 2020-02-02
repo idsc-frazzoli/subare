@@ -22,7 +22,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 /* package */ enum MCES_Gambler {
   ;
   public static void main(String[] args) throws Exception {
-    Gambler gambler = Gambler.createDefault();
+    GamblerModel gambler = GamblerModel.createDefault();
     GamblerRaster gamblerRaster = new GamblerRaster(gambler);
     final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
     MonteCarloExploringStarts mces = new MonteCarloExploringStarts(gambler);

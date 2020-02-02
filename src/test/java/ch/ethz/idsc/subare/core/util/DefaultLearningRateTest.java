@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.util;
 
-import ch.ethz.idsc.subare.ch04.gambler.Gambler;
+import ch.ethz.idsc.subare.ch04.gambler.GamblerModel;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.adapter.StepAdapter;
@@ -17,10 +17,10 @@ import junit.framework.TestCase;
 public class DefaultLearningRateTest extends TestCase {
   public void testFirst() {
     LearningRate learningRate = DefaultLearningRate.of(0.9, .51);
-    Gambler gambler = new Gambler(100, RealScalar.of(0.4));
-    QsaInterface qsa = DiscreteQsa.build(gambler);
+    GamblerModel gamblerModel = new GamblerModel(100, RealScalar.of(0.4));
+    QsaInterface qsa = DiscreteQsa.build(gamblerModel);
     StateActionCounter sac = new DiscreteStateActionCounter();
-    Sarsa sarsa = SarsaType.ORIGINAL.sarsa(gambler, learningRate, qsa, sac, PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac));
+    Sarsa sarsa = SarsaType.ORIGINAL.sarsa(gamblerModel, learningRate, qsa, sac, PolicyType.EGREEDY.bestEquiprobable(gamblerModel, qsa, sac));
     Tensor state = Tensors.vector(1);
     Tensor action = Tensors.vector(0);
     Scalar first = learningRate.alpha(new StepAdapter(state, action, RealScalar.ZERO, state), sarsa.sac());

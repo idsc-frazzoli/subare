@@ -13,6 +13,7 @@ public class Infoline {
     return infoline;
   }
 
+  // ---
   private final Scalar error;
   private final Scalar loss;
 

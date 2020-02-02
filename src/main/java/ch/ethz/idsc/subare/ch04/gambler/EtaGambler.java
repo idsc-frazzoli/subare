@@ -19,17 +19,17 @@ import ch.ethz.idsc.tensor.sca.Sign;
 /* package */ enum EtaGambler {
   ;
   public static void main(String[] args) {
-    Gambler gambler = new Gambler(10, RationalScalar.of(4, 10));
+    GamblerModel gamblerModel = new GamblerModel(10, RationalScalar.of(4, 10));
     // Policy policy = EquiprobablePolicy.create(gambler);
-    Policy policy = GamblerHelper.getOptimalPolicy(gambler);
-    OnPolicyStateDistribution opsd = new OnPolicyStateDistribution(gambler, gambler, policy);
+    Policy policy = GamblerHelper.getOptimalPolicy(gamblerModel);
+    OnPolicyStateDistribution opsd = new OnPolicyStateDistribution(gamblerModel, gamblerModel, policy);
     Tensor values = //
         ArrayPad.of(Array.zeros(9).map(Increment.ONE), Arrays.asList(1), Arrays.asList(1));
     values.map(Sign::requirePositiveOrZero);
     values = Normalize.with(Total::ofVector).apply(values);
     Scalar scalar = Total.ofVector(values);
     System.out.println("sum=" + scalar);
-    DiscreteVs vs = DiscreteVs.build(gambler.states(), values);
+    DiscreteVs vs = DiscreteVs.build(gamblerModel.states(), values);
     for (int count = 0; count < 10; ++count) {
       vs = opsd.iterate(vs);
       System.out.println(vs.values());

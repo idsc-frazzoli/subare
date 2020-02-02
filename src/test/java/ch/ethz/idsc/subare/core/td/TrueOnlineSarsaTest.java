@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.td;
 
-import ch.ethz.idsc.subare.ch04.gambler.Gambler;
+import ch.ethz.idsc.subare.ch04.gambler.GamblerModel;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StateActionCounter;
@@ -61,7 +61,7 @@ public class TrueOnlineSarsaTest extends TestCase {
   }
 
   public void testFailLambda() {
-    MonteCarloInterface monteCarloInterface = new Gambler(10, RationalScalar.HALF);
+    MonteCarloInterface monteCarloInterface = new GamblerModel(10, RationalScalar.HALF);
     LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     FeatureWeight w = new FeatureWeight(featureMapper);
@@ -76,7 +76,7 @@ public class TrueOnlineSarsaTest extends TestCase {
 
   public void testFail() {
     LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
-    MonteCarloInterface monteCarloInterface = new Gambler(10, RationalScalar.HALF);
+    MonteCarloInterface monteCarloInterface = new GamblerModel(10, RationalScalar.HALF);
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     FeatureWeight w = new FeatureWeight(featureMapper);
     try {

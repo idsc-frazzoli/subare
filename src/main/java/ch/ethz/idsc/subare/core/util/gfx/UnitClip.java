@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
  * such as {@link DoubleScalar#POSITIVE_INFINITY} and {@link DoubleScalar#INDETERMINATE} */
 /* package */ enum UnitClip implements ScalarUnaryOperator {
   FUNCTION;
-  // ---
+
   @Override
   public Scalar apply(Scalar scalar) {
     return NumberQ.of(scalar) //

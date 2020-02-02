@@ -18,18 +18,18 @@ import ch.ethz.idsc.tensor.io.ImageFormat;
 /* package */ enum AVI_GamblerAnimation {
   ;
   public static void main(String[] args) throws Exception {
-    Gambler gambler = Gambler.createDefault();
-    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    ActionValueIteration avi = ActionValueIteration.of(gambler);
+    GamblerModel gamblerModel = GamblerModel.createDefault();
+    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gamblerModel);
+    ActionValueIteration avi = ActionValueIteration.of(gamblerModel);
     try (AnimationWriter animationWriter = //
         new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_avi.gif"), 500, TimeUnit.MILLISECONDS)) {
       for (int index = 0; index < 13; ++index) {
         DiscreteQsa qsa = avi.qsa();
-        Infoline.print(gambler, index, ref, qsa);
-        animationWriter.write(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), qsa, ref));
+        Infoline.print(gamblerModel, index, ref, qsa);
+        animationWriter.write(StateActionRasters.qsaPolicyRef(new GamblerRaster(gamblerModel), qsa, ref));
         avi.step();
       }
-      animationWriter.write(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gambler), avi.qsa(), ref)));
+      animationWriter.write(ImageFormat.of(StateActionRasters.qsaPolicyRef(new GamblerRaster(gamblerModel), avi.qsa(), ref)));
     }
   }
 }

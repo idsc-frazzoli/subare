@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch03.grid;
 
+import ch.ethz.idsc.subare.core.StepDigest;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
@@ -17,14 +18,14 @@ import junit.framework.TestCase;
 
 public class GridworldTest extends TestCase {
   public void testBasics() {
-    Gridworld gw = new Gridworld();
-    assertEquals(gw.reward(Tensors.vector(0, 0), Tensors.vector(1, 0), null), RealScalar.ZERO);
-    assertEquals(gw.reward(Tensors.vector(0, 0), Tensors.vector(-1, 0), null), RealScalar.ONE.negate());
+    Gridworld gridworld = new Gridworld();
+    assertEquals(gridworld.reward(Tensors.vector(0, 0), Tensors.vector(1, 0), null), RealScalar.ZERO);
+    assertEquals(gridworld.reward(Tensors.vector(0, 0), Tensors.vector(-1, 0), null), RealScalar.ONE.negate());
   }
 
   public void testIndex() {
-    Gridworld gw = new Gridworld();
-    Index actionsIndex = Index.build(gw.actions(null));
+    Gridworld gridworld = new Gridworld();
+    Index actionsIndex = Index.build(gridworld.actions(null));
     int index = actionsIndex.of(Tensors.vector(1, 0));
     assertEquals(index, 3);
   }
@@ -33,11 +34,11 @@ public class GridworldTest extends TestCase {
     Gridworld gridworld = new Gridworld();
     DiscreteQsa ref = ActionValueIterations.solve(gridworld, DecimalScalar.of(0.0001));
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
-    Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of( //
-        gridworld, qsa, ConstantLearningRate.of(RealScalar.ONE));
+    StepDigest stepDigest = //
+        Random1StepTabularQPlanning.of(gridworld, qsa, ConstantLearningRate.of(RealScalar.ONE));
     Scalar error = null;
     for (int index = 0; index < 40; ++index) {
-      TabularSteps.batch(gridworld, gridworld, rstqp);
+      TabularSteps.batch(gridworld, gridworld, stepDigest);
       error = DiscreteValueFunctions.distance(ref, qsa);
     }
     assertTrue(Scalars.lessThan(error, RealScalar.of(3)));

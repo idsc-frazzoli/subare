@@ -29,9 +29,8 @@ public enum SarsaType {
     SarsaEvaluation sarsaEvaluation(DiscreteModel discreteModel) {
       return new QLearningSarsaEvaluation(discreteModel);
     }
-  }, //
-  ;
-  // ---
+  };
+
   abstract SarsaEvaluation sarsaEvaluation(DiscreteModel discreteModel);
 
   public Sarsa sarsa( //

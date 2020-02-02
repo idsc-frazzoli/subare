@@ -13,6 +13,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.red.Max;
+import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
 public enum DiscreteUtils {
   ;
@@ -81,7 +82,7 @@ public enum DiscreteUtils {
     }
   }
 
-  public static void print(DiscreteVs vs, Function<Scalar, Scalar> round) {
+  public static void print(DiscreteVs vs, ScalarUnaryOperator round) {
     for (Tensor key : vs.keys()) {
       Scalar value = vs.value(key);
       System.out.println(key + " " + value.map(round));
@@ -89,7 +90,7 @@ public enum DiscreteUtils {
   }
 
   public static void print(DiscreteVs vs) {
-    print(vs, Function.identity());
+    print(vs, scalar -> scalar);
   }
 
   /** @param standardModel

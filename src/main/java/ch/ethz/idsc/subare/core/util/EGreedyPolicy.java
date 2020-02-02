@@ -6,7 +6,7 @@ import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.VsInterface;
-import ch.ethz.idsc.subare.util.FairArgMax;
+import ch.ethz.idsc.subare.util.FairArg;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -39,7 +39,7 @@ public class EGreedyPolicy extends PolicyBase {
   public Tensor getBestActions(Tensor state) {
     Tensor actions = discreteModel.actions(state);
     Tensor va = Tensor.of(actions.stream().map(action -> qsa.value(state, action)));
-    FairArgMax fairArgMax = FairArgMax.of(va);
+    FairArg fairArgMax = FairArg.max(va);
     return Tensor.of(fairArgMax.options().stream().map(actions::get));
   }
 

@@ -6,9 +6,9 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.sca.Exp;
 import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
-enum DLogisticSigmoid implements ScalarUnaryOperator {
+/* package */ enum DLogisticSigmoid implements ScalarUnaryOperator {
   FUNCTION;
-  // ---
+
   @Override
   public Scalar apply(Scalar scalar) {
     Scalar exp = Exp.of(scalar); // Exp[x]

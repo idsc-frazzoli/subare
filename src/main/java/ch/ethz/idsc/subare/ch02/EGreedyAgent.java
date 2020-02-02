@@ -1,7 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
-import ch.ethz.idsc.subare.util.FairArgMax;
+import ch.ethz.idsc.subare.util.FairArg;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -30,7 +30,7 @@ public class EGreedyAgent extends Agent {
       notifyAboutRandomizedDecision();
       return RANDOM.nextInt(Qt.length());
     }
-    FairArgMax fairArgMax = FairArgMax.of(Qt);
+    FairArg fairArgMax = FairArg.max(Qt);
     if (!fairArgMax.isUnique())
       notifyAboutRandomizedDecision();
     return fairArgMax.nextRandomIndex(); // (2.2)

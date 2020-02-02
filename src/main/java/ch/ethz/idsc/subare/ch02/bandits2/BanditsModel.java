@@ -1,8 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02.bandits2;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
@@ -14,7 +14,6 @@ import ch.ethz.idsc.tensor.alg.Normalize;
 import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.opt.TensorUnaryOperator;
 import ch.ethz.idsc.tensor.pdf.Distribution;
-import ch.ethz.idsc.tensor.pdf.Expectation;
 import ch.ethz.idsc.tensor.pdf.NormalDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
@@ -23,22 +22,26 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
 
 /** "A k-armed Bandit Problem"
  * Section 2.1 p.28 */
-/* package */ class Bandits implements StandardModel, MonteCarloInterface {
+/* package */ class BanditsModel implements StandardModel, MonteCarloInterface {
   private static final TensorUnaryOperator NORMALIZE = Normalize.with(StandardDeviation::ofVector);
   /** state before choosing bandit */
   static final Tensor START = RealScalar.ZERO;
   /** terminal state after choosing bandit */
   static final Tensor END = RealScalar.ONE;
   // ---
-  private final List<Distribution> distributions = new ArrayList<>();
+  private final List<Distribution> distributions;
+  private final Tensor actions;
 
   /** @param k number of arms of bandit */
-  public Bandits(int k) {
+  public BanditsModel(int k) {
     Tensor data = RandomVariate.of(NormalDistribution.standard(), k);
     Scalar mean = Mean.of(data).Get();
     Tensor prep = NORMALIZE.apply(data.map(x -> x.subtract(mean)));
-    for (int index = 0; index < k; ++index)
-      distributions.add(NormalDistribution.of(prep.Get(index), RealScalar.ONE));
+    distributions = prep.stream() //
+        .map(Scalar.class::cast) //
+        .map(scalar -> NormalDistribution.of(scalar, RealScalar.ONE)) //
+        .collect(Collectors.toList());
+    actions = Range.of(0, k).unmodifiable();
   }
 
   @Override // from StateActionModel
@@ -50,7 +53,7 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
   public Tensor actions(Tensor state) {
     if (isTerminal(state))
       return Tensors.vector(0);
-    return Range.of(0, distributions.size());
+    return actions;
   }
 
   @Override // from DiscreteModel
@@ -99,6 +102,6 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
     if (isTerminal(state))
       return RealScalar.ZERO;
     int index = action.Get().number().intValue();
-    return Expectation.mean(distributions.get(index));
+    return Mean.of(distributions.get(index));
   }
 }

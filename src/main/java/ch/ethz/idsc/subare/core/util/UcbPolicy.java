@@ -6,7 +6,7 @@ import ch.ethz.idsc.subare.core.QsaInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.VsInterface;
-import ch.ethz.idsc.subare.util.FairArgMax;
+import ch.ethz.idsc.subare.util.FairArg;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -31,7 +31,7 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
     Tensor actions = discreteModel.actions(state);
     Tensor va = Tensor.of(actions.stream().parallel() //
         .map(action -> UcbUtils.getUpperConfidenceBound(state, action, qsa.value(state, action), sac, discreteModel)));
-    FairArgMax fairArgMax = FairArgMax.of(va);
+    FairArg fairArgMax = FairArg.max(va);
     return Tensor.of(fairArgMax.options().stream().map(actions::get));
   }
 

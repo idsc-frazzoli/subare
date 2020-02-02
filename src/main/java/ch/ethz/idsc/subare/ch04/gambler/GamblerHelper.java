@@ -19,27 +19,27 @@ import ch.ethz.idsc.tensor.sca.Round;
 
 /* package */ enum GamblerHelper {
   ;
-  static DiscreteQsa getOptimalQsa(Gambler gambler) {
-    return ActionValueIterations.solve(gambler, DecimalScalar.of(.0001));
+  static DiscreteQsa getOptimalQsa(GamblerModel gamblerModel) {
+    return ActionValueIterations.solve(gamblerModel, DecimalScalar.of(.0001));
   }
 
-  public static DiscreteVs getOptimalVs(Gambler gambler) {
-    return ValueIterations.solve(gambler, RealScalar.of(1e-10));
+  public static DiscreteVs getOptimalVs(GamblerModel gamblerModel) {
+    return ValueIterations.solve(gamblerModel, RealScalar.of(1e-10));
   }
 
-  public static Policy getOptimalPolicy(Gambler gambler) {
+  public static Policy getOptimalPolicy(GamblerModel gamblerModel) {
     // TODO test for equality of policies from qsa and vs
-    ValueIteration vi = new ValueIteration(gambler, gambler);
+    ValueIteration vi = new ValueIteration(gamblerModel, gamblerModel);
     vi.untilBelow(RealScalar.of(1e-10));
-    return PolicyType.GREEDY.bestEquiprobable(gambler, vi.vs(), null);
+    return PolicyType.GREEDY.bestEquiprobable(gamblerModel, vi.vs(), null);
   }
 
-  public static void play(Gambler gambler, DiscreteQsa qsa) {
+  public static void play(GamblerModel gamblerModel, DiscreteQsa qsa) {
     DiscreteUtils.print(qsa, Round._2);
     System.out.println("---");
-    Policy policy = PolicyType.GREEDY.bestEquiprobable(gambler, qsa, null);
-    EpisodeInterface mce = EpisodeKickoff.single(gambler, policy, //
-        gambler.startStates().get(gambler.startStates().length() / 2));
+    Policy policy = PolicyType.GREEDY.bestEquiprobable(gamblerModel, qsa, null);
+    EpisodeInterface mce = EpisodeKickoff.single(gamblerModel, policy, //
+        gamblerModel.startStates().get(gamblerModel.startStates().length() / 2));
     while (mce.hasNext()) {
       StepInterface stepInterface = mce.step();
       Tensor state = stepInterface.prevState();

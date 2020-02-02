@@ -14,8 +14,8 @@ enum PlayingCard {
   _T(10), //
   _J(10), //
   _Q(10), //
-  _K(10), //
-  ;
+  _K(10);
+
   final int value;
 
   private PlayingCard(int value) {

@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.analysis;
 
 import java.util.function.Supplier;
 
-import ch.ethz.idsc.subare.ch04.gambler.Gambler;
+import ch.ethz.idsc.subare.ch04.gambler.GamblerModel;
 import ch.ethz.idsc.subare.ch04.grid.Gridworld;
 import ch.ethz.idsc.subare.ch05.infvar.InfiniteVariance;
 import ch.ethz.idsc.subare.ch05.racetrack.RacetrackHelper;
@@ -21,8 +21,8 @@ import ch.ethz.idsc.tensor.RationalScalar;
 /* package */ enum MonteCarloExamples implements Supplier<MonteCarloInterface> {
   AIRPORT(() -> new Airport()), //
   VIRTUALSTATIONS(() -> new VirtualStations()), //
-  GAMBLER_20(() -> new Gambler(20, RationalScalar.of(4, 10))), //
-  GAMBLER_100(() -> Gambler.createDefault()), //
+  GAMBLER_20(() -> new GamblerModel(20, RationalScalar.of(4, 10))), //
+  GAMBLER_100(() -> GamblerModel.createDefault()), //
   MAZE2(() -> DynamazeHelper.original("maze2")), //
   MAZE5(() -> DynamazeHelper.create5(3)), //
   WIRELOOP_4(() -> {
@@ -45,9 +45,9 @@ import ch.ethz.idsc.tensor.RationalScalar;
   RACETRACK(() -> RacetrackHelper.create("track0", 5)), //
   CLIFFWALK(() -> new Cliffwalk(12, 4)), //
   MAXBIAS(() -> new Maxbias(5)), //
-  WINDYGRID(() -> Windygrid.createFour()),//
+  WINDYGRID(() -> Windygrid.createFour()), //
   ;
-  // ---
+
   private final Supplier<MonteCarloInterface> supplier;
 
   private MonteCarloExamples(Supplier<MonteCarloInterface> supplier) {

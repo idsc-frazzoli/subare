@@ -36,6 +36,7 @@ public enum DiscreteModelErrorAnalysis {
       return Norm2Squared.ofVector(Loss.asQsa(discreteModel, refQsa, currentQsa).values());
     }
   };
+
   /** @param discreteModel
    * @param refQsa
    * @param currentQsa

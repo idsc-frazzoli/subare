@@ -2,7 +2,7 @@
 package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
-import ch.ethz.idsc.subare.util.FairArgMax;
+import ch.ethz.idsc.subare.util.FairArg;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -32,7 +32,7 @@ public enum Loss {
           .map(action -> ref.value(state, action)) //
           .reduce(Max::of).get();
       // ---
-      FairArgMax fairArgMax = FairArgMax.of(Tensor.of(actions.stream().map(action -> qsa.value(state, action))));
+      FairArg fairArgMax = FairArg.max(Tensor.of(actions.stream().map(action -> qsa.value(state, action))));
       Scalar weight = RationalScalar.of(1, fairArgMax.optionsCount());
       for (int index : fairArgMax.options()) {
         Tensor action = actions.get(index);

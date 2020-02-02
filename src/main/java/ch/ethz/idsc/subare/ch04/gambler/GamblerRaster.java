@@ -11,22 +11,22 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /* package */ class GamblerRaster implements StateActionRaster {
-  private final Gambler gambler;
+  private final GamblerModel gamblerModel;
   private final int offset;
 
-  public GamblerRaster(Gambler gambler) {
-    this.gambler = gambler;
-    offset = (gambler.states().length() - 1) / 2;
+  public GamblerRaster(GamblerModel gamblerModel) {
+    this.gamblerModel = gamblerModel;
+    offset = (gamblerModel.states().length() - 1) / 2;
   }
 
   @Override
   public DiscreteModel discreteModel() {
-    return gambler;
+    return gamblerModel;
   }
 
   @Override
   public Dimension dimensionStateActionRaster() {
-    int length = gambler.states().length();
+    int length = gamblerModel.states().length();
     return new Dimension(length, (length + 1) / 2);
   }
 

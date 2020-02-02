@@ -31,16 +31,16 @@ import ch.ethz.idsc.tensor.io.Timing;
 
   static void run(SarsaType sarsaType) throws Exception {
     System.out.println(sarsaType);
-    Gambler gambler = new Gambler(20, RealScalar.of(.4));
-    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gambler);
-    FeatureMapper mapper = ExactFeatureMapper.of(gambler);
+    GamblerModel gamblerModel = new GamblerModel(20, RealScalar.of(.4));
+    final DiscreteQsa ref = GamblerHelper.getOptimalQsa(gamblerModel);
+    FeatureMapper mapper = ExactFeatureMapper.of(gamblerModel);
     FeatureWeight w = new FeatureWeight(mapper);
-    DiscreteQsa qsa = DiscreteQsa.build(gambler);
+    DiscreteQsa qsa = DiscreteQsa.build(gamblerModel);
     StateActionCounter sac = new DiscreteStateActionCounter();
-    EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gambler, qsa, sac);
+    EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gamblerModel, qsa, sac);
     LearningRate learningRate = DefaultLearningRate.of(RealScalar.of(3), RealScalar.of(0.81));
     // LearningRate learningRate = ConstantLearningRate.of(RealScalar.of(0.3), false); // the case without warmStart
-    TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(gambler, LAMBDA, mapper, learningRate, w, sac, policy);
+    TrueOnlineSarsa trueOnlineSarsa = sarsaType.trueOnline(gamblerModel, LAMBDA, mapper, learningRate, w, sac, policy);
     final String name = sarsaType.name().toLowerCase();
     Timing timing = Timing.started();
     try (AnimationWriter animationWriter = //
@@ -48,16 +48,16 @@ import ch.ethz.idsc.tensor.io.Timing;
       for (int batch = 0; batch < 100; ++batch) {
         // System.out.println("batch " + batch);
         policy.setQsa(trueOnlineSarsa.qsaInterface());
-        ExploringStarts.batch(gambler, policy, trueOnlineSarsa);
+        ExploringStarts.batch(gamblerModel, policy, trueOnlineSarsa);
         // DiscreteQsa toQsa = trueOnlineSarsa.getQsa();
         // XYtoSarsa.append(Tensors.vector(RealScalar.of(index).number(), errorAnalysis.getError(monteCarloInterface, optimalQsa, toQsa).number()));
         DiscreteQsa qsaRef = trueOnlineSarsa.qsa();
-        Infoline infoline = Infoline.print(gambler, batch, ref, qsaRef);
-        animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
+        Infoline infoline = Infoline.print(gamblerModel, batch, ref, qsaRef);
+        animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gamblerModel), qsaRef, ref));
         if (infoline.isLossfree()) {
-          animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
-          animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
-          animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gambler), qsaRef, ref));
+          animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gamblerModel), qsaRef, ref));
+          animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gamblerModel), qsaRef, ref));
+          animationWriter.write(StateActionRasters.qsaLossRef(new GamblerRaster(gamblerModel), qsaRef, ref));
           break;
         }
       }

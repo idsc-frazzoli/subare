@@ -7,7 +7,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 
-class ConstantPolicy implements Policy {
+/* package */ class ConstantPolicy implements Policy {
   final Scalar backProb;
 
   public ConstantPolicy(Scalar backProb) {

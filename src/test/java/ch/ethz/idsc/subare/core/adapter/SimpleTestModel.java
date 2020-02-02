@@ -18,7 +18,7 @@ import ch.ethz.idsc.tensor.red.KroneckerDelta;
 // MODIFY AND ADAPT A COPY IF NEEDED
 public enum SimpleTestModel implements MonteCarloInterface, StandardModel {
   INSTANCE;
-  // ---
+
   private static final Scalar TWO = RealScalar.of(2);
 
   @Override // from DiscreteModel
