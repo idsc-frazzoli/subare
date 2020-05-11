@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
+import ch.ethz.idsc.tensor.sca.Abs;
 import junit.framework.TestCase;
 
 public class InfiniteVarianceTest extends TestCase {
@@ -17,7 +18,7 @@ public class InfiniteVarianceTest extends TestCase {
     avi.untilBelow(RealScalar.of(.00001));
     DiscreteQsa qsa = avi.qsa();
     Scalar diff = qsa.value(InfiniteVariance.BACK, InfiniteVariance.BACK).subtract(RealScalar.ONE);
-    assertTrue(Scalars.lessThan(diff.abs(), RealScalar.of(.001)));
+    assertTrue(Scalars.lessThan(Abs.of(diff), RealScalar.of(.001)));
     assertEquals(qsa.value(InfiniteVariance.BACK, InfiniteVariance.END), RealScalar.ZERO);
     assertEquals(qsa.value(InfiniteVariance.END, InfiniteVariance.END), RealScalar.ZERO);
   }
@@ -28,7 +29,7 @@ public class InfiniteVarianceTest extends TestCase {
     vi.untilBelow(RealScalar.of(.00001));
     DiscreteVs vs = vi.vs();
     Scalar diff = vs.value(InfiniteVariance.BACK).subtract(RealScalar.ONE);
-    assertTrue(Scalars.lessThan(diff.abs(), RealScalar.of(.001)));
+    assertTrue(Scalars.lessThan(Abs.of(diff), RealScalar.of(.001)));
     assertEquals(vs.value(InfiniteVariance.END), RealScalar.ZERO);
   }
 }

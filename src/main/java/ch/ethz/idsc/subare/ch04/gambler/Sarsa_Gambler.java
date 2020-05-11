@@ -42,21 +42,19 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
     EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(gamblerModel, qsa, sac);
     policy.setExplorationRate(LinearExplorationRate.of(batches, 0.2, 0.01));
     // ---
-    AnimationWriter animationWriter1 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150, TimeUnit.MILLISECONDS);
-    AnimationWriter animationWriter2 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_sac_" + sarsaType + ".gif"), 150, TimeUnit.MILLISECONDS);
-    // ---
-    final Sarsa sarsa = sarsaType.sarsa(gamblerModel, learningRate, qsa, sac, policy);
-    // ---
-    for (int index = 0; index < batches; ++index) {
-      Infoline.print(gamblerModel, index, ref, qsa);
-      ExploringStarts.batch(gamblerModel, policy, 1, sarsa);
-      // ---
-      animationWriter1.write(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
-      animationWriter2.write(StateActionRasters.qsa( //
-          gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) sarsa.sac()).inQsa(gamblerModel))));
+    try (AnimationWriter animationWriter1 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_" + sarsaType + ".gif"), 150, TimeUnit.MILLISECONDS)) {
+      try (AnimationWriter animationWriter2 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_sac_" + sarsaType + ".gif"), 150, TimeUnit.MILLISECONDS)) {
+        Sarsa sarsa = sarsaType.sarsa(gamblerModel, learningRate, qsa, sac, policy);
+        for (int index = 0; index < batches; ++index) {
+          Infoline.print(gamblerModel, index, ref, qsa);
+          ExploringStarts.batch(gamblerModel, policy, 1, sarsa);
+          // ---
+          animationWriter1.write(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
+          animationWriter2.write(StateActionRasters.qsa( //
+              gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) sarsa.sac()).inQsa(gamblerModel))));
+        }
+      }
     }
-    animationWriter1.close();
-    animationWriter2.close();
     GamblerHelper.play(gamblerModel, qsa);
     return qsa;
   }

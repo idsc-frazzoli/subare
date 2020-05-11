@@ -20,6 +20,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.sca.Abs;
 
 /** base class for implementations of
  * 
@@ -93,7 +94,7 @@ public class Sarsa extends DequeDigestAdapter implements DiscreteQsaSupplier, St
     Tensor action = stepInterface.action();
     Scalar value0 = qsa.value(state0, action);
     Tensor rewards = Tensors.of(stepInterface.reward(), sarsaEvaluation.evaluate(stepInterface.nextState(), policy));
-    return discountFunction.apply(rewards).subtract(value0).abs();
+    return Abs.between(discountFunction.apply(rewards), value0);
   }
 
   @Override // from DiscreteQsaSupplier

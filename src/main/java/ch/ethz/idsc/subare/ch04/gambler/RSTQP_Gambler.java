@@ -28,20 +28,20 @@ import ch.ethz.idsc.tensor.io.HomeDirectory;
     Random1StepTabularQPlanning rstqp = Random1StepTabularQPlanning.of(gamblerModel, qsa, //
         DefaultLearningRate.of(4, 0.71));
     ActionValueStatistics avs = new ActionValueStatistics(gamblerModel);
-    AnimationWriter animationWriter1 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_rstqp.gif"), 100, TimeUnit.MILLISECONDS);
-    AnimationWriter animationWriter2 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_sac_rstqp.gif"), 200, TimeUnit.MILLISECONDS);
-    int batches = 200;
-    for (int index = 0; index < batches; ++index) {
-      Infoline infoline = Infoline.print(gamblerModel, index, ref, qsa);
-      TabularSteps.batch(gamblerModel, gamblerModel, rstqp, avs);
-      animationWriter1.write(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
-      animationWriter2.write(StateActionRasters.qsa( //
-          gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) rstqp.sac()).inQsa(gamblerModel))));
-      if (infoline.isLossfree())
-        break;
+    try (AnimationWriter animationWriter1 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_qsa_rstqp.gif"), 100, TimeUnit.MILLISECONDS)) {
+      try (AnimationWriter animationWriter2 = new GifAnimationWriter(HomeDirectory.Pictures("gambler_sac_rstqp.gif"), 200, TimeUnit.MILLISECONDS)) {
+        int batches = 200;
+        for (int index = 0; index < batches; ++index) {
+          Infoline infoline = Infoline.print(gamblerModel, index, ref, qsa);
+          TabularSteps.batch(gamblerModel, gamblerModel, rstqp, avs);
+          animationWriter1.write(StateActionRasters.qsaPolicyRef(gamblerRaster, qsa, ref));
+          animationWriter2.write(StateActionRasters.qsa( //
+              gamblerRaster, DiscreteValueFunctions.rescaled(((DiscreteStateActionCounter) rstqp.sac()).inQsa(gamblerModel))));
+          if (infoline.isLossfree())
+            break;
+        }
+      }
     }
-    animationWriter1.close();
-    animationWriter2.close();
     // ---
     // ActionValueIteration avi = new ActionValueIteration(gambler, avs);
     // avi.setMachinePrecision();
