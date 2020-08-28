@@ -13,7 +13,7 @@ import ch.ethz.idsc.tensor.sca.Chop;
 public class RobustArgMax implements Serializable {
   private final Chop chop;
 
-  /** @param chop that performs proximity check to the max via {@link Chop#close(Tensor, Tensor)} */
+  /** @param chop that performs proximity check to the max via {@link Chop#isClose(Tensor, Tensor)} */
   public RobustArgMax(Chop chop) {
     this.chop = chop;
   }
@@ -23,8 +23,9 @@ public class RobustArgMax implements Serializable {
    * @throws Exception if vector is empty, or not a tensor of rank 1 */
   public IntStream options(Tensor vector) {
     Tensor max = vector.stream().reduce(Max::of).get();
+    // TODO implementation is not efficient
     return IntStream.range(0, vector.length()) //
-        .filter(index -> chop.close(vector.get(index), max));
+        .filter(index -> chop.isClose(vector.get(index), max));
   }
 
   /** in the spirit of ArgMax which returns the first of equally maximal indices.

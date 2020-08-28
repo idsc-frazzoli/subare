@@ -16,6 +16,6 @@ public class LinearApproximationVsTest extends TestCase {
     TensorUnaryOperator represent = CosineBasis.create(5, Clips.positive(20));
     VsInterface vs = LinearApproximationVs.create(represent, Tensors.vector(0, 1, 0, 0, 0));
     Scalar value = vs.value(RealScalar.of(10));
-    assertTrue(Chop._13.allZero(value));
+    Chop._13.requireAllZero(value);
   }
 }

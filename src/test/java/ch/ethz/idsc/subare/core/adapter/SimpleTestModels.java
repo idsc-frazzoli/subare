@@ -38,7 +38,7 @@ public class SimpleTestModels extends TestCase {
     assertEquals(value_s1_a1, RealScalar.ONE);
     assertEquals(value_s2_a0, RealScalar.ZERO);
     Chop CHOP_3 = Chop._03;
-    if (!CHOP_3.close(value_s0_a1, RealScalar.of(3))) {
+    if (!CHOP_3.isClose(value_s0_a1, RealScalar.of(3))) {
       DiscreteUtils.print(qsa);
       assertTrue(false);
     }
