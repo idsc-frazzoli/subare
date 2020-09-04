@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch05.blackjack;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.List;
+import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -30,7 +31,7 @@ enum BlackjackHelper {
     Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.height, dimension.width);
     for (Tensor state : blackjack.states()) {
       Point point = blackjackRaster.point(state);
-      if (point != null) {
+      if (Objects.nonNull(point)) {
         Tensor action = RealScalar.ZERO;
         tensor.set(policy.probability(state, action), point.x, point.y);
       }

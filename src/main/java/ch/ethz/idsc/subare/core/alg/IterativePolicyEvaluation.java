@@ -2,6 +2,8 @@
 // inspired by Shangtong Zhang
 package ch.ethz.idsc.subare.core.alg;
 
+import java.util.Objects;
+
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.subare.core.VsInterface;
@@ -62,7 +64,7 @@ public class IterativePolicyEvaluation {
       Scalar delta = DiscreteValueFunctions.distance(vs_new, vs_old);
       if (3e9 < timing.nanoSeconds())
         System.out.println(past + " -> " + delta + " " + alternate);
-      if (past != null && Scalars.lessThan(past, delta))
+      if (Objects.nonNull(past) && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);
           break;

@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.core.util.gfx;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.List;
+import java.util.Objects;
 
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
@@ -39,7 +40,7 @@ public enum StateRasters {
     Tensor tensor = Array.of(list -> DoubleScalar.INDETERMINATE, dimension.height, dimension.width);
     for (Tensor state : discreteModel.states()) {
       Point point = stateRaster.point(state);
-      if (point != null)
+      if (Objects.nonNull(point))
         tensor.set(vs.value(state), point.y, point.x);
     }
     return ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);

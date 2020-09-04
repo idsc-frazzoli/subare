@@ -4,6 +4,7 @@ package ch.ethz.idsc.subare.ch01.tic;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 /* package */ class State implements Serializable {
   public static final String[] SYMBOL = { "0", "x", "*" };
@@ -53,7 +54,7 @@ import java.util.Arrays;
   }
 
   boolean isEnd() {
-    return winner != null;
+    return Objects.nonNull(winner);
   }
 
   State nextState(int pos, int symbol) {
@@ -95,7 +96,7 @@ import java.util.Arrays;
         stringBuilder.append('\n');
       }
     }
-    if (winner != null)
+    if (isEnd())
       stringBuilder.append("winner=" + winner + "\n");
     return stringBuilder.toString();
   }

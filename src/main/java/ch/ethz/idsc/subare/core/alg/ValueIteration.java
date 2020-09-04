@@ -1,6 +1,8 @@
 // code by jph
 package ch.ethz.idsc.subare.core.alg;
 
+import java.util.Objects;
+
 import ch.ethz.idsc.subare.core.ActionValueInterface;
 import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.DiscreteVsSupplier;
@@ -63,7 +65,7 @@ public class ValueIteration implements DiscreteVsSupplier {
       final Scalar delta = DiscreteValueFunctions.distance(vs_new, vs_old);
       if (3e9 < timing.nanoSeconds())
         System.out.println(past + " -> " + delta + " " + alternate);
-      if (past != null && Scalars.lessThan(past, delta))
+      if (Objects.nonNull(past) && Scalars.lessThan(past, delta))
         if (flips < ++alternate) {
           System.out.println("give up at " + past + " -> " + delta);
           break;
