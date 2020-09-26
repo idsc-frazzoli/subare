@@ -19,7 +19,7 @@ public class Index implements Serializable {
     return new Index(tensor);
   }
 
-  // ---
+  /***************************************************/
   private final Tensor keys;
   private final Map<Tensor, Integer> map = new HashMap<>();
 

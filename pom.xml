@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>ch.ethz.idsc</groupId>
 			<artifactId>tensor</artifactId>
-			<version>0.8.5</version>
+			<version>0.8.7</version>
 		</dependency>
 
 		<dependency>
@@ -33,7 +33,7 @@
 	<repositories>
 		<repository>
 			<id>tensor-mvn-repo</id>
-			<url>https://raw.github.com/idsc-frazzoli/tensor/mvn-repo/</url>
+			<url>https://raw.github.com/datahaki/tensor/mvn-repo/</url>
 			<snapshots>
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>

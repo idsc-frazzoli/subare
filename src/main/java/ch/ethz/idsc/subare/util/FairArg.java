@@ -29,7 +29,7 @@ public class FairArg implements Serializable {
     return new FairArg(Min::of, tensor);
   }
 
-  // ---
+  /***************************************************/
   private final List<Integer> list;
 
   private FairArg(BinaryOperator<Scalar> binaryOperator, Tensor tensor) {

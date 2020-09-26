@@ -24,7 +24,7 @@ public class Coinflip {
     return new Coinflip(RationalScalar.HALF);
   }
 
-  // ---
+  /***************************************************/
   private final Random random = new Random();
   private final float p_head;
 
