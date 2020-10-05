@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core;
 
+import ch.ethz.idsc.subare.util.AssertFail;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
@@ -27,11 +28,6 @@ public class DiscountFunctionTest extends TestCase {
   }
 
   public void testFail() {
-    try {
-      DiscountFunction.of(RealScalar.of(1.1));
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> DiscountFunction.of(RealScalar.of(1.1)));
   }
 }

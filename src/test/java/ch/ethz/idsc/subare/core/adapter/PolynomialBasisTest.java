@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.adapter;
 
+import ch.ethz.idsc.subare.util.AssertFail;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.opt.TensorUnaryOperator;
@@ -16,11 +17,6 @@ public class PolynomialBasisTest extends TestCase {
 
   public void testFail() {
     TensorUnaryOperator tuo = PolynomialBasis.create(4, Clips.interval(50, 100));
-    try {
-      tuo.apply(RealScalar.ZERO);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> tuo.apply(RealScalar.ZERO));
   }
 }

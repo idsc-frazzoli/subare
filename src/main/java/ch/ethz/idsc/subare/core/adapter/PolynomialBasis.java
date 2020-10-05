@@ -12,13 +12,15 @@ import ch.ethz.idsc.tensor.sca.Clip;
  * 
  * univariate basis functions on the unit interval */
 public class PolynomialBasis implements TensorUnaryOperator {
+  private static final long serialVersionUID = 8542417546512627918L;
+
   /** @param order number of basis functions
    * @param clip */
   public static TensorUnaryOperator create(int order, Clip clip) {
     return new PolynomialBasis(order, clip);
   }
 
-  // ---
+  /***************************************************/
   private final int order;
   private final Clip clip;
 

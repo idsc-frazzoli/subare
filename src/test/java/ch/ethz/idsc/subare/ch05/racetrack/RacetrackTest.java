@@ -3,6 +3,7 @@ package ch.ethz.idsc.subare.ch05.racetrack;
 
 import java.util.Arrays;
 
+import ch.ethz.idsc.subare.util.AssertFail;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -18,12 +19,7 @@ public class RacetrackTest extends TestCase {
     assertEquals(statesIndex.size(), 724);
     assertEquals(racetrack.statesStart, Tensors.fromString("{{1, 0, 0, 0}, {2, 0, 0, 0}, {3, 0, 0, 0}}"));
     assertEquals(racetrack.statesTerminal.length() % 3, 1);
-    try {
-      racetrack.actions(Tensors.vector(1, 0, 0));
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> racetrack.actions(Tensors.vector(1, 0, 0)));
   }
 
   public void testMove() {

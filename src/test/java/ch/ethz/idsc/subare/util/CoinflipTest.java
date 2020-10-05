@@ -32,17 +32,7 @@ public class CoinflipTest extends TestCase {
   }
 
   public void testFail() {
-    try {
-      Coinflip.of(RealScalar.of(-0.1));
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
-    try {
-      Coinflip.of(RealScalar.of(1.1));
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> Coinflip.of(RealScalar.of(-0.1)));
+    AssertFail.of(() -> Coinflip.of(RealScalar.of(1.1)));
   }
 }

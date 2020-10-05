@@ -7,6 +7,7 @@ import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.adapter.StepAdapter;
 import ch.ethz.idsc.subare.core.td.Sarsa;
 import ch.ethz.idsc.subare.core.td.SarsaType;
+import ch.ethz.idsc.subare.util.AssertFail;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -31,32 +32,12 @@ public class DefaultLearningRateTest extends TestCase {
   }
 
   public void testFailFactor() {
-    try {
-      DefaultLearningRate.of(0, 1);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
-    try {
-      DefaultLearningRate.of(-1, 1);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> DefaultLearningRate.of(0, 1));
+    AssertFail.of(() -> DefaultLearningRate.of(-1, 1));
   }
 
   public void testFailExponent() {
-    try {
-      DefaultLearningRate.of(1, 0.5);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
-    try {
-      DefaultLearningRate.of(1, 0.4);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> DefaultLearningRate.of(1, 0.5));
+    AssertFail.of(() -> DefaultLearningRate.of(1, 0.4));
   }
 }

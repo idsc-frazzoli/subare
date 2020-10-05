@@ -18,6 +18,7 @@ import ch.ethz.idsc.subare.core.util.FeatureWeight;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
+import ch.ethz.idsc.subare.util.AssertFail;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import junit.framework.TestCase;
@@ -65,13 +66,8 @@ public class TrueOnlineSarsaTest extends TestCase {
     LearningRate learningRate = ConstantLearningRate.of(RationalScalar.HALF);
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     FeatureWeight w = new FeatureWeight(featureMapper);
-    try {
-      SarsaType.ORIGINAL.trueOnline(SimpleTestModel.INSTANCE, RealScalar.of(2), featureMapper, //
-          learningRate, w, new DiscreteStateActionCounter(), null);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> SarsaType.ORIGINAL.trueOnline(SimpleTestModel.INSTANCE, RealScalar.of(2), featureMapper, //
+        learningRate, w, new DiscreteStateActionCounter(), null));
   }
 
   public void testFail() {
@@ -79,12 +75,7 @@ public class TrueOnlineSarsaTest extends TestCase {
     MonteCarloInterface monteCarloInterface = new GamblerModel(10, RationalScalar.HALF);
     FeatureMapper featureMapper = ExactFeatureMapper.of(monteCarloInterface);
     FeatureWeight w = new FeatureWeight(featureMapper);
-    try {
-      SarsaType.ORIGINAL.trueOnline(null, RealScalar.of(0.9), featureMapper, //
-          learningRate, w, new DiscreteStateActionCounter(), null);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> SarsaType.ORIGINAL.trueOnline(null, RealScalar.of(0.9), featureMapper, //
+        learningRate, w, new DiscreteStateActionCounter(), null));
   }
 }

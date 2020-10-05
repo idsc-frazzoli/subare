@@ -44,20 +44,10 @@ public class FairArgTest extends TestCase {
   }
 
   public void testEmptyFail() {
-    try {
-      FairArg.max(Tensors.empty());
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> FairArg.max(Tensors.empty()));
   }
 
   public void testScalarFail() {
-    try {
-      FairArg.max(RealScalar.ONE);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> FairArg.max(RealScalar.ONE));
   }
 }

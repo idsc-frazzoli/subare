@@ -15,6 +15,8 @@ import ch.ethz.idsc.tensor.red.Min;
 
 /** ArgMax returns the index of the first element in the input sequence, which is equal to the max value. */
 public class FairArg implements Serializable {
+  private static final long serialVersionUID = 2106191155277109725L;
+
   /** @param tensor
    * @return
    * @throws Exception if tensor is empty, or a scalar */

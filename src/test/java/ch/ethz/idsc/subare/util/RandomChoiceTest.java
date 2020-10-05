@@ -38,26 +38,11 @@ public class RandomChoiceTest extends TestCase {
   }
 
   public void testTensorFail() {
-    try {
-      RandomChoice.of(Tensors.vector());
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
-    try {
-      RandomChoice.of(RealScalar.ONE);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> RandomChoice.of(Tensors.vector()));
+    AssertFail.of(() -> RandomChoice.of(RealScalar.ONE));
   }
 
   public void testListEmptyFail() {
-    try {
-      RandomChoice.of(Collections.emptyList());
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> RandomChoice.of(Collections.emptyList()));
   }
 }

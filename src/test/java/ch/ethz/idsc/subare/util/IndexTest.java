@@ -12,20 +12,10 @@ public class IndexTest extends TestCase {
     Tensor tensor = Tensors.vector(5, 7, 11);
     Index index = Index.build(tensor);
     assertEquals(index.of(RealScalar.of(7)), 1);
-    try {
-      index.of(RealScalar.of(8));
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> index.of(RealScalar.of(8)));
   }
 
   public void testScalarFail() {
-    try {
-      Index.build(Pi.VALUE);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> Index.build(Pi.VALUE));
   }
 }

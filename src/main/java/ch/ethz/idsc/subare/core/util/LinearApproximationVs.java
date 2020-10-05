@@ -9,6 +9,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.opt.TensorUnaryOperator;
 
 public class LinearApproximationVs implements VsInterface, Serializable {
+  private static final long serialVersionUID = 945502455438746542L;
+
   /** @param represent
    * @param weight initial choice of weights
    * @return */
@@ -16,7 +18,7 @@ public class LinearApproximationVs implements VsInterface, Serializable {
     return new LinearApproximationVs(represent, weight);
   }
 
-  // ---
+  /***************************************************/
   private final TensorUnaryOperator represent;
   private Tensor weight;
 

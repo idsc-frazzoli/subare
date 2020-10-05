@@ -12,6 +12,8 @@ import ch.ethz.idsc.tensor.Tensor;
  * the index allows fast checks for containment and gives the position of the key
  * in the original tensor of keys */
 public class Index implements Serializable {
+  private static final long serialVersionUID = -3684664253641844185L;
+
   /** @param tensor
    * @return
    * @throws Exception if given tensor is a scalar */

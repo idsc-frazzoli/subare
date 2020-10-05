@@ -16,6 +16,7 @@ import ch.ethz.idsc.tensor.sca.Log;
 import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
 public class DiscreteStateActionCounter implements StateActionCounter, Serializable {
+  private static final long serialVersionUID = -7232801811755179539L;
   private static final ScalarUnaryOperator LOGARITHMIC = scalar -> Log.of(scalar.add(RealScalar.ONE));
   // ---
   private final Map<Tensor, Integer> stateActionMap = new HashMap<>();

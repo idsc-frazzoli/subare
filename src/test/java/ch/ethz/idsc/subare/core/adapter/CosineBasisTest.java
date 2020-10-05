@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.core.adapter;
 
+import ch.ethz.idsc.subare.util.AssertFail;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -23,11 +24,6 @@ public class CosineBasisTest extends TestCase {
 
   public void testFail() {
     TensorUnaryOperator tuo = CosineBasis.create(4, Clips.interval(50, 100));
-    try {
-      tuo.apply(RealScalar.ZERO);
-      fail();
-    } catch (Exception exception) {
-      // ---
-    }
+    AssertFail.of(() -> tuo.apply(RealScalar.ZERO));
   }
 }

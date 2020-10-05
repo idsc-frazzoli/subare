@@ -12,6 +12,8 @@ import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.alg.Array;
 
 public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializable {
+  private static final long serialVersionUID = -1674313460677330819L;
+
   /** initializes all state value to zero
    * 
    * @param discreteModel
@@ -24,7 +26,7 @@ public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializa
     return new DiscreteVs(Index.build(states), values);
   }
 
-  // ---
+  /***************************************************/
   private final Index index;
   private final Tensor values;
 

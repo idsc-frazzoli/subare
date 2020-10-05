@@ -13,13 +13,15 @@ import ch.ethz.idsc.tensor.sca.Cos;
  * 
  * univariate basis functions on the unit interval */
 public class CosineBasis implements TensorUnaryOperator {
+  private static final long serialVersionUID = -3687698178741071915L;
+
   /** @param order number of basis functions
    * @param clip */
   public static TensorUnaryOperator create(int order, Clip clip) {
     return new CosineBasis(order, clip);
   }
 
-  // ---
+  /***************************************************/
   private final int order;
   private final Clip clip;
 
