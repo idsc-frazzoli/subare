@@ -12,9 +12,9 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.PolicyBase;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** monte carlo is bad in this example, since the steep negative reward biases most episodes */
 // TODO this does not really converge at all

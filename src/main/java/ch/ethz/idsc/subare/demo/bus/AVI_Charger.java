@@ -7,8 +7,8 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Export;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /* package */ enum AVI_Charger {
   ;

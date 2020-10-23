@@ -19,7 +19,7 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** Double Sarsa for maximization bias */

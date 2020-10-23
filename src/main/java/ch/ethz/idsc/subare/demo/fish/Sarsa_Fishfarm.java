@@ -18,9 +18,9 @@ import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.DoubleScalar;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** StepDigest qsa methods applied to cliff walk */

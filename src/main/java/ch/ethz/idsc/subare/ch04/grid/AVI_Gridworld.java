@@ -9,9 +9,9 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** solving grid world
  * gives the value function for the optimal policy equivalent to

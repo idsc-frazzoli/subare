@@ -6,7 +6,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
-import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
+import ch.ethz.idsc.tensor.api.ScalarUnaryOperator;
 
 /** The e-greedy agent is described in
  * Section 2.2 "Action-Value Methods" */

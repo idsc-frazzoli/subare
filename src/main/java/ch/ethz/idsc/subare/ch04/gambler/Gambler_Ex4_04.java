@@ -11,7 +11,7 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Last;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
 /* package */ enum Gambler_Ex4_04 {

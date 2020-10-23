@@ -10,13 +10,13 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
+import ch.ethz.idsc.tensor.api.ScalarTensorFunction;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
+import ch.ethz.idsc.tensor.ext.Timing;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
-import ch.ethz.idsc.tensor.io.Timing;
-import ch.ethz.idsc.tensor.opt.ScalarTensorFunction;
 import ch.ethz.idsc.tensor.red.Min;
 import ch.ethz.idsc.tensor.sca.Round;
 

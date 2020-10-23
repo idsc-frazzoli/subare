@@ -8,7 +8,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Range;
-import ch.ethz.idsc.tensor.qty.Boole;
+import ch.ethz.idsc.tensor.num.Boole;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
 /** states = 0 1 2 with start = 0 and terminal = 2

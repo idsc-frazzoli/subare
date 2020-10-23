@@ -14,9 +14,9 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum Sarsa_Wireloop {
   ;

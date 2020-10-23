@@ -6,8 +6,8 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Export;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
 /** action value iteration for gambler's dilemma

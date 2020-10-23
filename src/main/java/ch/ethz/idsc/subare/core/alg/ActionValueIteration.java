@@ -13,7 +13,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.io.Timing;
+import ch.ethz.idsc.tensor.ext.Timing;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.sca.N;
 import ch.ethz.idsc.tensor.sca.Sign;

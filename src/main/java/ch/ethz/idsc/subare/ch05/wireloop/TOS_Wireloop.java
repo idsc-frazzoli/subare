@@ -20,10 +20,10 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
+import ch.ethz.idsc.tensor.ext.Timing;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
-import ch.ethz.idsc.tensor.io.Timing;
 
 enum TOS_Wireloop {
   ;

@@ -3,8 +3,8 @@ package ch.ethz.idsc.subare.demo.fish;
 
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.api.ScalarUnaryOperator;
 import ch.ethz.idsc.tensor.sca.Exp;
-import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
 /* package */ enum DLogisticSigmoid implements ScalarUnaryOperator {
   FUNCTION;

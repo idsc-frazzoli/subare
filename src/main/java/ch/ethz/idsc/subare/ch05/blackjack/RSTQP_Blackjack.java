@@ -7,9 +7,9 @@ import ch.ethz.idsc.subare.core.alg.Random1StepTabularQPlanning;
 import ch.ethz.idsc.subare.core.util.DefaultLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** finding optimal policy to stay or hit
  * 

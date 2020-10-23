@@ -16,8 +16,8 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
 import ch.ethz.idsc.tensor.alg.Join;
+import ch.ethz.idsc.tensor.api.TensorScalarFunction;
 import ch.ethz.idsc.tensor.io.ResourceData;
-import ch.ethz.idsc.tensor.opt.TensorScalarFunction;
 import ch.ethz.idsc.tensor.sca.Chop;
 import ch.ethz.idsc.tensor.sca.Clips;
 

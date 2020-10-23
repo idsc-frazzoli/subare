@@ -12,8 +12,8 @@ import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.api.ScalarUnaryOperator;
 import ch.ethz.idsc.tensor.sca.Log;
-import ch.ethz.idsc.tensor.sca.ScalarUnaryOperator;
 
 public class DiscreteStateActionCounter implements StateActionCounter, Serializable {
   private static final long serialVersionUID = -7232801811755179539L;

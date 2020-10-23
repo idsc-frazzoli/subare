@@ -16,8 +16,8 @@ import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Export;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** value iteration for cliffwalk */
 enum VI_Cliffwalk {

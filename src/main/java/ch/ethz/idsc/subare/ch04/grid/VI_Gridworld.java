@@ -10,8 +10,8 @@ import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Export;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** solving grid world
  * gives the value function for the optimal policy equivalent to

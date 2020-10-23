@@ -7,9 +7,9 @@ import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 enum IPE_Wireloop {
   ;

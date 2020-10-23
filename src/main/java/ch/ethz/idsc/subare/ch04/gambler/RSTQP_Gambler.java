@@ -13,9 +13,9 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
 import ch.ethz.idsc.tensor.RationalScalar;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 // R1STQP algorithm is not suited for gambler's dilemma
 /* package */ enum RSTQP_Gambler {

@@ -14,7 +14,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
-import ch.ethz.idsc.tensor.opt.TensorScalarFunction;
+import ch.ethz.idsc.tensor.api.TensorScalarFunction;
 
 /** Example 5.2 p.95: Soap Bubble
  * a classical Dirichlet problem

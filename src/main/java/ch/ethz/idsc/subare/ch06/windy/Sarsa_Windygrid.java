@@ -16,9 +16,9 @@ import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.LearningRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRasters;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** determines q(s, a) function for equiprobable "random" policy */
 enum Sarsa_Windygrid {

@@ -6,7 +6,7 @@ import java.io.Serializable;
 import ch.ethz.idsc.subare.core.VsInterface;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.opt.TensorUnaryOperator;
+import ch.ethz.idsc.tensor.api.TensorUnaryOperator;
 
 public class LinearApproximationVs implements VsInterface, Serializable {
   private static final long serialVersionUID = 945502455438746542L;

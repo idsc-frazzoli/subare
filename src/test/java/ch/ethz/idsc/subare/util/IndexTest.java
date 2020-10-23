@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.util;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.opt.Pi;
+import ch.ethz.idsc.tensor.num.Pi;
 import junit.framework.TestCase;
 
 public class IndexTest extends TestCase {

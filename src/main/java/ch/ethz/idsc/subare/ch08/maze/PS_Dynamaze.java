@@ -20,9 +20,9 @@ import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.StepExploringStarts;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.tensor.RealScalar;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** determines q(s, a) function for equiprobable "random" policy */
 enum PS_Dynamaze {

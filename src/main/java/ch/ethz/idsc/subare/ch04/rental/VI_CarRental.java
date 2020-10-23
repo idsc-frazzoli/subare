@@ -4,9 +4,9 @@ package ch.ethz.idsc.subare.ch04.rental;
 import java.util.concurrent.TimeUnit;
 
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** Example 4.2: Jack's Car Rental
  * Figure 4.2

@@ -8,7 +8,7 @@ import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.qty.Boole;
+import ch.ethz.idsc.tensor.num.Boole;
 import ch.ethz.idsc.tensor.red.KroneckerDelta;
 
 /** Example 5.5 p.106: Infinite Variance */

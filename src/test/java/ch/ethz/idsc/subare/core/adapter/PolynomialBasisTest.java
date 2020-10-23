@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.core.adapter;
 import ch.ethz.idsc.subare.util.AssertFail;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensors;
-import ch.ethz.idsc.tensor.opt.TensorUnaryOperator;
+import ch.ethz.idsc.tensor.api.TensorUnaryOperator;
 import ch.ethz.idsc.tensor.sca.Clips;
 import junit.framework.TestCase;
 

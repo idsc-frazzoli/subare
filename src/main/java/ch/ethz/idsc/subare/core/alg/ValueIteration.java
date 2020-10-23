@@ -14,7 +14,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.io.Timing;
+import ch.ethz.idsc.tensor.ext.Timing;
 import ch.ethz.idsc.tensor.red.Max;
 
 /** value iteration: "policy evaluation is stopped after just one sweep"

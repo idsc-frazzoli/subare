@@ -3,7 +3,7 @@ package ch.ethz.idsc.subare.ch05.racetrack;
 
 import java.io.File;
 
-import ch.ethz.idsc.tensor.io.HomeDirectory;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import junit.framework.TestCase;
 
 public class VI_RaceTrackTest extends TestCase {

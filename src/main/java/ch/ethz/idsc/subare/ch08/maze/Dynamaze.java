@@ -12,7 +12,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
-import ch.ethz.idsc.tensor.qty.Boole;
+import ch.ethz.idsc.tensor.num.Boole;
 
 /** Example 8.1 p.164: Dyna Maze */
 class Dynamaze extends DeterministicStandardModel implements MonteCarloInterface {

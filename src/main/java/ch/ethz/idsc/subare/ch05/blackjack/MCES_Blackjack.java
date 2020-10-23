@@ -12,9 +12,9 @@ import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Subdivide;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
 
 /** Example 5.3 p.108: Solving Blackjack
  * Figure 5.3 p.108

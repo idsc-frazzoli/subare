@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Last;
 import ch.ethz.idsc.tensor.alg.Range;
-import ch.ethz.idsc.tensor.qty.Boole;
+import ch.ethz.idsc.tensor.num.Boole;
 
 /** Example 6.2: Random Walk, p.133 */
 class Randomwalk implements MonteCarloInterface {

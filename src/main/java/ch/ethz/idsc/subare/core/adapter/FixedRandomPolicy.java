@@ -10,8 +10,8 @@ import ch.ethz.idsc.subare.core.StateActionModel;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.num.Boole;
 import ch.ethz.idsc.tensor.pdf.Distribution;
-import ch.ethz.idsc.tensor.qty.Boole;
 
 public class FixedRandomPolicy implements Policy {
   private static final Random RANDOM = new Random();

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
-import ch.ethz.idsc.tensor.io.HomeDirectory;
+import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Put;
 
 /* package */ enum AllPairsExport {
