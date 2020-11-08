@@ -7,8 +7,7 @@ import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.sca.N;
 
-// TODO check again
-enum FVPE_InfiniteVariance {
+/* package */ enum FVPE_InfiniteVariance {
   ;
   public static void main(String[] args) {
     InfiniteVariance infiniteVariance = new InfiniteVariance();

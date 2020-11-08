@@ -20,11 +20,11 @@ import ch.ethz.idsc.tensor.img.ArrayPlot;
 import ch.ethz.idsc.tensor.img.ColorDataGradients;
 import ch.ethz.idsc.tensor.img.ImageResize;
 
-enum BlackjackHelper {
+/* package */ enum BlackjackHelper {
   ;
   private static final int MAGNIFY = 5;
 
-  // FIXME magnify irregular
+  // TODO magnify irregular
   public static Tensor render(Blackjack blackjack, Policy policy) {
     BlackjackRaster blackjackRaster = new BlackjackRaster(blackjack);
     Dimension dimension = blackjackRaster.dimensionStateRaster();

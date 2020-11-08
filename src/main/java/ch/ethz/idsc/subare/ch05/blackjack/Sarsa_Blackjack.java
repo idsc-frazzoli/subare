@@ -20,8 +20,8 @@ import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 import ch.ethz.idsc.tensor.sca.Round;
 
-// FIXME this demo throws an exception
-enum Sarsa_Blackjack {
+// TODO this demo throws an exception
+/* package */ enum Sarsa_Blackjack {
   ;
   static void handle(SarsaType sarsaType) throws Exception {
     System.out.println(sarsaType);

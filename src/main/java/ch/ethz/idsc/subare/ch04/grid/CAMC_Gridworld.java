@@ -15,8 +15,7 @@ import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.AnimationWriter;
 import ch.ethz.idsc.tensor.io.GifAnimationWriter;
 
-/**  */
-enum CAMC_Gridworld { // TODO this looks like WIP
+/* package */ enum CAMC_Gridworld { // LONGTERM work in progress?
   ;
   public static void main(String[] args) throws Exception {
     Gridworld gridworld = new Gridworld();
