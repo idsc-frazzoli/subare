@@ -59,7 +59,7 @@ public enum SimpleTestModel implements MonteCarloInterface, StandardModel {
 
   @Override // from ActionValueInterface
   public Scalar expectedReward(Tensor state, Tensor action) {
-    return TWO.subtract(state).Get();
+    return TWO.subtract(state);
   }
 
   @Override // from TransitionInterface

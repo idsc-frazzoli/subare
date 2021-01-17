@@ -69,7 +69,7 @@ import ch.ethz.idsc.tensor.sca.Increment;
           ? RealScalar.of(-10)
           : RealScalar.ZERO;
     }
-    Scalar total = tripProfile.costPerUnit(time).multiply(action.Get()).negate();
+    Scalar total = tripProfile.costPerUnit(time).multiply((Scalar) action).negate();
     if (capacity == 0)
       total = total.add(RealScalar.of(-20)); // TODO possibly make terminal
     return total;

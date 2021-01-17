@@ -55,7 +55,7 @@ public class GamblerModel implements StandardModel, MonteCarloInterface {
     // we require that the bet=action is non-zero,
     // if the state is non-terminal, 0 < cash < 100.
     // otherwise the player can stall (the iteration) forever.
-    Scalar stateS = state.Get();
+    Scalar stateS = (Scalar) state;
     return Range.of(1, Min.of(stateS, last.subtract(stateS)).number().intValue() + 1);
   }
 

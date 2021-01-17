@@ -43,7 +43,7 @@ enum Bulk_Wireloop {
         StateActionCounter sac = new DiscreteStateActionCounter();
         EGreedyPolicy policy = (EGreedyPolicy) PolicyType.EGREEDY.bestEquiprobable(wireloop, qsa, sac);
         policy.setExplorationRate(LinearExplorationRate.of(40, 0.2, 0.05));
-        Sarsa sarsa = sarsaType.sarsa(wireloop, DefaultLearningRate.of(factor.Get(), exponent.Get()), qsa, sac, policy);
+        Sarsa sarsa = sarsaType.sarsa(wireloop, DefaultLearningRate.of((Scalar) factor, (Scalar) exponent), qsa, sac, policy);
         LearningContender learningContender = LearningContender.sarsa(wireloop, sarsa);
         learningCompetition.put(new Point(x, y), learningContender);
         ++y;

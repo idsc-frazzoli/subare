@@ -42,7 +42,7 @@ import ch.ethz.idsc.tensor.img.ImageResize;
       Tensor action = policyWrap.next(state, carRental.actions(state));
       int x = state.Get(0).number().intValue();
       int y = state.Get(1).number().intValue();
-      Scalar sca = action.Get().add(RealScalar.of(5)).divide(RealScalar.of(10));
+      Scalar sca = RealScalar.of(5).add(action).divide(RealScalar.of(10));
       tensor.set(sca, x, y);
     }
     Tensor image = ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);

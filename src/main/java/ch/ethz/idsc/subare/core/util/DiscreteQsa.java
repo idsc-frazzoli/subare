@@ -78,11 +78,11 @@ public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Seriali
 
   /**************************************************/
   public Scalar getMin() {
-    return values.flatten(-1).reduce(Min::of).get().Get();
+    return (Scalar) values.flatten(-1).reduce(Min::of).get();
   }
 
   public Scalar getMax() {
-    return values.flatten(-1).reduce(Max::of).get().Get();
+    return (Scalar) values.flatten(-1).reduce(Max::of).get();
   }
 
   public int size() {

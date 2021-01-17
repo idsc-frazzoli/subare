@@ -75,7 +75,7 @@ class Fishfarm extends DeterministicStandardModel implements MonteCarloInterface
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (isTerminal(state))
       return RealScalar.ZERO;
-    Scalar fish = action.Get();
+    Scalar fish = (Scalar) action;
     if (!isTerminal(next))
       return fish;
     Scalar remain = next.Get(1);

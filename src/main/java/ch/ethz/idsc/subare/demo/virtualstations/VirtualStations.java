@@ -131,7 +131,7 @@ public class VirtualStations implements MonteCarloInterface {
       for (int j = 0; j < NVNODES; ++j) {
         if (j == i)
           continue;
-        int arrivals = Total.of(RandomVariate.of(arrival_distribution, exactStateMap.get(i).get(j))).Get().number().intValue();
+        int arrivals = Total.ofVector(RandomVariate.of(arrival_distribution, exactStateMap.get(i).get(j))).number().intValue();
         exactStateMap.get(i).put(j, exactStateMap.get(i).get(j) - arrivals);
         exactStateMap.get(j).put(j, exactStateMap.get(j).get(j) + arrivals);
       }
@@ -142,7 +142,7 @@ public class VirtualStations implements MonteCarloInterface {
       for (int j = 0; j < NVNODES; ++j) {
         if (j == i)
           continue;
-        int customers = RandomVariate.of(customer_distribution).Get().number().intValue();
+        int customers = RandomVariate.of(customer_distribution).number().intValue();
         int served = Math.min(exactStateMap.get(i).get(i), customers);
         exactStateMap.get(i).put(i, exactStateMap.get(i).get(i) - served);
         exactStateMap.get(i).put(j, exactStateMap.get(i).get(j) + served);
@@ -167,8 +167,8 @@ public class VirtualStations implements MonteCarloInterface {
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    Scalar availabilityCost = RealScalar.of(NVNODES).subtract(Total.of(next.extract(1, next.length())).Get()).multiply(AVAILABILITY_COST);
-    Scalar rebalancingCost = Total.of(action).Get().multiply(REBALANCE_COST);
+    Scalar availabilityCost = RealScalar.of(NVNODES).subtract(Total.of(next.extract(1, next.length()))).multiply(AVAILABILITY_COST);
+    Scalar rebalancingCost = Total.ofVector(action).multiply(REBALANCE_COST);
     return availabilityCost.add(rebalancingCost);
   }
 

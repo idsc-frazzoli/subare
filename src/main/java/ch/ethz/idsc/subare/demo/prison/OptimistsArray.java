@@ -29,9 +29,9 @@ import ch.ethz.idsc.tensor.sca.N;
       List<AbstractExact> list = new ArrayList<>();
       for (Tensor q1 : init) {
         Supplier<Agent> sup1 = //
-            () -> new OptimistAgent(2, q0.Get(), alpha);
+            () -> new OptimistAgent(2, (Scalar) q0, alpha);
         Supplier<Agent> sup2 = //
-            () -> new OptimistAgent(2, q1.Get(), alpha);
+            () -> new OptimistAgent(2, (Scalar) q1, alpha);
         list.add(new OptimistsExact(sup1, sup2));
       }
       array.add(list);

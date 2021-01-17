@@ -31,8 +31,8 @@ public class PolynomialBasis implements TensorUnaryOperator {
 
   @Override // from UnaryOperator
   public Tensor apply(Tensor tensor) {
-    Scalar param = clip.requireInside(tensor.Get());
+    Scalar param = clip.requireInside((Scalar) tensor);
     Scalar value = clip.rescale(param);
-    return NestList.of(s -> s.multiply(value), RealScalar.ONE, order - 1);
+    return NestList.of(value::multiply, RealScalar.ONE, order - 1);
   }
 }

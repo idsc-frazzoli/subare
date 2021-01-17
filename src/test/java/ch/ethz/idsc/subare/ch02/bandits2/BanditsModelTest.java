@@ -26,9 +26,9 @@ public class BanditsModelTest extends TestCase {
     BanditsModel banditsModel = new BanditsModel(num);
     DiscreteQsa ref = BanditsHelper.getOptimalQsa(banditsModel);
     Tensor expected = Tensors.vector(i -> ref.value(BanditsModel.START, RealScalar.of(i)), num);
-    Scalar mean = Mean.of(expected).Get();
+    Scalar mean = (Scalar) Mean.of(expected);
     Chop._10.requireAllZero(mean);
-    Scalar var = Variance.ofVector(expected).Get();
+    Scalar var = Variance.ofVector(expected);
     Chop._10.requireClose(var, RealScalar.ONE);
   }
 }

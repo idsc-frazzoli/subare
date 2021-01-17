@@ -40,7 +40,7 @@ public class UCBAgent extends FairArgAgent {
         // if an action hasn't been taken yet, bias towards this action is infinite
         bias = DoubleScalar.POSITIVE_INFINITY;
       else {
-        Scalar count = Sign.requirePositive(IntegerQ.require(Total.of(Na).Get()));
+        Scalar count = Sign.requirePositive(IntegerQ.require(Total.ofVector(Na)));
         Scalar logt = Log.of(count);
         bias = c.multiply(Sqrt.of(logt.divide(Nta)));
       }
@@ -62,7 +62,7 @@ public class UCBAgent extends FairArgAgent {
   protected Tensor protected_QValues() {
     Tensor dec = getQVector();
     boolean inf = dec.flatten(-1) //
-        .filter(t -> Double.isInfinite(t.Get().number().doubleValue())) //
+        .filter(t -> Double.isInfinite(((Scalar) t).number().doubleValue())) //
         .findFirst().isPresent();
     return inf ? Qt : dec;
   }

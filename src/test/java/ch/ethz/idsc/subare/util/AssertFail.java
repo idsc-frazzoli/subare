@@ -1,15 +1,16 @@
 // code by jph
 package ch.ethz.idsc.subare.util;
 
-import java.util.function.Supplier;
+import java.util.Objects;
 
 import junit.framework.Assert;
 
 public enum AssertFail {
   ;
-  public static void of(Supplier<?> supplier) {
+  public static void of(Runnable runnable) {
+    Objects.requireNonNull(runnable);
     try {
-      supplier.get();
+      runnable.run();
       Assert.fail();
     } catch (Exception exception) {
       // ---

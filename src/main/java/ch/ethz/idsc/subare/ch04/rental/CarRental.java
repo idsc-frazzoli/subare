@@ -105,7 +105,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    Scalar sum = Abs.of(action.Get()).multiply(MOVE_CAR_COST);
+    Scalar sum = Abs.FUNCTION.apply((Scalar) action).multiply(MOVE_CAR_COST);
     Tensor morning = night_move(state, action).unmodifiable();
     Scalar n1_in;
     Scalar n1out = null;
@@ -145,7 +145,7 @@ import ch.ethz.idsc.tensor.sca.Sign;
   static final int LOOK = 5;
 
   Scalar expectedReward(Tensor state, Tensor action, Tensor next) {
-    Scalar sum = Abs.of(action.Get()).multiply(MOVE_CAR_COST);
+    Scalar sum = Abs.FUNCTION.apply((Scalar) action).multiply(MOVE_CAR_COST);
     Tensor morning = night_move(state, action);
     Tensor delta = next.subtract(morning); // cars that have to be pop-up and disappear through the random process
     // Scalar prob = RealScalar.ZERO;

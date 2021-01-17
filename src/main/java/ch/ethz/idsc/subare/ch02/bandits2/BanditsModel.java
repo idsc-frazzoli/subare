@@ -35,7 +35,7 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
   /** @param k number of arms of bandit */
   public BanditsModel(int k) {
     Tensor data = RandomVariate.of(NormalDistribution.standard(), k);
-    Scalar mean = Mean.of(data).Get();
+    Scalar mean = (Scalar) Mean.of(data);
     Tensor prep = NORMALIZE.apply(data.map(x -> x.subtract(mean)));
     distributions = prep.stream() //
         .map(Scalar.class::cast) //
@@ -71,7 +71,7 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (isTerminal(state))
       return RealScalar.ZERO;
-    int index = action.Get().number().intValue();
+    int index = ((Scalar) action).number().intValue();
     return RandomVariate.of(distributions.get(index));
   }
 
@@ -101,7 +101,7 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
   public Scalar expectedReward(Tensor state, Tensor action) {
     if (isTerminal(state))
       return RealScalar.ZERO;
-    int index = action.Get().number().intValue();
+    int index = ((Scalar) action).number().intValue();
     return Mean.of(distributions.get(index));
   }
 }

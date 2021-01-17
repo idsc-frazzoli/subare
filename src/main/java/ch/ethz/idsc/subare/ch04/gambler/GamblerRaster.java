@@ -33,8 +33,8 @@ import ch.ethz.idsc.tensor.Tensor;
   @Override
   public Point point(Tensor state, Tensor action) {
     return new Point( //
-        state.Get().number().intValue(), //
-        offset - action.Get().number().intValue());
+        ((Scalar) state).number().intValue(), //
+        offset - ((Scalar) action).number().intValue());
   }
 
   @Override

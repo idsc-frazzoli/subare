@@ -56,7 +56,7 @@ import ch.ethz.idsc.tensor.Tensor;
   public Point point(Tensor state, Tensor action) {
     int x = state.Get(0).number().intValue();
     int y = SPACE_Y - state.Get(1).number().intValue() - 2;
-    int load = 4 - action.Get().number().intValue();
+    int load = 4 - ((Scalar) action).number().intValue();
     load *= SPACE_Y;
     return new Point(x, y + load);
   }

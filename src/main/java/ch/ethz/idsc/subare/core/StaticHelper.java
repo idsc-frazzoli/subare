@@ -5,5 +5,5 @@ import ch.ethz.idsc.tensor.red.Total;
 
 enum StaticHelper {
   ;
-  public static final DiscountFunction TOTAL = rewards -> Total.of(rewards).Get();
+  public static final DiscountFunction TOTAL = Total::ofVector;
 }
