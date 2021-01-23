@@ -7,6 +7,7 @@ import ch.ethz.idsc.subare.core.TerminalInterface;
 import ch.ethz.idsc.subare.core.adapter.DeterministicStandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
@@ -49,7 +50,7 @@ import ch.ethz.idsc.tensor.sca.Increment;
   public Tensor move(Tensor state, Tensor action) {
     if (isTerminal(state))
       return state;
-    final int time = state.Get(0).number().intValue();
+    final int time = Scalars.intValueExact(state.Get(0));
     Tensor next = state.copy();
     next.set(Increment.ONE, 0);
     Scalar drawn = tripProfile.unitsDrawn(time);
@@ -60,8 +61,7 @@ import ch.ethz.idsc.tensor.sca.Increment;
 
   @Override
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
-    final int time = state.Get(0).number().intValue();
-    final int capacity = state.Get(1).number().intValue();
+    final int capacity = Scalars.intValueExact(state.Get(1));
     if (isTerminal(next)) {
       if (isTerminal(state))
         return RealScalar.ZERO;
@@ -69,6 +69,7 @@ import ch.ethz.idsc.tensor.sca.Increment;
           ? RealScalar.of(-10)
           : RealScalar.ZERO;
     }
+    final int time = Scalars.intValueExact(state.Get(0));
     Scalar total = tripProfile.costPerUnit(time).multiply((Scalar) action).negate();
     if (capacity == 0)
       total = total.add(RealScalar.of(-20)); // TODO possibly make terminal
@@ -77,6 +78,6 @@ import ch.ethz.idsc.tensor.sca.Increment;
 
   @Override // from TerminalInterface
   public boolean isTerminal(Tensor state) {
-    return state.Get(0).number().intValue() == tripProfile.length() - 1;
+    return Scalars.intValueExact(state.Get(0)) == tripProfile.length() - 1;
   }
 }

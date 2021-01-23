@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.ch02.UCBAgent;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 
 /** chapter 2:
  * Multi-arm Bandits */
@@ -21,7 +22,7 @@ import ch.ethz.idsc.tensor.Scalar;
         new RandomAgent(n), //
         new GradientAgent(n, RealScalar.of(.1)), //
         new EGreedyAgent(n, i -> econst, econst.toString()), //
-        new EGreedyAgent(n, i -> RationalScalar.of(1, i.number().intValue() + 1), "1/i"), new UCBAgent(n, RealScalar.of(1)), //
+        new EGreedyAgent(n, i -> RationalScalar.of(1, Scalars.intValueExact(i) + 1), "1/i"), new UCBAgent(n, RealScalar.of(1)), //
         new UCBAgent(n, RealScalar.of(1.2)), //
         new UCBAgent(n, RealScalar.of(0.8)), //
         // new GradientAgent(n, 0.25), //

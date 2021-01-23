@@ -11,6 +11,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.api.ScalarUnaryOperator;
 import ch.ethz.idsc.tensor.sca.Log;
@@ -50,11 +51,11 @@ public class DiscreteStateActionCounter implements StateActionCounter, Serializa
   }
 
   public void setStateCount(Tensor state, Scalar value) {
-    stateMap.put(state, value.number().intValue());
+    stateMap.put(state, Scalars.intValueExact(value));
   }
 
   public void setStateActionCount(Tensor key, Scalar value) {
-    stateActionMap.put(key, value.number().intValue());
+    stateActionMap.put(key, Scalars.intValueExact(value));
   }
 
   public Scalar getLogarithmicStateActionCount(Tensor state, Tensor action) {

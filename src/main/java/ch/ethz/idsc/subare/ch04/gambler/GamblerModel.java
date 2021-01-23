@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.util.Coinflip;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.Tensors;
@@ -56,7 +57,7 @@ public class GamblerModel implements StandardModel, MonteCarloInterface {
     // if the state is non-terminal, 0 < cash < 100.
     // otherwise the player can stall (the iteration) forever.
     Scalar stateS = (Scalar) state;
-    return Range.of(1, Min.of(stateS, last.subtract(stateS)).number().intValue() + 1);
+    return Range.of(1, Scalars.intValueExact(Min.of(stateS, last.subtract(stateS))) + 1);
   }
 
   @Override

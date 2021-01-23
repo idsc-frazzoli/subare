@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 
 class BlackjackRaster implements StateRaster {
@@ -30,9 +31,9 @@ class BlackjackRaster implements StateRaster {
   @Override
   public Point point(Tensor state) {
     if (state.length() == 3) {
-      int useAce = state.Get(0).number().intValue();
-      int player = state.Get(1).number().intValue() - 12;
-      int dealer = state.Get(2).number().intValue() - 1;
+      int useAce = Scalars.intValueExact(state.Get(0));
+      int player = Scalars.intValueExact(state.Get(1)) - 12;
+      int dealer = Scalars.intValueExact(state.Get(2)) - 1;
       return new Point(dealer + (10 + 2) * useAce, 9 - player);
     }
     return null;

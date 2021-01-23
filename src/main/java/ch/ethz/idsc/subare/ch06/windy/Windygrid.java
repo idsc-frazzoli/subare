@@ -7,6 +7,7 @@ import ch.ethz.idsc.subare.core.util.StateActionMap;
 import ch.ethz.idsc.subare.core.util.StateActionMaps;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
@@ -90,7 +91,7 @@ public class Windygrid extends DeterministicStandardModel implements MonteCarloI
       return state;
     // wind is added first
     Tensor next = state.copy();
-    int x = next.Get(0).number().intValue(); // wind depends on x coordinate
+    int x = Scalars.intValueExact(next.Get(0)); // wind depends on x coordinate
     next.set(scalar -> scalar.add(WIND.Get(x)), 1); // wind shift in y coordinate
     next.set(CLIP_Y, 1);
     next = next.add(action);

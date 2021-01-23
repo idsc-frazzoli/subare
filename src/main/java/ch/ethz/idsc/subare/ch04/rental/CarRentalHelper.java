@@ -10,6 +10,7 @@ import ch.ethz.idsc.subare.core.util.PolicyWrap;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
@@ -27,8 +28,8 @@ import ch.ethz.idsc.tensor.img.ImageResize;
     DiscreteVs scaled = vs.create(Rescale.of(vs.values()).stream());
     for (Tensor state : carRental.states()) {
       Scalar sca = scaled.value(state);
-      int x = state.Get(0).number().intValue();
-      int y = state.Get(1).number().intValue();
+      int x = Scalars.intValueExact(state.Get(0));
+      int y = Scalars.intValueExact(state.Get(1));
       tensor.set(sca, x, y);
     }
     Tensor image = ArrayPlot.of(tensor, ColorDataGradients.CLASSIC);
@@ -40,8 +41,8 @@ import ch.ethz.idsc.tensor.img.ImageResize;
     PolicyWrap policyWrap = new PolicyWrap(policy);
     for (Tensor state : carRental.states()) {
       Tensor action = policyWrap.next(state, carRental.actions(state));
-      int x = state.Get(0).number().intValue();
-      int y = state.Get(1).number().intValue();
+      int x = Scalars.intValueExact(state.Get(0));
+      int y = Scalars.intValueExact(state.Get(1));
       Scalar sca = RealScalar.of(5).add(action).divide(RealScalar.of(10));
       tensor.set(sca, x, y);
     }

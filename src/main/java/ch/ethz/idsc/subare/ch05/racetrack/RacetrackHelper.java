@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.img.ArrayPlot;
@@ -31,8 +32,8 @@ public enum RacetrackHelper {
         if (index.containsKey(action))
           try {
             Scalar sca = scaled.value(state, action);
-            int px = state.Get(0).number().intValue();
-            int py = state.Get(1).number().intValue();
+            int px = Scalars.intValueExact(state.Get(0));
+            int py = Scalars.intValueExact(state.Get(1));
             tensor.set(sca, py, px);
           } catch (Exception exception) {
             // ---

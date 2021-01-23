@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Normalize;
@@ -71,7 +72,7 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
   public Scalar reward(Tensor state, Tensor action, Tensor next) {
     if (isTerminal(state))
       return RealScalar.ZERO;
-    int index = ((Scalar) action).number().intValue();
+    int index = Scalars.intValueExact((Scalar) action);
     return RandomVariate.of(distributions.get(index));
   }
 
@@ -101,7 +102,7 @@ import ch.ethz.idsc.tensor.red.StandardDeviation;
   public Scalar expectedReward(Tensor state, Tensor action) {
     if (isTerminal(state))
       return RealScalar.ZERO;
-    int index = ((Scalar) action).number().intValue();
+    int index = Scalars.intValueExact((Scalar) action);
     return Mean.of(distributions.get(index));
   }
 }

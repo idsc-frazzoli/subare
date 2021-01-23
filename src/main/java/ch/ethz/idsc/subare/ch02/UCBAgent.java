@@ -1,6 +1,7 @@
 // code by jph
 package ch.ethz.idsc.subare.ch02;
 
+import ch.ethz.idsc.tensor.DeterminateScalarQ;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.IntegerQ;
 import ch.ethz.idsc.tensor.RealScalar;
@@ -61,10 +62,9 @@ public class UCBAgent extends FairArgAgent {
   @Override
   protected Tensor protected_QValues() {
     Tensor dec = getQVector();
-    boolean inf = dec.flatten(-1) //
-        .filter(t -> Double.isInfinite(((Scalar) t).number().doubleValue())) //
-        .findFirst().isPresent();
-    return inf ? Qt : dec;
+    return dec.flatten(-1).map(Scalar.class::cast).allMatch(DeterminateScalarQ::of) //
+        ? dec
+        : Qt;
   }
 
   @Override

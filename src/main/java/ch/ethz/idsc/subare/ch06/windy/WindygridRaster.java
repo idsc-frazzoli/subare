@@ -9,6 +9,7 @@ import ch.ethz.idsc.subare.core.util.gfx.StateActionRaster;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 
 class WindygridRaster implements StateActionRaster {
@@ -32,8 +33,8 @@ class WindygridRaster implements StateActionRaster {
 
   @Override
   public Point point(Tensor state, Tensor action) {
-    int sx = state.Get(0).number().intValue();
-    int sy = state.Get(1).number().intValue();
+    int sx = Scalars.intValueExact(state.Get(0));
+    int sy = Scalars.intValueExact(state.Get(1));
     int a = indexActions.of(action);
     return new Point(sx, sy + (Windygrid.NY + 1) * a);
   }

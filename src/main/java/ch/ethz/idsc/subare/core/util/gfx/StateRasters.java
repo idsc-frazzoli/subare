@@ -13,6 +13,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.tensor.DoubleScalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Dimensions;
@@ -27,8 +28,8 @@ public enum StateRasters {
   ;
   public static Point canonicPoint(Tensor state) {
     return new Point( //
-        state.Get(0).number().intValue(), //
-        state.Get(1).number().intValue());
+        Scalars.intValueExact(state.Get(0)), //
+        Scalars.intValueExact(state.Get(1)));
   }
 
   /** @param stateActionRaster

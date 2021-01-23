@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 
 class FishfarmRaster implements StateRaster {
@@ -49,8 +50,8 @@ class FishfarmRaster implements StateRaster {
 
   @Override
   public Point point(Tensor state) {
-    int sx = state.Get(0).number().intValue();
-    int sy = fishfarm.max_fish - state.Get(1).number().intValue();
+    int sx = Scalars.intValueExact(state.Get(0));
+    int sy = fishfarm.max_fish - Scalars.intValueExact(state.Get(1));
     return new Point(sx, sy);
   }
 }

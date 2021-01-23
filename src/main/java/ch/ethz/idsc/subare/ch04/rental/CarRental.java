@@ -6,6 +6,7 @@ import ch.ethz.idsc.subare.core.SampleModel;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
@@ -68,8 +69,8 @@ import ch.ethz.idsc.tensor.sca.Sign;
 
   @Override
   public Tensor actions(Tensor state) {
-    int min = Math.min(state.Get(0).number().intValue(), MAX_MOVE_OF_CARS);
-    int max = Math.min(state.Get(1).number().intValue(), MAX_MOVE_OF_CARS);
+    int min = Math.min(Scalars.intValueExact(state.Get(0)), MAX_MOVE_OF_CARS);
+    int max = Math.min(Scalars.intValueExact(state.Get(1)), MAX_MOVE_OF_CARS);
     return Range.of(-min, max + 1);
   }
 
@@ -149,8 +150,8 @@ import ch.ethz.idsc.tensor.sca.Sign;
     Tensor morning = night_move(state, action);
     Tensor delta = next.subtract(morning); // cars that have to be pop-up and disappear through the random process
     // Scalar prob = RealScalar.ZERO;
-    final int d0 = (int) delta.Get(0).number();
-    final int d1 = (int) delta.Get(1).number();
+    final int d0 = Scalars.intValueExact(delta.Get(0));
+    final int d1 = Scalars.intValueExact(delta.Get(1));
     final int ofs0 = Math.max(0, -d0);
     final int ofs1 = Math.max(0, -d1);
     for (int req0 = ofs0; req0 < ofs0 + LOOK; ++req0) {
@@ -186,8 +187,8 @@ import ch.ethz.idsc.tensor.sca.Sign;
     Tensor morning = night_move(state, action);
     Tensor delta = next.subtract(morning); // cars that have to be pop-up and disappear through the random process
     Scalar prob = RealScalar.ZERO;
-    final int d0 = (int) delta.Get(0).number();
-    final int d1 = (int) delta.Get(1).number();
+    final int d0 = Scalars.intValueExact(delta.Get(0));
+    final int d1 = Scalars.intValueExact(delta.Get(1));
     final int ofs0 = Math.max(0, -d0);
     final int ofs1 = Math.max(0, -d1);
     for (int req0 = ofs0; req0 < ofs0 + LOOK; ++req0) {

@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
 import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.io.ResourceData;
@@ -30,8 +31,8 @@ public enum DynamazeHelper {
     for (int count = 0; count < starts; ++count) {
       Tensor vec = STARTS_5.get(count);
       image.set(Dynamaze.GREEN, //
-          vec.Get(0).number().intValue(), //
-          vec.Get(1).number().intValue());
+          Scalars.intValueExact(vec.Get(0)), //
+          Scalars.intValueExact(vec.Get(1)));
     }
     return fromImage(image);
   }

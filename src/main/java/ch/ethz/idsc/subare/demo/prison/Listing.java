@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import ch.ethz.idsc.subare.ch02.Agent;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.sca.Round;
 
 /* package */ enum Listing {
   ;
@@ -18,10 +19,10 @@ import ch.ethz.idsc.tensor.Tensor;
         Agent a1 = list.get(i1).get();
         Agent a2 = list.get(i2).get();
         System.out.println("---");
-        System.out.println(String.format("%s %f", //
-            a1.getAbsDesc(), matrix.Get(i1, i2).number().doubleValue()));
-        System.out.println(String.format("%s %f", //
-            a2.getAbsDesc(), matrix.Get(i2, i1).number().doubleValue()));
+        System.out.println(String.format("%s %s", //
+            a1.getAbsDesc(), matrix.Get(i1, i2).map(Round._3)));
+        System.out.println(String.format("%s %s", //
+            a2.getAbsDesc(), matrix.Get(i2, i1).map(Round._3)));
       }
     }
     System.out.println("done.");

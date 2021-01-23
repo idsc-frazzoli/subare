@@ -7,6 +7,7 @@ import java.util.Map;
 import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Join;
@@ -117,7 +118,7 @@ public class VirtualStations implements MonteCarloInterface {
   }
 
   private int getActionElement(Tensor action, int from, int to) {
-    return action.Get(linkToIndex.get(from).get(to)).number().intValue();
+    return Scalars.intValueExact(action.Get(linkToIndex.get(from).get(to)));
   }
 
   @Override
@@ -131,7 +132,7 @@ public class VirtualStations implements MonteCarloInterface {
       for (int j = 0; j < NVNODES; ++j) {
         if (j == i)
           continue;
-        int arrivals = Total.ofVector(RandomVariate.of(arrival_distribution, exactStateMap.get(i).get(j))).number().intValue();
+        int arrivals = Scalars.intValueExact(Total.ofVector(RandomVariate.of(arrival_distribution, exactStateMap.get(i).get(j))));
         exactStateMap.get(i).put(j, exactStateMap.get(i).get(j) - arrivals);
         exactStateMap.get(j).put(j, exactStateMap.get(j).get(j) + arrivals);
       }
@@ -142,7 +143,7 @@ public class VirtualStations implements MonteCarloInterface {
       for (int j = 0; j < NVNODES; ++j) {
         if (j == i)
           continue;
-        int customers = RandomVariate.of(customer_distribution).number().intValue();
+        int customers = Scalars.intValueExact(RandomVariate.of(customer_distribution));
         int served = Math.min(exactStateMap.get(i).get(i), customers);
         exactStateMap.get(i).put(i, exactStateMap.get(i).get(i) - served);
         exactStateMap.get(i).put(j, exactStateMap.get(i).get(j) + served);

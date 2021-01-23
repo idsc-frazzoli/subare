@@ -8,6 +8,7 @@ import ch.ethz.idsc.subare.core.DiscreteModel;
 import ch.ethz.idsc.subare.core.util.gfx.StateActionRaster;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 
 /* package */ class GamblerRaster implements StateActionRaster {
@@ -33,8 +34,8 @@ import ch.ethz.idsc.tensor.Tensor;
   @Override
   public Point point(Tensor state, Tensor action) {
     return new Point( //
-        ((Scalar) state).number().intValue(), //
-        offset - ((Scalar) action).number().intValue());
+        Scalars.intValueExact((Scalar) state), //
+        offset - Scalars.intValueExact((Scalar) action));
   }
 
   @Override

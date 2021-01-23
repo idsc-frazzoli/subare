@@ -41,7 +41,7 @@ class Fishfarm extends DeterministicStandardModel implements MonteCarloInterface
   @Override
   public Tensor actions(Tensor state) {
     Scalar fish = state.Get(1);
-    return Range.of(0, fish.number().intValue() + 1);
+    return Range.of(0, Scalars.intValueExact(fish) + 1);
   }
 
   @Override

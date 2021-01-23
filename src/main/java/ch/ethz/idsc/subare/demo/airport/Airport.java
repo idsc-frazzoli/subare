@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.MonteCarloInterface;
 import ch.ethz.idsc.subare.core.StandardModel;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Normalize;
@@ -60,11 +61,11 @@ public class Airport implements StandardModel, MonteCarloInterface {
     if (isTerminal(state))
       return Tensors.of(Tensors.of(RealScalar.ZERO));
     Tensor actions = Tensors.empty();
-    for (int i = 0; i <= state.Get(1).number().intValue(); i++) {
-      for (int j = 0; j <= state.Get(2).number().intValue(); j++) {
+    int c1 = Scalars.intValueExact(state.Get(1));
+    int c2 = Scalars.intValueExact(state.Get(2));
+    for (int i = 0; i <= c1; ++i)
+      for (int j = 0; j <= c2; ++j)
         actions.append(Tensors.vector(i, j));
-      }
-    }
     return actions;
   }
 

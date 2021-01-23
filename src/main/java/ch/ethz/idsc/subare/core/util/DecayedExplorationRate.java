@@ -5,6 +5,7 @@ import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.tensor.DoubleScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
+import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.red.Min;
@@ -31,7 +32,7 @@ public class DecayedExplorationRate implements ExplorationRate {
 
   @Override // from ExplorationRate
   public synchronized final Scalar epsilon(Tensor state, StateActionCounter stateActionCounter) {
-    int index = stateActionCounter.stateCount(state).number().intValue();
+    int index = Scalars.intValueExact(stateActionCounter.stateCount(state));
     while (MEMO.length() <= index)
       MEMO.append(Min.of(factor.multiply(Power.of(DoubleScalar.of(1.0 / (index + 1)), exponent)), //
           RealScalar.ONE));
