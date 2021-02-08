@@ -11,8 +11,6 @@ import ch.ethz.idsc.tensor.sca.Chop;
 /** RobustArgMax accounts for entries that are numerically close to the maximum and
  * returns the first such close match. */
 public class RobustArgMax implements Serializable {
-  private static final long serialVersionUID = 7383319676669344846L;
-  // ---
   private final Chop chop;
 
   /** @param chop that performs proximity check to the max via {@link Chop#isClose(Tensor, Tensor)} */

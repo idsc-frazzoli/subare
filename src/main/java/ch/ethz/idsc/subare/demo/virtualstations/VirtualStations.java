@@ -29,17 +29,17 @@ import ch.ethz.idsc.tensor.sca.Sign;
 public class VirtualStations implements MonteCarloInterface {
   private static final int NVNODES = 3;
   private static final int VEHICLES = 30;
-  private static final int VEHICLESSENT = 3;
-  private static final int TIMEINTERVALS = 24;
-  private static final int TOTALTIME = 24;
-  private static final int INTERVALTIME = TOTALTIME / TIMEINTERVALS;
+  private static final int VEHICLES_SENT = 3;
+  private static final int TIME_INTERVALS = 24;
+  private static final int TOTAL_TIME = 24;
+  private static final int INTERVAL_TIME = TOTAL_TIME / TIME_INTERVALS;
   // ---
   private static final Scalar REBALANCE_COST = RealScalar.of(-1);
   private static final Scalar AVAILABILITY_COST = RealScalar.of(-10);
   private static final Scalar TAXI_ARRIVAL_PROB = RealScalar.of(0.5); // assuming a fluidic model
   private static final Scalar CUSTOMER_ARRIVAL_RATE = RealScalar.of(0.5);
   // ---
-  private final Distribution customer_distribution = PoissonDistribution.of(CUSTOMER_ARRIVAL_RATE.multiply(RealScalar.of(INTERVALTIME)));
+  private final Distribution customer_distribution = PoissonDistribution.of(CUSTOMER_ARRIVAL_RATE.multiply(RealScalar.of(INTERVAL_TIME)));
   private final Distribution arrival_distribution = BernoulliDistribution.of(TAXI_ARRIVAL_PROB);
   // ---
   private final Tensor states;
@@ -54,11 +54,10 @@ public class VirtualStations implements MonteCarloInterface {
 
   private static Tensor generateStates() {
     Tensor prefixes = Tensors.empty();
-    for (int t = 0; t <= TIMEINTERVALS; ++t) {
+    for (int t = 0; t <= TIME_INTERVALS; ++t) {
       prefixes.append(Tensors.vector(t));
     }
-    Tensor states = StaticHelper.binaryVectors(NVNODES, prefixes);
-    return states;
+    return StaticHelper.binaryVectors(NVNODES, prefixes);
   }
 
   private void generateExactState() {
@@ -155,7 +154,7 @@ public class VirtualStations implements MonteCarloInterface {
       for (int j = 0; j < NVNODES; ++j) {
         if (j == i)
           continue;
-        int rebalanced = Math.min(exactStateMap.get(i).get(i), getActionElement(action, i, j) * VEHICLESSENT);
+        int rebalanced = Math.min(exactStateMap.get(i).get(i), getActionElement(action, i, j) * VEHICLES_SENT);
         exactStateMap.get(i).put(i, exactStateMap.get(i).get(i) - rebalanced);
         exactStateMap.get(i).put(j, exactStateMap.get(i).get(j) + rebalanced);
       }
@@ -175,7 +174,7 @@ public class VirtualStations implements MonteCarloInterface {
 
   @Override
   public boolean isTerminal(Tensor state) {
-    return state.Get(0).equals(RealScalar.of(TIMEINTERVALS));
+    return state.Get(0).equals(RealScalar.of(TIME_INTERVALS));
   }
 
   @Override
@@ -184,7 +183,7 @@ public class VirtualStations implements MonteCarloInterface {
   }
 
   public int getTimeIntervals() {
-    return TIMEINTERVALS;
+    return TIME_INTERVALS;
   }
 
   public int getNVnodes() {

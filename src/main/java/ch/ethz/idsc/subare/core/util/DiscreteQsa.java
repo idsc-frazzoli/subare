@@ -18,8 +18,7 @@ import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
 
 public class DiscreteQsa implements QsaInterface, DiscreteValueFunction, Serializable {
-  private static final long serialVersionUID = -556746160094594665L;
-
+  
   /** @param stateActionModel
    * @return qsa with q(s, a) == 0 for all state-action pairs */
   public static DiscreteQsa build(StateActionModel stateActionModel) {

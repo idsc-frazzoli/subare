@@ -7,7 +7,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.TensorRuntimeException;
 
-enum StaticHelper {
+/* package */ enum StaticHelper {
   ;
   // test that probabilities add up to 1
   static void assertConsistent(Tensor keys, ActionValueInterface actionValueInterface) {

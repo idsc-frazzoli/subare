@@ -8,8 +8,6 @@ import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.alg.Array;
 
 public class FeatureWeight implements Serializable {
-  private static final long serialVersionUID = -7019649759357095365L;
-  // ---
   private final FeatureMapper featureMapper;
   /** vector */
   private Tensor w;

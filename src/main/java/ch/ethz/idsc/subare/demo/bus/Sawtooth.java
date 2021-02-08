@@ -8,8 +8,6 @@ import ch.ethz.idsc.tensor.sca.Abs;
 import ch.ethz.idsc.tensor.sca.Mod;
 
 /* package */ class Sawtooth implements ScalarUnaryOperator {
-  private static final long serialVersionUID = -4402840439795833427L;
-  // ---
   private final Mod mod;
 
   public Sawtooth(int half_period) {

@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /* package */ class State implements Serializable {
-  private static final long serialVersionUID = 7622734094199124733L;
-  // ---
   public static final String[] SYMBOL = { "0", "x", "*" };
   public static final State EMPTY = new State(new int[9]);
 

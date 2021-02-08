@@ -96,7 +96,7 @@ public class Cliffwalk extends DeterministicStandardModel implements MonteCarloI
 
   boolean isCliff(Tensor coord) {
     Scalar x = coord.Get(0);
-    return coord.get(1).equals(RealScalar.of(MY)) && //
+    return coord.Get(1).equals(RealScalar.of(MY)) && //
         Sign.isPositive(x) && Scalars.lessThan(x, RealScalar.of(MX));
   }
 

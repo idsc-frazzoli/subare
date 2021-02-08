@@ -11,8 +11,6 @@ import java.util.Objects;
  * Roughly speaking, the value of a state is the total amount of reward
  * an agent can expect to accumulate over the future, starting from that state. */
 /* package */ class Estimation implements Serializable {
-  private static final long serialVersionUID = 7116493876294729568L;
-  // ---
   private final Map<State, Double> map = new HashMap<>();
 
   /** Assuming we always play Xs, then for

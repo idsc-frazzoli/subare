@@ -6,14 +6,14 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Join;
 
-enum StaticHelper {
+/* package */ enum StaticHelper {
   ;
   /** returns the tensor of all possible binary combinations in a vector of size length
    * 
    * @param length
    * @param prefixes
    * @return */
-  static Tensor binaryVectors(int length, Tensor prefixes) {
+  public static Tensor binaryVectors(int length, Tensor prefixes) {
     if (length == 0)
       return prefixes;
     if (Tensors.isEmpty(prefixes))
@@ -26,7 +26,7 @@ enum StaticHelper {
     return binaryVectors(length - 1, extension);
   }
 
-  static Tensor zeroVectors(int length, Tensor prefixes) {
+  public static Tensor zeroVectors(int length, Tensor prefixes) {
     if (Tensors.isEmpty(prefixes))
       return Tensors.of(Array.zeros(length));
     return Tensor.of(prefixes.stream().map(v -> Join.of(v, Array.zeros(length))));
