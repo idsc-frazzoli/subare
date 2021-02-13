@@ -12,7 +12,6 @@ import ch.ethz.idsc.tensor.TensorRuntimeException;
 import ch.ethz.idsc.tensor.alg.Array;
 
 public class DiscreteVs implements VsInterface, DiscreteValueFunction, Serializable {
-  
   /** initializes all state value to zero
    * 
    * @param discreteModel

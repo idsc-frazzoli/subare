@@ -4,6 +4,8 @@ package ch.ethz.idsc.subare.ch01.tic;
 
 import java.util.Arrays;
 
+import ch.ethz.idsc.tensor.ext.Integers;
+
 /* package */ class Statistics {
   double[] data;
   int size;
@@ -34,9 +36,9 @@ import java.util.Arrays;
 
   public double median() {
     Arrays.sort(data);
-    if (data.length % 2 == 0) {
-      return (data[(data.length / 2) - 1] + data[data.length / 2]) / 2.0;
-    }
-    return data[data.length / 2];
+    int mid = data.length / 2;
+    return Integers.isEven(data.length) //
+        ? (data[mid - 1] + data[mid]) / 2.0
+        : data[mid];
   }
 }

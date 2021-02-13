@@ -14,7 +14,6 @@ import ch.ethz.idsc.tensor.alg.UnitVector;
  * 
  * the implementation initializes the features as unit vectors */
 public class ExactFeatureMapper implements FeatureMapper, Serializable {
-  
   /** @param monteCarloInterface
    * @return */
   public static FeatureMapper of(MonteCarloInterface monteCarloInterface) {

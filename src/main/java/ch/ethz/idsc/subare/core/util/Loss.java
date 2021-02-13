@@ -6,8 +6,8 @@ import ch.ethz.idsc.subare.util.FairArg;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.nrm.VectorNorm1;
 import ch.ethz.idsc.tensor.red.Max;
-import ch.ethz.idsc.tensor.red.Norm;
 import ch.ethz.idsc.tensor.sca.Sign;
 
 /** measures to compare performance between optimal state-action value function and learned q-function
@@ -58,6 +58,6 @@ public enum Loss {
    * @param qsa
    * @return non-negative number which should be subtracted from the optimal gains */
   public static Scalar accumulation(DiscreteModel discreteModel, DiscreteQsa ref, DiscreteQsa qsa) {
-    return Norm._1.ofVector(perState(discreteModel, ref, qsa).values());
+    return VectorNorm1.of(perState(discreteModel, ref, qsa).values());
   }
 }

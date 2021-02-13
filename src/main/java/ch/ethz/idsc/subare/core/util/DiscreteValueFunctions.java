@@ -6,7 +6,8 @@ import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Rescale;
-import ch.ethz.idsc.tensor.red.Norm;
+import ch.ethz.idsc.tensor.api.TensorScalarFunction;
+import ch.ethz.idsc.tensor.nrm.VectorNorm1;
 import ch.ethz.idsc.tensor.sca.InvertUnlessZero;
 import ch.ethz.idsc.tensor.sca.LogisticSigmoid;
 import ch.ethz.idsc.tensor.sca.N;
@@ -23,12 +24,16 @@ public enum DiscreteValueFunctions {
     return (T) tvi.create(Rescale.of(tvi.values()).stream());
   }
 
-  public static Scalar distance(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2, Norm norm) {
-    return norm.ofVector(_difference(tvi1, tvi2));
+  /** @param tvi1
+   * @param tvi2
+   * @param norm for vectors
+   * @return */
+  public static Scalar distance(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2, TensorScalarFunction norm) {
+    return norm.apply(_difference(tvi1, tvi2));
   }
 
   public static Scalar distance(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
-    return distance(tvi1, tvi2, Norm._1);
+    return distance(tvi1, tvi2, VectorNorm1::of);
   }
 
   @SuppressWarnings("unchecked")
