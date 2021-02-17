@@ -6,7 +6,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.util.Index;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.nrm.VectorNorm1;
+import ch.ethz.idsc.tensor.nrm.Vector1Norm;
 import ch.ethz.idsc.tensor.sca.Power;
 
 enum DynamazeHeuristic {
@@ -20,7 +20,7 @@ enum DynamazeHeuristic {
     for (Tensor key : qsa.keys()) {
       final Tensor state = key.get(0);
       final Tensor action = key.get(1);
-      Scalar dist = VectorNorm1.between(state.add(action), endPos);
+      Scalar dist = Vector1Norm.between(state.add(action), endPos);
       // Scalar dist = Norm._1.ofVector(state.subtract(endPos));
       Scalar value = Power.of(dynamaze.gamma(), dist);
       qsa.assign(state, action, value);

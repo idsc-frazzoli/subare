@@ -6,7 +6,7 @@ import ch.ethz.idsc.subare.util.FairArg;
 import ch.ethz.idsc.tensor.RationalScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
-import ch.ethz.idsc.tensor.nrm.VectorNorm1;
+import ch.ethz.idsc.tensor.nrm.Vector1Norm;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.sca.Sign;
 
@@ -58,6 +58,6 @@ public enum Loss {
    * @param qsa
    * @return non-negative number which should be subtracted from the optimal gains */
   public static Scalar accumulation(DiscreteModel discreteModel, DiscreteQsa ref, DiscreteQsa qsa) {
-    return VectorNorm1.of(perState(discreteModel, ref, qsa).values());
+    return Vector1Norm.of(perState(discreteModel, ref, qsa).values());
   }
 }

@@ -10,7 +10,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Flatten;
-import ch.ethz.idsc.tensor.nrm.VectorNorm1;
+import ch.ethz.idsc.tensor.nrm.Vector1Norm;
 import ch.ethz.idsc.tensor.num.Boole;
 import ch.ethz.idsc.tensor.sca.Clip;
 import ch.ethz.idsc.tensor.sca.Clips;
@@ -77,7 +77,7 @@ public class Cliffwalk extends DeterministicStandardModel implements MonteCarloI
     if (isTerminal(next))
       return Boole.of(!isTerminal(state));
     if (next.equals(START) && Scalars.lessThan( //
-        RealScalar.ONE, VectorNorm1.between(state, next)))
+        RealScalar.ONE, Vector1Norm.between(state, next)))
       return PRICE_CLIFF; // walked off cliff
     return PRICE_MOVE; // -1 until goal is reached
   }

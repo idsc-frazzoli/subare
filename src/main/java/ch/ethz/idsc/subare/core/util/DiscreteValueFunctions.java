@@ -7,7 +7,7 @@ import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Rescale;
 import ch.ethz.idsc.tensor.api.TensorScalarFunction;
-import ch.ethz.idsc.tensor.nrm.VectorNorm1;
+import ch.ethz.idsc.tensor.nrm.Vector1Norm;
 import ch.ethz.idsc.tensor.sca.InvertUnlessZero;
 import ch.ethz.idsc.tensor.sca.LogisticSigmoid;
 import ch.ethz.idsc.tensor.sca.N;
@@ -33,7 +33,7 @@ public enum DiscreteValueFunctions {
   }
 
   public static Scalar distance(DiscreteValueFunction tvi1, DiscreteValueFunction tvi2) {
-    return distance(tvi1, tvi2, VectorNorm1::of);
+    return distance(tvi1, tvi2, Vector1Norm::of);
   }
 
   @SuppressWarnings("unchecked")
