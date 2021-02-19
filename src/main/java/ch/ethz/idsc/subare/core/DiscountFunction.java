@@ -3,8 +3,8 @@ package ch.ethz.idsc.subare.core;
 
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
-import ch.ethz.idsc.tensor.alg.Series;
 import ch.ethz.idsc.tensor.api.TensorScalarFunction;
+import ch.ethz.idsc.tensor.num.Series;
 import ch.ethz.idsc.tensor.sca.Clips;
 
 /** provides different implementation for adding the discounted rewards:

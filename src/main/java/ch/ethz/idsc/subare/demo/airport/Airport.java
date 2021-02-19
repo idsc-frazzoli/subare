@@ -10,6 +10,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Range;
 import ch.ethz.idsc.tensor.nrm.Normalize;
+import ch.ethz.idsc.tensor.nrm.NormalizeTotal;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
@@ -31,7 +32,7 @@ public class Airport implements StandardModel, MonteCarloInterface {
   private static final Scalar CUSTOMER_REWARD = RealScalar.of(30);
   // i.e. CUSTOMER_PROB.Get(0) is the probability that 0 customers are waiting
   private static final Tensor CUSTOMER_HIST = Tensors.vector(1, 2, 4, 3);
-  private static final Tensor CUSTOMER_PROB = Normalize.with(Total::ofVector).apply(CUSTOMER_HIST);
+  private static final Tensor CUSTOMER_PROB = NormalizeTotal.FUNCTION.apply(CUSTOMER_HIST);
   // ---
   private final Tensor states;
   // for EmpiricalDistribution#fromUnscaledPDF the numbers don't have to add up to 1

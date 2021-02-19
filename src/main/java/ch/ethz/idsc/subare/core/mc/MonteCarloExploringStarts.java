@@ -23,7 +23,7 @@ import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Accumulate;
 import ch.ethz.idsc.tensor.alg.Last;
-import ch.ethz.idsc.tensor.alg.Series;
+import ch.ethz.idsc.tensor.num.Series;
 
 /** Monte Carlo exploring starts improves an initial policy
  * based on average returns from complete episodes.
