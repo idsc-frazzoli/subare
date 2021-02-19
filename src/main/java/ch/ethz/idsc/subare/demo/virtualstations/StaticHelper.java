@@ -1,8 +1,10 @@
 // code by fluric
 package ch.ethz.idsc.subare.demo.virtualstations;
 
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
+import ch.ethz.idsc.tensor.alg.Append;
 import ch.ethz.idsc.tensor.alg.Array;
 import ch.ethz.idsc.tensor.alg.Join;
 
@@ -20,8 +22,8 @@ import ch.ethz.idsc.tensor.alg.Join;
       return binaryVectors(length - 1, Tensors.of(Tensors.vector(1), Tensors.vector(0)));
     Tensor extension = Tensors.empty();
     for (Tensor prefix : prefixes) {
-      extension.append(Join.of(prefix, Tensors.vector(1)));
-      extension.append(Join.of(prefix, Tensors.vector(0)));
+      extension.append(Append.of(prefix, RealScalar.ONE));
+      extension.append(Append.of(prefix, RealScalar.ZERO));
     }
     return binaryVectors(length - 1, extension);
   }

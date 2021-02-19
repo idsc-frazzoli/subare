@@ -9,7 +9,6 @@ import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.alg.Range;
-import ch.ethz.idsc.tensor.nrm.Normalize;
 import ch.ethz.idsc.tensor.nrm.NormalizeTotal;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
@@ -33,13 +32,14 @@ public class Airport implements StandardModel, MonteCarloInterface {
   // i.e. CUSTOMER_PROB.Get(0) is the probability that 0 customers are waiting
   private static final Tensor CUSTOMER_HIST = Tensors.vector(1, 2, 4, 3);
   private static final Tensor CUSTOMER_PROB = NormalizeTotal.FUNCTION.apply(CUSTOMER_HIST);
-  // ---
-  private final Tensor states;
   // for EmpiricalDistribution#fromUnscaledPDF the numbers don't have to add up to 1
   private static final Distribution DISTRIBUTION = EmpiricalDistribution.fromUnscaledPDF(CUSTOMER_HIST);
+  public static final Airport INSTANCE = new Airport();
+  // ---
+  private final Tensor states;
 
   // TODO defined parameters for complexity of scenario: # time steps, # taxis ...
-  public Airport() {
+  private Airport() {
     Tensor states = Tensors.empty();
     states.append(Tensors.vector(0, 5, 0)); // start at time 0 with 5 taxis in the city and 0 in the airport
     for (int t = 1; t <= LASTT; t++) {

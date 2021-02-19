@@ -8,7 +8,7 @@ import ch.ethz.idsc.subare.core.StateActionCounter;
 import ch.ethz.idsc.subare.core.VsInterface;
 
 public enum PolicyType {
-  GREEDY() {
+  GREEDY {
     @Override
     public PolicyBase bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
       EGreedyPolicy eGreedyPolicy = new EGreedyPolicy(discreteModel, qsa, sac);
@@ -22,8 +22,8 @@ public enum PolicyType {
       eGreedyPolicy.setExplorationRate(ConstantExplorationRate.of(0));
       return eGreedyPolicy;
     }
-  }, //
-  EGREEDY() {
+  },
+  EGREEDY {
     @Override
     public PolicyBase bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
       return new EGreedyPolicy(discreteModel, qsa, sac);
@@ -33,8 +33,8 @@ public enum PolicyType {
     public PolicyBase bestEquiprobable(StandardModel standardModel, VsInterface vs, StateActionCounter sac) {
       return new EGreedyPolicy(standardModel, vs, sac);
     }
-  }, //
-  UCB() {
+  },
+  UCB {
     @Override
     public PolicyBase bestEquiprobable(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
       return new UcbPolicy(discreteModel, qsa, sac);

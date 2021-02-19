@@ -21,7 +21,7 @@ import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ext.Timing;
 import ch.ethz.idsc.tensor.red.Mean;
 
-/* package */ enum MonteCarloAlgorithms {
+public enum MonteCarloAlgorithms {
   ORIGINAL_SARSA() {
     @Override
     MonteCarloTrial create(MonteCarloInterface monteCarloInterface) {

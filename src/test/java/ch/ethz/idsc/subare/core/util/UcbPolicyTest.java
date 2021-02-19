@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 
 public class UcbPolicyTest extends TestCase {
   public void testSimple() {
-    Airport airport = new Airport();
+    Airport airport = Airport.INSTANCE;
     DiscreteQsa qsa = DiscreteQsa.build(airport);
     StateActionCounter sac = new DiscreteStateActionCounter();
     Sarsa sarsa = SarsaType.ORIGINAL.sarsa(airport, ConstantLearningRate.of(RealScalar.ZERO), //
@@ -48,7 +48,7 @@ public class UcbPolicyTest extends TestCase {
   }
 
   public void testUcb() {
-    Airport airport = new Airport();
+    Airport airport = Airport.INSTANCE;
     DiscreteQsa qsa = DiscreteQsa.build(airport);
     StateActionCounter sac = new DiscreteStateActionCounter();
     Sarsa sarsa = SarsaType.ORIGINAL.sarsa(airport, ConstantLearningRate.of(RealScalar.ZERO), //

@@ -5,7 +5,8 @@ import ch.ethz.idsc.tensor.Tensor;
 
 @FunctionalInterface
 public interface MoveInterface {
-  /** the move function is not necessarily deterministic
+  /** the move function is not necessarily deterministic, i.e.
+   * two consecutive calls may return different values
    * 
    * @param state
    * @param action

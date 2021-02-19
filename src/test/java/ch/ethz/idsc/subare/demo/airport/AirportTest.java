@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 
 public class AirportTest extends TestCase {
   public void testTerminalState() {
-    Airport airport = new Airport();
+    Airport airport = Airport.INSTANCE;
     assertEquals(airport.isTerminal(Tensors.vector(Airport.LASTT, 0, Airport.VEHICLES)), true);
     assertEquals(airport.actions(Tensors.vector(Airport.LASTT, 0, Airport.VEHICLES)), Array.zeros(1, 1));
     assertEquals(airport.expectedReward(Tensors.vector(Airport.LASTT, 0, Airport.VEHICLES), Tensors.of(RealScalar.ZERO)), RealScalar.ZERO);
@@ -25,7 +25,7 @@ public class AirportTest extends TestCase {
   }
 
   public void testCustProb() {
-    Airport airport = new Airport();
+    Airport airport = Airport.INSTANCE;
     Tensor state = Tensors.vector(1, 2, 3);
     Tensor actions = airport.actions(state);
     assertEquals(actions.length(), 12);

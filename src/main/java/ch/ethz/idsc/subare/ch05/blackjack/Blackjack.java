@@ -81,7 +81,7 @@ class Blackjack implements MonteCarloInterface {
       }
       if (dealer <= 21) {
         int player = state.Get(1).number().intValue();
-        return Sign.of(Tensors.vector(player - dealer));
+        return Tensors.of(Sign.FUNCTION.apply(RealScalar.of(player - dealer)));
       }
       return END_WIN; // dealer goes bust
     }

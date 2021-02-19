@@ -18,9 +18,9 @@ import ch.ethz.idsc.subare.demo.airport.Airport;
 import ch.ethz.idsc.subare.demo.virtualstations.VirtualStations;
 import ch.ethz.idsc.tensor.RationalScalar;
 
-/* package */ enum MonteCarloExamples implements Supplier<MonteCarloInterface> {
-  AIRPORT(() -> new Airport()), //
-  VIRTUALSTATIONS(() -> new VirtualStations()), //
+public enum MonteCarloExamples implements Supplier<MonteCarloInterface> {
+  AIRPORT(() -> Airport.INSTANCE), //
+  VIRTUALSTATIONS(() -> VirtualStations.INSTANCE), //
   GAMBLER_20(() -> new GamblerModel(20, RationalScalar.of(4, 10))), //
   GAMBLER_100(() -> GamblerModel.createDefault()), //
   MAZE2(() -> DynamazeHelper.original("maze2")), //
