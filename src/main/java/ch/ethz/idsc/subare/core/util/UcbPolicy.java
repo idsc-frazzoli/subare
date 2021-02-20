@@ -31,11 +31,11 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
     Tensor actions = discreteModel.actions(state);
     Tensor va = Tensor.of(actions.stream().parallel() //
         .map(action -> UcbUtils.getUpperConfidenceBound(state, action, qsa.value(state, action), sac, discreteModel)));
-    FairArg fairArgMax = FairArg.max(va);
-    return Tensor.of(fairArgMax.options().stream().map(actions::get));
+    FairArg fairArg = FairArg.max(va);
+    return Tensor.of(fairArg.options().stream().map(actions::get));
   }
 
-  @Override
+  @Override // from Policy
   public Distribution getDistribution(Tensor state) {
     Tensor bestActions = getBestActions(state);
     Index index = Index.build(bestActions);
@@ -45,11 +45,12 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
     return EmpiricalDistribution.fromUnscaledPDF(pdf);
   }
 
-  @Override
+  
+  @Override // from Policy
   public Scalar probability(Tensor state, Tensor action) {
-    Index index = Index.build(getBestActions(state));
-    return index.containsKey(action) //
-        ? RationalScalar.of(1, index.size())
+    Tensor actions = getBestActions(state);
+    return actions.stream().anyMatch(action::equals) // computational complexity is O(n)
+        ? RationalScalar.of(1, actions.length())
         : RealScalar.ZERO;
   }
 

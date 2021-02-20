@@ -8,7 +8,6 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.red.Max;
 import ch.ethz.idsc.tensor.red.Min;
@@ -19,27 +18,29 @@ public class FairArg implements Serializable {
    * @return
    * @throws Exception if tensor is empty, or a scalar */
   public static FairArg max(Tensor tensor) {
-    return new FairArg(Max::of, tensor);
+    return new FairArg(build(Max::of, tensor));
   }
 
   /** @param tensor
    * @return
    * @throws Exception if tensor is empty, or a scalar */
   public static FairArg min(Tensor tensor) {
-    return new FairArg(Min::of, tensor);
+    return new FairArg(build(Min::of, tensor));
+  }
+
+  private static List<Integer> build(BinaryOperator<Tensor> binaryOperator, Tensor tensor) {
+    Tensor value = tensor.stream().reduce(binaryOperator).get();
+    return IntStream.range(0, tensor.length()) //
+        .filter(index -> tensor.get(index).equals(value)) //
+        .boxed() //
+        .collect(Collectors.toList());
   }
 
   /***************************************************/
   private final List<Integer> list;
 
-  private FairArg(BinaryOperator<Scalar> binaryOperator, Tensor tensor) {
-    Tensor value = tensor.stream() //
-        .map(Scalar.class::cast) //
-        .reduce(binaryOperator).get();
-    list = IntStream.range(0, tensor.length()) //
-        .filter(index -> tensor.get(index).equals(value)) //
-        .boxed() //
-        .collect(Collectors.toList());
+  private FairArg(List<Integer> list) {
+    this.list = list;
   }
 
   public int nextRandomIndex() {

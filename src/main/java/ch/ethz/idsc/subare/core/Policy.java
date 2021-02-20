@@ -13,7 +13,10 @@ import ch.ethz.idsc.tensor.pdf.Distribution;
  * <p>Since a PolicyInterface outputs probabilities, the additional constraint holds:
  * sum_a pi(a|s) == 1 for all states s */
 public interface Policy {
-  /** @param state
+  /** Hint: for bulk calls use {@link #getDistribution(Tensor)} because
+   * function {@link #probability(Tensor, Tensor)} may not scale.
+   * 
+   * @param state
    * @param action
    * @return probability that action is taken when in given state,
    * the probability is in the interval [0, 1], and the sum of

@@ -30,7 +30,7 @@ abstract class DecayedLearningRate implements LearningRate {
   private final Scalar factor;
   private final Scalar exponent;
   /** lookup table to speed up computation */
-  private final Tensor MEMO = Tensors.vector(1.0); // index == 0 => learning rate == 1
+  private final Tensor memo = Tensors.vector(1.0); // index == 0 => learning rate == 1
 
   /* package */ DecayedLearningRate(Scalar factor, Scalar exponent) {
     if (Scalars.lessEquals(exponent, RationalScalar.HALF))
@@ -43,15 +43,15 @@ abstract class DecayedLearningRate implements LearningRate {
   public synchronized final Scalar alpha(StepInterface stepInterface, StateActionCounter stateActionCounter) {
     Tensor key = StateAction.key(stepInterface);
     int index = Scalars.intValueExact(stateActionCounter.stateActionCount(key));
-    while (MEMO.length() <= index)
-      MEMO.append(Min.of( // TODO the "+1" in the denominator may not be ideal... perhaps +0.5, or +0 ?
+    while (memo.length() <= index)
+      memo.append(Min.of( // TODO the "+1" in the denominator may not be ideal... perhaps +0.5, or +0 ?
           factor.multiply(Power.of(DoubleScalar.of(1.0 / (index + 1)), exponent)), //
           RealScalar.ONE));
-    return MEMO.Get(index);
+    return memo.Get(index);
   }
 
   /** @return */
   final int maxCount() { // function is not used yet...
-    return MEMO.length();
+    return memo.length();
   }
 }

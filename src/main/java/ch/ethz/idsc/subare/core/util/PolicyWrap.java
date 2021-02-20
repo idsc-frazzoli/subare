@@ -3,11 +3,14 @@ package ch.ethz.idsc.subare.core.util;
 
 import ch.ethz.idsc.subare.core.Policy;
 import ch.ethz.idsc.subare.core.StateActionModel;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
+import ch.ethz.idsc.tensor.mat.Tolerance;
 import ch.ethz.idsc.tensor.pdf.Distribution;
 import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
 import ch.ethz.idsc.tensor.pdf.RandomVariate;
+import ch.ethz.idsc.tensor.red.Total;
 
 /** class picks action based on distribution defined by given {@link Policy} */
 public class PolicyWrap {
@@ -22,6 +25,7 @@ public class PolicyWrap {
    * @return */
   public Tensor next(Tensor state, Tensor actions) {
     Tensor pdf = Tensor.of(actions.stream().map(action -> policy.probability(state, action)));
+    Tolerance.CHOP.requireClose(Total.ofVector(pdf), RealScalar.ONE);
     Distribution distribution = EmpiricalDistribution.fromUnscaledPDF(pdf);
     return actions.get(Scalars.intValueExact(RandomVariate.of(distribution)));
   }

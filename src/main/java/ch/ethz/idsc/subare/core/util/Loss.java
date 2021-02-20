@@ -32,9 +32,9 @@ public enum Loss {
           .map(action -> ref.value(state, action)) //
           .reduce(Max::of).get();
       // ---
-      FairArg fairArgMax = FairArg.max(Tensor.of(actions.stream().map(action -> qsa.value(state, action))));
-      Scalar weight = RationalScalar.of(1, fairArgMax.optionsCount());
-      for (int index : fairArgMax.options()) {
+      FairArg fairArg = FairArg.max(Tensor.of(actions.stream().map(action -> qsa.value(state, action))));
+      Scalar weight = RationalScalar.of(1, fairArg.optionsCount());
+      for (int index : fairArg.options()) {
         Tensor action = actions.get(index);
         Scalar delta = max.subtract(ref.value(state, action));
         Sign.requirePositiveOrZero(delta);

@@ -6,11 +6,14 @@ import ch.ethz.idsc.subare.core.td.Sarsa;
 
 /**  */
 public class LearningContender {
+  /** @param monteCarloInterface
+   * @param sarsa
+   * @return */
   public static LearningContender sarsa(MonteCarloInterface monteCarloInterface, Sarsa sarsa) {
     return new LearningContender(monteCarloInterface, sarsa, sarsa.qsa());
   }
 
-  // ---
+  /***************************************************/
   private final MonteCarloInterface monteCarloInterface;
   private final DiscreteQsa qsa;
   private final Sarsa sarsa;

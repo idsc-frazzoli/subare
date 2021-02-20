@@ -23,7 +23,6 @@ public class RobustArgMax implements Serializable {
    * @throws Exception if vector is empty, or not a tensor of rank 1 */
   public IntStream options(Tensor vector) {
     Tensor max = vector.stream().reduce(Max::of).get();
-    // TODO implementation is not efficient
     return IntStream.range(0, vector.length()) //
         .filter(index -> chop.isClose(vector.get(index), max));
   }

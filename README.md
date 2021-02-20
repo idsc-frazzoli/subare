@@ -354,7 +354,3 @@ by Christian Fluri, Claudio Ruch, Julian Zilly, Jan Hakenberg, and Emilio Frazzo
 
 * [*Reinforcement Learning: An Introduction*](http://incompleteideas.net/book/the-book-2nd.html)
 by Richard S. Sutton, and Andrew G. Barto
-
----
-
-![ethz300](https://user-images.githubusercontent.com/4012178/45925071-bf9d3b00-bf0e-11e8-9d92-e30650fd6bf6.png)

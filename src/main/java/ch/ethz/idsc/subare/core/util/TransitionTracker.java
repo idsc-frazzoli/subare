@@ -18,7 +18,7 @@ import ch.ethz.idsc.tensor.Tensor;
 /* package */ class TransitionTracker implements StepDigest {
   private final AverageTracker average = new AverageTracker();
   private final Map<Tensor, Integer> map = new LinkedHashMap<>();
-  private int total = 0;
+  private long total = 0;
 
   @Override
   public void digest(StepInterface stepInterface) {
@@ -29,7 +29,7 @@ import ch.ethz.idsc.tensor.Tensor;
     Tensor next = stepInterface.nextState();
     // ---
     average.track(reward);
-    map.put(next, map.containsKey(next) ? map.get(next) + 1 : 1);
+    map.merge(next, 1, Math::addExact);
     ++total;
   }
 

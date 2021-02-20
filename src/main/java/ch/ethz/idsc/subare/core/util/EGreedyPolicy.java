@@ -23,12 +23,12 @@ public class EGreedyPolicy extends PolicyBase {
 
   public EGreedyPolicy(DiscreteModel discreteModel, QsaInterface qsa, StateActionCounter sac) {
     super(discreteModel, qsa, sac);
-    explorationRate = ConstantExplorationRate.of(0.1);
+    explorationRate = ConstantExplorationRate.of(0.1); // TODO magic const
   }
 
   public EGreedyPolicy(StandardModel standardModel, VsInterface vs, StateActionCounter sac) {
     super(standardModel, vs, sac);
-    explorationRate = ConstantExplorationRate.of(0.1);
+    explorationRate = ConstantExplorationRate.of(0.1); // TODO magic const
   }
 
   public void setExplorationRate(ExplorationRate explorationRate) {

@@ -19,7 +19,7 @@ public class AverageTrackerTest extends TestCase {
     avg.track(RealScalar.of(1));
     assertEquals(avg.getScalar(), RealScalar.of(2));
     avg.track(RealScalar.of(1));
-    Chop._10.requireAllZero(avg.getScalar().subtract(RealScalar.of(5. / 3)));
+    Chop._10.requireClose(avg.getScalar(), RealScalar.of(5. / 3));
   }
 
   public void testMean() {

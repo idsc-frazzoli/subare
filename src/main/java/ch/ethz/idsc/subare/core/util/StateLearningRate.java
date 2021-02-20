@@ -22,10 +22,11 @@ public class StateLearningRate extends DecayedLearningRate {
   /** @param factor
    * @param exponent
    * @return */
-  public static LearningRate of(double factor, double exponent) {
+  public static LearningRate of(Number factor, Number exponent) {
     return of(RealScalar.of(factor), RealScalar.of(exponent));
   }
 
+  /***************************************************/
   private StateLearningRate(Scalar factor, Scalar exponent) {
     super(factor, exponent);
   }
