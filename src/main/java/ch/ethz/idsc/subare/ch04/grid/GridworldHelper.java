@@ -3,11 +3,11 @@ package ch.ethz.idsc.subare.ch04.grid;
 
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 
 enum GridworldHelper {
   ;
   static DiscreteQsa getOptimalQsa(Gridworld gridworld) {
-    return ActionValueIterations.solve(gridworld, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(gridworld, RealScalar.of(.0001));
   }
 }

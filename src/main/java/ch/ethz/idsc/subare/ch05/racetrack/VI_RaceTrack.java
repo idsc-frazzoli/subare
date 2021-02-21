@@ -10,7 +10,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.mc.MonteCarloEpisode;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
 import ch.ethz.idsc.tensor.ext.HomeDirectory;
@@ -24,7 +24,7 @@ import ch.ethz.idsc.tensor.io.Primitives;
   public static void make(String name, int maxSpeed, File file) throws Exception {
     Racetrack racetrack = RacetrackHelper.create(name, maxSpeed);
     ValueIteration vi = new ValueIteration(racetrack, racetrack);
-    vi.untilBelow(DecimalScalar.of(10), 5);
+    vi.untilBelow(RealScalar.of(10), 5);
     System.out.println("iterations=" + vi.iterations());
     Policy policy = PolicyType.GREEDY.bestEquiprobable(racetrack, vi.vs(), null);
     try (AnimationWriter animationWriter = //

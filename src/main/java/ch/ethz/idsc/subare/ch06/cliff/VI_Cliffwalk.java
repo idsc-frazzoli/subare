@@ -13,7 +13,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.ext.HomeDirectory;
@@ -27,7 +27,7 @@ enum VI_Cliffwalk {
     CliffwalkRaster cliffwalkRaster = new CliffwalkRaster(cliffwalk);
     DiscreteQsa ref = CliffwalkHelper.getOptimalQsa(cliffwalk);
     ValueIteration vi = new ValueIteration(cliffwalk, cliffwalk);
-    vi.untilBelow(DecimalScalar.of(.0001));
+    vi.untilBelow(RealScalar.of(.0001));
     DiscreteVs vs = vi.vs();
     DiscreteVs vr = DiscreteUtils.createVs(cliffwalk, ref);
     Scalar error = DiscreteValueFunctions.distance(vs, vr);

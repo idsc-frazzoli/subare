@@ -5,7 +5,6 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensors;
 import junit.framework.TestCase;
@@ -14,7 +13,7 @@ public class GridworldTest extends TestCase {
   public void testVI() {
     Gridworld gridworld = new Gridworld();
     ValueIteration vi = new ValueIteration(gridworld, gridworld);
-    vi.untilBelow(DecimalScalar.of(.0001));
+    vi.untilBelow(RealScalar.of(.0001));
     DiscreteVs vs = vi.vs();
     // vs.print();
     assertEquals(vs.value(Tensors.vector(0, 2)), RealScalar.of(-2));

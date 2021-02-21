@@ -12,7 +12,7 @@ import ch.ethz.idsc.subare.core.util.EGreedyPolicy;
 import ch.ethz.idsc.subare.core.util.ExploringStarts;
 import ch.ethz.idsc.subare.core.util.LinearExplorationRate;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Join;
 import ch.ethz.idsc.tensor.alg.Subdivide;
@@ -43,7 +43,7 @@ enum AVS_Blackjack {
           episodes += ExploringStarts.batchWithReplay(blackjack, policy, mces, avs);
         }
         ActionValueIteration avi = ActionValueIteration.of(blackjack, avs);
-        avi.untilBelow(DecimalScalar.of(.0001), 3);
+        avi.untilBelow(RealScalar.of(.0001), 3);
         animationWriter.write( //
             Join.of( //
                 BlackjackHelper.joinAll(blackjack, mces.qsa()), //

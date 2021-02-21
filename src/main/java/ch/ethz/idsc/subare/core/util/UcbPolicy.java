@@ -45,7 +45,6 @@ import ch.ethz.idsc.tensor.pdf.EmpiricalDistribution;
     return EmpiricalDistribution.fromUnscaledPDF(pdf);
   }
 
-  
   @Override // from Policy
   public Scalar probability(Tensor state, Tensor action) {
     Tensor actions = getBestActions(state);

@@ -9,7 +9,7 @@ import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.PolicyType;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.ext.HomeDirectory;
 import ch.ethz.idsc.tensor.io.Export;
 
@@ -41,7 +41,7 @@ enum VI_Gridworld {
     Gridworld gridworld = new Gridworld();
     GridworldRaster gridworldStateRaster = new GridworldRaster(gridworld);
     ValueIteration vi = new ValueIteration(gridworld, gridworld);
-    vi.untilBelow(DecimalScalar.of(.0001));
+    vi.untilBelow(RealScalar.of(.0001));
     DiscreteUtils.print(vi.vs());
     Policy policy = PolicyType.GREEDY.bestEquiprobable(gridworld, vi.vs(), null);
     Policies.print(policy, gridworld.states());

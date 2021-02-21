@@ -12,7 +12,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.sca.Round;
@@ -20,7 +19,7 @@ import ch.ethz.idsc.tensor.sca.Round;
 /* package */ enum GamblerHelper {
   ;
   static DiscreteQsa getOptimalQsa(GamblerModel gamblerModel) {
-    return ActionValueIterations.solve(gamblerModel, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(gamblerModel, RealScalar.of(.0001));
   }
 
   public static DiscreteVs getOptimalVs(GamblerModel gamblerModel) {

@@ -4,7 +4,7 @@ package ch.ethz.idsc.subare.ch08.maze;
 import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.gfx.StateRaster;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalars;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.Tensors;
@@ -46,6 +46,6 @@ public enum DynamazeHelper {
   }
 
   static DiscreteQsa getOptimalQsa(Dynamaze dynamaze) {
-    return ActionValueIterations.solve(dynamaze, DecimalScalar.of(.0000001));
+    return ActionValueIterations.solve(dynamaze, RealScalar.of(.0000001));
   }
 }

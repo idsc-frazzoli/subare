@@ -8,13 +8,13 @@ import ch.ethz.idsc.subare.core.util.ConstantLearningRate;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.Infoline;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 
 /* package */ enum RSTQP_Gridworld {
   ;
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
-    DiscreteQsa ref = ActionValueIterations.solve(gridworld, DecimalScalar.of(0.0001));
+    DiscreteQsa ref = ActionValueIterations.solve(gridworld, RealScalar.of(0.0001));
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     StepDigest stepDigest = Random1StepTabularQPlanning.of( //
         gridworld, qsa, ConstantLearningRate.one());

@@ -9,7 +9,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.DiscreteValueFunctions;
 import ch.ethz.idsc.subare.core.util.TabularSteps;
 import ch.ethz.idsc.subare.util.Index;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Scalar;
 import ch.ethz.idsc.tensor.Scalars;
@@ -32,7 +31,7 @@ public class GridworldTest extends TestCase {
 
   public void testR1STQL() {
     Gridworld gridworld = new Gridworld();
-    DiscreteQsa ref = ActionValueIterations.solve(gridworld, DecimalScalar.of(0.0001));
+    DiscreteQsa ref = ActionValueIterations.solve(gridworld, RealScalar.of(0.0001));
     DiscreteQsa qsa = DiscreteQsa.build(gridworld);
     StepDigest stepDigest = //
         Random1StepTabularQPlanning.of(gridworld, qsa, ConstantLearningRate.of(RealScalar.ONE));

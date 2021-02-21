@@ -5,7 +5,7 @@ package ch.ethz.idsc.subare.ch04.grid;
 import ch.ethz.idsc.subare.core.alg.IterativePolicyEvaluation;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.EquiprobablePolicy;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** determines value function for equiprobable "random" policy
@@ -35,7 +35,7 @@ enum IPE_Gridworld {
     Gridworld gridworld = new Gridworld();
     IterativePolicyEvaluation ipe = new IterativePolicyEvaluation( //
         gridworld, EquiprobablePolicy.create(gridworld));
-    ipe.until(DecimalScalar.of(.0001));
+    ipe.until(RealScalar.of(.0001));
     DiscreteUtils.print(ipe.vs(), Round._1);
   }
 }

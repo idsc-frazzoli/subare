@@ -5,7 +5,7 @@ package ch.ethz.idsc.subare.ch03.grid;
 import ch.ethz.idsc.subare.core.alg.ActionValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.DiscreteVs;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** solving grid world using action value iteration
@@ -42,7 +42,7 @@ import ch.ethz.idsc.tensor.sca.Round;
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
     ActionValueIteration avi = ActionValueIteration.of(gridworld);
-    avi.untilBelow(DecimalScalar.of(.0001));
+    avi.untilBelow(RealScalar.of(.0001));
     System.out.println("iterations=" + avi.iterations());
     DiscreteUtils.print(avi.qsa(), Round._1);
     DiscreteVs dvs = DiscreteUtils.createVs(gridworld, avi.qsa());

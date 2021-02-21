@@ -10,7 +10,6 @@ import ch.ethz.idsc.subare.core.util.DiscreteVs;
 import ch.ethz.idsc.subare.core.util.Loss;
 import ch.ethz.idsc.subare.core.util.gfx.StateRasters;
 import ch.ethz.idsc.subare.util.RobustArgMax;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 import ch.ethz.idsc.tensor.alg.Array;
@@ -37,7 +36,7 @@ public enum WireloopHelper {
   }
 
   static DiscreteQsa getOptimalQsa(Wireloop wireloop) {
-    return ActionValueIterations.solve(wireloop, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(wireloop, RealScalar.of(.0001));
   }
 
   private static Tensor renderActions(Wireloop wireloop, QsaInterface qsa) {

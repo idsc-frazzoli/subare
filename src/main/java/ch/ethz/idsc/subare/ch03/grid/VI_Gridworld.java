@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteUtils;
 import ch.ethz.idsc.subare.core.util.Policies;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.sca.Round;
 
 /** solving grid world
@@ -44,7 +44,7 @@ import ch.ethz.idsc.tensor.sca.Round;
   public static void main(String[] args) {
     Gridworld gridworld = new Gridworld();
     ValueIteration vi = new ValueIteration(gridworld, gridworld);
-    vi.untilBelow(DecimalScalar.of(.0001));
+    vi.untilBelow(RealScalar.of(.0001));
     System.out.println("iterations=" + vi.iterations());
     DiscreteUtils.print(vi.vs(), Round._1);
     Policy policy = PolicyType.GREEDY.bestEquiprobable(gridworld, vi.vs(), null);

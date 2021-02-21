@@ -6,13 +6,12 @@ import ch.ethz.idsc.subare.core.alg.ActionValueIterations;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.DiscreteQsa;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.tensor.DecimalScalar;
 import ch.ethz.idsc.tensor.RealScalar;
 
 enum CliffwalkHelper {
   ;
   static DiscreteQsa getOptimalQsa(Cliffwalk cliffwalk) {
-    return ActionValueIterations.solve(cliffwalk, DecimalScalar.of(.0001));
+    return ActionValueIterations.solve(cliffwalk, RealScalar.of(.0001));
   }
 
   static Policy getOptimalPolicy(Cliffwalk cliffwalk) {

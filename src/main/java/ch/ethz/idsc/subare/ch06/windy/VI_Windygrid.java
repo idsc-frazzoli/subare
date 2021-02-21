@@ -7,7 +7,7 @@ import ch.ethz.idsc.subare.core.StepInterface;
 import ch.ethz.idsc.subare.core.alg.ValueIteration;
 import ch.ethz.idsc.subare.core.util.EpisodeKickoff;
 import ch.ethz.idsc.subare.core.util.PolicyType;
-import ch.ethz.idsc.tensor.DecimalScalar;
+import ch.ethz.idsc.tensor.RealScalar;
 import ch.ethz.idsc.tensor.Tensor;
 
 /** reproduces Figure 6.4 on p.139 */
@@ -15,7 +15,7 @@ enum VI_Windygrid {
   ;
   public static void simulate(Windygrid windygrid) {
     ValueIteration vi = new ValueIteration(windygrid, windygrid);
-    vi.untilBelow(DecimalScalar.of(.001));
+    vi.untilBelow(RealScalar.of(.001));
     final Tensor values = vi.vs().values();
     System.out.println("iterations=" + vi.iterations());
     System.out.println(values);
